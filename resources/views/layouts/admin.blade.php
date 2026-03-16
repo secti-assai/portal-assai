@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Painel Administrativo - Assaí</title>
+    @vite(['resources/css/admin.css', 'resources/js/admin.js'])
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+</head>
+
+<body class="flex h-screen overflow-hidden font-sans bg-slate-50">
+
+    <aside class="flex-col hidden w-64 text-white transition-all bg-blue-900 shadow-xl md:flex shrink-0 z-20">
+
+        <div class="flex items-center justify-center h-16 border-b bg-blue-950 border-blue-800/50 shrink-0">
+            <a href="{{ route('admin.dashboard') }}" class="text-xl font-extrabold tracking-tight text-white transition hover:text-yellow-400">
+                Admin
+            </a>
+        </div>
+
+        <nav class="flex flex-col flex-1 gap-2 p-4 mt-2 overflow-y-auto">
+
+            @hasanyrole('admin|comunicacao|gestao')
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Dashboard
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin|comunicacao|gestao')
+            <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Conteúdo</div>
+            @endhasanyrole
+
+            @hasanyrole('admin|comunicacao')
+            <a href="{{ route('admin.noticias.index') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('noticias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2"></path>
+                </svg>
+                Notícias
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin')
+            <a href="{{ route('admin.alertas.index') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.alertas.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                Alertas da Home
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin|comunicacao')
+            <a href="{{ route('admin.banners.index') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Banners da Home
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin|comunicacao')
+            <a href="{{ route('admin.eventos.index') }}"
+               class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.eventos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Agenda de Eventos
+            </a>
+            @endhasanyrole
+            
+            @hasanyrole('admin|gestao')
+            <a href="{{ route('admin.programas.index') }}"
+               class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.programas.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Assaí em Ação
+            </a>
+            @endhasanyrole
+            
+            @hasanyrole('admin|gestao')
+            <a href="{{ route('admin.secretarias.index') }}"
+               class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.secretarias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Secretarias
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin|gestao')
+            <a href="{{ route('admin.servicos.index') }}"
+               class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.servicos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Serviços
+            </a>
+            @endhasanyrole
+
+            @hasanyrole('admin')
+            <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Governança</div>
+
+            <a href="{{ route('admin.activity-logs.index') }}"
+               class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.activity-logs.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4V7m3 10H6a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2z"></path></svg>
+                Auditoria
+
+                        @can('gerir usuarios')
+                        <a href="{{ route('users.index') }}"
+                           class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.users.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            Usuários
+                        </a>
+                        @endcan
+            </a>
+            @endhasanyrole
+            
+        </nav>
+
+        <div class="p-4 text-xs font-medium text-center border-t border-blue-800/50 text-blue-300 shrink-0">
+            Prefeitura de Assaí<br>&copy; {{ date('Y') }}
+        </div>
+    </aside>
+
+    <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+        <header class="flex items-center justify-between px-6 py-4 bg-white border-b shadow-sm border-slate-200 shrink-0 z-10">
+            <div class="flex items-center gap-4">
+                <span class="text-xl font-bold text-slate-800 md:hidden">Painel Admin</span>
+            </div>
+
+            <div class="flex items-center gap-3 md:gap-4">
+                <span class="hidden text-sm font-medium text-slate-500 md:block">
+                    Bem-vindo(a), <strong class="text-slate-700">{{ Auth::user()->name }}</strong>
+                </span>
+
+                <a href="/" target="_blank" class="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-bold transition rounded-lg text-slate-600 hover:text-blue-600 bg-slate-100 hover:bg-blue-50">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                    Ver site
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-red-700 transition bg-red-100 rounded-lg hover:bg-red-200 hover:-translate-y-0.5 shadow-sm border border-red-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Sair
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <main class="flex-1 w-full p-4 overflow-y-auto md:p-8">
+            <div class="max-w-6xl mx-auto pb-10">
+                @yield('content')
+            </div>
+        </main>
+
+    </div>
+
+</body>
+
+</html>

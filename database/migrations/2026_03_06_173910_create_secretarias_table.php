@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('secretarias', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome'); // Ex: Secretaria de Saúde
+            $table->string('nome_secretario'); // Nome do responsável
+            $table->text('descricao')->nullable();
+            $table->string('foto')->nullable(); // Foto do Secretário
+            $table->string('telefone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('endereco')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('secretarias');
+    }
+};
