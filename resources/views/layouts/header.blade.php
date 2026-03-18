@@ -1,5 +1,5 @@
 <header class="relative z-50 bg-white shadow-sm">
-    <div class="hidden px-4 py-2.5 text-sm text-white bg-blue-900 lg:block font-sans">
+    <div class="hidden px-4 py-2.5 text-sm text-white bg-blue-900 xl:block font-sans">
         <div class="container flex justify-end items-center gap-5 mx-auto">
             <div class="flex items-center gap-2 border-r border-blue-700 pr-4">
                 <a href="{{ route('pages.acessibilidade') }}" class="hover:text-yellow-400 hover:underline font-bold flex items-center gap-1.5 transition py-1 px-1" title="Página de Acessibilidade">
@@ -30,7 +30,7 @@
             <img src="{{ asset('img/logo_preta.png') }}" alt="Prefeitura de Assaí" class="h-10 md:h-14 w-auto object-contain">
         </a>
 
-        <nav accesskey="2" tabindex="-1" aria-label="Navegação Principal" class="items-center hidden gap-4 lg:gap-5 font-medium text-gray-700 lg:flex font-sans focus:outline-none">
+        <nav accesskey="2" tabindex="-1" aria-label="Navegação Principal" class="items-center hidden gap-2 lg:gap-3 font-medium text-gray-700 xl:flex xl:justify-between xl:flex-wrap font-sans focus:outline-none">
             <a href="{{ route('home') }}" class="transition hover:text-blue-600">Início</a>
             <a href="{{ route('servicos.index') }}" class="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-sm transition-colors">Serviços</a>
 
@@ -73,19 +73,19 @@
 
             <a href="{{ route('contato.index') }}" class="transition hover:text-blue-600">Contato</a>
 
-            <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 text-sm font-bold text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 font-sans shadow-sm">
+            <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="hidden xl:inline-flex xl:flex-shrink-0 items-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 font-sans shadow-sm whitespace-nowrap">
                 Entrar com gov.assai
             </a>
         </nav>
 
-        <button id="mobile-menu-button" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Abrir menu principal" class="p-2 text-blue-900 transition rounded-lg lg:hidden hover:bg-blue-50 focus:outline-none">
+        <button id="mobile-menu-button" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Abrir menu principal" class="p-2 text-blue-900 transition rounded-lg xl:hidden hover:bg-blue-50 focus:outline-none">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
         </button>
     </div>
 
-    <div id="mobile-menu" class="absolute hidden w-full z-50 bg-white border-t border-gray-100 shadow-2xl lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
+    <div id="mobile-menu" class="absolute hidden w-full z-50 bg-white border-t border-gray-100 shadow-2xl xl:hidden max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain">
         <nav class="flex flex-col gap-1 px-4 pt-2 pb-6 font-sans text-center">
             <a href="{{ route('home') }}" class="block px-3 py-3 text-base font-medium text-gray-700 rounded-md hover:text-blue-900 hover:bg-blue-50 text-center">Início</a>
             <a href="{{ route('servicos.index') }}" class="flex items-center justify-center px-3 py-3 text-base font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors">Serviços ao Cidadão</a>
@@ -141,24 +141,24 @@
 
             @foreach($alertasAtivos as $alerta)
             <div class="swiper-slide">
-                <div class="flex flex-col items-center justify-center w-full h-full gap-3 px-4 font-sans text-white sm:flex-row">
+                <div class="flex items-center justify-center w-full h-full gap-2 px-2 min-[641px]:px-4 font-sans text-white">
 
-                    <span class="alerta-tag flex items-center gap-1 px-2.5 py-1 text-xs font-bold tracking-wide uppercase bg-red-800 rounded-md shrink-0">
+                    <span class="alerta-tag hidden min-[641px]:flex items-center gap-1 px-2.5 py-1 text-xs font-bold tracking-wide uppercase bg-red-800 rounded-md shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                         </svg>
-                        {{ $alerta->titulo }}
+                        <span class="hidden min-[641px]:inline">{{ $alerta->titulo }}</span>
                     </span>
 
-                    <span class="alerta-msg-mobile block w-full truncate text-xs font-semibold text-center sm:hidden">
+                    <span class="alerta-msg-mobile block max-w-[75%] truncate text-xs font-semibold min-[641px]:hidden">
                         {{ $alerta->titulo }}
                     </span>
-                    <span class="alerta-msg hidden sm:block text-sm font-medium text-center break-words sm:line-clamp-1">
+                    <span class="alerta-msg hidden min-[641px]:block text-sm font-medium break-words min-[641px]:line-clamp-1">
                         {{ $alerta->mensagem }}
                     </span>
 
                     @if($alerta->link)
-                    <a href="{{ $alerta->link }}" target="_blank" rel="noopener noreferrer" class="alerta-link text-sm font-bold underline text-center hover:text-red-200 transition">
+                    <a href="{{ $alerta->link }}" target="_blank" rel="noopener noreferrer" class="alerta-link inline shrink-0 text-xs min-[641px]:text-sm font-bold underline hover:text-red-200 transition whitespace-nowrap">
                         Saiba mais >
                     </a>
                     @endif

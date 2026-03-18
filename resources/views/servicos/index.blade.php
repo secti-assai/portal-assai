@@ -21,7 +21,7 @@
     </div>
 
     <div class="container relative z-10 px-4 mx-auto max-w-7xl text-left">
-        <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div class="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
             <div>
                 <x-breadcrumb :items="[
                         ['name' => 'Início', 'url' => route('home')],
@@ -53,7 +53,7 @@
                 </form>
             </div>
 
-            <div class="inline-flex w-fit self-start lg:self-auto flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-white border border-white/80 shadow-xl text-center">
+            <div class="inline-flex w-fit self-start xl:self-auto flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-white border border-white/80 shadow-xl text-center">
                 <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Powered by</span>
                 <img src="{{ asset('img/conecta.png') }}" alt="Conecta Assaí" class="w-36 md:w-32 h-auto" loading="lazy" decoding="async">
             </div>

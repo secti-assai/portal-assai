@@ -120,7 +120,7 @@
             </div>
 
             {{-- Chips de Sugestão --}}
-            <div id="ia-suggestions" class="flex flex-wrap items-center justify-center gap-2 mt-3 pointer-events-auto max-[360px]:hidden">
+            <div id="ia-suggestions" class="hidden lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:gap-2.5 mt-3 pointer-events-auto">
                 @forelse($sugestoesIA as $sugestao)
                 <button
                     type="button"
@@ -129,7 +129,7 @@
                     aria-label="Sugestão de busca: {{ $sugestao }}"
                     onclick="preencherBusca('{{ addslashes($sugestao) }}')"
                     onkeydown="if(event.key==='Enter'||event.key===' ')preencherBusca('{{ addslashes($sugestao) }}')"
-                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans">
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
                     <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>

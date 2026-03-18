@@ -323,7 +323,7 @@ class PortalController extends Controller
         ]);
 
         try {
-            Mail::to('contato@assai.pr.gov.br')->send(new ContatoSiteMail($validated));
+            Mail::to(config('services.contato.to_address'))->send(new ContatoSiteMail($validated));
         } catch (\Throwable $exception) {
             Log::error('Falha ao enviar formulário de contato do portal.', [
                 'erro' => $exception->getMessage(),

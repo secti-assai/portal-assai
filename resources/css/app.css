@@ -48,10 +48,34 @@
         text-overflow: ellipsis;
         line-height: 1.2;
     }
+}
 
-    .swiper-alertas .alerta-tag,
+/* Ajuste para tablets pequenos (641-768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+    .swiper-alertas {
+        height: 52px;
+    }
+
+    .swiper-alertas .swiper-slide > div {
+        gap: 0.5rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .swiper-alertas .alerta-tag {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.65rem;
+    }
+
+    .swiper-alertas .alerta-msg {
+        font-size: 0.8125rem;
+        line-clamp: 1;
+    }
+
     .swiper-alertas .alerta-link {
-        display: none;
+        font-size: 0.75rem;
     }
 }
 
