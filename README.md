@@ -12,7 +12,6 @@ npm install
 npm run build
 
 4. Configuração de Variáveis de Ambiente
-Bash
 cp .env.example .env
 php artisan key:generate
 Atenção: Edite o ficheiro .env informando as credenciais de DB_CONNECTION (PostgreSQL) e as chaves de MAIL_MAILER (SMTP).
