@@ -35,7 +35,7 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Usuários Cadastrados</h2>
-            <form method="GET" action="{{ route('users.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('users.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por nome ou e-mail..." />
                 <x-admin.filter-select
                     name="role"
@@ -52,7 +52,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold">Utilizador</th>
@@ -65,19 +65,19 @@
                 <tbody class="text-sm divide-y divide-slate-100">
                     @forelse($usuarios as $usuario)
                         <tr class="transition hover:bg-slate-50 {{ $usuario->id === auth()->id() ? 'bg-blue-50/30' : '' }}">
-                            <td class="p-4">
+                            <td class="p-4 max-w-0 overflow-hidden">
                                 <div class="flex items-center gap-3">
                                     <div class="flex items-center justify-center w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold text-sm shrink-0">
                                         {{ strtoupper(substr($usuario->name, 0, 1)) }}
                                     </div>
-                                    <div>
-                                        <p class="font-bold text-slate-800">
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-slate-800 truncate" title="{{ $usuario->name }}">
                                             {{ $usuario->name }}
                                             @if($usuario->id === auth()->id())
                                                 <span class="ml-2 inline-block px-1.5 py-0.5 text-[10px] font-bold rounded bg-blue-100 text-blue-700">Você</span>
                                             @endif
                                         </p>
-                                        <p class="text-xs text-slate-500">{{ $usuario->email }}</p>
+                                        <p class="text-xs text-slate-500 truncate" title="{{ $usuario->email }}">{{ $usuario->email }}</p>
                                     </div>
                                 </div>
                             </td>

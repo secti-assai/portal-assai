@@ -14,7 +14,7 @@
 
         {{-- Header --}}
         <div class="mb-8 text-center md:text-left">
-            <h1 class="text-3xl font-black text-blue-900 md:text-4xl font-heading leading-tight">
+            <h1 class="text-3xl max-[360px]:text-2xl font-black text-blue-900 md:text-4xl font-heading leading-tight">
                 Últimas Notícias
             </h1>
             <p class="mt-1 text-sm text-gray-500">Fique por dentro de tudo que acontece em Assaí.</p>
@@ -25,8 +25,8 @@
             @if(request('categoria'))
                 <input type="hidden" name="categoria" value="{{ request('categoria') }}">
             @endif
-            <div class="flex items-center w-full bg-white border border-gray-200 rounded-2xl shadow-md overflow-hidden focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition">
-                <span class="pl-5 pr-3 text-gray-400 shrink-0">
+            <div class="flex flex-col sm:flex-row sm:items-center w-full bg-white border border-gray-200 rounded-2xl shadow-md overflow-hidden focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition">
+                <span class="hidden sm:flex pl-5 pr-3 text-gray-400 shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -36,9 +36,9 @@
                     name="q"
                     value="{{ request('q') }}"
                     placeholder="Busque por título, tema ou palavra-chave..."
-                    class="flex-1 py-4 text-sm text-gray-700 bg-transparent outline-none focus:outline-none focus:ring-0 border-transparent focus:border-transparent placeholder-gray-400"
+                    class="flex-1 py-4 max-[360px]:py-3.5 text-sm text-gray-700 bg-transparent outline-none focus:outline-none focus:ring-0 border-transparent focus:border-transparent placeholder-gray-400"
                 >
-                <button type="submit" class="m-2 px-6 py-2.5 text-sm font-bold text-white bg-blue-700 rounded-xl hover:bg-blue-800 transition shrink-0">
+                <button type="submit" class="mx-2 mb-2 sm:m-2 px-6 max-[360px]:px-5 py-2.5 text-sm font-bold text-white bg-blue-700 rounded-xl hover:bg-blue-800 transition shrink-0 w-[calc(100%-1rem)] sm:w-auto">
                     Buscar
                 </button>
             </div>
@@ -46,7 +46,7 @@
 
         {{-- Filtros por Pills --}}
         <div class="mb-10 -mx-4 px-4">
-            <div class="flex items-center gap-2 overflow-x-auto flex-nowrap pb-2 scrollbar-hide">
+            <div class="flex items-center gap-2 overflow-x-auto flex-nowrap pb-2 pr-2 scrollbar-hide">
                 <a
                     href="{{ route('noticias.index', array_filter(['q' => request('q')])) }}"
                     class="shrink-0 px-4 py-1.5 text-xs font-bold rounded-full transition whitespace-nowrap
@@ -72,9 +72,9 @@
 
                 @if($loop->first)
                     {{-- Manchete / Notícia Destaque --}}
-                    <article class="flex flex-col overflow-hidden transition-shadow duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-sm group hover:shadow-xl md:col-span-2 lg:col-span-2">
+                    <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-md hover:-translate-y-1 group hover:shadow-xl md:col-span-2 lg:col-span-2">
                         <a href="{{ route('noticias.show', $noticia->slug) }}" class="flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-gray-200 h-64 md:h-80 shrink-0">
+                            <div class="relative overflow-hidden bg-gray-200 h-56 sm:h-64 md:h-80 shrink-0">
                                 <span class="absolute z-10 px-3 py-1 text-xs font-bold tracking-wider text-blue-900 uppercase bg-yellow-400 rounded-md shadow top-4 left-4">
                                     {{ $noticia->categoria }}
                                 </span>
@@ -107,7 +107,7 @@
                     </article>
                 @else
                     {{-- Cards normais --}}
-                    <article class="flex flex-col overflow-hidden transition-shadow duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-sm group hover:shadow-lg">
+                    <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-md hover:-translate-y-1 group hover:shadow-xl">
                         <a href="{{ route('noticias.show', $noticia->slug) }}" class="flex flex-col flex-1 h-full">
                             <div class="relative overflow-hidden bg-gray-200 h-48 shrink-0">
                                 <span class="absolute z-10 px-2.5 py-1 text-xs font-bold tracking-wider text-blue-900 uppercase bg-yellow-400 rounded-md shadow top-3 left-3">
@@ -126,7 +126,7 @@
                                 <h3 class="mb-2 text-base font-bold leading-snug text-gray-900 transition duration-200 font-heading group-hover:text-blue-700">
                                     {{ $noticia->titulo }}
                                 </h3>
-                                <p class="mt-auto text-sm text-gray-500 line-clamp-2">
+                                <p class="mt-auto text-sm text-gray-600 line-clamp-2">
                                     {{ $noticia->resumo ?? Str::limit(strip_tags($noticia->conteudo), 100) }}
                                 </p>
                                 <span class="inline-flex items-center gap-1 mt-4 text-xs font-bold text-blue-500 group-hover:text-blue-700 transition">

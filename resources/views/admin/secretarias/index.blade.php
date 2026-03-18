@@ -29,7 +29,7 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Órgãos Cadastrados</h2>
-            <form method="GET" action="{{ route('admin.secretarias.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.secretarias.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search value="{{ request('q') }}" placeholder="Pesquisar por secretaria ou titular..." class="focus:ring-teal-500 focus:border-teal-500" />
                 <button type="submit" class="px-3 py-1.5 text-sm font-bold text-white bg-teal-600 rounded-lg hover:bg-teal-700 transition">Buscar</button>
                 @if(request('q'))
@@ -40,7 +40,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold">Órgão / Secretaria</th>
@@ -52,7 +52,7 @@
                 <tbody class="text-sm divide-y divide-slate-100">
                     @forelse($secretarias as $secretaria)
                         <tr class="transition group hover:bg-slate-50">
-                            <td class="p-4">
+                            <td class="p-4 max-w-0 overflow-hidden">
                                 <div class="flex items-center gap-3">
                                     <a href="{{ route('secretarias.show', $secretaria->id) }}" target="_blank" class="block group">
                                         @if($secretaria->foto)
@@ -61,11 +61,11 @@
                                             <img src="https://ui-avatars.com/api/?name={{ urlencode($secretaria->nome_secretario ?: $secretaria->nome) }}&background=e2e8f0&color=94a3b8&size=96" alt="Avatar" class="object-cover w-10 h-10 rounded-full border-2 border-teal-200 shadow-sm group-hover:ring-2 group-hover:ring-teal-400 transition">
                                         @endif
                                     </a>
-                                    <p class="font-bold text-slate-800">{{ $secretaria->nome }}</p>
+                                    <p class="font-bold text-slate-800 truncate" title="{{ $secretaria->nome }}">{{ \Illuminate\Support\Str::limit($secretaria->nome, 90) }}</p>
                                 </div>
                             </td>
-                            <td class="p-4">
-                                <p class="font-medium text-slate-700">{{ $secretaria->nome_secretario ?? 'Não informado' }}</p>
+                            <td class="p-4 max-w-0 overflow-hidden">
+                                <p class="font-medium text-slate-700 truncate" title="{{ $secretaria->nome_secretario ?? 'Não informado' }}">{{ \Illuminate\Support\Str::limit($secretaria->nome_secretario ?? 'Não informado', 70) }}</p>
                             </td>
                             <td class="p-4 text-slate-500 text-xs space-y-1">
                                 @if($secretaria->telefone)

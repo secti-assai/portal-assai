@@ -29,11 +29,11 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Eventos Cadastrados</h2>
-            <form method="GET" action="{{ route('admin.eventos.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.eventos.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título ou local..." class="focus:ring-amber-500 focus:border-amber-500" />
                 <x-admin.filter-select
                     name="status"
-                    :options="['' => 'Qualquer status', 'agendado' => 'Agendado', 'adiado' => 'Adiado', 'cancelado' => 'Cancelado', 'realizado' => 'Realizado']"
+                    :options="['' => 'Qualquer status', 'agendado' => 'Agendado', 'cancelado' => 'Cancelado', 'realizado' => 'Realizado']"
                     :value="request('status')"
                     placeholder="Qualquer status"
                     class="focus:ring-amber-500 focus:border-amber-500"
@@ -48,7 +48,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold w-24">Imagem</th>
@@ -71,8 +71,8 @@
                                     @endif
                                 </a>
                             </td>
-                            <td class="p-4">
-                                <p class="font-bold text-slate-800 line-clamp-2">{{ $evento->titulo }}</p>
+                            <td class="p-4 max-w-0 overflow-hidden">
+                                <p class="font-bold text-slate-800 truncate" title="{{ $evento->titulo }}">{{ \Illuminate\Support\Str::limit($evento->titulo, 90) }}</p>
                             </td>
                             <td class="p-4">
                                 <div class="flex flex-col gap-1">
@@ -88,8 +88,8 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="p-4 text-slate-500 font-medium truncate max-w-[150px]" title="{{ $evento->local }}">
-                                {{ $evento->local ?? 'Não informado' }}
+                            <td class="p-4 text-slate-500 font-medium overflow-hidden" title="{{ $evento->local }}">
+                                <span class="block truncate">{{ $evento->local ?? 'Não informado' }}</span>
                             </td>
                             <td class="p-4 text-center">
                                 @php
@@ -99,7 +99,7 @@
                                         default     => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                     };
                                     $statusLabel = match($evento->status) {
-                                        'adiado'    => 'ADIADO',
+                                        'adiado'    => 'LEGADO: ADIADO',
                                         'cancelado' => 'CANCELADO',
                                         default     => 'CONFIRMADO',
                                     };

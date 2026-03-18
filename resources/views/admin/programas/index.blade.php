@@ -29,7 +29,7 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Programas Cadastrados</h2>
-            <form method="GET" action="{{ route('admin.programas.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.programas.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search value="{{ request('q') }}" placeholder="Pesquisar por título ou descrição..." class="focus:ring-emerald-500 focus:border-emerald-500" />
                 <x-admin.filter-select
                     name="ativo"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold w-24">Ícone</th>
@@ -72,15 +72,15 @@
                                     </div>
                                 </a>
                             </td>
-                            <td class="p-4">
-                                <p class="font-bold text-slate-800">{{ $programa->titulo }}</p>
-                                <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">{{ $programa->descricao }}</p>
+                            <td class="p-4 overflow-hidden" style="max-width:0">
+                                <p class="font-bold text-slate-800 truncate" title="{{ $programa->titulo }}">{{ \Illuminate\Support\Str::limit($programa->titulo, 80) }}</p>
+                                <p class="text-xs text-slate-500 mt-0.5 truncate">{{ \Illuminate\Support\Str::limit(strip_tags((string) $programa->descricao), 120) }}</p>
                             </td>
-                            <td class="p-4 text-slate-500 font-medium">
+                            <td class="p-4 text-slate-500 font-medium overflow-hidden">
                                 @if($programa->link)
-                                    <a href="{{ $programa->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-emerald-600 transition truncate max-w-[200px]" title="{{ $programa->link }}">
-                                        {{ $programa->link }}
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    <a href="{{ $programa->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-emerald-600 transition truncate w-full" title="{{ $programa->link }}">
+                                        <span class="truncate">{{ $programa->link }}</span>
+                                        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </a>
                                 @else
                                     <span class="text-slate-400">Sem link externo</span>

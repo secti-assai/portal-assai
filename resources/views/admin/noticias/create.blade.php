@@ -40,7 +40,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.noticias.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <form action="{{ route('admin.noticias.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         @csrf
 
         {{-- Coluna Principal (Formulário de Conteúdo) --}}

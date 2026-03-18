@@ -29,7 +29,7 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Serviços Cadastrados</h2>
-            <form method="GET" action="{{ route('admin.servicos.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.servicos.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título ou link..." class="focus:ring-orange-500 focus:border-orange-500" />
                 <x-admin.filter-select
                     name="status"
@@ -45,8 +45,15 @@
                     placeholder="Todos os tipos"
                     class="focus:ring-orange-500 focus:border-orange-500"
                 />
+                <x-admin.filter-select
+                    name="ordenacao"
+                    :options="['' => 'Ordem padrão', 'mais_acessados' => 'Mais acessados', 'menos_acessados' => 'Menos acessados']"
+                    :value="request('ordenacao')"
+                    placeholder="Ordem padrão"
+                    class="focus:ring-orange-500 focus:border-orange-500"
+                />
                 <button type="submit" class="px-3 py-1.5 text-sm font-bold text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition">Buscar</button>
-                @if(request()->hasAny(['search', 'status', 'icone']))
+                @if(request()->hasAny(['search', 'status', 'icone', 'ordenacao']))
                     <a href="{{ route('admin.servicos.index') }}" class="px-3 py-1.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">Limpar</a>
                 @endif
             </form>
@@ -54,7 +61,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold w-24 text-center">Ícone</th>
@@ -99,13 +106,13 @@
                                     </div>
                                 </a>
                             </td>
-                            <td class="p-4">
-                                <p class="font-bold text-slate-800">{{ $servico->titulo }}</p>
+                            <td class="p-4 max-w-0 overflow-hidden">
+                                <p class="font-bold text-slate-800 truncate" title="{{ $servico->titulo }}">{{ \Illuminate\Support\Str::limit($servico->titulo, 90) }}</p>
                                 <p class="text-[10px] font-mono text-slate-400 mt-0.5 uppercase tracking-wider">Ref: {{ $servico->icone ?? 'padrao' }}</p>
                             </td>
-                            <td class="p-4 text-slate-500 font-medium">
-                                <a href="{{ $servico->url_acesso ?? $servico->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-orange-600 transition truncate max-w-[200px]" title="{{ $servico->url_acesso ?? $servico->link }}">
-                                    {{ $servico->url_acesso ?? $servico->link }}
+                            <td class="p-4 text-slate-500 font-medium overflow-hidden">
+                                <a href="{{ $servico->url_acesso ?? $servico->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-orange-600 transition w-full" title="{{ $servico->url_acesso ?? $servico->link }}">
+                                    <span class="truncate">{{ $servico->url_acesso ?? $servico->link }}</span>
                                     <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </a>
                             </td>

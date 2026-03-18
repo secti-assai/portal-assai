@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- ===== HERO / CABEÇALHO ===== --}}
-<section class="bg-blue-900 py-14 md:py-20">
+<section class="bg-blue-900 py-14 max-[360px]:py-10 md:py-20">
     <div class="container max-w-5xl mx-auto px-4 text-center text-white">
         <x-breadcrumb :items="[
             ['name' => 'Início',              'url' => route('home')],
@@ -19,7 +19,7 @@
             Em andamento
         </div>
 
-        <h1 class="font-heading font-black text-3xl md:text-5xl leading-tight mb-4">
+        <h1 class="font-heading font-black text-3xl max-[360px]:text-2xl md:text-5xl leading-tight mb-4 break-words">
             {{ $programa->titulo }}
         </h1>
 
@@ -30,14 +30,14 @@
 </section>
 
 {{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 pb-20">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-5xl mx-auto px-4">
 
-        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
 
             {{-- Imagem de capa --}}
             @if ($programa->icone)
-                <div class="h-72 md:h-96 overflow-hidden">
+                <div class="h-56 sm:h-72 md:h-96 overflow-hidden">
                     <img
                         src="{{ asset('storage/' . $programa->icone) }}"
                         alt="Imagem de capa: {{ $programa->titulo }}"
@@ -55,7 +55,7 @@
             @endif
 
             {{-- Metadados --}}
-            <div class="flex flex-wrap items-center gap-4 px-8 py-5 border-b border-gray-100 bg-gray-50 text-sm text-gray-500">
+            <div class="flex flex-wrap items-center gap-4 px-5 max-[360px]:px-4 sm:px-8 py-5 border-b border-gray-100 bg-gray-50 text-sm text-gray-500">
                 {{-- Data --}}
                 <span class="flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,15 +84,15 @@
             </div>
 
             {{-- Descrição completa --}}
-            <div class="px-8 py-10">
-                <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed text-base">
+            <div class="px-5 max-[360px]:px-4 sm:px-8 py-8 max-[360px]:py-6 sm:py-10">
+                <div class="prose prose-sm md:prose-base prose-blue max-w-none text-gray-700 leading-7 md:leading-relaxed text-[15px] md:text-base">
                     {!! nl2br(e($programa->descricao)) !!}
                 </div>
             </div>
 
             {{-- Rodapé do card: botão de link externo --}}
             @if ($programa->link)
-                <div class="px-8 pb-10">
+                <div class="px-5 sm:px-8 pb-8 sm:pb-10">
                     <a
                         href="{{ $programa->link }}"
                         target="_blank"

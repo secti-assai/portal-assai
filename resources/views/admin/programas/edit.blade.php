@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.programas.update', $programa->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.programas.update', $programa->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
         @method('PUT')
 
@@ -66,7 +66,7 @@
             
             <x-admin.panel title="Visibilidade">
                 <x-admin.checkbox name="ativo" label="Programa Ativo" :checked="$programa->ativo" color="emerald" help-text="Se desmarcado, o programa não será exibido no portal público." />
-                <x-admin.checkbox name="destaque" label="Destaque na Página Inicial" :checked="$programa->destaque" color="blue" help-text="Programas marcados como destaque aparecem primeiro na seção da página inicial (máx. 4)." />
+                <x-admin.checkbox name="destaque" label="Destaque na Página Inicial" :checked="$programa->destaque" color="blue" help-text="Programas marcados como destaque aparecem primeiro na seção da página inicial (máx. 6)." />
             </x-admin.panel>
 
             <x-admin.panel title="Identidade Visual">

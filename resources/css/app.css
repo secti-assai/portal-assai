@@ -32,7 +32,26 @@
 
 @media (max-width: 640px) {
     .swiper-alertas {
-        height: 85px;
+        height: 44px;
+    }
+
+    .swiper-alertas .swiper-slide > div {
+        gap: 0.25rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .swiper-alertas .alerta-msg {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+    }
+
+    .swiper-alertas .alerta-tag,
+    .swiper-alertas .alerta-link {
+        display: none;
     }
 }
 
@@ -232,4 +251,25 @@ html.contrast-mode body img {
 
 html.contrast-mode body svg {
     background: transparent !important;
+}
+
+@media (max-width: 767px) {
+    [vw] [vw-access-button] {
+        right: 8px !important;
+        bottom: 24px !important;
+        top: auto !important;
+        left: auto !important;
+        transform: scale(0.9);
+        z-index: 80 !important;
+    }
+}
+
+@media (max-width: 360px) {
+    [vw] [vw-access-button] {
+        bottom: 18px !important;
+        right: 6px !important;
+        top: auto !important;
+        left: auto !important;
+        transform: scale(0.82);
+    }
 }

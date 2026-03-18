@@ -18,7 +18,6 @@
                 ['name' => 'Início', 'url' => route('home')],
                 ['name' => 'Busca no Portal'],
             ]" dark />
-            </nav>
 
             <h1 class="text-3xl md:text-4xl font-black text-white font-heading mb-8 leading-tight">
                 @if($termo)
@@ -28,13 +27,14 @@
                 @endif
             </h1>
 
-            <form action="{{ route('busca.index') }}" method="GET" class="relative group">
+            <form action="{{ route('busca.index') }}" method="GET" class="relative group" role="search" aria-label="Busca no portal">
                 <div class="flex items-center bg-white rounded-2xl shadow-2xl overflow-hidden focus-within:ring-4 focus-within:ring-blue-500/20 transition-all duration-300">
                     <div class="pl-5 text-gray-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
-                    <input type="text" name="q" value="{{ $termo }}" placeholder="Digite serviços, notícias, leis ou eventos..." class="flex-1 px-4 py-5 text-base md:text-lg text-gray-800 bg-transparent border-none focus:outline-none font-sans">
-                    <button type="submit" class="m-2 px-8 py-3.5 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all font-heading shrink-0 shadow-lg">
+                    <label for="campo-busca-portal" class="sr-only">Pesquisar no portal</label>
+                    <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="Digite serviços, notícias, leis ou eventos..." class="flex-1 px-4 py-5 text-base md:text-lg text-gray-800 bg-transparent border-none focus:outline-none font-sans">
+                    <button type="submit" class="m-2 px-7 md:px-8 py-3 md:py-3.5 text-sm md:text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all font-heading shrink-0 shadow-lg">
                         Pesquisar
                     </button>
                 </div>
@@ -43,35 +43,35 @@
     </section>
 
     {{-- Sistema de Abas e Filtros --}}
-    <div class="container px-4 mx-auto max-w-5xl -mt-8 relative z-20">
+    <div id="sec-all" class="container px-4 mx-auto max-w-5xl -mt-8 relative z-20">
         
         <div class="bg-white p-2 rounded-2xl shadow-xl border border-gray-100 mb-10 overflow-x-auto">
-            <div class="flex items-center gap-1 min-w-max">
-                <button onclick="filterResults('all')" class="tab-btn active px-6 py-3 rounded-xl font-bold text-sm transition-all" data-target="all">
+            <div class="flex items-center gap-1 min-w-max" role="tablist" aria-label="Filtrar resultados da busca">
+                <button id="tab-all" role="tab" aria-selected="true" aria-controls="sec-all" onclick="filterResults('all')" class="tab-btn active px-6 py-3 rounded-xl font-bold text-sm transition-all" data-target="all">
                     Tudo <span class="ml-2 opacity-50 text-xs">{{ $noticias->count() + $servicos->count() + $eventos->count() + $programas->count() + $secretarias->count() }}</span>
                 </button>
                 @if($noticias->isNotEmpty())
-                <button onclick="filterResults('noticias')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="noticias">
+                <button id="tab-noticias" role="tab" aria-selected="false" aria-controls="sec-noticias" onclick="filterResults('noticias')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="noticias">
                     Notícias <span class="ml-2 opacity-50 text-xs">{{ $noticias->count() }}</span>
                 </button>
                 @endif
                 @if($servicos->isNotEmpty())
-                <button onclick="filterResults('servicos')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="servicos">
+                <button id="tab-servicos" role="tab" aria-selected="false" aria-controls="sec-servicos" onclick="filterResults('servicos')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="servicos">
                     Serviços <span class="ml-2 opacity-50 text-xs">{{ $servicos->count() }}</span>
                 </button>
                 @endif
                 @if($eventos->isNotEmpty())
-                <button onclick="filterResults('eventos')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="eventos">
+                <button id="tab-eventos" role="tab" aria-selected="false" aria-controls="sec-eventos" onclick="filterResults('eventos')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="eventos">
                     Eventos <span class="ml-2 opacity-50 text-xs">{{ $eventos->count() }}</span>
                 </button>
                 @endif
                 @if($programas->isNotEmpty())
-                <button onclick="filterResults('programas')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="programas">
+                <button id="tab-programas" role="tab" aria-selected="false" aria-controls="sec-programas" onclick="filterResults('programas')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="programas">
                     Programas <span class="ml-2 opacity-50 text-xs">{{ $programas->count() }}</span>
                 </button>
                 @endif
                 @if($secretarias->isNotEmpty())
-                <button onclick="filterResults('secretarias')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="secretarias">
+                <button id="tab-secretarias" role="tab" aria-selected="false" aria-controls="sec-secretarias" onclick="filterResults('secretarias')" class="tab-btn px-6 py-3 rounded-xl font-bold text-sm transition-all text-gray-500 hover:bg-gray-50" data-target="secretarias">
                     Secretarias <span class="ml-2 opacity-50 text-xs">{{ $secretarias->count() }}</span>
                 </button>
                 @endif
@@ -88,7 +88,7 @@
             </div>
         @elseif($noticias->isEmpty() && $servicos->isEmpty() && $eventos->isEmpty() && $programas->isEmpty() && $secretarias->isEmpty())
             <div class="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
-                <img src="{{ asset('img/no-results.svg') }}" class="w-48 mx-auto mb-8 opacity-50" alt="Nenhum resultado">
+                <img src="{{ asset('img/no-results.svg') }}" class="w-48 mx-auto mb-8 opacity-50" alt="Nenhum resultado" loading="lazy" decoding="async">
                 <h3 class="text-2xl font-bold text-gray-800 font-heading">Nenhum resultado para "{{ $termo }}"</h3>
                 <p class="text-gray-500 mt-2 max-w-md mx-auto">Não encontramos informações correspondentes. Tente termos mais genéricos ou verifique se há erros de digitação.</p>
                 <div class="mt-8">
@@ -99,7 +99,7 @@
 
             {{-- Resultados: Notícias --}}
             @if($noticias->isNotEmpty())
-            <section id="sec-noticias" class="result-section mb-12">
+            <section id="sec-noticias" role="tabpanel" aria-labelledby="tab-noticias" class="result-section mb-12">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
                     <h2 class="text-2xl font-black text-gray-900 font-heading">Notícias Encontradas</h2>
@@ -109,7 +109,7 @@
                     <article class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex gap-5 group">
                         <div class="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-xl overflow-hidden bg-gray-100">
                             @if($noticia->imagem_capa)
-                                <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="{{ $noticia->titulo }}" loading="lazy" decoding="async">
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-blue-50 text-blue-200">
                                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
@@ -121,7 +121,7 @@
                             <a href="{{ route('noticias.show', $noticia->slug) }}" class="text-base md:text-lg font-bold text-gray-900 group-hover:text-blue-600 transition leading-tight line-clamp-2 font-heading">
                                 {{ $noticia->titulo }}
                             </a>
-                            <p class="text-xs text-gray-400 mt-2">
+                            <p class="text-xs text-gray-500 mt-2">
                                 Publicado em {{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}
                             </p>
                         </div>
@@ -133,20 +133,20 @@
 
             {{-- Resultados: Serviços --}}
             @if($servicos->isNotEmpty())
-            <section id="sec-servicos" class="result-section mb-12">
+            <section id="sec-servicos" role="tabpanel" aria-labelledby="tab-servicos" class="result-section mb-12">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-8 bg-emerald-500 rounded-full"></div>
                     <h2 class="text-2xl font-black text-gray-900 font-heading">Serviços e Consultas</h2>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($servicos as $servico)
-                    <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" class="flex items-center p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-emerald-400 hover:shadow-lg transition-all group">
+                    <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" rel="noopener noreferrer" class="flex items-center p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-emerald-400 hover:shadow-lg transition-all group">
                         <div class="w-12 h-12 flex items-center justify-center bg-emerald-50 text-emerald-600 rounded-xl mr-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                         </div>
                         <div class="min-w-0">
                             <h3 class="text-sm font-bold text-gray-800 truncate font-heading group-hover:text-emerald-700 transition-colors">{{ $servico->titulo }}</h3>
-                            <span class="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">Acesso Direto &rarr;</span>
+                            <span class="text-[10px] font-medium text-gray-500 uppercase tracking-tighter">Acesso Direto &rarr;</span>
                         </div>
                     </a>
                     @endforeach
@@ -156,7 +156,7 @@
 
             {{-- Resultados: Eventos --}}
             @if($eventos->isNotEmpty())
-            <section id="sec-eventos" class="result-section mb-12">
+            <section id="sec-eventos" role="tabpanel" aria-labelledby="tab-eventos" class="result-section mb-12">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-8 bg-yellow-500 rounded-full"></div>
                     <h2 class="text-2xl font-black text-gray-900 font-heading">Agenda e Eventos</h2>
@@ -189,7 +189,7 @@
 
             {{-- Resultados: Programas --}}
             @if($programas->isNotEmpty())
-            <section id="sec-programas" class="result-section mb-12">
+            <section id="sec-programas" role="tabpanel" aria-labelledby="tab-programas" class="result-section mb-12">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-8 bg-purple-500 rounded-full"></div>
                     <h2 class="text-2xl font-black text-gray-900 font-heading">Programas Municipais</h2>
@@ -205,7 +205,7 @@
                         </div>
                         <div class="min-w-0">
                             <h3 class="text-sm font-bold text-gray-800 line-clamp-2 font-heading group-hover:text-purple-700 transition-colors">{{ $programa->titulo }}</h3>
-                            <span class="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">Programa Municipal</span>
+                            <span class="text-[10px] font-medium text-gray-500 uppercase tracking-tighter">Programa Municipal</span>
                         </div>
                     </a>
                     @endforeach
@@ -215,7 +215,7 @@
 
             {{-- Resultados: Secretarias --}}
             @if($secretarias->isNotEmpty())
-            <section id="sec-secretarias" class="result-section mb-12">
+            <section id="sec-secretarias" role="tabpanel" aria-labelledby="tab-secretarias" class="result-section mb-12">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-8 bg-slate-500 rounded-full"></div>
                     <h2 class="text-2xl font-black text-gray-900 font-heading">Secretarias</h2>
@@ -233,7 +233,7 @@
                        class="flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-slate-400 hover:shadow-lg transition-all group">
                         <div class="w-12 h-12 shrink-0 rounded-xl overflow-hidden">
                             @if($secretaria->foto)
-                                <img src="{{ asset('storage/' . $secretaria->foto) }}" class="w-full h-full object-cover" alt="">
+                                <img src="{{ asset('storage/' . $secretaria->foto) }}" class="w-full h-full object-cover" alt="Foto de {{ $secretaria->nome }}" loading="lazy" decoding="async">
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-600 font-black text-sm group-hover:bg-slate-600 group-hover:text-white transition-colors">
                                     {{ $iniciais ?: 'SM' }}
@@ -243,7 +243,7 @@
                         <div class="min-w-0">
                             <h3 class="text-sm font-bold text-gray-800 leading-snug line-clamp-2 font-heading group-hover:text-slate-700 transition-colors">{{ $secretaria->nome }}</h3>
                             @if($secretaria->nome_secretario)
-                                <p class="text-[11px] text-gray-400 mt-0.5 truncate">{{ $secretaria->nome_secretario }}</p>
+                                <p class="text-[11px] text-gray-500 mt-0.5 truncate">{{ $secretaria->nome_secretario }}</p>
                             @endif
                         </div>
                     </a>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContatoSiteMail;
 use App\Models\Noticia;
 use App\Models\Servico;
 use App\Models\Evento;
@@ -15,10 +16,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Support\Concerns\NormalizesSearch;
 
 class PortalController extends Controller
 {
+    use NormalizesSearch;
+
     // Página inicial
     public function index()
     {
@@ -37,14 +43,17 @@ class PortalController extends Controller
 
         // 2. Busca as Notícias
         $noticias = Cache::remember('home_noticias', 3600, function () {
-            return Noticia::orderBy('data_publicacao', 'desc')
+            return Noticia::whereDate('data_publicacao', '<=', today())
+                ->orderBy('data_publicacao', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get();
         });
 
-        // 3. Busca os Próximos 5 Eventos (todos os status; fechamento automático por data)
+        // 3. Busca os Próximos 5 Eventos públicos (exceto cancelados; fechamento automático por data)
         $eventos = Cache::remember('home_eventos_v2', 3600, function () {
-            return Evento::where(function ($query) {
+            return Evento::where('status', '!=', 'cancelado')
+            ->where(function ($query) {
                 $query->whereNotNull('data_fim')
                       ->where('data_fim', '>=', now())
                       ->orWhere(function ($q) {
@@ -116,12 +125,15 @@ class PortalController extends Controller
     // Página de notícias
     public function noticias(Request $request)
     {
-        $categorias = Noticia::whereNotNull('categoria')
+        $categorias = Noticia::whereDate('data_publicacao', '<=', today())
+            ->whereNotNull('categoria')
             ->distinct()
             ->orderBy('categoria')
             ->pluck('categoria');
 
-        $query = Noticia::orderBy('data_publicacao', 'desc');
+        $query = Noticia::whereDate('data_publicacao', '<=', today())
+            ->orderBy('data_publicacao', 'desc')
+            ->orderBy('created_at', 'desc');
 
         if ($request->filled('q')) {
             $termo = $request->q;
@@ -158,6 +170,14 @@ class PortalController extends Controller
         // 3. Dias com evento no mês visualizado (highlights do calendário)
         $diasComEvento = Evento::whereYear('data_inicio', $dataBase->year)
             ->whereMonth('data_inicio', $dataBase->month)
+            ->where(function ($query) {
+                $query->whereNotNull('data_fim')
+                      ->where('data_fim', '>=', now())
+                      ->orWhere(function ($q) {
+                          $q->whereNull('data_fim')
+                            ->whereDate('data_inicio', '>=', today());
+                      });
+            })
             ->get()
             ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
             ->unique()
@@ -211,10 +231,21 @@ class PortalController extends Controller
         return view('agenda.show', compact('evento', 'outrosEventos'));
     }
 
-    public function secretarias()
+    public function secretarias(Request $request)
     {
-        // Puxa todas as secretarias por ordem alfabética
-        $secretarias = \App\Models\Secretaria::orderBy('nome', 'asc')->get();
+        $query = \App\Models\Secretaria::query();
+
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $termo = '%' . $this->normalizeSearchTerm($request->string('search')->trim()->toString()) . '%';
+
+            $q->where(function ($subQuery) use ($termo) {
+                $subQuery->whereRaw($this->normalizedColumnSql('nome') . ' LIKE ?', [$termo])
+                    ->orWhereRaw($this->normalizedColumnSql('nome_secretario') . ' LIKE ?', [$termo]);
+            });
+        });
+
+        $secretarias = $query->orderBy('nome', 'asc')->paginate(12)->withQueryString();
+
         return view('secretarias.index', compact('secretarias'));
     }
 
@@ -222,10 +253,13 @@ class PortalController extends Controller
     {
         $query = Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
 
-        if ($request->filled('q')) {
-            $termo = $request->q;
+        if ($request->filled('search')) {
+            $termo = $request->string('search')->trim()->toString();
             $query->where(function ($q) use ($termo) {
-                $q->where('titulo', 'like', "%{$termo}%");
+                $busca = '%' . $this->normalizeSearchTerm($termo) . '%';
+
+                $q->whereRaw($this->normalizedColumnSql('titulo') . ' LIKE ?', [$busca])
+                    ->orWhereRaw($this->normalizedColumnSql('link') . ' LIKE ?', [$busca]);
             });
         }
 
@@ -269,9 +303,9 @@ class PortalController extends Controller
     }
 
 
-    public function contatoStore(Request $request)
+    public function enviarContato(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nome'     => 'required|string|min:2|max:120',
             'email'    => 'required|email|max:120',
             'assunto'  => 'required|string|min:3|max:200',
@@ -288,13 +322,27 @@ class PortalController extends Controller
             'mensagem.max'      => 'A mensagem pode ter no máximo 4000 caracteres.',
         ]);
 
-        // Opcional: enviar e-mail ao configurar o MAIL no .env
-        // Mail::raw(
-        //     "Nome: {$request->nome}\nEmail: {$request->email}\n\nAssunto: {$request->assunto}\n\n{$request->mensagem}",
-        //     fn ($m) => $m->to('contato@assai.pr.gov.br')->subject('[Portal] ' . $request->assunto)
-        // );
+        try {
+            Mail::to('contato@assai.pr.gov.br')->send(new ContatoSiteMail($validated));
+        } catch (\Throwable $exception) {
+            Log::error('Falha ao enviar formulário de contato do portal.', [
+                'erro' => $exception->getMessage(),
+                'nome' => $validated['nome'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'assunto' => $validated['assunto'] ?? null,
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Não foi possível enviar sua mensagem no momento. Tente novamente em instantes.');
+        }
 
         return back()->with('success', 'Mensagem enviada com sucesso! Entraremos em contato em breve.');
+    }
+
+    public function contatoStore(Request $request)
+    {
+        return $this->enviarContato($request);
     }
 
     public function programas()
@@ -393,7 +441,9 @@ class PortalController extends Controller
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
 
             $noticias = $noticiasQuery
+                ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->take(12)
                 ->get();
 

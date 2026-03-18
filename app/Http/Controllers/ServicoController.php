@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servico;
+use App\Support\Concerns\NormalizesSearch;
 use Illuminate\Http\Request;
 
 class ServicoController extends Controller
 {
+    use NormalizesSearch;
+
     public function index(Request $request)
     {
+        $ordenacao = $request->string('ordenacao')->trim()->toString();
+
         $icones = [
             'padrao' => 'Padrão (Genérico)',
             'saude' => 'Saúde (Coração/Cruz)',
@@ -29,13 +34,20 @@ class ServicoController extends Controller
             'educacao' => ['educacao', 'heroicon-o-computer-desktop', 'heroicon-o-map-pin'],
         ];
 
+        $searchTerm = $request->string('search')->trim()->toString();
+        if ($searchTerm === '') {
+            $searchTerm = $request->string('q')->trim()->toString();
+        }
+
         $servicos = Servico::query()
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->string('search')->trim()->toString();
+            ->when($searchTerm !== '', function ($query) use ($searchTerm) {
+                $search = $searchTerm;
 
                 $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('titulo', 'like', "%{$search}%")
-                        ->orWhere('link', 'like', "%{$search}%");
+                    $busca = '%' . $this->normalizeSearchTerm($search) . '%';
+
+                    $subQuery->whereRaw($this->normalizedColumnSql('titulo') . ' LIKE ?', [$busca])
+                        ->orWhereRaw($this->normalizedColumnSql('link') . ' LIKE ?', [$busca]);
                 });
             })
             ->when($request->filled('status'), function ($query) use ($request) {
@@ -49,10 +61,17 @@ class ServicoController extends Controller
                 $iconesPermitidos = $iconesCompatibilidade[$icone] ?? [$icone];
 
                 $query->whereIn('icone', $iconesPermitidos);
-            })
-            ->orderBy('titulo')
-            ->paginate(10)
-            ->withQueryString();
+            });
+
+        if ($ordenacao === 'mais_acessados') {
+            $servicos->orderByDesc('acessos')->orderBy('titulo');
+        } elseif ($ordenacao === 'menos_acessados') {
+            $servicos->orderBy('acessos')->orderBy('titulo');
+        } else {
+            $servicos->orderBy('titulo');
+        }
+
+        $servicos = $servicos->paginate(10)->appends($request->query());
 
         return view('admin.servicos.index', compact('servicos', 'icones'));
     }

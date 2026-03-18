@@ -41,7 +41,7 @@ Route::get('/servico/{id}/acessar', [PortalController::class, 'acessarServico'])
 
 // Contato
 Route::get('/contato', [PortalController::class, 'contato'])->name('contato.index');
-Route::post('/contato', [PortalController::class, 'contatoStore'])->name('contato.store');
+Route::post('/contato', [PortalController::class, 'enviarContato'])->name('contato.store');
 
 // Programas
 Route::get('/programas', [PortalController::class, 'programas'])->name('programas.index');

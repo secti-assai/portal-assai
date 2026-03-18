@@ -32,7 +32,7 @@ class EventoController extends Controller
                         ->where('data_inicio', '<', now());
                 }
 
-                if (in_array($status, ['adiado', 'cancelado'], true)) {
+                if ($status === 'cancelado') {
                     $query->where('status', $status);
                 }
             })
@@ -64,7 +64,7 @@ class EventoController extends Controller
             'data_inicio' => 'required|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
             'imagem' => 'nullable|image|max:2048',
-            'status' => 'required|in:confirmado,adiado,cancelado',
+            'status' => 'required|in:confirmado,cancelado',
         ]);
 
         $dados = $request->all();
@@ -93,7 +93,7 @@ class EventoController extends Controller
             'data_inicio' => 'required|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
             'imagem' => 'nullable|image|max:2048',
-            'status' => 'required|in:confirmado,adiado,cancelado',
+            'status' => 'required|in:confirmado,cancelado',
         ]);
 
         $dados = $request->all();

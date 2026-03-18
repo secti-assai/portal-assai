@@ -4,40 +4,33 @@
 
 @section('content')
 
-{{-- ===== HERO SECTION ===== --}}
-<section class="bg-blue-900 py-14 md:py-20">
-    <div class="container max-w-6xl mx-auto px-4 text-center text-white">
+{{-- ===== CABEÇALHO PADRONIZADO ===== --}}
+<section class="relative py-12 overflow-hidden bg-blue-900 md:py-20 lg:py-24">
+    {{-- Textura Vetorial e Gradiente de Profundidade --}}
+    <div class="absolute inset-0 pointer-events-none">
+        <svg class="absolute w-full h-full opacity-40 text-blue-800" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-pattern)"/>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-950 to-transparent"></div>
+    </div>
+
+    <div class="container relative z-10 px-4 mx-auto max-w-7xl text-left">
         <x-breadcrumb :items="[
             ['name' => 'Início', 'url' => route('home')],
             ['name' => 'Programas'],
         ]" dark />
-        <div class="inline-flex items-center gap-2 bg-blue-800 text-blue-200 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            Gestão Municipal
-        </div>
-        <h1 class="font-heading font-black text-4xl md:text-5xl leading-tight mb-4">
-            Programas
-        </h1>
-        <p class="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed">
-            Acompanhe as principais iniciativas, obras e ações estratégicas em desenvolvimento no município.
-        </p>
-
-        {{-- Breadcrumb --}}
-        <nav class="mt-8 flex items-center justify-center gap-2 text-sm text-blue-300" aria-label="Breadcrumb">
-            <a href="{{ route('home') }}" class="hover:text-white transition">Início</a>
-            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-            <span class="text-white font-medium">Programas</span>
-        </nav>
+        <h1 class="text-3xl font-extrabold text-white md:text-5xl font-heading mb-4">Programas</h1>
+        <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light">Acompanhe as principais iniciativas, obras e ações estratégicas em desenvolvimento no município.</p>
     </div>
 </section>
 
 {{-- ===== GRID DE PROGRAMAS ===== --}}
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 pb-20">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-6xl mx-auto px-4">
 
         @forelse ($programas as $programa)
@@ -45,7 +38,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @endif
 
-            <article class="bg-white rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden group">
+            <article class="bg-white rounded-3xl shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
 
                 {{-- Imagem / Ícone de Capa --}}
                 <div class="relative h-48 bg-gradient-to-br from-blue-800 to-blue-600 flex items-center justify-center overflow-hidden">
@@ -73,7 +66,7 @@
 
                 {{-- Corpo do Card --}}
                 <div class="flex flex-col flex-1 p-6">
-                    <p class="text-xs text-gray-400 mb-2 flex items-center gap-1.5">
+                    <p class="text-xs text-gray-500 mb-2 flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -81,12 +74,12 @@
                         {{ $programa->created_at->translatedFormat('d \d\e F \d\e Y') }}
                     </p>
 
-                    <h2 class="font-heading font-black text-xl text-blue-900 leading-snug mb-3 group-hover:text-blue-700 transition-colors line-clamp-2">
-                        {{ $programa->titulo }}
+                    <h2 class="font-heading font-black text-xl text-blue-900 leading-snug mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 break-words" title="{{ $programa->titulo }}">
+                        {{ \Illuminate\Support\Str::limit($programa->titulo, 100) }}
                     </h2>
 
-                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-3 flex-1">
-                        {{ $programa->descricao }}
+                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-3 break-words flex-1">
+                        {{ \Illuminate\Support\Str::limit(strip_tags((string) $programa->descricao), 160) }}
                     </p>
 
                     {{-- Rodapé do Card --}}

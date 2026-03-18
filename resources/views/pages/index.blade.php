@@ -3,7 +3,7 @@
 @section('content')
 <main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen bg-gray-50">
 
-    <section class="relative w-full bg-blue-900 h-[400px] md:h-[480px]">
+    <section class="relative w-full bg-blue-900 h-[450px] sm:h-[400px] md:h-[480px]">
 
         <div class="w-full h-full overflow-hidden swiper swiper-banners">
             <div class="swiper-wrapper">
@@ -20,17 +20,17 @@
                     : asset('img/Assaí.jpg');
                     @endphp
                     <img src="{{ $bannerImage }}" alt="{{ $banner->titulo }}" class="absolute inset-0 object-cover w-full h-full"
-                        @if($loop->first) fetchpriority="high" loading="eager" @else loading="lazy" decoding="async" @endif>
+                        @if($loop->first) fetchpriority="high" loading="eager" decoding="async" @else loading="lazy" decoding="async" @endif>
                     <div class="absolute inset-0 mix-blend-multiply bg-blue-900/70"></div>
 
-                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-36 md:pb-[180px]">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-28 sm:pb-36 md:pb-[180px]">
 
-                        <h1 class="w-full max-w-4xl mb-2 text-3xl font-extrabold text-white break-words drop-shadow-lg md:text-5xl font-heading leading-tight">
+                        <h1 class="w-full max-w-4xl mb-2 text-xl max-[360px]:text-lg font-extrabold text-white break-words drop-shadow-lg sm:text-3xl md:text-5xl font-heading leading-tight">
                             {{ $banner->titulo }}
                         </h1>
 
                         @if($banner->subtitulo)
-                        <p class="w-full max-w-2xl mb-4 text-base font-medium text-blue-100 break-words drop-shadow md:text-lg font-sans">
+                        <p class="w-full max-w-2xl mb-4 text-sm font-medium text-blue-100 break-words drop-shadow sm:text-base md:text-lg font-sans max-[360px]:hidden">
                             {{ $banner->subtitulo }}
                         </p>
                         @endif
@@ -45,7 +45,7 @@
                 @empty
                 <div class="relative w-full h-full swiper-slide">
                     <img src="{{ asset('img/Assaí.jpg') }}" alt="Prefeitura de Assaí" class="absolute inset-0 object-cover w-full h-full"
-                        fetchpriority="high" loading="eager">
+                        fetchpriority="high" loading="eager" decoding="async">
 
                     <div class="absolute inset-0 mix-blend-multiply bg-blue-900/70"></div>
 
@@ -60,13 +60,17 @@
             </div>
 
             @if($banners->count() > 1)
-            <div class="text-white swiper-button-next after:!text-2xl drop-shadow hidden md:flex !z-30"></div>
-            <div class="text-white swiper-button-prev after:!text-2xl drop-shadow hidden md:flex !z-30"></div>
+            <button type="button" aria-label="Próximo banner" class="banner-swiper-next absolute right-6 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-black/35 text-white hover:bg-black/55 transition-all z-30 shadow-lg backdrop-blur-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <button type="button" aria-label="Banner anterior" class="banner-swiper-prev absolute left-6 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-11 h-11 rounded-full bg-black/35 text-white hover:bg-black/55 transition-all z-30 shadow-lg backdrop-blur-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            </button>
             <div class="swiper-pagination !bottom-4 !z-30"></div>
             @endif
         </div>
 
-        <div class="absolute bottom-10 md:bottom-[80px] left-0 right-0 z-40 flex flex-col items-center justify-center w-full px-5 md:px-4 pointer-events-none">
+        <div class="absolute bottom-14 sm:bottom-8 md:bottom-[80px] left-0 right-0 z-40 flex flex-col items-center justify-center w-full px-4 md:px-4 pointer-events-none">
 
             {{-- Wrapper com efeito scale ao focar --}}
             <div class="w-full max-w-3xl pointer-events-auto transition-all duration-300 focus-within:scale-[1.02]">
@@ -87,7 +91,7 @@
                         type="text"
                         name="q"
                         accesskey="3"
-                        placeholder="Buscar serviços, notícias ou informações..."
+                        placeholder="Buscar serviços ou notícias..."
                         autocomplete="off"
                         aria-label="Campo de busca do portal [3]"
                         class="flex-1 min-w-0 px-4 py-3.5 text-sm text-gray-800 bg-transparent border-none md:pl-12 md:py-4 md:text-base focus:outline-none font-sans placeholder:text-slate-400">
@@ -104,7 +108,7 @@
                     </button>
 
                     {{-- Botão Pesquisar --}}
-                    <button type="submit" aria-label="Pesquisar" class="m-1.5 px-5 py-2.5 font-bold text-sm text-white transition-all bg-blue-600 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-blue-700 hover:shadow-lg font-heading">
+                    <button type="submit" aria-label="Pesquisar" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-white transition-all bg-blue-600 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-blue-700 hover:shadow-lg font-heading">
                         Buscar
                     </button>
 
@@ -116,7 +120,7 @@
             </div>
 
             {{-- Chips de Sugestão --}}
-            <div id="ia-suggestions" class="flex flex-wrap items-center justify-center gap-2 mt-3 pointer-events-auto">
+            <div id="ia-suggestions" class="flex flex-wrap items-center justify-center gap-2 mt-3 pointer-events-auto max-[360px]:hidden">
                 @forelse($sugestoesIA as $sugestao)
                 <button
                     type="button"
@@ -200,7 +204,7 @@
                             </svg>
                         </a>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 md:gap-6">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6">
 
                         @forelse($servicos as $servico)
                         <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center p-6 text-center bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group">
@@ -233,8 +237,8 @@
                                 </svg>
                             </div>
 
-                            <h3 class="text-sm font-bold text-slate-800 line-clamp-3 group-hover:text-blue-700 transition-colors font-heading" title="{{ $servico->titulo }}">
-                                {{ $servico->titulo }}
+                            <h3 class="text-sm font-bold text-slate-800 line-clamp-3 break-words group-hover:text-blue-700 transition-colors font-heading" title="{{ $servico->titulo }}">
+                                {{ \Illuminate\Support\Str::limit($servico->titulo, 90) }}
                             </h3>
                         </a>
                         @empty
@@ -250,7 +254,7 @@
             {{-- ═══════════════════════════════════════════════
                  2. ASSAÍ EM AÇÃO
             ════════════════════════════════════════════════ --}}
-            <div class="p-8 md:p-10 bg-slate-200 border border-slate-300 rounded-[2rem] shadow-inner">
+            <div class="p-8 max-[360px]:p-5 md:p-10 bg-slate-200 border border-slate-300 rounded-[2rem] shadow-inner">
                 <div class="flex flex-col items-start mb-10">
                     <span class="px-3 py-1 mb-3 text-xs font-bold tracking-wider text-blue-700 uppercase bg-blue-100 rounded-full">Acontecendo Agora</span>
                     <h2 class="text-3xl font-extrabold text-slate-800 font-heading">Assaí em Ação</h2>
@@ -261,7 +265,7 @@
 
                     @if(isset($inscricoesAbertas) && count($inscricoesAbertas) > 0)
                     @foreach($inscricoesAbertas as $inscricao)
-                    <a href="https://conecta.assai.pr.gov.br/editais/{{ $inscricao['slug'] ?? $inscricao['id'] }}" target="_blank" class="relative flex flex-col p-6 overflow-hidden transition bg-blue-50 border shadow-sm border-blue-200 rounded-2xl hover:shadow-xl hover:-translate-y-1 group hover:border-blue-400">
+                    <a href="https://conecta.assai.pr.gov.br/editais/{{ $inscricao['slug'] ?? $inscricao['id'] }}" target="_blank" class="relative flex flex-col p-6 max-[360px]:p-5 overflow-hidden transition bg-blue-50 border shadow-sm border-blue-200 rounded-2xl hover:shadow-xl hover:-translate-y-1 group hover:border-blue-400">
 
                         <div class="absolute top-0 right-0 px-3 py-1 text-[10px] font-bold text-white bg-green-500 rounded-bl-lg rounded-tr-xl flex items-center gap-1">
                             <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
@@ -274,8 +278,8 @@
                             </svg>
                         </div>
 
-                        <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2">{{ $inscricao['title'] ?? $inscricao['titulo'] }}</h3>
-                        <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">{{ $inscricao['description'] ?? $inscricao['descricao'] }}</p>
+                        <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2 break-words">{{ \Illuminate\Support\Str::limit($inscricao['title'] ?? $inscricao['titulo'], 95) }}</h3>
+                        <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 break-words">{{ \Illuminate\Support\Str::limit(strip_tags((string) ($inscricao['description'] ?? $inscricao['descricao'])), 150) }}</p>
 
                         <span class="flex items-center gap-1 text-sm font-bold text-blue-600 group-hover:text-blue-800">Inscreva-se &rarr;</span>
                     </a>
@@ -290,21 +294,21 @@
                         <div class="relative overflow-hidden h-48 bg-gray-200 shrink-0">
                             <img src="{{ asset('storage/' . $programa->icone) }}" alt="{{ $programa->titulo }}" class="object-cover w-full h-full transition duration-500 group-hover:scale-105" loading="lazy" decoding="async">
                         </div>
-                        <div class="flex flex-col flex-1 p-6">
-                            <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2">{{ $programa->titulo }}</h3>
-                            <p class="text-sm text-slate-500 mb-6 flex-1 line-clamp-3">{{ $programa->descricao }}</p>
+                        <div class="flex flex-col flex-1 p-6 max-[360px]:p-5">
+                            <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2 break-words" title="{{ $programa->titulo }}">{{ \Illuminate\Support\Str::limit($programa->titulo, 95) }}</h3>
+                            <p class="text-sm text-slate-500 mb-6 flex-1 line-clamp-3 break-words">{{ \Illuminate\Support\Str::limit(strip_tags((string) $programa->descricao), 150) }}</p>
                             <span class="flex items-center gap-1 text-sm font-bold text-blue-600 group-hover:text-blue-700 mt-auto">Saiba mais &rarr;</span>
                         </div>
                         @else
                         {{-- Layout com Ícone Vetorial (Fallback) --}}
-                        <div class="flex flex-col flex-1 p-6">
+                        <div class="flex flex-col flex-1 p-6 max-[360px]:p-5">
                             <div class="flex items-center justify-center w-14 h-14 mb-6 text-blue-600 bg-blue-50 rounded-xl group-hover:scale-110 transition-transform overflow-hidden shrink-0">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                 </svg>
                             </div>
-                            <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2">{{ $programa->titulo }}</h3>
-                            <p class="text-sm text-slate-500 mb-6 flex-1 line-clamp-3">{{ $programa->descricao }}</p>
+                            <h3 class="mb-2 text-xl font-bold text-slate-800 font-heading line-clamp-2 break-words" title="{{ $programa->titulo }}">{{ \Illuminate\Support\Str::limit($programa->titulo, 95) }}</h3>
+                            <p class="text-sm text-slate-500 mb-6 flex-1 line-clamp-3 break-words">{{ \Illuminate\Support\Str::limit(strip_tags((string) $programa->descricao), 150) }}</p>
                             <span class="flex items-center gap-1 text-sm font-bold text-blue-600 group-hover:text-blue-700 mt-auto">Saiba mais &rarr;</span>
                         </div>
                         @endif
@@ -407,13 +411,13 @@
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
                     @forelse($eventos as $evento)
                     <a href="{{ route('agenda.show', $evento->id) }}"
-                        class="flex flex-col overflow-hidden transition-all bg-white border shadow-sm rounded-2xl border-slate-100 hover:shadow-xl hover:-translate-y-1 group cursor-pointer {{ $loop->iteration <= 2 ? 'md:col-span-3' : 'md:col-span-2' }} {{ $evento->status === 'cancelado' ? 'opacity-75' : '' }}">
+                        class="flex flex-col w-full max-w-sm mx-auto md:max-w-none overflow-hidden transition-all bg-white border shadow-sm rounded-2xl border-slate-100 hover:shadow-xl hover:-translate-y-1 group cursor-pointer {{ $loop->iteration <= 2 ? 'md:col-span-3' : 'md:col-span-2' }} {{ $evento->status === 'cancelado' ? 'opacity-75' : '' }}">
 
                         <div class="relative">
                             @if($evento->imagem)
-                            <img src="{{ asset('storage/' . $evento->imagem) }}" alt="{{ $evento->titulo }}" class="object-cover w-full border-b border-slate-100 {{ $loop->iteration <= 2 ? 'h-52' : 'h-40' }}" loading="lazy" decoding="async">
+                            <img src="{{ asset('storage/' . $evento->imagem) }}" alt="{{ $evento->titulo }}" class="object-cover w-full h-36 border-b border-slate-100 md:h-32" loading="lazy" decoding="async">
                             @else
-                            <div class="flex items-center justify-center w-full bg-blue-50 border-b border-slate-100 {{ $loop->iteration <= 2 ? 'h-52' : 'h-40' }}">
+                            <div class="flex items-center justify-center w-full h-36 bg-blue-50 border-b border-slate-100 md:h-32">
                                 <svg class="w-12 h-12 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
@@ -456,7 +460,14 @@
                             </h3>
 
                             @if($evento->descricao)
-                            <p class="text-sm text-slate-500 line-clamp-2">{{ $evento->descricao }}</p>
+                            @php
+                                $descricaoEventoLimpa = trim(preg_replace(
+                                    '/\s+/u',
+                                    ' ',
+                                    strip_tags(str_ireplace(['</p>', '<br>', '<br/>', '<br />'], ' ', (string) $evento->descricao))
+                                ));
+                            @endphp
+                            <p class="mt-1.5 text-sm text-slate-500 line-clamp-2">{{ \Illuminate\Support\Str::limit($descricaoEventoLimpa, 120) }}</p>
                             @endif
 
                         </div>
@@ -473,7 +484,7 @@
                 </div>
 
                 <div class="flex justify-center mt-10 md:mt-12">
-                    <a href="{{ route('agenda.index') }}" class="inline-flex items-center gap-2 px-8 py-3.5 text-base font-bold text-white transition bg-transparent border-2 border-white/30 rounded-full hover:bg-white hover:text-blue-950 hover:border-white hover:-translate-y-1">
+                    <a href="{{ route('agenda.index') }}" class="inline-flex items-center gap-2 px-7 md:px-8 py-3 md:py-3.5 text-sm md:text-base font-bold text-white transition bg-transparent border-2 border-white/30 rounded-full hover:bg-white hover:text-blue-950 hover:border-white hover:-translate-y-1">
                         Ver calendário completo
                         <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>

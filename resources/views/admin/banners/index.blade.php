@@ -29,7 +29,7 @@
     <div class="overflow-hidden bg-white border shadow-sm rounded-xl border-slate-200">
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Imagens em Destaque</h2>
-            <form method="GET" action="{{ route('admin.banners.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.banners.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título ou subtítulo..." class="focus:ring-indigo-500 focus:border-indigo-500" />
                 <x-admin.filter-select
                     name="status"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
                         <th class="p-4 font-semibold w-48">Pré-visualização</th>
@@ -71,16 +71,16 @@
                                     </div>
                                 </a>
                             </td>
-                            <td class="p-4">
-                                <p class="font-bold text-slate-800 line-clamp-1">{{ $banner->titulo }}</p>
+                            <td class="p-4 max-w-0 overflow-hidden">
+                                <p class="font-bold text-slate-800 truncate" title="{{ $banner->titulo }}">{{ \Illuminate\Support\Str::limit($banner->titulo, 90) }}</p>
                                 @if($banner->subtitulo)
-                                    <p class="text-xs text-slate-500 mt-1 line-clamp-1">{{ $banner->subtitulo }}</p>
+                                    <p class="text-xs text-slate-500 mt-1 truncate">{{ \Illuminate\Support\Str::limit(strip_tags((string) $banner->subtitulo), 110) }}</p>
                                 @endif
                             </td>
-                            <td class="p-4 text-slate-500 font-medium">
+                            <td class="p-4 text-slate-500 font-medium overflow-hidden">
                                 @if($banner->link)
-                                    <a href="{{ $banner->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-indigo-600 transition truncate max-w-[200px]" title="{{ $banner->link }}">
-                                        {{ $banner->link }}
+                                    <a href="{{ $banner->link }}" target="_blank" class="inline-flex items-center gap-1 hover:text-indigo-600 transition w-full" title="{{ $banner->link }}">
+                                        <span class="truncate">{{ $banner->link }}</span>
                                         <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </a>
                                 @else

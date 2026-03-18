@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.secretarias.update', $secretaria->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.secretarias.update', $secretaria->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
         @method('PUT')
 

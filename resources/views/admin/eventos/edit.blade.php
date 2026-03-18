@@ -4,9 +4,10 @@
 @php
     $statusOptions = [
         'confirmado' => '✅ Confirmado / Agendado',
-        'adiado' => '⚠️ Adiado',
         'cancelado' => '❌ Cancelado',
     ];
+
+    $statusSelecionado = $evento->status === 'adiado' ? 'confirmado' : $evento->status;
 @endphp
 
 <div class="flex flex-col max-w-6xl gap-6 mx-auto">
@@ -36,7 +37,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.eventos.update', $evento->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.eventos.update', $evento->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
         @method('PUT')
 
@@ -91,9 +92,19 @@
                     name="status"
                     label="Status do Evento"
                     :options="$statusOptions"
-                    :value="$evento->status"
+                    :value="$statusSelecionado"
                     class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
                 />
+
+                @if($evento->status === 'adiado')
+                    <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2.5">
+                        Registro legado com status <strong>Adiado</strong>: ao salvar, o evento será normalizado para <strong>Confirmado</strong>.
+                    </p>
+                @endif
+
+                <p class="text-xs text-slate-500">
+                    Para adiar um evento, atualize as datas de início/fim e mantenha o status como <strong>Confirmado</strong>.
+                </p>
             </x-admin.panel>
 
             <x-admin.panel title="Mídia">

@@ -4,7 +4,6 @@
 @php
     $statusOptions = [
         'confirmado' => '✅ Confirmado / Agendado',
-        'adiado' => '⚠️ Adiado',
         'cancelado' => '❌ Cancelado',
     ];
 @endphp
@@ -36,7 +35,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.eventos.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.eventos.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
 
         {{-- Coluna Principal --}}
@@ -91,6 +90,10 @@
                     value="confirmado"
                     class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
                 />
+
+                <p class="text-xs text-slate-500">
+                    Para adiar um evento, edite as datas de início/fim e mantenha o status como <strong>Confirmado</strong>.
+                </p>
             </x-admin.panel>
 
             <x-admin.panel title="Mídia">

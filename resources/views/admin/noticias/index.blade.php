@@ -30,7 +30,7 @@
         
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Registros Cadastrados</h2>
-            <form method="GET" action="{{ route('admin.noticias.index') }}" class="flex items-center gap-2">
+            <form method="GET" action="{{ route('admin.noticias.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                 <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título ou conteúdo..." />
                 <x-admin.filter-select
                     name="categoria"
@@ -53,7 +53,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
                         <th class="p-4 font-semibold w-24">Capa</th>
@@ -75,8 +75,8 @@
                                     @endif
                                 </a>
                             </td>
-                            <td class="p-4">
-                                <p class="font-bold text-slate-800 line-clamp-2">{{ $noticia->titulo }}</p>
+                            <td class="p-4 max-w-0 overflow-hidden">
+                                <p class="font-bold text-slate-800 truncate" title="{{ $noticia->titulo }}">{{ \Illuminate\Support\Str::limit($noticia->titulo, 100) }}</p>
                             </td>
                             <td class="p-4">
                                 <x-admin.status-badge :label="$noticia->categoria" tone="blue" />

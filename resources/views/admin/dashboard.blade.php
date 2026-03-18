@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- ===== HEADER ===== --}}
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
         <div>
             <h1 class="text-3xl font-bold text-slate-800">Visão Geral</h1>
             <p class="mt-1 text-slate-500">Painel de inteligência e monitoramento do portal · {{ \Carbon\Carbon::now()->isoFormat('D [de] MMMM [de] YYYY') }}</p>

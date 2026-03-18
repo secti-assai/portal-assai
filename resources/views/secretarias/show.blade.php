@@ -3,10 +3,10 @@
 @section('title', $secretaria->nome . ' - Prefeitura de Assaí')
 
 @section('content')
-<main class="min-h-screen pb-20 bg-slate-50">
+<main class="min-h-screen pb-20 bg-slate-100/50">
 
     {{-- ===== HERO HEADER ===== --}}
-    <section class="bg-blue-900 py-12 md:py-16">
+    <section class="bg-blue-900 py-12 max-[360px]:py-10 md:py-16">
         <div class="container px-4 mx-auto max-w-6xl">
 
             {{-- Breadcrumb --}}
@@ -15,10 +15,10 @@
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 <a href="{{ route('secretarias.index') }}" class="hover:text-white transition">Secretarias</a>
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                <span class="font-medium text-white truncate max-w-xs">{{ $secretaria->nome }}</span>
+                <span class="font-medium text-white truncate max-w-[180px] sm:max-w-xs">{{ $secretaria->nome }}</span>
             </nav>
 
-            <h1 class="text-3xl md:text-4xl font-black text-white leading-tight">
+            <h1 class="text-3xl max-[360px]:text-2xl md:text-4xl font-black text-white leading-tight break-words">
                 {{ $secretaria->nome }}
             </h1>
             @if($secretaria->nome_secretario)
@@ -31,7 +31,7 @@
     </section>
 
     {{-- ===== GRID PRINCIPAL ===== --}}
-    <div class="container px-4 mx-auto max-w-6xl py-10">
+    <div class="container px-4 mx-auto max-w-6xl py-10 max-[360px]:py-7">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {{-- ============================================================ --}}
@@ -41,7 +41,7 @@
 
                 {{-- Bloco: Sobre a Secretaria --}}
                 @if($secretaria->descricao)
-                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-8">
+                <div class="bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 max-[360px]:p-5">
                     <h2 class="text-lg font-black text-slate-800 mb-5 flex items-center gap-2">
                         <span class="flex items-center justify-center w-8 h-8 bg-blue-50 rounded-lg text-blue-600 shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -55,7 +55,7 @@
                 @endif
 
                 {{-- Bloco: Serviços Vinculados --}}
-                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-8">
+                <div class="bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 max-[360px]:p-5">
                     <h2 class="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
                         <span class="flex items-center justify-center w-8 h-8 bg-blue-50 rounded-lg text-blue-600 shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -64,9 +64,9 @@
                     </h2>
 
                     @if($secretaria->servicos->isEmpty())
-                        <div class="flex flex-col items-center justify-center py-12 text-center bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl">
+                        <div class="flex flex-col items-center justify-center py-12 text-center bg-slate-100/50 border-2 border-dashed border-slate-200 rounded-xl">
                             <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-                            <p class="text-sm font-medium text-slate-400">Nenhum serviço vinculado a esta secretaria no momento.</p>
+                            <p class="text-sm font-medium text-slate-500">Nenhum serviço vinculado a esta secretaria no momento.</p>
                         </div>
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -104,7 +104,7 @@
                                     <span class="font-bold text-slate-800 text-sm leading-snug group-hover:text-blue-700 transition">
                                         {{ $servico->titulo }}
                                     </span>
-                                    <span class="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-slate-400 group-hover:text-blue-400 transition">
+                                    <span class="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-slate-500 group-hover:text-blue-600 transition">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                                         Acessar serviço
                                     </span>
@@ -120,16 +120,16 @@
             {{-- SIDEBAR (direita)                                              --}}
             {{-- ============================================================ --}}
             <aside class="lg:col-span-1">
-                <div class="sticky top-8 space-y-6">
+                <div class="lg:sticky lg:top-8 space-y-6">
 
                     {{-- Card do Secretário --}}
-                    <div class="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-visible pt-14 relative">
+                    <div class="bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-visible pt-14 relative">
                         {{-- Avatar flutuante --}}
                         <div class="absolute -top-10 left-1/2 -translate-x-1/2">
                             @if($secretaria->foto)
                                 <img src="{{ asset('storage/' . $secretaria->foto) }}"
                                      alt="{{ $secretaria->nome_secretario }}"
-                                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md">
+                                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" loading="lazy" decoding="async">
                             @else
                                 @php
                                     $partes = explode(' ', trim($secretaria->nome_secretario ?? ''));
@@ -144,7 +144,7 @@
                         </div>
 
                         <div class="px-6 pb-6 text-center">
-                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Secretário(a)</p>
+                            <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Secretário(a)</p>
                             <p class="text-lg font-black text-slate-800 leading-tight">
                                 {{ $secretaria->nome_secretario ?? '—' }}
                             </p>
@@ -155,7 +155,7 @@
                     </div>
 
                     {{-- Card de Contatos --}}
-                    <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
+                    <div class="bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 max-[360px]:p-5">
                         <h3 class="text-sm font-black text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                             <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             Contato e Localização
@@ -166,7 +166,7 @@
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                 <div>
-                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-0.5">Telefone</dt>
+                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-0.5">Telefone</dt>
                                     <dd>
                                         <a href="tel:{{ preg_replace('/\D/', '', $secretaria->telefone) }}"
                                            class="font-medium text-slate-700 hover:text-blue-600 transition">
@@ -181,7 +181,7 @@
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                 <div>
-                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-0.5">E-mail</dt>
+                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-0.5">E-mail</dt>
                                     <dd>
                                         <a href="mailto:{{ $secretaria->email }}"
                                            class="font-medium text-blue-600 hover:text-blue-800 transition break-all">
@@ -196,7 +196,7 @@
                             <div class="flex items-start gap-3">
                                 <svg class="w-4 h-4 mt-0.5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <div>
-                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-0.5">Endereço</dt>
+                                    <dt class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-0.5">Endereço</dt>
                                     <dd class="text-slate-700 leading-snug">{{ $secretaria->endereco }}</dd>
                                 </div>
                             </div>

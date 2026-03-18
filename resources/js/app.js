@@ -8,7 +8,6 @@ import './bootstrap';
  * Dependências externas (carregadas via CDN no layout):
  *   - Swiper JS   → https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
  *   - VLibras     → https://vlibras.gov.br/app/vlibras-plugin.js
- *   - Tailwind CSS (configuração inline no layout)
  * ==========================================================================
  */
 
@@ -38,8 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				clickable: true,
 			},
 			navigation: {
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',
+				nextEl: '.banner-swiper-next',
+				prevEl: '.banner-swiper-prev',
 			},
 		});
 	}
@@ -52,8 +51,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	   ========================================================================== */
 	var swiperAlertasEl = document.querySelector('.swiper-alertas');
 	if (swiperAlertasEl && typeof Swiper !== 'undefined') {
+		var isMobileAlerts = window.matchMedia('(max-width: 640px)').matches;
 		new Swiper('.swiper-alertas', {
-			direction: 'vertical',
+			direction: isMobileAlerts ? 'horizontal' : 'vertical',
+			slidesPerView: 1,
+			spaceBetween: 0,
 			loop: true,
 			autoplay: {
 				delay: 4000,
@@ -141,6 +143,40 @@ document.addEventListener('DOMContentLoaded', function () {
 		btnCidade.addEventListener('click', function () {
 			submenuCidade.classList.toggle('hidden');
 			iconCidade.classList.toggle('rotate-180');
+			var expanded = !submenuCidade.classList.contains('hidden');
+			btnCidade.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+		});
+	}
+
+	var mobileMenuButton = document.getElementById('mobile-menu-button');
+	var mobileMenu = document.getElementById('mobile-menu');
+	if (mobileMenuButton && mobileMenu) {
+		mobileMenuButton.addEventListener('click', function () {
+			mobileMenu.classList.toggle('hidden');
+			var expanded = !mobileMenu.classList.contains('hidden');
+			mobileMenuButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+			mobileMenuButton.setAttribute('aria-label', expanded ? 'Fechar menu principal' : 'Abrir menu principal');
+		});
+	}
+
+	var desktopCidadeButton = document.getElementById('btn-cidade-desktop');
+	var desktopCidadeMenu = document.getElementById('submenu-cidade-desktop');
+	if (desktopCidadeButton && desktopCidadeMenu) {
+		desktopCidadeButton.addEventListener('focus', function () {
+			desktopCidadeButton.setAttribute('aria-expanded', 'true');
+		});
+		desktopCidadeButton.addEventListener('blur', function () {
+			setTimeout(function () {
+				if (!desktopCidadeMenu.matches(':hover') && !desktopCidadeMenu.contains(document.activeElement)) {
+					desktopCidadeButton.setAttribute('aria-expanded', 'false');
+				}
+			}, 50);
+		});
+		desktopCidadeButton.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				desktopCidadeButton.setAttribute('aria-expanded', 'false');
+				desktopCidadeButton.blur();
+			}
 		});
 	}
 
@@ -352,8 +388,26 @@ function filterResults(type) {
 	buttons.forEach(function (btn) {
 		btn.classList.remove('active', 'bg-blue-900', 'text-white');
 		btn.classList.add('text-gray-500', 'hover:bg-gray-50');
+		btn.setAttribute('aria-selected', 'false');
 		if (btn.getAttribute('data-target') === type) {
 			btn.classList.add('active');
+			btn.classList.remove('text-gray-500', 'hover:bg-gray-50');
+			btn.classList.add('bg-blue-900', 'text-white');
+			btn.setAttribute('aria-selected', 'true');
 		}
 	});
+
+	sections.forEach(function (section) {
+		if (type === 'all') {
+			section.classList.remove('hidden');
+			return;
+		}
+		section.classList.toggle('hidden', section.id !== 'sec-' + type);
+	});
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+	if (document.querySelector('.tab-btn')) {
+		filterResults('all');
+	}
+});

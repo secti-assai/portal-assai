@@ -3,20 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Secretaria;
+use App\Support\Concerns\NormalizesSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SecretariaController extends Controller
 {
+    use NormalizesSearch;
+
     public function index(Request $request)
     {
+        $searchTerm = $request->string('search')->trim()->toString();
+        if ($searchTerm === '') {
+            $searchTerm = $request->string('q')->trim()->toString();
+        }
+
         $secretarias = Secretaria::query()
-            ->when($request->filled('q'), function ($query) use ($request) {
-                $search = $request->string('q')->trim()->toString();
+            ->when($searchTerm !== '', function ($query) use ($searchTerm) {
+                $search = $searchTerm;
 
                 $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('nome', 'like', "%{$search}%")
-                        ->orWhere('nome_secretario', 'like', "%{$search}%");
+                    $busca = '%' . $this->normalizeSearchTerm($search) . '%';
+
+                    $subQuery->whereRaw($this->normalizedColumnSql('nome') . ' LIKE ?', [$busca])
+                        ->orWhereRaw($this->normalizedColumnSql('nome_secretario') . ' LIKE ?', [$busca]);
                 });
             })
             ->orderBy('nome', 'asc')

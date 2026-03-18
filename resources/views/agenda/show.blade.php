@@ -20,13 +20,13 @@
 @endphp
 
 {{-- ===== HERO ===== --}}
-<section class="relative min-h-[340px] md:min-h-[420px] flex items-end overflow-hidden bg-blue-950">
+<section class="relative min-h-[340px] max-[360px]:min-h-[300px] md:min-h-[420px] flex items-end overflow-hidden bg-blue-950">
 
     {{-- Imagem de fundo --}}
     @if($evento->imagem)
         <img src="{{ asset('storage/' . $evento->imagem) }}"
              alt="{{ $evento->titulo }}"
-             class="absolute inset-0 object-cover w-full h-full {{ $isCancelado ? 'grayscale' : '' }} opacity-40">
+             class="absolute inset-0 object-cover w-full h-full {{ $isCancelado ? 'grayscale' : '' }} opacity-40" loading="eager" decoding="async" fetchpriority="high">
     @else
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900 to-blue-950"></div>
     @endif
@@ -34,7 +34,7 @@
     {{-- Overlay gradiente --}}
     <div class="absolute inset-0 bg-gradient-to-t from-blue-950 via-blue-950/60 to-transparent pointer-events-none"></div>
 
-    <div class="relative z-10 w-full container px-4 mx-auto max-w-5xl pb-10 pt-20">
+    <div class="relative z-10 w-full container px-4 mx-auto max-w-5xl pb-10 max-[360px]:pb-7 pt-20 max-[360px]:pt-16">
 
         {{-- Breadcrumb --}}
         <x-breadcrumb :items="[
@@ -61,7 +61,7 @@
         @endif
 
         {{-- Título --}}
-        <h1 class="text-3xl font-extrabold text-white md:text-5xl font-heading leading-tight max-w-3xl">
+        <h1 class="text-3xl max-[360px]:text-2xl font-extrabold text-white md:text-5xl font-heading leading-tight max-w-3xl break-words">
             {{ $evento->titulo }}
         </h1>
 
@@ -88,17 +88,17 @@
 </section>
 
 {{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<section class="py-10 bg-slate-50 md:py-14">
+<section class="py-10 max-[360px]:py-7 bg-slate-100/50 md:py-14">
     <div class="container px-4 mx-auto max-w-5xl">
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 
             {{-- ── Coluna Principal: Conteúdo ── --}}
             <main class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200 p-6 max-[360px]:p-5 md:p-8">
 
                     @if($evento->descricao)
-                        <div class="prose prose-blue max-w-none">
+                        <div class="prose prose-sm md:prose-base prose-blue max-w-none">
                             {!! $evento->descricao !!}
                         </div>
                     @else
@@ -124,7 +124,7 @@
                         <div class="flex flex-col gap-4">
                             @foreach($outrosEventos as $outro)
                                 <a href="{{ route('agenda.show', $outro->id) }}"
-                                   class="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                                   class="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                                     <div class="flex flex-col items-center justify-center w-12 h-12 bg-blue-900 rounded-lg text-white shrink-0 shadow-inner">
                                         <span class="text-[9px] font-bold tracking-wider uppercase opacity-70">{{ $outro->data_inicio->translatedFormat('M') }}</span>
                                         <span class="text-lg font-extrabold leading-none">{{ $outro->data_inicio->format('d') }}</span>
@@ -158,7 +158,7 @@
 
             {{-- ── Coluna Lateral: Metadados e Ações ── --}}
             <aside class="lg:col-span-1">
-                <div class="sticky top-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 space-y-5">
+                <div class="lg:sticky lg:top-8 bg-white border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl p-6 max-[360px]:p-5 space-y-5">
 
                     {{-- Data de início --}}
                     <div class="flex items-start gap-3">
@@ -217,7 +217,7 @@
 
                     {{-- Status --}}
                     <div class="flex items-start gap-3">
-                        <div class="flex items-center justify-center w-9 h-9 bg-slate-50 rounded-lg shrink-0 text-slate-400">
+                        <div class="flex items-center justify-center w-9 h-9 bg-slate-100/50 rounded-lg shrink-0 text-slate-500">
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
@@ -248,7 +248,7 @@
 
                         {{-- Adicionar ao Google Agenda --}}
                         <a href="{{ $gcUrl }}" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition shadow-sm shadow-blue-500/20">
+                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-xl">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
@@ -266,7 +266,7 @@
 
                         {{-- Voltar --}}
                         <a href="{{ route('agenda.index') }}"
-                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition">
+                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100/50 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('data_fim')->nullable();
             $table->string('local')->nullable();
             $table->string('imagem')->nullable();
-            $table->string('status')->default('confirmado'); // confirmado | adiado | cancelado
+            $table->string('status')->default('confirmado'); // confirmado | cancelado
             $table->timestamps();
             $table->softDeletes();
         });

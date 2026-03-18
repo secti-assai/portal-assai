@@ -7,6 +7,6 @@
         name="{{ $name }}"
         value="{{ $value }}"
         placeholder="{{ $placeholder }}"
-        {{ $attributes->merge(['class' => 'pl-9 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white w-64']) }}
+        {{ $attributes->merge(['class' => 'pl-9 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white w-full sm:w-64']) }}
     >
 </div>

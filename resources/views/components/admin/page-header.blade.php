@@ -1,9 +1,9 @@
 @props(['title', 'breadcrumbs' => []])
 
-<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
         @if(!empty($breadcrumbs))
-            <nav class="flex items-center gap-2 mb-2 text-sm text-slate-500">
+            <nav class="flex flex-wrap items-center gap-2 mb-2 text-sm text-slate-500">
                 @foreach($breadcrumbs as $index => $item)
                     @if($index > 0)
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -18,10 +18,12 @@
             </nav>
         @endif
 
-        <h1 class="text-3xl font-bold text-slate-800">{{ $title }}</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">{{ $title }}</h1>
     </div>
 
     @isset($action)
-        {{ $action }}
+        <div class="w-full sm:w-auto">
+            {{ $action }}
+        </div>
     @endisset
 </div>

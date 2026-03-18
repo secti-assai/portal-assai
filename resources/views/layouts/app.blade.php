@@ -14,20 +14,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                        heading: ['Montserrat', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -40,7 +26,7 @@
         })();
     </script>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased font-sans min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
 
     {{-- Skip links (acessibilidade por teclado) --}}
     <a href="#conteudo-principal" accesskey="1"
@@ -57,17 +43,6 @@
     @yield('content')
 
     @include('layouts.footer')
-        <!-- VLibras Widget -->
-        <div vw class="enabled">
-            <div vw-access-button class="vw-access-button"></div>
-            <div vw-plugin-wrapper class="vw-plugin-wrapper">
-                <div class="vw-plugin-top"></div>
-            </div>
-        </div>
-        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-        <script>
-            new window.VLibras.Widget('https://vlibras.gov.br/app');
-        </script>
 
     <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[100] hidden px-4 py-4 text-sm text-white bg-blue-950/95 backdrop-blur-md border-t border-blue-800 font-sans shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
         <div class="container flex flex-col items-center justify-between gap-4 mx-auto md:flex-row">
@@ -83,6 +58,21 @@
             </div>
         </div>
     </div>
+
+    {{-- Inicio do Widget VLibras --}}
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new window.VLibras.Widget('https://vlibras.gov.br/app');
+        });
+    </script>
+    {{-- Fim do Widget VLibras --}}
 
 </body>
 </html>
