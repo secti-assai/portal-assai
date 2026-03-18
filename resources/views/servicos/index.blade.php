@@ -21,43 +21,43 @@
     </div>
 
     <div class="container relative z-10 px-4 mx-auto max-w-7xl text-left">
-        <div class="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
-            <div>
+        <div class="flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
+            <div class="max-w-2xl">
                 <x-breadcrumb :items="[
                         ['name' => 'Início', 'url' => route('home')],
                         ['name' => 'Serviços'],
                     ]" dark />
 
                 <h1 class="text-3xl font-extrabold text-white md:text-5xl font-heading mb-4">Serviços ao Cidadão</h1>
-                <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light mb-8">Encontre rapidamente os serviços digitais e presenciais oferecidos pela Prefeitura de Assaí.</p>
-
-                {{-- Barra de busca --}}
-                <form method="GET" action="{{ route('servicos.index') }}" class="flex flex-col sm:flex-row gap-2 max-w-xl">
-                    @if(request('secretaria'))
-                    <input type="hidden" name="secretaria" value="{{ request('secretaria') }}">
-                    @endif
-                    <div class="relative flex-1">
-                        <span class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-white/40">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </span>
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            placeholder="Buscar serviço..."
-                            class="w-full py-3 pl-12 pr-4 text-sm text-white bg-white/10 border border-white/20 rounded-xl placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/15 transition">
-                    </div>
-                    <button type="submit"
-                        class="px-5 py-3 text-sm font-bold text-blue-900 bg-yellow-400 rounded-xl hover:bg-yellow-300 transition shrink-0 w-full sm:w-auto">
-                        Buscar
-                    </button>
-                </form>
+                <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light">Encontre rapidamente os serviços digitais e presenciais oferecidos pela Prefeitura de Assaí.</p>
             </div>
 
-            <div class="inline-flex w-fit self-start xl:self-auto flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-white border border-white/80 shadow-xl text-center">
-                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Powered by</span>
-                <img src="{{ asset('img/conecta.png') }}" alt="Conecta Assaí" class="w-36 md:w-32 h-auto" loading="lazy" decoding="async">
+            <div class="inline-flex w-fit self-start xl:self-auto flex-col items-center justify-center px-4 pt-2.5 pb-2 rounded-xl bg-white border border-white/80 shadow-xl">
+                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">Powered by</span>
+                <img src="{{ asset('img/conecta.png') }}" alt="Conecta Assaí" class="w-auto h-8 object-contain mt-1" loading="lazy" decoding="async">
             </div>
         </div>
+
+        {{-- Barra de busca --}}
+        <form method="GET" action="{{ route('servicos.index') }}" class="flex flex-col sm:flex-row gap-2 max-w-xl mt-8">
+            @if(request('secretaria'))
+            <input type="hidden" name="secretaria" value="{{ request('secretaria') }}">
+            @endif
+            <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-white/40">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}"
+                    placeholder="Buscar serviço..."
+                    class="w-full py-3 pl-12 pr-4 text-sm text-white bg-white/10 border border-white/20 rounded-xl placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/15 transition">
+            </div>
+            <button type="submit"
+                class="px-5 py-3 text-sm font-bold text-blue-900 bg-yellow-400 rounded-xl hover:bg-yellow-300 transition shrink-0 w-full sm:w-auto">
+                Buscar
+            </button>
+        </form>
     </div>
 </section>
 
