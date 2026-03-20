@@ -26,7 +26,6 @@
 
         <nav class="flex flex-col flex-1 gap-2 p-4 mt-2 overflow-y-auto">
 
-            @hasanyrole('admin|comunicacao|gestao')
             <a href="{{ route('admin.dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,13 +33,12 @@
                 </svg>
                 Dashboard
             </a>
-            @endhasanyrole
 
-            @hasanyrole('admin|comunicacao|gestao')
+            @if(auth()->user()->canAny(['gerir alertas', 'gerir banners', 'gerir servicos', 'gerir programas', 'gerir noticias', 'gerir eventos', 'gerir secretarias']))
             <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Conteúdo</div>
-            @endhasanyrole
+            @endif
 
-            @hasanyrole('admin')
+            @can('gerir alertas')
             <a href="{{ route('admin.alertas.index') }}"
                 class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.alertas.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,9 +46,9 @@
                 </svg>
                 Alertas da Home
             </a>
-            @endhasanyrole
+            @endcan
 
-            @hasanyrole('admin|comunicacao')
+            @can('gerir banners')
             <a href="{{ route('admin.banners.index') }}"
                 class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,17 +56,17 @@
                 </svg>
                 Banners da Home
             </a>
-            @endhasanyrole
+            @endcan
 
-            @hasanyrole('admin|gestao')
+            @can('gerir servicos')
             <a href="{{ route('admin.servicos.index') }}"
                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.servicos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 Serviços
             </a>
-            @endhasanyrole
+            @endcan
 
-            @hasanyrole('admin|gestao')
+            @can('gerir programas')
             <a href="{{ route('admin.programas.index') }}"
                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.programas.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,9 +74,9 @@
                 </svg>
                 Programas
             </a>
-            @endhasanyrole
+            @endcan
             
-            @hasanyrole('admin|comunicacao')
+            @can('gerir noticias')
             <a href="{{ route('admin.noticias.index') }}"
                 class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('noticias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,23 +84,23 @@
                 </svg>
                 Notícias
             </a>
-            @endhasanyrole
+            @endcan
 
-            @hasanyrole('admin|comunicacao')
+            @can('gerir eventos')
             <a href="{{ route('admin.eventos.index') }}"
                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.eventos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 Agenda de Eventos
             </a>
-            @endhasanyrole
+            @endcan
             
-            @hasanyrole('admin|gestao')
+            @can('gerir secretarias')
             <a href="{{ route('admin.secretarias.index') }}"
                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.secretarias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 Secretarias
             </a>
-            @endhasanyrole
+            @endcan
 
             @hasanyrole('admin')
             <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Governança</div>
@@ -140,20 +138,30 @@
                     </summary>
                     <nav class="absolute left-0 mt-2 z-30 w-56 p-2 bg-white border border-slate-200 rounded-xl shadow-xl">
                         <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Dashboard</a>
-                        @hasanyrole('admin|comunicacao')
+                        @can('gerir noticias')
                         <a href="{{ route('admin.noticias.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Notícias</a>
+                        @endcan
+                        @can('gerir banners')
                         <a href="{{ route('admin.banners.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Banners</a>
+                        @endcan
+                        @can('gerir eventos')
                         <a href="{{ route('admin.eventos.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Eventos</a>
-                        @endhasanyrole
-                        @hasanyrole('admin|gestao')
+                        @endcan
+                        @can('gerir programas')
                         <a href="{{ route('admin.programas.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Programas</a>
+                        @endcan
+                        @can('gerir secretarias')
                         <a href="{{ route('admin.secretarias.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Secretarias</a>
+                        @endcan
+                        @can('gerir servicos')
                         <a href="{{ route('admin.servicos.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Serviços</a>
-                        @endhasanyrole
-                        @hasanyrole('admin')
+                        @endcan
+                        @can('gerir alertas')
                         <a href="{{ route('admin.alertas.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Alertas</a>
+                        @endcan
+                        @role('admin')
                         <a href="{{ route('admin.activity-logs.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Auditoria</a>
-                        @endhasanyrole
+                        @endrole
                     </nav>
                 </details>
             </div>

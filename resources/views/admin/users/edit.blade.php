@@ -66,7 +66,7 @@
 
         {{-- Papéis (Roles) --}}
         <x-admin.panel title="Papéis (Roles)">
-            <p class="mb-4 text-sm text-slate-500">Define o nível de acesso do usuários no painel. Alterar papéis afeta imediatamente as permissões herdadas.</p>
+            <p class="mb-4 text-sm text-slate-500">Papéis são apenas nomes organizacionais. O acesso é definido somente em permissões diretas. O único papel fixo é <strong>admin</strong>.</p>
             @php
                 $selectedRoleNames = old('roles', $user->roles->pluck('name')->toArray());
             @endphp
@@ -75,14 +75,10 @@
                     @php
                         $tagColor = match($role->name) {
                             'admin'       => 'border-red-200 bg-red-50/50 hover:bg-red-50 has-[:checked]:bg-red-100 has-[:checked]:border-red-400',
-                            'comunicacao' => 'border-purple-200 bg-purple-50/50 hover:bg-purple-50 has-[:checked]:bg-purple-100 has-[:checked]:border-purple-400',
-                            'gestao'      => 'border-amber-200 bg-amber-50/50 hover:bg-amber-50 has-[:checked]:bg-amber-100 has-[:checked]:border-amber-400',
                             default       => 'border-slate-200 bg-slate-50 hover:bg-slate-100 has-[:checked]:bg-blue-100 has-[:checked]:border-blue-400',
                         };
                         $checkColor = match($role->name) {
                             'admin'       => 'text-red-600 focus:ring-red-500',
-                            'comunicacao' => 'text-purple-600 focus:ring-purple-500',
-                            'gestao'      => 'text-amber-600 focus:ring-amber-500',
                             default       => 'text-blue-600 focus:ring-blue-500',
                         };
                         $isChecked = in_array($role->name, $selectedRoleNames);
@@ -99,7 +95,19 @@
                     </label>
                 @endforeach
             </div>
+            <div class="mt-4">
+                <x-admin.input
+                    name="new_roles"
+                    label="Novos papéis (opcional)"
+                    :value="old('new_roles')"
+                    placeholder="Ex: fiscalizacao, ouvidoria, gabinete"
+                    helpText="Separe por vírgula para criar novos nomes de papel."
+                />
+            </div>
             @error('roles')
+                <p class="mt-2 text-xs italic text-red-500">{{ $message }}</p>
+            @enderror
+            @error('new_roles')
                 <p class="mt-2 text-xs italic text-red-500">{{ $message }}</p>
             @enderror
         </x-admin.panel>
@@ -109,29 +117,38 @@
             <p class="mb-4 text-sm text-slate-500">Permissões concedidas diretamente ao Usuários, independentes dos papéis atribuídos.</p>
             @php
                 $directPermissionNames = $user->getDirectPermissions()->pluck('name')->toArray();
-                $permissionsViaRolesNames = $user->getPermissionsViaRoles()->pluck('name')->toArray();
                 $selectedPermissionNames = old('permissions', $directPermissionNames);
             @endphp
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-                @foreach($permissions as $permission)
-                    @php
-                        $isChecked = in_array($permission->name, $selectedPermissionNames);
-                    @endphp
-                    <label class="flex items-center gap-3 p-3 transition border rounded-lg cursor-pointer border-slate-200 bg-slate-50 hover:bg-slate-100 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300">
-                        <input
-                            type="checkbox"
-                            name="permissions[]"
-                            value="{{ $permission->name }}"
-                            {{ $isChecked ? 'checked' : '' }}
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        >
-                        <div class="min-w-0">
-                            <span class="block text-sm font-medium text-slate-700">{{ $permission->name }}</span>
-                            @if(in_array($permission->name, $permissionsViaRolesNames))
-                                <span class="block text-[10px] text-blue-500 font-medium">Herdada via papel</span>
-                            @endif
-                        </div>
-                    </label>
+                @php
+                    $permissionLabels = [
+                        'gerir noticias' => 'Gerenciar Notícias',
+                        'gerir eventos' => 'Gerenciar Eventos',
+                        'gerir banners' => 'Gerenciar Banners',
+                        'gerir alertas' => 'Gerenciar Alertas',
+                        'gerir programas' => 'Gerenciar Programas',
+                        'gerir servicos' => 'Gerenciar Serviços',
+                        'gerir secretarias' => 'Gerenciar Secretarias',
+                        'gerir usuarios' => 'Gerenciar Usuários',
+                    ];
+                @endphp
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                    @foreach($permissions as $permission)
+                        @php
+                            $isChecked = in_array($permission->name, $selectedPermissionNames);
+                            $label = $permissionLabels[$permission->name] ?? ucfirst($permission->name);
+                        @endphp
+                        <label class="flex items-center gap-3 p-3 transition border rounded-lg cursor-pointer border-slate-200 bg-slate-50 hover:bg-slate-100 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300">
+                            <input
+                                type="checkbox"
+                                name="permissions[]"
+                                value="{{ $permission->name }}"
+                                {{ $isChecked ? 'checked' : '' }}
+                                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            >
+                            <div class="min-w-0">
+                                <span class="block text-sm font-medium text-slate-700">{{ $label }}</span>
+                            </div>
+                        </label>
                 @endforeach
             </div>
             @error('permissions')

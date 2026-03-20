@@ -85,12 +85,7 @@
                                 <div class="flex flex-wrap gap-1">
                                     @forelse($usuario->roles as $role)
                                         @php
-                                            $tagColor = match($role->name) {
-                                                'admin'       => 'bg-red-100 text-red-700',
-                                                'comunicacao' => 'bg-purple-100 text-purple-700',
-                                                'gestao'      => 'bg-amber-100 text-amber-700',
-                                                default       => 'bg-slate-100 text-slate-700',
-                                            };
+                                            $tagColor = $role->name === 'admin' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700';
                                         @endphp
                                         <span class="inline-block px-2 py-0.5 text-xs font-bold rounded-full {{ $tagColor }}">
                                             {{ ucfirst($role->name) }}

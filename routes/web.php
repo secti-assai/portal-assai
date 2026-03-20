@@ -63,25 +63,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     // A rota principal do painel (Acessada via /admin)
     Route::get('/', [AdminController::class, 'dashboard'])
-        ->middleware('role:admin|comunicacao|gestao')
         ->name('admin.dashboard');
 
     Route::middleware('role:admin')->group(function () {
         Route::get('/auditoria', [ActivityLogController::class, 'index'])->name('admin.activity-logs.index');
         Route::get('/auditoria/exportar', [ActivityLogController::class, 'export'])->name('admin.activity-logs.export');
         Route::get('/auditoria/{activity}', [ActivityLogController::class, 'show'])->name('admin.activity-logs.show');
-
-        // Rotas de Alertas
-        Route::resource('alertas', AlertaController::class)->except(['show'])->names([
-            'index'   => 'admin.alertas.index',
-            'create'  => 'admin.alertas.create',
-            'store'   => 'admin.alertas.store',
-            'edit'    => 'admin.alertas.edit',
-            'update'  => 'admin.alertas.update',
-            'destroy' => 'admin.alertas.destroy',
-        ]);
-        Route::patch('alertas/{id}/toggle', [AlertaController::class, 'toggleAtivo'])->name('admin.alertas.toggle');
-        Route::patch('alertas/{alerta}/toggle-status', [App\Http\Controllers\AlertaController::class, 'toggleStatus'])->name('admin.alertas.toggle-status');
 
             // Módulo de Gestão de Utilizadores
             Route::resource('users', UserController::class)->except(['show'])->names([
@@ -94,7 +81,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             ]);
     });
 
-    Route::middleware(['role:admin|comunicacao', 'permission:gerir noticias'])->group(function () {
+    Route::middleware(['permission:gerir alertas'])->group(function () {
+        // Rotas de Alertas
+        Route::resource('alertas', AlertaController::class)->except(['show'])->names([
+            'index'   => 'admin.alertas.index',
+            'create'  => 'admin.alertas.create',
+            'store'   => 'admin.alertas.store',
+            'edit'    => 'admin.alertas.edit',
+            'update'  => 'admin.alertas.update',
+            'destroy' => 'admin.alertas.destroy',
+        ]);
+        Route::patch('alertas/{id}/toggle', [AlertaController::class, 'toggleAtivo'])->name('admin.alertas.toggle');
+        Route::patch('alertas/{alerta}/toggle-status', [App\Http\Controllers\AlertaController::class, 'toggleStatus'])->name('admin.alertas.toggle-status');
+    });
+
+    Route::middleware(['permission:gerir noticias'])->group(function () {
         // Upload de imagem via CKEditor
         Route::post('/upload-imagem-editor', [NoticiaController::class, 'uploadImagemEditor'])->name('admin.upload.editor');
 
@@ -107,7 +108,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/noticias/{id}', [NoticiaController::class, 'destroy'])->name('admin.noticias.destroy');
     });
 
-    Route::middleware(['role:admin|comunicacao', 'permission:gerir banners'])->group(function () {
+    Route::middleware(['permission:gerir banners'])->group(function () {
         // Rotas de Banners
         Route::resource('banners', BannerController::class)->except(['show'])->names([
             'index'   => 'admin.banners.index',
@@ -121,7 +122,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::patch('banners/{id}/toggle', [BannerController::class, 'toggleAtivo'])->name('admin.banners.toggle');
     });
 
-    Route::middleware(['role:admin|comunicacao', 'permission:gerir eventos'])->group(function () {
+    Route::middleware(['permission:gerir eventos'])->group(function () {
         // Módulo de Eventos/Agenda
         Route::resource('eventos', EventoController::class)->except(['show'])->names([
             'index'   => 'admin.eventos.index',
@@ -134,7 +135,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::patch('eventos/{id}/toggle', [EventoController::class, 'toggleAtivo'])->name('admin.eventos.toggle');
     });
 
-    Route::middleware(['role:admin|gestao', 'permission:gerir programas'])->group(function () {
+    Route::middleware(['permission:gerir programas'])->group(function () {
         // Módulo de Programas (Assaí em Ação)
         Route::resource('programas', ProgramaController::class)->except(['show'])->names([
             'index'   => 'admin.programas.index',
@@ -149,7 +150,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::patch('programas/{programa}/toggle-destaque', [ProgramaController::class, 'toggleDestaque'])->name('admin.programas.toggle-destaque');
     });
 
-    Route::middleware(['role:admin|gestao', 'permission:gerir secretarias'])->group(function () {
+    Route::middleware(['permission:gerir secretarias'])->group(function () {
         // Módulo de Secretarias
         Route::resource('secretarias', SecretariaController::class)->except(['show'])->names([
             'index'   => 'admin.secretarias.index',
@@ -161,7 +162,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ]);
     });
 
-    Route::middleware(['role:admin|gestao', 'permission:gerir servicos'])->group(function () {
+    Route::middleware(['permission:gerir servicos'])->group(function () {
         // Módulo de Serviços Rápidos
         Route::patch('servicos/{id}/toggle', [ServicoController::class, 'toggleAtivo'])->name('admin.servicos.toggle');
         Route::patch('servicos/{servico}/toggle-status', [ServicoController::class, 'toggleStatus'])->name('admin.servicos.toggle-status');

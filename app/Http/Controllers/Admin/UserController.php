@@ -9,6 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
@@ -48,7 +49,7 @@ class UserController extends Controller
 
     public function create(): View
     {
-        $roles       = Role::orderBy('name')->get();
+        $roles       = Role::query()->orderBy('name')->get();
         $permissions = Permission::orderBy('name')->get();
 
         return view('admin.users.create', compact('roles', 'permissions'));
@@ -62,7 +63,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->syncRoles($request->roles ?? []);
+        $user->syncRoles($this->resolveRoleNames($request));
         $user->syncPermissions($request->permissions ?? []);
 
         return redirect()->route('users.index')
@@ -71,7 +72,7 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        $roles       = Role::orderBy('name')->get();
+        $roles       = Role::query()->orderBy('name')->get();
         $permissions = Permission::orderBy('name')->get();
 
         return view('admin.users.edit', compact('user', 'roles', 'permissions'));
@@ -88,7 +89,7 @@ class UserController extends Controller
             $user->update(['password' => Hash::make($request->password)]);
         }
 
-        $user->syncRoles($request->roles ?? []);
+        $user->syncRoles($this->resolveRoleNames($request));
         $user->syncPermissions($request->permissions ?? []);
 
         return redirect()->route('users.index')
@@ -108,5 +109,46 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Usuário removido do sistema com sucesso.');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function resolveRoleNames(UserRequest $request): array
+    {
+        $selectedRoles = collect($request->input('roles', []))
+            ->filter(static fn ($role): bool => is_string($role) && trim($role) !== '')
+            ->map(static fn (string $role): string => trim($role));
+
+        $newRoles = $this->parseNewRoles((string) $request->input('new_roles', ''));
+
+        $roleNames = $selectedRoles
+            ->merge($newRoles)
+            ->map(static function (string $role): string {
+                return mb_strtolower($role) === 'admin' ? 'admin' : $role;
+            })
+            ->unique()
+            ->values();
+
+        $rolesToCreate = $roleNames->filter(static fn (string $role): bool => $role !== 'admin');
+
+        $rolesToCreate->each(static function (string $role): void {
+            Role::firstOrCreate(['name' => $role]);
+        });
+
+        Role::firstOrCreate(['name' => 'admin']);
+
+        return $roleNames->all();
+    }
+
+    /**
+     * @return Collection<int, string>
+     */
+    private function parseNewRoles(string $newRoles): Collection
+    {
+        return collect(explode(',', $newRoles))
+            ->map(static fn (string $role): string => trim($role))
+            ->filter(static fn (string $role): bool => $role !== '')
+            ->values();
     }
 }

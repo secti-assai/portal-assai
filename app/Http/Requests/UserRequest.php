@@ -33,7 +33,8 @@ class UserRequest extends FormRequest
                 Password::min(8),
             ],
             'roles' => ['nullable', 'array'],
-            'roles.*' => ['string', Rule::exists('roles', 'name')],
+            'roles.*' => ['string', 'max:100'],
+            'new_roles' => ['nullable', 'string', 'max:500'],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::exists('permissions', 'name')],
         ];
@@ -44,6 +45,9 @@ class UserRequest extends FormRequest
         return [
             'name' => 'nome',
             'email' => 'e-mail',
+            'roles' => 'papéis',
+            'new_roles' => 'novos papéis',
+            'permissions' => 'permissões diretas',
         ];
     }
 }

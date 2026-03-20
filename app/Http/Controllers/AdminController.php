@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alerta;
+use App\Models\Banner;
 use App\Models\Evento;
 use App\Models\Noticia;
+use App\Models\Programa;
 use App\Models\Servico;
 use Illuminate\Http\Request;
 
@@ -29,6 +31,11 @@ class AdminController extends Controller
             $proximosEventos = Evento::latest()->take(5)->get();
         }
 
+        $ultimosProgramas = Programa::orderByDesc('created_at')->take(5)->get();
+
+        $alertasAtivos = Alerta::where('ativo', true)->orderByDesc('created_at')->take(5)->get();
+        $bannersAtivos = Banner::where('ativo', true)->orderByDesc('created_at')->take(5)->get();
+
         return view('admin.dashboard', compact(
             'totalNoticias',
             'totalEventosAtivos',
@@ -36,7 +43,10 @@ class AdminController extends Controller
             'totalAlertas',
             'topServicos',
             'ultimasNoticias',
-            'proximosEventos'
+            'proximosEventos',
+            'ultimosProgramas',
+            'alertasAtivos',
+            'bannersAtivos'
         ));
     }
 }
