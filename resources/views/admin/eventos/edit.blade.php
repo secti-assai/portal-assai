@@ -6,8 +6,6 @@
         'confirmado' => '✅ Confirmado / Agendado',
         'cancelado' => '❌ Cancelado',
     ];
-
-    $statusSelecionado = $evento->status === 'adiado' ? 'confirmado' : $evento->status;
 @endphp
 
 <div class="flex flex-col max-w-6xl gap-6 mx-auto">
@@ -92,15 +90,9 @@
                     name="status"
                     label="Status do Evento"
                     :options="$statusOptions"
-                    :value="$statusSelecionado"
+                    :value="$evento->status"
                     class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
                 />
-
-                @if($evento->status === 'adiado')
-                    <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2.5">
-                        Registro legado com status <strong>Adiado</strong>: ao salvar, o evento será normalizado para <strong>Confirmado</strong>.
-                    </p>
-                @endif
 
                 <p class="text-xs text-slate-500">
                     Para adiar um evento, atualize as datas de início/fim e mantenha o status como <strong>Confirmado</strong>.

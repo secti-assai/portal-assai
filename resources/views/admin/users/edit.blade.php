@@ -48,7 +48,7 @@
                     type="email"
                     :required="true"
                     :value="old('email', $user->email)"
-                    placeholder="usuários@prefeitura.gov.br"
+                    placeholder="usuários@prefeitura.assai.pr.gov.br"
                 />
                 <x-admin.input
                     name="password"
@@ -121,12 +121,12 @@
             @endphp
                 @php
                     $permissionLabels = [
+                        'gerir alertas' => 'Gerenciar Alertas',
+                        'gerir banners' => 'Gerenciar Banners',
+                        'gerir servicos' => 'Gerenciar Serviços',
+                        'gerir programas' => 'Gerenciar Programas',
                         'gerir noticias' => 'Gerenciar Notícias',
                         'gerir eventos' => 'Gerenciar Eventos',
-                        'gerir banners' => 'Gerenciar Banners',
-                        'gerir alertas' => 'Gerenciar Alertas',
-                        'gerir programas' => 'Gerenciar Programas',
-                        'gerir servicos' => 'Gerenciar Serviços',
                         'gerir secretarias' => 'Gerenciar Secretarias',
                         'gerir usuarios' => 'Gerenciar Usuários',
                     ];

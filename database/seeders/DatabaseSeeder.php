@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             'data_publicacao' => now()->addDays(10),
         ]);
 
-        // Eventos (confirmado, adiado, cancelado + passado/futuro para agendado/realizado)
+        // Eventos (confirmado e cancelado + passado/futuro para agendado/realizado)
         Evento::factory(50)->create();
 
         Evento::factory()->create([
@@ -85,13 +85,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Evento::factory()->create([
-            'titulo' => 'Evento de teste adiado',
-            'status' => 'adiado',
-            'data_inicio' => now()->addDays(30),
-            'data_fim' => now()->addDays(31),
-        ]);
-
-        Evento::factory()->create([
             'titulo' => 'Evento de teste cancelado',
             'status' => 'cancelado',
             'data_inicio' => now()->addDays(40),
@@ -101,23 +94,5 @@ class DatabaseSeeder extends Seeder
         // Alertas para testar busca e status
         Alerta::factory(20)->create();
 
-        // Usuários extras com roles para filtro por papel
-        $comunicacao = User::firstOrCreate(
-            ['email' => 'comunicacao@assai.pr.gov.br'],
-            [
-                'name' => 'Usuário Comunicação',
-                'password' => Hash::make('password'),
-            ]
-        );
-        $comunicacao->assignRole('comunicacao');
-
-        $gestao = User::firstOrCreate(
-            ['email' => 'gestao@assai.pr.gov.br'],
-            [
-                'name' => 'Usuário Gestão',
-                'password' => Hash::make('password'),
-            ]
-        );
-        $gestao->assignRole('gestao');
     }
 }

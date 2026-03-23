@@ -200,64 +200,91 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
             {{-- Parque Ikeda --}}
-            <div class="group relative flex flex-col overflow-hidden bg-white border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl">
-                <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500"></div>
-                <div class="relative h-56 bg-slate-200 overflow-hidden">
-                    <img src="{{ asset('img/assai_2.jpg') }}" alt="Parque Ikeda — Assaí" class="object-cover w-full h-full transition duration-700 group-hover:scale-110" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-slate-800 bg-white/90 rounded-full shadow backdrop-blur-sm">🌿 Parque</span>
+            <article class="tour-card group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-900 shadow-xl">
+                <img src="{{ asset('img/assai_2.jpg') }}" alt="Parque Ikeda — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+
+                <div class="card-cover absolute bottom-0 left-0 right-0 p-6 transition-opacity duration-300">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300">🌿 Parque</span>
+                    <h3 class="mt-1 text-2xl font-extrabold text-white font-heading">Parque Ikeda</h3>
+                    <button type="button" onclick="toggleInteractiveCard(this)" class="mt-5 w-full rounded-xl border border-white/40 py-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white transition hover:border-emerald-500 hover:bg-emerald-500 hover:text-slate-900">
+                        Saiba Mais
+                    </button>
+                </div>
+
+                <div class="details-panel card-panel absolute inset-0 z-20 bg-white p-6 transition-transform duration-500 ease-in-out flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Roteiro Cultural</span>
+                            <button type="button" onclick="toggleInteractiveCard(this)" class="rounded-md border border-slate-200 px-2 py-1 text-xs transition hover:bg-slate-900 hover:text-white">—</button>
+                        </div>
+                        <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Parque Ikeda</h3>
+                        <p class="mt-5 text-sm leading-relaxed text-slate-600">Um oásis verde de <strong>27 mil m²</strong> no coração de Assaí. A pista de caminhada contorna um lago sereno e leva ao imponente <strong>portal Torii</strong>, ideal para passeios em família.</p>
+                        <ul class="mt-5 space-y-2">
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Trilha de Caminhada</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Portal Torii</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="p-6 md:p-8 flex flex-col flex-1 text-left">
-                    <h3 class="mb-3 text-xl font-extrabold text-slate-800 font-heading transition-colors duration-300 group-hover:text-emerald-600">Parque Ikeda</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed flex-1">Um oásis verde de <strong>27 mil m²</strong> no coração de Assaí. A pista de caminhada contorna um lago sereno e leva ao imponente <strong>portal Torii</strong> — símbolo budista da transição entre o mundo profano e o sagrado. O lugar perfeito para fins de tarde em família.</p>
-                    <div class="mt-5 pt-5 border-t border-slate-100 flex items-center gap-4 text-xs text-slate-400 font-semibold">
-                        <span>🚶 Trilha de Caminhada</span>
-                        <span>🏮 Portal Torii</span>
-                    </div>
-                </div>
-            </div>
+            </article>
 
             {{-- Shoshinji --}}
-            <div class="group relative flex flex-col overflow-hidden bg-white border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl">
-                <div class="absolute top-0 left-0 w-full h-1.5 bg-indigo-500"></div>
-                <div class="relative h-56 bg-slate-200 overflow-hidden">
-                    <img src="{{ asset('img/assai_3.jpg') }}" alt="Templo Budista Shoshinji — Assaí" class="object-cover w-full h-full transition duration-700 group-hover:scale-110" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-slate-800 bg-white/90 rounded-full shadow backdrop-blur-sm">⛩️ Templo</span>
+            <article class="tour-card group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-900 shadow-xl">
+                <img src="{{ asset('img/assai_3.jpg') }}" alt="Templo Budista Shoshinji — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+
+                <div class="card-cover absolute bottom-0 left-0 right-0 p-6 transition-opacity duration-300">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-300">⛩️ Templo</span>
+                    <h3 class="mt-1 text-2xl font-extrabold text-white font-heading">Templo Shoshinji</h3>
+                    <button type="button" onclick="toggleInteractiveCard(this)" class="mt-5 w-full rounded-xl border border-white/40 py-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white transition hover:border-indigo-500 hover:bg-indigo-500 hover:text-slate-900">
+                        Saiba Mais
+                    </button>
+                </div>
+
+                <div class="details-panel card-panel absolute inset-0 z-20 bg-white p-6 transition-transform duration-500 ease-in-out flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-600">Patrimônio Cultural</span>
+                            <button type="button" onclick="toggleInteractiveCard(this)" class="rounded-md border border-slate-200 px-2 py-1 text-xs transition hover:bg-slate-900 hover:text-white">—</button>
+                        </div>
+                        <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Templo Shoshinji</h3>
+                        <p class="mt-5 text-sm leading-relaxed text-slate-600">O <strong>templo budista em atividade mais antigo do Paraná</strong>, inaugurado em 1948 e construído em madeira pelos próprios fiéis, preserva arquitetura nipônica original e ambiente de contemplação.</p>
+                        <ul class="mt-5 space-y-2">
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Madeira original de 1948</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Espaço para Meditação</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="p-6 md:p-8 flex flex-col flex-1 text-left">
-                    <h3 class="mb-3 text-xl font-extrabold text-slate-800 font-heading transition-colors duration-300 group-hover:text-indigo-600">Templo Shoshinji</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed flex-1">O <strong>templo budista em atividade mais antigo do Paraná</strong>. Inaugurado em 1948 e erguido inteiramente em madeira pelos próprios fiéis, a sua arquitetura nipônica original emana uma paz profunda e singular. Entrar ali é ser transportado para o interior do Japão.</p>
-                    <div class="mt-5 pt-5 border-t border-slate-100 flex items-center gap-4 text-xs text-slate-400 font-semibold">
-                        <span>🪵 Madeira original de 1948</span>
-                        <span>🧘 Meditação</span>
-                    </div>
-                </div>
-            </div>
+            </article>
 
             {{-- Praça da Matriz --}}
-            <div class="group relative flex flex-col overflow-hidden bg-white border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl">
-                <div class="absolute top-0 left-0 w-full h-1.5 bg-yellow-400"></div>
-                <div class="relative h-56 bg-slate-200 overflow-hidden">
-                    <img src="{{ asset('img/igreja_matriz.jpg') }}" alt="Praça da Matriz — Assaí" class="object-cover w-full h-full transition duration-700 group-hover:scale-110" loading="lazy" decoding="async">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="absolute top-4 left-4">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-slate-800 bg-white/90 rounded-full shadow backdrop-blur-sm">🏛️ Praça</span>
+            <article class="tour-card group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-900 shadow-xl">
+                <img src="{{ asset('img/igreja_matriz.jpg') }}" alt="Praça da Matriz — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+
+                <div class="card-cover absolute bottom-0 left-0 right-0 p-6 transition-opacity duration-300">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-yellow-300">🏛️ Praça</span>
+                    <h3 class="mt-1 text-2xl font-extrabold text-white font-heading">Praça da Matriz</h3>
+                    <button type="button" onclick="toggleInteractiveCard(this)" class="mt-5 w-full rounded-xl border border-white/40 py-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white transition hover:border-yellow-500 hover:bg-yellow-500 hover:text-slate-900">
+                        Saiba Mais
+                    </button>
+                </div>
+
+                <div class="details-panel card-panel absolute inset-0 z-20 bg-white p-6 transition-transform duration-500 ease-in-out flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-yellow-600">Centro Histórico</span>
+                            <button type="button" onclick="toggleInteractiveCard(this)" class="rounded-md border border-slate-200 px-2 py-1 text-xs transition hover:bg-slate-900 hover:text-white">—</button>
+                        </div>
+                        <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Praça da Matriz</h3>
+                        <p class="mt-5 text-sm leading-relaxed text-slate-600">O coração de Assaí. A <strong>Igreja Matriz São José</strong> domina a praça central, onde toda quarta-feira acontece a tradicional <strong>Feira Teia da Cidadania</strong> com artesanato e produtos locais.</p>
+                        <ul class="mt-5 space-y-2">
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Igreja desde 1944</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Feira às Quartas</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="p-6 md:p-8 flex flex-col flex-1 text-left">
-                    <h3 class="mb-3 text-xl font-extrabold text-slate-800 font-heading transition-colors duration-300 group-hover:text-yellow-600">Praça da Matriz</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed flex-1">O coração pulsante de Assaí. A <strong>Igreja Matriz São José</strong> (paróquia desde 1944) domina uma praça central frondosa onde, toda quarta-feira, floresce a tradicional <strong>Feira Teia da Cidadania</strong> — um mercado vibrante de artesanato, hortifrutigranjeiros e sabores locais.</p>
-                    <div class="mt-5 pt-5 border-t border-slate-100 flex items-center gap-4 text-xs text-slate-400 font-semibold">
-                        <span>⛪ Igreja desde 1944</span>
-                        <span>🛒 Feira às Quartas</span>
-                    </div>
-                </div>
-            </div>
+            </article>
         </div>
     </div>
 </section>
@@ -336,5 +363,29 @@
         </div>
     </div>
 </section>
+
+<style>
+    .tour-card .card-panel {
+        transform: translateY(100%);
+    }
+
+    .tour-card.card-open .card-panel {
+        transform: translateY(0);
+    }
+
+    .tour-card.card-open .card-cover {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    function toggleInteractiveCard(button) {
+        const card = button.closest('.tour-card');
+        if (!card) return;
+
+        card.classList.toggle('card-open');
+    }
+</script>
 
 @endsection

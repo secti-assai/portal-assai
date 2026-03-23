@@ -1,4 +1,4 @@
-<header class="relative z-50 bg-white shadow-sm">
+<header id="site-header" class="relative z-50 bg-white shadow-sm">
     <div class="hidden px-4 py-2.5 text-sm text-white bg-blue-900 xl:block font-sans">
         <div class="container flex justify-end items-center gap-5 mx-auto">
             <div class="flex items-center gap-2 border-r border-blue-700 pr-4">
@@ -73,9 +73,9 @@
 
             <a href="{{ route('contato.index') }}" class="transition hover:text-blue-600">Contato</a>
 
-            <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="hidden xl:inline-flex xl:flex-shrink-0 items-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 font-sans shadow-sm whitespace-nowrap">
+            {{-- <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="hidden xl:inline-flex xl:flex-shrink-0 items-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 font-sans shadow-sm whitespace-nowrap">
                 Entrar com gov.assai
-            </a>
+            </a> --}}
         </nav>
 
         <button id="mobile-menu-button" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="Abrir menu principal" class="p-2 text-blue-900 transition rounded-lg xl:hidden hover:bg-blue-50 focus:outline-none">
@@ -127,15 +127,15 @@
                 <a href="https://e-gov.betha.com.br/e-nota/login.faces" target="_blank" rel="noopener noreferrer" class="px-3 py-2 text-xs font-medium text-slate-600 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors text-center">E-SIC</a>
             </div>
 
-            <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="w-full px-4 py-3 mt-4 font-bold text-center text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 block">
+            {{-- <a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="w-full px-4 py-3 mt-4 font-bold text-center text-blue-900 transition border-2 border-blue-900 rounded-lg hover:bg-yellow-500 hover:border-yellow-500 block">
                 Entrar com gov.assai
-            </a>
+            </a> --}}
         </nav>
     </div>
 </header>
 
 @if(isset($alertasAtivos) && $alertasAtivos->count() > 0)
-<div class="relative z-40 overflow-hidden bg-red-600 border-b border-red-700 shadow-md">
+<div id="site-alert-bar" class="relative z-40 overflow-hidden bg-red-600 border-b border-red-700 shadow-md">
     <div class="container mx-auto swiper swiper-alertas">
         <div class="swiper-wrapper">
 

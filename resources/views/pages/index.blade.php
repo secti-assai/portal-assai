@@ -3,7 +3,7 @@
 @section('content')
 <main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen bg-gray-50">
 
-    <section class="relative w-full bg-blue-900 h-[450px] sm:h-[400px] md:h-[480px]">
+    <section id="home-hero" class="relative w-full bg-blue-900">
 
         <div class="w-full h-full overflow-hidden swiper swiper-banners">
             <div class="swiper-wrapper">
@@ -23,7 +23,7 @@
                         @if($loop->first) fetchpriority="high" loading="eager" decoding="async" @else loading="lazy" decoding="async" @endif>
                     <div class="absolute inset-0 mix-blend-multiply bg-blue-900/70"></div>
 
-                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-28 sm:pb-36 md:pb-[180px]">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-64 sm:pb-52 md:pb-[240px]">
 
                         <h1 class="w-full max-w-4xl mb-2 text-xl max-[360px]:text-lg font-extrabold text-white break-words drop-shadow-lg sm:text-3xl md:text-5xl font-heading leading-tight">
                             {{ $banner->titulo }}
@@ -49,7 +49,7 @@
 
                     <div class="absolute inset-0 mix-blend-multiply bg-blue-900/70"></div>
 
-                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-20 md:pb-[100px]">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center z-10 pb-52 sm:pb-40 md:pb-[160px]">
                         <h1 class="mb-3 text-3xl font-extrabold text-white drop-shadow-md md:text-5xl font-heading leading-tight">
                             Bem-vindo ao Portal da<br>Prefeitura de Assaí
                         </h1>
@@ -70,7 +70,7 @@
             @endif
         </div>
 
-        <div class="absolute bottom-14 sm:bottom-8 md:bottom-[80px] left-0 right-0 z-40 flex flex-col items-center justify-center w-full px-4 md:px-4 pointer-events-none">
+        <div class="absolute bottom-36 sm:bottom-28 md:bottom-[120px] left-0 right-0 z-40 flex flex-col items-center justify-center w-full px-4 md:px-4 pointer-events-none">
 
             {{-- Wrapper com efeito scale ao focar --}}
             <div class="w-full max-w-3xl pointer-events-auto transition-all duration-300 focus-within:scale-[1.02]">
@@ -120,7 +120,7 @@
             </div>
 
             {{-- Chips de Sugestão --}}
-            <div id="ia-suggestions" class="hidden lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:gap-2.5 mt-3 pointer-events-auto">
+            <div id="ia-suggestions" class="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 sm:gap-x-3 sm:gap-y-2.5 mt-4 sm:mt-4 md:mt-5 pointer-events-auto max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4">
                 @forelse($sugestoesIA as $sugestao)
                 <button
                     type="button"
@@ -129,7 +129,7 @@
                     aria-label="Sugestão de busca: {{ $sugestao }}"
                     onclick="preencherBusca('{{ addslashes($sugestao) }}')"
                     onkeydown="if(event.key==='Enter'||event.key===' ')preencherBusca('{{ addslashes($sugestao) }}')"
-                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
                     <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -425,8 +425,6 @@
                             @endif
                             @if($evento->status === 'cancelado')
                             <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold text-white bg-red-600 rounded-full shadow">CANCELADO</span>
-                            @elseif($evento->status === 'adiado')
-                            <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold text-white bg-amber-500 rounded-full shadow">ADIADO</span>
                             @endif
                         </div>
 
@@ -528,18 +526,54 @@
         {{-- ═══════════════════════════════════════════════
              BARRA LATERAL (lg:col-span-3)
         ════════════════════════════════════════════════ --}}
-        <aside class="hidden lg:flex flex-col gap-8 lg:col-span-3 sticky top-6 h-fit font-sans">
-            <div class="p-6 text-center bg-white border border-gray-100 shadow-sm rounded-2xl">
-                <img src="{{ asset('img/conecta.png') }}" class="w-auto h-14 object-contain mx-auto mb-4" alt="Conecta Assaí" loading="lazy" decoding="async">
-                <h3 class="text-lg font-bold text-gray-800 font-heading">Serviços ao Cidadão e Inscrições Online</h3>
-                <a href="https://conecta.assai.pr.gov.br/" target="_blank" class="block w-full py-2 mt-4 font-bold text-center text-blue-600 transition border border-blue-600 rounded-lg hover:bg-yellow-500 hover:text-blue-900 hover:border-yellow-500 font-heading">Acessar Conecta Assaí</a>
-            </div>
+        <aside class="hidden lg:flex flex-col gap-6 lg:col-span-3 sticky top-6 h-fit font-sans">
+            <article class="sidebar-interactive-card group relative h-[198px] overflow-hidden rounded-2xl border border-gray-100 shadow-sm">
+                <div class="absolute inset-0 bg-slate-900"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
 
-            <div class="p-6 text-center shadow-sm bg-blue-50 border-blue-100 rounded-2xl">
-                <img src="{{ asset('img/gov.assai.png') }}" class="w-auto h-14 object-contain mx-auto mb-4" alt="Gov.Assaí" loading="lazy" decoding="async">
-                <h3 class="text-lg font-bold text-blue-900 font-heading">Sua identidade digital unificada em Assaí.</h3>
-                <a href="https://gov.assai.pr.gov.br/" target="_blank" class="block w-full py-2 mt-4 font-bold text-center text-white transition bg-blue-600 rounded-lg hover:bg-blue-700 font-heading">Acessar Gov.Assaí</a>
-            </div>
+                <div class="sidebar-cover absolute inset-0 z-10 flex flex-col justify-end p-4 transition-opacity duration-300">
+                    <img src="{{ asset('img/conecta.png') }}" class="w-auto h-9 object-contain mb-2" alt="Conecta Assaí" loading="lazy" decoding="async">
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-green-300">Hub de Serviços</span>
+                    <h3 class="mt-1 text-lg font-extrabold text-white font-heading leading-tight">Conecta Assaí</h3>
+                    <button type="button" onclick="toggleSidebarCard(this)" class="mt-3 w-full rounded-lg border border-white/35 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:border-yellow-500 hover:bg-yellow-500 hover:text-blue-900">Saiba Mais</button>
+                </div>
+
+                <div class="sidebar-details-panel absolute inset-0 z-20 bg-white p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-green-600">Ecossistema Digital</span>
+                            <button type="button" onclick="toggleSidebarCard(this)" class="rounded-md border border-slate-200 px-2 py-1 text-xs transition hover:bg-slate-900 hover:text-white">—</button>
+                        </div>
+                        <h3 class="mt-3 text-lg font-extrabold text-slate-900 font-heading">Conecta Assaí</h3>
+                        <p class="mt-2 text-xs leading-relaxed text-slate-600">Portal central de serviços e inscrições online da prefeitura em um só lugar.</p>
+                    </div>
+                    <a href="https://conecta.assai.pr.gov.br/" target="_blank" class="text-[10px] font-black uppercase tracking-[0.18em] border-b-2 border-green-600 pb-1 self-start text-green-700 hover:text-blue-700 hover:border-blue-700 transition-all">Acessar Plataforma</a>
+                </div>
+            </article>
+
+            <article class="sidebar-interactive-card group relative h-[198px] overflow-hidden rounded-2xl border border-blue-100 shadow-sm">
+                <div class="absolute inset-0 bg-blue-900"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-950/95 via-blue-900/60 to-blue-700/20"></div>
+
+                <div class="sidebar-cover absolute inset-0 z-10 flex flex-col justify-end p-4 transition-opacity duration-300">
+                    <img src="{{ asset('img/gov.assai.png') }}" class="w-auto h-12 object-contain mb-2" alt="Gov.Assaí" loading="lazy" decoding="async">
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-blue-200">Cidade Digital</span>
+                    <h3 class="mt-1 text-lg font-extrabold text-white font-heading leading-tight">gov.assaí</h3>
+                    <button type="button" onclick="toggleSidebarCard(this)" class="mt-3 w-full rounded-lg border border-white/35 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:border-blue-300 hover:bg-blue-300 hover:text-blue-900">Saiba Mais</button>
+                </div>
+
+                <div class="sidebar-details-panel absolute inset-0 z-20 bg-white p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-blue-600">Identidade Única</span>
+                            <button type="button" onclick="toggleSidebarCard(this)" class="rounded-md border border-slate-200 px-2 py-1 text-xs transition hover:bg-slate-900 hover:text-white">—</button>
+                        </div>
+                        <h3 class="mt-3 text-lg font-extrabold text-slate-900 font-heading">Gov.Assaí</h3>
+                        <p class="mt-2 text-xs leading-relaxed text-slate-600">Acesse sua identidade municipal com login único e acompanhamento online.</p>
+                    </div>
+                    <a href="https://gov.assai.pr.gov.br/" target="_blank" class="text-[10px] font-black uppercase tracking-[0.18em] border-b-2 border-blue-600 pb-1 self-start text-blue-700 hover:text-green-700 hover:border-green-700 transition-all">Acessar Plataforma</a>
+                </div>
+            </article>
 
             <div class="p-6 bg-gray-100 rounded-3xl font-sans">
                 <h3 class="mb-4 text-base font-bold text-gray-800 uppercase font-heading">Participação & Transparência</h3>
@@ -557,5 +591,74 @@
     {{-- /.container --}}
 
 </main>
+
+<style>
+    #home-hero {
+        min-height: 560px;
+    }
+
+    .sidebar-details-panel {
+        transform: translateY(100%);
+        transition: transform .45s ease-in-out;
+    }
+
+    .sidebar-interactive-card.sidebar-card-open .sidebar-details-panel {
+        transform: translateY(0);
+    }
+
+    .sidebar-interactive-card.sidebar-card-open .sidebar-cover {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    function updateHomeHeroHeight() {
+        const hero = document.getElementById('home-hero');
+
+        if (!hero) {
+            return;
+        }
+
+        const header = document.getElementById('site-header');
+        const alertBar = document.getElementById('site-alert-bar');
+
+        const headerHeight = header ? header.offsetHeight : 0;
+        const alertHeight = alertBar ? alertBar.offsetHeight : 0;
+        const topOffset = headerHeight + alertHeight;
+
+        hero.style.height = `calc(100dvh - ${topOffset}px)`;
+        hero.style.minHeight = `calc(100svh - ${topOffset}px)`;
+    }
+
+    function toggleSidebarCard(button) {
+        const card = button.closest('.sidebar-interactive-card');
+
+        if (!card) {
+            return;
+        }
+
+        card.classList.toggle('sidebar-card-open');
+    }
+
+    window.addEventListener('load', updateHomeHeroHeight);
+    window.addEventListener('resize', updateHomeHeroHeight);
+    window.addEventListener('orientationchange', updateHomeHeroHeight);
+
+    const headerElement = document.getElementById('site-header');
+    const alertElement = document.getElementById('site-alert-bar');
+
+    if (window.ResizeObserver) {
+        const heroObserver = new ResizeObserver(updateHomeHeroHeight);
+
+        if (headerElement) {
+            heroObserver.observe(headerElement);
+        }
+
+        if (alertElement) {
+            heroObserver.observe(alertElement);
+        }
+    }
+</script>
 
 @endsection

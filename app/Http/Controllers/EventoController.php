@@ -45,7 +45,7 @@ class EventoController extends Controller
                         ->whereMonth('data_inicio', (int) $mes);
                 }
             })
-            ->orderBy('data_inicio', 'asc')
+            ->ordenarPorDataMaisProxima()
             ->paginate(10)
             ->withQueryString();
 

@@ -51,19 +51,11 @@ class PortalController extends Controller
         });
 
         // 3. Busca os Próximos 5 Eventos públicos (exceto cancelados; fechamento automático por data)
-        $eventos = Cache::remember('home_eventos_v2', 3600, function () {
-            return Evento::where('status', '!=', 'cancelado')
-            ->where(function ($query) {
-                $query->whereNotNull('data_fim')
-                      ->where('data_fim', '>=', now())
-                      ->orWhere(function ($q) {
-                          $q->whereNull('data_fim')
-                            ->whereDate('data_inicio', '>=', today());
-                      });
-            })
-            ->orderBy('data_inicio', 'asc')
-            ->take(5)
-            ->get();
+        $eventos = Cache::remember('home_eventos_v4', 3600, function () {
+            return Evento::futurosPublicos()
+            ->ordenarPorDataMaisProxima()
+                ->take(5)
+                ->get();
         });
 
         // 4. Busca os Programas (Assaí em Ação) — destaques primeiro, complementa com os mais recentes
@@ -168,16 +160,9 @@ class PortalController extends Controller
         $primeiroDiaSemana = $dataBase->dayOfWeek; // 0=Dom … 6=Sáb
 
         // 3. Dias com evento no mês visualizado (highlights do calendário)
-        $diasComEvento = Evento::whereYear('data_inicio', $dataBase->year)
+        $diasComEvento = Evento::futurosPublicos()
+            ->whereYear('data_inicio', $dataBase->year)
             ->whereMonth('data_inicio', $dataBase->month)
-            ->where(function ($query) {
-                $query->whereNotNull('data_fim')
-                      ->where('data_fim', '>=', now())
-                      ->orWhere(function ($q) {
-                          $q->whereNull('data_fim')
-                            ->whereDate('data_inicio', '>=', today());
-                      });
-            })
             ->get()
             ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
             ->unique()
@@ -196,15 +181,8 @@ class PortalController extends Controller
         }
 
         // 5. Feed principal: todos os eventos futuros paginados
-        $eventos = Evento::where(function ($query) {
-                $query->whereNotNull('data_fim')
-                      ->where('data_fim', '>=', now())
-                      ->orWhere(function ($q) {
-                          $q->whereNull('data_fim')
-                            ->whereDate('data_inicio', '>=', today());
-                      });
-            })
-            ->orderBy('data_inicio', 'asc')
+        $eventos = Evento::publico()
+            ->ordenarPorDataMaisProxima()
             ->paginate(12);
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
@@ -216,15 +194,8 @@ class PortalController extends Controller
 
         // Outros eventos futuros para sugestão no sidebar (exclui o atual)
         $outrosEventos = Evento::where('id', '!=', $id)
-            ->where(function ($q) {
-                $q->whereNotNull('data_fim')
-                  ->where('data_fim', '>=', now())
-                  ->orWhere(function ($q2) {
-                      $q2->whereNull('data_fim')
-                         ->whereDate('data_inicio', '>=', today());
-                  });
-            })
-            ->orderBy('data_inicio', 'asc')
+            ->publico()
+            ->ordenarPorDataMaisProxima()
             ->take(3)
             ->get();
 
@@ -454,11 +425,10 @@ class PortalController extends Controller
                 ->take(9)
                 ->get();
 
-            $eventosQuery = Evento::where('status', '!=', 'cancelado');
+            $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
             $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
 
             $eventos = $eventosQuery
-                ->orderBy('data_inicio', 'asc')
                 ->take(8)
                 ->get();
 

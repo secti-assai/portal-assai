@@ -6,7 +6,6 @@
 
 @php
     $isCancelado = $evento->status === 'cancelado';
-    $isAdiado    = $evento->status === 'adiado';
 
     $gcDateStart = $evento->data_inicio->format('Ymd\THis');
     $gcDateEnd   = $evento->data_fim
@@ -50,13 +49,6 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                 </svg>
                 Evento Cancelado
-            </span>
-        @elseif($isAdiado)
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 mb-3 text-xs font-bold text-amber-100 uppercase bg-amber-500/80 border border-amber-400/40 rounded-full tracking-wide backdrop-blur-sm">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                Evento Adiado
             </span>
         @endif
 
@@ -137,12 +129,10 @@
                                     </div>
                                     @php
                                         $outroCfg = match($outro->status) {
-                                            'adiado'    => 'bg-amber-50 text-amber-700 border-amber-200',
                                             'cancelado' => 'bg-red-50 text-red-700 border-red-200',
                                             default     => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                         };
                                         $outroLabel = match($outro->status) {
-                                            'adiado'    => 'Adiado',
                                             'cancelado' => 'Cancelado',
                                             default     => 'Confirmado',
                                         };
@@ -226,12 +216,10 @@
                             <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</p>
                             @php
                                 $statusCfg = match($evento->status) {
-                                    'adiado'    => 'bg-amber-50 text-amber-700 border-amber-200',
                                     'cancelado' => 'bg-red-50 text-red-700 border-red-200',
                                     default     => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                 };
                                 $statusLabel = match($evento->status) {
-                                    'adiado'    => 'Adiado',
                                     'cancelado' => 'Cancelado',
                                     default     => 'Confirmado',
                                 };

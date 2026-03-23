@@ -64,7 +64,7 @@ class EventoFactory extends Factory
             'data_fim'    => $fim,
             'local'       => fake()->randomElement($locais),
             'imagem'      => null,
-            'status'      => fake()->randomElement(['confirmado', 'confirmado', 'confirmado', 'adiado', 'cancelado']),
+            'status'      => fake()->randomElement(['confirmado', 'confirmado', 'confirmado', 'confirmado', 'cancelado']),
         ];
     }
 }
