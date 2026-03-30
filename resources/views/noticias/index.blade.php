@@ -67,77 +67,38 @@
         </div>
 
         {{-- Grid de Notícias --}}
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
             @forelse($noticias as $noticia)
-
-                @if($loop->first)
-                    {{-- Manchete / Notícia Destaque --}}
-                    <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-md hover:-translate-y-1 group hover:shadow-xl md:col-span-2 lg:col-span-2">
-                        <a href="{{ route('noticias.show', $noticia->slug) }}" class="flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-gray-200 h-56 sm:h-64 md:h-80 shrink-0">
-                                <span class="absolute z-10 px-3 py-1 text-xs font-bold tracking-wider text-blue-900 uppercase bg-yellow-400 rounded-md shadow top-4 left-4">
-                                    {{ $noticia->categoria }}
-                                </span>
-                                <span class="absolute z-10 px-3 py-1 text-xs font-bold tracking-wider text-white uppercase bg-blue-700 rounded-md shadow top-4 right-4">
-                                    Destaque
-                                </span>
-                                @if($noticia->imagem_capa)
-                                    <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" alt="{{ $noticia->titulo }}" class="object-cover w-full h-full transition duration-700 ease-in-out group-hover:scale-105" loading="lazy" decoding="async">
-                                @else
-                                    <img src="{{ asset('img/Assaí.jpg') }}" alt="Prefeitura de Assaí" class="object-cover w-full h-full transition duration-700 ease-in-out opacity-80 group-hover:scale-105" loading="lazy" decoding="async">
-                                @endif
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                {{-- Card pequeno para cada notícia --}}
+                <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-md hover:-translate-y-1 group hover:shadow-xl">
+                    <a href="{{ route('noticias.show', $noticia->slug) }}" class="flex flex-col flex-1 h-full">
+                        <div class="relative overflow-hidden bg-gray-200 h-48 shrink-0">
+                            <span class="absolute z-10 px-2.5 py-1 text-xs font-bold tracking-wider text-blue-900 uppercase bg-yellow-400 rounded-md shadow top-3 left-3">
+                                {{ $noticia->categoria }}
+                            </span>
+                            @if($noticia->imagem_capa)
+                                <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" alt="{{ $noticia->titulo }}" class="object-cover w-full h-full transition duration-500 ease-in-out group-hover:scale-105" loading="lazy" decoding="async">
+                            @else
+                                <img src="{{ asset('img/Assaí.jpg') }}" alt="Prefeitura de Assaí" class="object-cover w-full h-full transition duration-500 ease-in-out opacity-80 group-hover:scale-105" loading="lazy" decoding="async">
+                            @endif
+                        </div>
+                        <div class="flex flex-col flex-1 p-5">
+                            <div class="mb-2 text-xs font-bold tracking-widest text-blue-500 uppercase">
+                                {{ \Carbon\Carbon::parse($noticia->data_publicacao)->translatedFormat('d \d\e F \d\e Y') }}
                             </div>
-                            <div class="flex flex-col flex-1 p-6">
-                                <div class="mb-3 text-xs font-bold tracking-widest text-blue-500 uppercase">
-                                    {{ \Carbon\Carbon::parse($noticia->data_publicacao)->translatedFormat('d \d\e F \d\e Y') }}
-                                </div>
-                                <h2 class="mb-3 text-2xl font-black leading-tight text-gray-900 transition duration-200 font-heading group-hover:text-blue-700 md:text-3xl">
-                                    {{ $noticia->titulo }}
-                                </h2>
-                                <p class="mt-auto text-sm leading-relaxed text-gray-600 line-clamp-3">
-                                    {{ $noticia->resumo ?? Str::limit(strip_tags($noticia->conteudo), 160) }}
-                                </p>
-                                <span class="inline-flex items-center gap-1 mt-4 text-sm font-bold text-blue-600 group-hover:text-blue-800 transition">
-                                    Ler matéria completa
-                                    <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                                </span>
-                            </div>
-                        </a>
-                    </article>
-                @else
-                    {{-- Cards normais --}}
-                    <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-100 cursor-pointer rounded-3xl shadow-md hover:-translate-y-1 group hover:shadow-xl">
-                        <a href="{{ route('noticias.show', $noticia->slug) }}" class="flex flex-col flex-1 h-full">
-                            <div class="relative overflow-hidden bg-gray-200 h-48 shrink-0">
-                                <span class="absolute z-10 px-2.5 py-1 text-xs font-bold tracking-wider text-blue-900 uppercase bg-yellow-400 rounded-md shadow top-3 left-3">
-                                    {{ $noticia->categoria }}
-                                </span>
-                                @if($noticia->imagem_capa)
-                                    <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" alt="{{ $noticia->titulo }}" class="object-cover w-full h-full transition duration-500 ease-in-out group-hover:scale-105" loading="lazy" decoding="async">
-                                @else
-                                    <img src="{{ asset('img/Assaí.jpg') }}" alt="Prefeitura de Assaí" class="object-cover w-full h-full transition duration-500 ease-in-out opacity-80 group-hover:scale-105" loading="lazy" decoding="async">
-                                @endif
-                            </div>
-                            <div class="flex flex-col flex-1 p-5">
-                                <div class="mb-2 text-xs font-bold tracking-widest text-blue-500 uppercase">
-                                    {{ \Carbon\Carbon::parse($noticia->data_publicacao)->translatedFormat('d \d\e F \d\e Y') }}
-                                </div>
-                                <h3 class="mb-2 text-base font-bold leading-snug text-gray-900 transition duration-200 font-heading group-hover:text-blue-700">
-                                    {{ $noticia->titulo }}
-                                </h3>
-                                <p class="mt-auto text-sm text-gray-600 line-clamp-2">
-                                    {{ $noticia->resumo ?? Str::limit(strip_tags($noticia->conteudo), 100) }}
-                                </p>
-                                <span class="inline-flex items-center gap-1 mt-4 text-xs font-bold text-blue-500 group-hover:text-blue-700 transition">
-                                    Ler mais
-                                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                                </span>
-                            </div>
-                        </a>
-                    </article>
-                @endif
-
+                            <h3 class="mb-2 text-base font-bold leading-snug text-gray-900 transition duration-200 font-heading group-hover:text-blue-700">
+                                {{ $noticia->titulo }}
+                            </h3>
+                            <p class="mt-auto text-sm text-gray-600 line-clamp-2">
+                                {{ $noticia->resumo ?? Str::limit(strip_tags($noticia->conteudo), 100) }}
+                            </p>
+                            <span class="inline-flex items-center gap-1 mt-4 text-xs font-bold text-blue-500 group-hover:text-blue-700 transition">
+                                Ler mais
+                                <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </span>
+                        </div>
+                    </a>
+                </article>
             @empty
                 <div class="flex flex-col items-center justify-center gap-4 p-12 text-center border-2 border-gray-200 border-dashed bg-white col-span-full rounded-3xl">
                     <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

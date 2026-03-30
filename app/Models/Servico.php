@@ -16,6 +16,7 @@ class Servico extends Model
     protected $fillable = [
         'secretaria_id',
         'titulo',
+        'descricao',
         'link',
         'icone',
         'ativo',

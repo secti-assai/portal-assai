@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	   Exibe o banner se o utilizador ainda não aceitou; persiste a aceitação
 	   ========================================================================== */
 	var cookieBanner = document.getElementById('cookie-banner');
-	var acceptBtn    = document.getElementById('accept-cookies');
+	var acceptBtn = document.getElementById('accept-cookies');
 	if (cookieBanner && acceptBtn) {
 		if (!localStorage.getItem('cookiesAceitos_Assai')) {
 			cookieBanner.classList.remove('hidden');
@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	   MENU MOBILE: ACORDEÃO "A CIDADE"
 	   Expande/colapsa o submenu no cabeçalho mobile
 	   ========================================================================== */
-	var btnCidade     = document.getElementById('btn-cidade-mobile');
+	var btnCidade = document.getElementById('btn-cidade-mobile');
 	var submenuCidade = document.getElementById('submenu-cidade-mobile');
-	var iconCidade    = document.getElementById('icon-cidade-mobile');
+	var iconCidade = document.getElementById('icon-cidade-mobile');
 	if (btnCidade && submenuCidade && iconCidade) {
 		btnCidade.addEventListener('click', function () {
 			submenuCidade.classList.toggle('hidden');
@@ -185,10 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	   BUSCA DA PÁGINA INICIAL: BOTÃO LIMPAR (CLEAR)
 	   Exibe/oculta o botão "×" conforme o utilizador digita na barra de busca
 	   ========================================================================== */
-	var inputBusca  = document.getElementById('input-busca');
-	var btnLimpar   = document.getElementById('btn-limpar-busca');
-	var dropdownAC  = document.getElementById('autocomplete-results');
-	var chipsIA     = document.getElementById('ia-suggestions');
+	var inputBusca = document.getElementById('input-busca');
+	var btnLimpar = document.getElementById('btn-limpar-busca');
+	var dropdownAC = document.getElementById('autocomplete-results');
+	var chipsIA = document.getElementById('ia-suggestions');
 
 	if (!inputBusca || !btnLimpar) return;
 
@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	   BUSCA DA PÁGINA INICIAL: AUTOCOMPLETE
 	   ========================================================================== */
 	var TYPE_COLORS = {
-		'Notícia':    'bg-blue-50 text-blue-700',
-		'Serviço':    'bg-emerald-50 text-emerald-700',
-		'Programa':   'bg-purple-50 text-purple-700',
+		'Notícia': 'bg-blue-50 text-blue-700',
+		'Serviço': 'bg-emerald-50 text-emerald-700',
+		'Programa': 'bg-purple-50 text-purple-700',
 		'Secretaria': 'bg-slate-100 text-slate-600',
 	};
 
@@ -314,8 +314,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 window.preencherBusca = function (termo) {
-	var input    = document.getElementById('input-busca');
-	var form     = document.getElementById('form-busca');
+	var input = document.getElementById('input-busca');
+	var form = document.getElementById('form-busca');
 	var btnLimpar = document.getElementById('btn-limpar-busca');
 	if (input && form) {
 		input.value = termo;
@@ -333,7 +333,7 @@ function carregarCalendario(url) {
 	var container = document.getElementById('calendario-container');
 	if (!container) return;
 
-	container.style.opacity      = '0.5';
+	container.style.opacity = '0.5';
 	container.style.pointerEvents = 'none';
 
 	fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
@@ -348,7 +348,7 @@ function carregarCalendario(url) {
 			console.error(err);
 		})
 		.finally(function () {
-			container.style.opacity       = '1';
+			container.style.opacity = '1';
 			container.style.pointerEvents = '';
 		});
 }
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function filterResults(type) {
 	var sections = document.querySelectorAll('.result-section');
-	var buttons  = document.querySelectorAll('.tab-btn');
+	var buttons = document.querySelectorAll('.tab-btn');
 
 	buttons.forEach(function (btn) {
 		btn.classList.remove('active', 'bg-blue-900', 'text-white');
@@ -409,5 +409,98 @@ function filterResults(type) {
 document.addEventListener('DOMContentLoaded', function () {
 	if (document.querySelector('.tab-btn')) {
 		filterResults('all');
+	}
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+	const header = document.getElementById('site-header');
+	const topBar = document.getElementById('top-bar');
+	const navInner = document.querySelector('.nav-inner');
+	const logoBranca = document.getElementById('logo-branca');
+	const logoPreta = document.getElementById('logo-preta');
+	const navLinks = document.querySelectorAll('.nav-link');
+	const navSpecial = document.querySelector('.nav-link-special');
+	const mobileBtn = document.getElementById('hamburger-icon');
+
+	if (!header) return;
+
+	const isHome = document.getElementById('home-hero') !== null;
+
+	function updateHeaderState() {
+		if (!isHome) {
+			// Em páginas internas: Fundo branco, MAS NÃO esconde a Top Bar
+			applySolidState(false);
+			return;
+		}
+
+		if (window.scrollY > 50) {
+			applySolidState(true);
+		} else {
+			applyTransparentState();
+		}
+	}
+
+	function applySolidState(hideTopBar = true) {
+		header.classList.remove('bg-transparent', 'text-white');
+		header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'text-slate-700');
+
+		if (topBar) {
+			if (hideTopBar) {
+				topBar.classList.add('h-0', 'opacity-0', 'overflow-hidden');
+				topBar.classList.remove('py-2');
+			} else {
+				topBar.classList.remove('h-0', 'opacity-0', 'overflow-hidden');
+				topBar.classList.add('py-2');
+			}
+		}
+
+		if (navInner) navInner.classList.replace('py-4', 'py-2');
+
+		if (logoBranca) logoBranca.classList.add('opacity-0');
+		if (logoPreta) logoPreta.classList.remove('opacity-0');
+
+		navLinks.forEach(link => link.classList.replace('hover:text-yellow-400', 'hover:text-blue-600'));
+		if (mobileBtn) mobileBtn.classList.replace('text-white', 'text-blue-900');
+
+		if (navSpecial) {
+			navSpecial.classList.replace('text-green-300', 'text-emerald-600');
+			navSpecial.classList.replace('border-white/20', 'border-emerald-200');
+			navSpecial.classList.replace('bg-white/10', 'bg-emerald-50');
+		}
+	}
+
+	function applyTransparentState() {
+		header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'text-slate-700');
+		header.classList.add('bg-transparent', 'text-white');
+
+		if (topBar) {
+			topBar.classList.remove('h-0', 'opacity-0', 'overflow-hidden');
+			topBar.classList.add('py-2');
+		}
+
+		if (navInner) navInner.classList.replace('py-2', 'py-4');
+
+		if (logoBranca) logoBranca.classList.remove('opacity-0');
+		if (logoPreta) logoPreta.classList.add('opacity-0');
+
+		navLinks.forEach(link => link.classList.replace('hover:text-blue-600', 'hover:text-yellow-400'));
+		if (mobileBtn) mobileBtn.classList.replace('text-blue-900', 'text-white');
+
+		if (navSpecial) {
+			navSpecial.classList.replace('text-emerald-600', 'text-green-300');
+			navSpecial.classList.replace('border-emerald-200', 'border-white/20');
+			navSpecial.classList.replace('bg-emerald-50', 'bg-white/10');
+		}
+	}
+
+	// 1. Primeiro aplica as regras do estado (o que faz o menu encolher)
+	window.addEventListener('scroll', updateHeaderState, { passive: true });
+	updateHeaderState();
+
+	// 2. DEPOIS liga o radar de altura para evitar a linha branca
+	if (!isHome && window.ResizeObserver) {
+		new ResizeObserver(() => {
+			document.body.style.paddingTop = header.offsetHeight + 'px';
+		}).observe(header);
 	}
 });

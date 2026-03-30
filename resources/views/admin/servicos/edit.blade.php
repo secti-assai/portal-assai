@@ -40,6 +40,13 @@
                     <input type="text" name="titulo" value="{{ old('titulo', $servico->titulo) }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">
                 </div>
 
+                {{-- NOVO CAMPO: Descrição --}}
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-bold text-slate-700">Descrição / Subtítulo <span class="text-xs font-normal text-slate-400">(Opcional)</span></label>
+                    <textarea name="descricao" rows="2" maxlength="150" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all resize-none">{{ old('descricao', $servico->descricao) }}</textarea>
+                    <p class="mt-1 text-xs text-slate-400">Recomendamos até 80 caracteres para que o texto não fique cortado na página inicial.</p>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block mb-1.5 text-sm font-bold text-slate-700">URL de Acesso Direto (Conecta, Gov.br, etc.) <span class="text-red-500">*</span></label>
                         <input type="url" name="url_acesso" value="{{ old('url_acesso', $servico->url_acesso) }}" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all">

@@ -86,7 +86,8 @@ class ServicoController extends Controller
     {
         $dados = $request->validate([
             'titulo'        => 'required|max:50',
-            'url_acesso'    => 'required|url|max:2048',
+            'descricao'     => 'nullable|string|max:255',
+            'link'          => 'required|url|max:2048',
             'icone'         => 'nullable|string|max:50',
             'secretaria_id' => 'nullable|exists:secretarias,id',
         ]);
@@ -111,7 +112,8 @@ class ServicoController extends Controller
 
         $dados = $request->validate([
             'titulo'        => 'required|max:50',
-            'url_acesso'    => 'required|url|max:2048',
+            'descricao'     => 'nullable|string|max:255',
+            'link'          => 'required|url|max:2048',
             'icone'         => 'nullable|string|max:50',
             'secretaria_id' => 'nullable|exists:secretarias,id',
         ]);
@@ -129,7 +131,7 @@ class ServicoController extends Controller
         $servico->delete();
         return redirect()->route('admin.servicos.index')->with('sucesso', 'Serviço apagado!');
     }
-    
+
     // Função para o botão de ativar/desativar rápido
     public function toggleAtivo($id)
     {
@@ -145,5 +147,4 @@ class ServicoController extends Controller
         $servico->save();
         return response()->json(['status' => 'success', 'ativo' => $servico->ativo]);
     }
-
 }

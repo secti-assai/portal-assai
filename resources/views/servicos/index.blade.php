@@ -173,6 +173,13 @@
                             {{ \Illuminate\Support\Str::limit($servico->titulo, 100) }}
                         </h3>
 
+                        {{-- Descrição do Serviço (Novo Bloco) --}}
+                        @if($servico->descricao)
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-3 leading-relaxed" title="{{ strip_tags($servico->descricao) }}">
+                            {{ \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 120) }}
+                        </p>
+                        @endif
+
                         {{-- Botão CTA --}}
                         <div class="mt-auto pt-4 border-t border-slate-100">
                             <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}"

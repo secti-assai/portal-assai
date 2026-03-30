@@ -46,7 +46,7 @@ class PortalController extends Controller
             return Noticia::whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->take(5)
+                ->take(4)
                 ->get();
         });
 
@@ -81,7 +81,7 @@ class PortalController extends Controller
         $servicos = Cache::remember('home_servicos', 3600, function () {
             return Servico::where('ativo', true)
                 ->orderByDesc('acessos')
-                ->take(8)
+                ->take(7)
                 ->get();
         });
 
@@ -140,7 +140,7 @@ class PortalController extends Controller
             $query->where('categoria', $request->categoria);
         }
 
-        $noticias = $query->paginate(14)->withQueryString();
+        $noticias = $query->paginate(15)->withQueryString();
         return view('noticias.index', compact('noticias', 'categorias'));
     }
 
@@ -183,7 +183,7 @@ class PortalController extends Controller
         // 5. Feed principal: todos os eventos futuros paginados
         $eventos = Evento::publico()
             ->ordenarPorDataMaisProxima()
-            ->paginate(12);
+            ->paginate(8);
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
     }
@@ -238,7 +238,7 @@ class PortalController extends Controller
             $query->where('secretaria_id', $request->secretaria);
         }
 
-        $servicos    = $query->paginate(12)->withQueryString();
+        $servicos    = $query->paginate(21)->withQueryString();
         $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
 
         return view('servicos.index', compact('servicos', 'secretarias'));

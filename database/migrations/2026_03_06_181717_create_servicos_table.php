@@ -19,6 +19,7 @@ return new class extends Migration
                 ->constrained('secretarias')
                 ->onDelete('set null');
             $table->string('titulo', 50); // Ex: Saúde, Alvará
+            $table->text('descricao')->nullable();
             $table->string('link')->nullable(); // Para onde o botão vai
             $table->string('icone')->nullable(); // Upload da imagem/ícone
             $table->boolean('ativo')->default(true);
