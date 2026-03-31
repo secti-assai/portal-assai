@@ -3,7 +3,7 @@
 @section('content')
 <main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen bg-gray-50">
 
-    <section id="home-hero" class="relative w-full bg-blue-900 rounded-b-[2rem] overflow-hidden">
+    <section id="home-hero" class="relative w-full bg-blue-900 overflow-hidden">
 
         <div class="w-full h-full overflow-hidden swiper swiper-banners">
             <div class="swiper-wrapper">
