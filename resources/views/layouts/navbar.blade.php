@@ -70,12 +70,6 @@
             <a href="{{ route('agenda.index') }}" class="nav-link lg:px-1.5 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Agenda</a>
             <a href="{{ route('contato.index') }}" class="nav-link lg:px-1.5 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Contato</a>
 
-            <a href="{{ route('pages.transparencia') }}" id="btn-transparencia" class="lg:px-2 xl:px-4 py-1.5 xl:py-2 border border-emerald-600 text-emerald-700 rounded-full hover:bg-emerald-50 transition lg:ml-1 xl:ml-2 flex items-center gap-1.5 whitespace-nowrap">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                Transparência
-            </a>
         </nav>
     </div>
 
