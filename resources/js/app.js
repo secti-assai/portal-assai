@@ -1,5 +1,8 @@
 import './bootstrap';
 
+// Importa os scripts de interatividade do Gov.br
+import '@govbr-ds/core/dist/core.min.js';
+
 /**
  * ==========================================================================
  * PORTAL PREFEITURA MUNICIPAL DE ASSAÍ — portal.js

@@ -18,6 +18,10 @@ use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', [PortalController::class, 'index'])->name('home');
 
+Route::get('/novo', function () {
+    return view('pages.pagina');
+});
+
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
 

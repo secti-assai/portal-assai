@@ -2,6 +2,17 @@
    MIGRADO DE public/css/style.css
    ========================================================================== */
 
+/* Importa a biblioteca de ícones do FontAwesome */
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+/* Importa o Design System do Gov.br */
+@import "@govbr-ds/core/dist/core.min.css";
+
+/* (Pode manter o seu código Tailwind abaixo, caso ainda o use para outras secções) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ==========================================================================
    COMPONENTES: SWIPER JS — BANNERS DA PÁGINA INICIAL
    ========================================================================== */
@@ -35,7 +46,7 @@
         height: 44px;
     }
 
-    .swiper-alertas .swiper-slide > div {
+    .swiper-alertas .swiper-slide>div {
         gap: 0.25rem;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
@@ -56,7 +67,7 @@
         height: 52px;
     }
 
-    .swiper-alertas .swiper-slide > div {
+    .swiper-alertas .swiper-slide>div {
         gap: 0.5rem;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
@@ -186,7 +197,7 @@
     border-radius: 0.75rem;
     max-width: 100% !important;
     height: auto !important;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     margin: 0 auto;
     display: block;
 }
@@ -197,6 +208,7 @@
     margin-top: 0.5rem;
     font-style: italic;
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -205,6 +217,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
