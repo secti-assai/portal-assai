@@ -8,10 +8,21 @@
 /* Importa o Design System do Gov.br */
 @import "@govbr-ds/core/dist/core.min.css";
 
-/* (Pode manter o seu código Tailwind abaixo, caso ainda o use para outras secções) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   TIPOGRAFIA BASE GOV.BR
+   ========================================================================== */
+@layer base {
+    body {
+        @apply font-sans text-slate-800 bg-slate-50 antialiased;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading;
+    }
+}
 
 /* ==========================================================================
    COMPONENTES: SWIPER JS — BANNERS DA PÁGINA INICIAL
@@ -41,7 +52,8 @@
     justify-content: center;
 }
 
-@media (max-width: 640px) {
+/* Telas menores que Tablet (Smartphones em pé e deitados - máx 767px) */
+@media (max-width: 767px) {
     .swiper-alertas {
         height: 44px;
     }
@@ -61,8 +73,8 @@
     }
 }
 
-/* Ajuste para tablets pequenos (641-768px) */
-@media (min-width: 641px) and (max-width: 768px) {
+/* Tablets / iPads (768px a 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
     .swiper-alertas {
         height: 52px;
     }
@@ -209,10 +221,9 @@
     font-style: italic;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* ==========================================================================
+   UTILITÁRIOS E ACESSIBILIDADE
+   ========================================================================== */
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -290,6 +301,10 @@ html.contrast-mode body svg {
     background: transparent !important;
 }
 
+/* ==========================================================================
+   VLIBRAS FIXES (Posicionamento responsivo)
+   ========================================================================== */
+/* Oculta em telas muito pequenas ou ajusta proporção (padrão gov.br xs/sm) */
 @media (max-width: 767px) {
     [vw] [vw-access-button] {
         right: 8px !important;
@@ -301,12 +316,10 @@ html.contrast-mode body svg {
     }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 575px) {
     [vw] [vw-access-button] {
         bottom: 18px !important;
         right: 6px !important;
-        top: auto !important;
-        left: auto !important;
         transform: scale(0.82);
     }
 }
