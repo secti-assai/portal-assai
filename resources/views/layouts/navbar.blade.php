@@ -18,9 +18,10 @@
 
         <div class="flex items-center gap-4 text-blue-100">
             <a href="#" class="hover:text-white transition">Portal da Transparência</a>
-            <a href="#" class="hover:text-white transition">Licitações</a>
             <a href="#" class="hover:text-white transition">Diário Oficial</a>
+            <a href="#" class="hover:text-white transition">Licitações</a>
             <a href="#" class="hover:text-white transition">Ouvidoria</a>
+            <a href="#" class="hover:text-white transition">Leis Municipais</a>
         </div>
     </div>
 
@@ -58,21 +59,14 @@
                 <div class="absolute left-0 top-full mt-2 w-48 bg-white text-slate-800 text-sm rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left border border-slate-100">
                     <a href="#" class="block px-4 py-2.5 hover:bg-blue-50 hover:text-blue-700 first:rounded-t-xl border-b border-slate-50">História</a>
                     <a href="#" class="block px-4 py-2.5 hover:bg-blue-50 hover:text-blue-700 border-b border-slate-50">Turismo</a>
-                    <a href="#" class="block px-4 py-2.5 hover:bg-blue-50 hover:text-blue-700 last:rounded-b-xl">Galeria de Fotos</a>
                 </div>
             </div>
 
             <a href="#" class="nav-link lg:px-2 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Secretarias</a>
             <a href="#" class="nav-link lg:px-2 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Notícias</a>
             <a href="#" class="nav-link lg:px-2 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Agenda</a>
+            <a href="#" class="nav-link lg:px-2 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Programas</a>
             <a href="#" class="nav-link lg:px-2 xl:px-3 py-2 rounded-lg hover:bg-slate-100 transition whitespace-nowrap">Contato</a>
-
-            <a href="#" id="btn-transparencia" class="lg:px-3 xl:px-4 py-2 border border-emerald-600 text-emerald-700 rounded-full hover:bg-emerald-50 transition lg:ml-1 xl:ml-2 flex items-center gap-1.5 whitespace-nowrap">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                Transparência
-            </a>
         </nav>
     </div>
 
@@ -108,13 +102,13 @@
                         <div id="mobile-submenu" class="hidden flex-col bg-black/20 divide-y divide-white/5">
                             <a href="#" class="block w-full px-6 py-2.5 text-sm font-medium text-blue-100 hover:bg-white/5 hover:text-white transition">História</a>
                             <a href="#" class="block w-full px-6 py-2.5 text-sm font-medium text-blue-100 hover:bg-white/5 hover:text-white transition">Turismo</a>
-                            <a href="#" class="block w-full px-6 py-2.5 text-sm font-medium text-blue-100 hover:bg-white/5 hover:text-white transition">Mapas e Dados</a>
                         </div>
                     </div>
 
                     <a href="#" class="px-4 py-2.5 rounded-xl hover:bg-white/5 transition">Secretarias</a>
                     <a href="#" class="px-4 py-2.5 rounded-xl hover:bg-white/5 transition">Notícias</a>
                     <a href="#" class="px-4 py-2.5 rounded-xl hover:bg-white/5 transition">Agenda</a>
+                    <a href="#" class="px-4 py-2.5 rounded-xl hover:bg-white/5 transition">Programas</a>
                     <a href="#" class="px-4 py-2.5 rounded-xl hover:bg-white/5 transition">Contato</a>
                 </div>
             </div>
@@ -140,13 +134,6 @@
                     {{-- Os 4 cartões restantes perfeitamente alinhados --}}
                     <a href="#" class="flex flex-col items-start gap-2 p-3 rounded-xl hover:bg-white/10 transition group">
                         <svg class="w-6 h-6 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[13px] sm:text-sm">Ouvidoria</span>
-                    </a>
-
-                    <a href="#" class="flex flex-col items-start gap-2 p-3 rounded-xl hover:bg-white/10 transition group">
-                        <svg class="w-6 h-6 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
                         </svg>
                         <span class="font-medium leading-tight text-[13px] sm:text-sm">Diário Oficial</span>
@@ -158,7 +145,12 @@
                         </svg>
                         <span class="font-medium leading-tight text-[13px] sm:text-sm">Licitações</span>
                     </a>
-
+                    <a href="#" class="flex flex-col items-start gap-2 p-3 rounded-xl hover:bg-white/10 transition group">
+                        <svg class="w-6 h-6 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <span class="font-medium leading-tight text-[13px] sm:text-sm">Ouvidoria</span>
+                    </a>
                     {{-- NOVO: Cartão das Leis com ícone de balança --}}
                     <a href="#" class="flex flex-col items-start gap-2 p-3 rounded-xl hover:bg-white/10 transition group">
                         <svg class="w-6 h-6 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
