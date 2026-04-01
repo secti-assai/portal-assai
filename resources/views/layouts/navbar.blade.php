@@ -32,10 +32,10 @@
          ========================================== --}}
     <div class="container mx-auto px-4 sm:px-6 py-2 lg:py-4 flex items-center justify-between relative transition-all duration-300" id="nav-inner">
 
-        {{-- Logo Dinâmica --}}
-        <a href="{{ route('home') }}" class="flex items-center gap-2 shrink-0 relative w-48 sm:w-56 lg:w-40 xl:w-56 h-14 sm:h-16 lg:h-12 xl:h-16 transition-all duration-300">
-            <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" class="absolute inset-0 w-full h-full object-contain object-left opacity-0 transition-opacity duration-300" id="logo-branca">
-            <img src="{{ asset('img/logo_preta.png') }}" alt="Prefeitura de Assaí" class="absolute inset-0 w-full h-full object-contain object-left opacity-100 transition-opacity duration-300" id="logo-colorida">
+        {{-- Logo Dinâmica (Tamanho Aumentado, Caixa de Clique Exata) --}}
+        <a href="{{ route('home') }}" class="flex items-center shrink-0 relative transition-all duration-300 h-16 sm:h-20 lg:h-18 xl:h-18 w-auto py-1">
+            <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain opacity-0 transition-opacity duration-300 absolute left-0" id="logo-branca">
+            <img src="{{ asset('img/logo_preta.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain opacity-100 transition-opacity duration-300 relative" id="logo-colorida">
         </a>
 
         {{-- Botão Mobile Hamburger --}}
@@ -83,7 +83,7 @@
 
             {{-- Header da Gaveta --}}
             <div class="flex items-center justify-between p-4 border-b border-white/10 shrink-0">
-                <img src="{{ asset('img/logo_branca.png') }}" alt="Assaí" class="h-12 sm:h-14 w-auto object-contain">
+            <img src="{{ asset('img/logo_branca.png') }}" alt="Assaí" class="h-16 sm:h-18 w-auto object-contain">
                 <button id="mobile-close-btn" class="p-2 -mr-2 text-white hover:text-yellow-400 transition">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
