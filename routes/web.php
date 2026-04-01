@@ -20,7 +20,7 @@ Route::get('/', [PortalController::class, 'index'])->name('home');
 
 Route::get('/novo', function () {
     return view('pages.pagina');
-});
+})->name('home2');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
