@@ -7,8 +7,11 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/css/admin.css', // Se houver css específico para o admin
-                'resources/js/admin.js'    // Se houver js específico para o admin
+                'resources/css/admin.css',
+                'resources/js/admin.js', 
+                'resources/css/home.css', 
+                'resources/js/home.js',
+                'resources/js/navbar.js' 
             ],
             refresh: true,
         }),

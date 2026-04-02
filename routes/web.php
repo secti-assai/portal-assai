@@ -13,13 +13,28 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\Admin\UserController;
+use App\Models\Banner;
+use App\Models\Servico;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
 Route::get('/', [PortalController::class, 'index'])->name('home');
 
 Route::get('/novo', function () {
-    return view('pages.pagina');
+    // 1. Puxa os banners ativos
+    $banners = Banner::where('ativo', true)->get();
+
+    // 2. Trending Topics: Top 3 serviços mais acessados nos últimos 7 dias
+    $servicosPopulares = Servico::where('ativo', true)
+        ->withCount(['acessosLog as acessos_recentes' => function ($query) {
+            $query->where('created_at', '>=', now()->subDays(7));
+        }])
+        ->orderByDesc('acessos_recentes')
+        ->take(3)
+        ->get(['id', 'titulo', 'slug']);
+
+    // 3. Envia os dados consolidados para a view
+    return view('pages.pagina', compact('banners', 'servicosPopulares'));
 })->name('home2');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
@@ -74,15 +89,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/auditoria/exportar', [ActivityLogController::class, 'export'])->name('admin.activity-logs.export');
         Route::get('/auditoria/{activity}', [ActivityLogController::class, 'show'])->name('admin.activity-logs.show');
 
-            // Módulo de Gestão de Utilizadores
-            Route::resource('users', UserController::class)->except(['show'])->names([
-                'index'   => 'users.index',
-                'create'  => 'admin.users.create',
-                'store'   => 'admin.users.store',
-                'edit'    => 'admin.users.edit',
-                'update'  => 'admin.users.update',
-                'destroy' => 'admin.users.destroy',
-            ]);
+        // Módulo de Gestão de Utilizadores
+        Route::resource('users', UserController::class)->except(['show'])->names([
+            'index'   => 'users.index',
+            'create'  => 'admin.users.create',
+            'store'   => 'admin.users.store',
+            'edit'    => 'admin.users.edit',
+            'update'  => 'admin.users.update',
+            'destroy' => 'admin.users.destroy',
+        ]);
     });
 
     Route::middleware(['permission:gerir alertas'])->group(function () {

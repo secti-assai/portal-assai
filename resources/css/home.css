@@ -1,0 +1,44 @@
+/* resources/css/home.css */
+@import 'swiper/css/bundle';
+
+.swiper-pagination-bullet {
+    background: #ffffff;
+    opacity: 0.4;
+    transition: all 0.3s;
+    width: 8px;
+    height: 8px;
+}
+
+.swiper-pagination-bullet-active {
+    background: #facc15;
+    opacity: 1;
+    transform: scale(1.4);
+}
+
+#home-hero,
+.swiper-slide {
+    background-color: #020617;
+}
+
+.swiper-banners .swiper-slide {
+    opacity: 0 !important;
+    transition-property: opacity;
+}
+
+.swiper-banners .swiper-slide-active {
+    opacity: 1 !important;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    font-family: 'Montserrat', sans-serif;
+}
