@@ -1,18 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ---- 1. COMPENSAÇÃO DE ALTURA (Header Fixo) ----
-    const header = document.getElementById('site-header');
-    
-    function fixHeaderHeight() {
-        if (header) {
-            document.body.style.paddingTop = header.offsetHeight + 'px';
-        }
-    }
-    
-    // Recalcula ao redimensionar a tela
-    window.addEventListener('resize', fixHeaderHeight);
-    fixHeaderHeight();
-
-    // ---- 2. GESTÃO DO MENU MOBILE ----
+    // ---- 1. GESTÃO DO MENU MOBILE ----
     const drawer = document.getElementById('mobile-drawer');
     const overlay = document.getElementById('mobile-overlay');
     const panel = document.getElementById('mobile-panel');
@@ -21,10 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openMenu() {
         if (!drawer || !overlay || !panel) return;
-        
+
         drawer.classList.remove('invisible');
         document.body.style.overflow = 'hidden'; // Impede rolagem do fundo
-        
+
         requestAnimationFrame(() => {
             overlay.classList.remove('opacity-0');
             panel.classList.remove('translate-x-full');
@@ -37,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.classList.add('opacity-0');
         panel.classList.add('translate-x-full');
         document.body.style.overflow = '';
-        
+
         setTimeout(() => {
             drawer.classList.add('invisible');
         }, 300);
@@ -47,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeBtn) closeBtn.addEventListener('click', closeMenu);
     if (overlay) overlay.addEventListener('click', closeMenu);
 
-    // ---- 3. ACESSIBILIDADE: TAMANHO DA FONTE ----
+    // ---- 2. ACESSIBILIDADE: TAMANHO DA FONTE ----
     const htmlEl = document.documentElement;
     const MIN_SIZE = 14, MAX_SIZE = 20, STEP = 2;
 
@@ -74,12 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- 4. ACESSIBILIDADE: ALTO CONTRASTE ----
+    // ---- 3. ACESSIBILIDADE: ALTO CONTRASTE ----
     const btnContrast = document.getElementById('btn-contrast');
     if (btnContrast) {
         // Inicializa o estado do ARIA baseado no carregamento da página
         btnContrast.setAttribute('aria-pressed', htmlEl.classList.contains('contrast-mode') ? 'true' : 'false');
-        
+
         btnContrast.addEventListener('click', function () {
             htmlEl.classList.toggle('contrast-mode');
             let active = htmlEl.classList.contains('contrast-mode');

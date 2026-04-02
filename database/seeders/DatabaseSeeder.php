@@ -25,11 +25,7 @@ class DatabaseSeeder extends Seeder
         // Usuário administrador (preservado)
         $this->call([AdminSeeder::class]);
 
-        // Banners do carrossel principal (ativos/inativos para filtro)
-        Banner::factory(10)->create();
-
-        // Secretarias (devem existir antes dos serviços)
-        Secretaria::factory(20)->create();
+        $this->call([SecretariaSeeder::class]);
 
         // Programas municipais
         Programa::factory(50)->create();

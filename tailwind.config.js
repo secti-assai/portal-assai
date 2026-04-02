@@ -16,14 +16,10 @@ export default {
         extend: {
             // Base Normativa: Tipografia estrita do gov.br
             fontFamily: {
-                sans: ['Open Sans', 'sans-serif'],
+                sans: ['Poppins', 'sans-serif'],
                 heading: ['Montserrat', 'sans-serif'],
             },
-            colors: {
-                // Aqui você pode mapear futuramente as cores do gov.br
-                // govblue: '#1351B4',
-                // govyellow: '#F8E800',
-            }
+            colors: {}
         },
     },
     plugins: [],
