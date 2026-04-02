@@ -1,22 +1,41 @@
 /* resources/css/home.css */
 @import 'swiper/css/bundle';
 
-.swiper-pagination-bullet {
-    background: #ffffff;
-    opacity: 0.4;
-    transition: all 0.3s;
-    width: 8px;
-    height: 8px;
+.swiper-banners .swiper-pagination {
+    display: none !important;
 }
 
-.swiper-pagination-bullet-active {
-    background: #facc15;
-    opacity: 1;
-    transform: scale(1.4);
+.banner-nav-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px);
+    transition: all 0.2s ease;
 }
 
-#home-hero,
-.swiper-slide {
+.banner-nav-btn:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(250, 204, 21, 0.8);
+    color: #fde047;
+}
+
+.banner-nav-btn:focus-visible {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
+}
+
+.banner-nav-btn.swiper-button-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#home-hero {
     background-color: #020617;
 }
 
