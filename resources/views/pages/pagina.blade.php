@@ -21,15 +21,30 @@
 
     <main>
 
+        @php
+        $heroVideos = [
+            asset('videos/DJI_0611.MP4'),
+            asset('videos/' . rawurlencode('DJI_0613 (3).MP4')),
+            asset('videos/DJI_0633.MP4'),
+            asset('videos/DJI_0661.MP4'),
+            asset('videos/DJI_0677.MP4'),
+        ];
+        @endphp
+
         {{-- ==============
              HERO SECTION
              ============== --}}
         <section id="hero-oficial" class="relative w-full overflow-hidden bg-slate-950 flex flex-col items-center justify-center">
 
             {{-- 1. Camada de Fundo (Vídeo) --}}
-            <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover object-center transform scale-105" aria-hidden="true" style="opacity: 1 !important; filter: brightness(1) !important;">
-                <source src="{{ asset('video/assai (1) (1).mp4') }}" type="video/mp4">
-            </video>
+            <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden" data-hero-videos='@json($heroVideos)'>
+                <video autoplay muted playsinline preload="auto" src="{{ $heroVideos[0] }}"
+                    class="hero-video-layer absolute inset-0 h-full w-full object-cover object-center scale-105 opacity-100 transition-opacity duration-1000 ease-in-out"
+                    aria-hidden="true"></video>
+                <video muted playsinline preload="auto"
+                    class="hero-video-layer absolute inset-0 h-full w-full object-cover object-center scale-105 opacity-0 transition-opacity duration-1000 ease-in-out"
+                    aria-hidden="true"></video>
+            </div>
 
             {{-- 2. Camada de Contraste (Sombra) --}}
             <div class="absolute inset-0 z-10 pointer-events-none" style="background-color: rgba(2, 6, 23, 0.84) !important; opacity: 1 !important;"></div>
