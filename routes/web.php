@@ -22,19 +22,12 @@ Route::get('/', [PortalController::class, 'index'])->name('home');
 
 Route::get('/novo', function () {
     // 1. Puxa os banners ativos
-    $banners = Banner::where('ativo', true)->get();
+    $banners = Banner::where('ativo', true)
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-    // 2. Trending Topics: Top 3 serviços mais acessados nos últimos 7 dias
-    $servicosPopulares = Servico::where('ativo', true)
-        ->withCount(['acessosLog as acessos_recentes' => function ($query) {
-            $query->where('created_at', '>=', now()->subDays(7));
-        }])
-        ->orderByDesc('acessos_recentes')
-        ->take(3)
-        ->get(['id', 'titulo', 'slug']);
-
-    // 3. Envia os dados consolidados para a view
-    return view('pages.pagina', compact('banners', 'servicosPopulares'));
+    // 4. Envia os dados consolidados para a view
+    return view('pages.pagina', compact('banners'));
 })->name('home2');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');

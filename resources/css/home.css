@@ -1,23 +1,60 @@
 /* resources/css/home.css */
 @import 'swiper/css/bundle';
 
-.swiper-pagination-bullet {
-    background: #ffffff;
-    opacity: 0.4;
-    transition: all 0.3s;
-    width: 8px;
-    height: 8px;
+.swiper-banners .swiper-pagination {
+    display: none !important;
 }
 
-.swiper-pagination-bullet-active {
-    background: #facc15;
-    opacity: 1;
-    transform: scale(1.4);
+.banner-nav-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px);
+    transition: all 0.2s ease;
 }
 
-#home-hero,
-.swiper-slide {
+.banner-nav-btn:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(250, 204, 21, 0.8);
+    color: #fde047;
+}
+
+.banner-nav-btn:focus-visible {
+    outline: 2px solid #facc15;
+    outline-offset: 2px;
+}
+
+.banner-nav-btn.swiper-button-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#home-hero {
     background-color: #020617;
+}
+
+.hero-video-layer {
+    object-position: center 35%;
+    will-change: opacity, transform;
+    filter: brightness(0.92) contrast(1.05) saturate(1.08);
+}
+
+@media (max-width: 768px) {
+    .hero-video-layer {
+        object-position: center 45%;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-video-layer {
+        object-position: center 50%;
+    }
 }
 
 .swiper-banners .swiper-slide {
@@ -27,6 +64,54 @@
 
 .swiper-banners .swiper-slide-active {
     opacity: 1 !important;
+}
+
+/* Melhorias no botão de pesquisa */
+button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+button[type="submit"]:active::before {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/* Animação do ícone no hover */
+button[type="submit"]:hover svg {
+    animation: iconPulse 0.3s ease-out;
+}
+
+@keyframes iconPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 body {

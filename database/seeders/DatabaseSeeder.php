@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([SecretariaSeeder::class]);
 
+        // Banners do carrossel principal (ativos/inativos para filtro)
+        Banner::factory(10)->create();
+        
         // Programas municipais
         Programa::factory(50)->create();
 
