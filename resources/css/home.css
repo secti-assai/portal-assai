@@ -39,6 +39,24 @@
     background-color: #020617;
 }
 
+.hero-video-layer {
+    object-position: center 35%;
+    will-change: opacity, transform;
+    filter: brightness(0.92) contrast(1.05) saturate(1.08);
+}
+
+@media (max-width: 768px) {
+    .hero-video-layer {
+        object-position: center 45%;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-video-layer {
+        object-position: center 50%;
+    }
+}
+
 .swiper-banners .swiper-slide {
     opacity: 0 !important;
     transition-property: opacity;
@@ -46,6 +64,54 @@
 
 .swiper-banners .swiper-slide-active {
     opacity: 1 !important;
+}
+
+/* Melhorias no botão de pesquisa */
+button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+button[type="submit"]:active::before {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/* Animação do ícone no hover */
+button[type="submit"]:hover svg {
+    animation: iconPulse 0.3s ease-out;
+}
+
+@keyframes iconPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 body {
