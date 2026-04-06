@@ -217,6 +217,7 @@
                 $noticiasLista = isset($noticias) ? $noticias : collect();
                 $noticiaDestaque = $noticiasLista->first();
                 $noticiasRecentes = $noticiasLista->skip(1)->take(4);
+                $noticiasMobile = $noticiasLista->take(4);
                 @endphp
 
                 @if($noticiaDestaque)
@@ -226,7 +227,32 @@
                 : asset('img/Assaí.jpg');
                 @endphp
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
+                {{-- Mobile/Tablet: 4 cards iguais de notícias --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
+                    @foreach($noticiasMobile as $noticia)
+                    @php
+                    $imagemMobile = $noticia->imagem_capa
+                    ? asset('storage/' . $noticia->imagem_capa)
+                    : asset('img/Assaí.jpg');
+                    @endphp
+                    <a href="{{ route('noticias.show', $noticia->slug) }}" class="group bg-white border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="relative overflow-hidden">
+                            <img src="{{ $imagemMobile }}" alt="{{ $noticia->titulo }}" class="w-full h-44 object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" decoding="async">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-base font-extrabold text-slate-800 leading-tight font-heading line-clamp-3 group-hover:text-blue-700 transition-colors duration-200">
+                                {{ $noticia->titulo }}
+                            </h3>
+                            <p class="mt-2 text-xs text-slate-500 font-medium">
+                                {{ $noticia->data_publicacao ? \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y H:i') : '--/--/---- --:--' }}
+                            </p>
+                        </div>
+                    </a>
+                    @endforeach
+                </div>
+
+                <div class="hidden lg:grid lg:grid-cols-12 gap-5 md:gap-6">
 
                     {{-- Notícia Destaque Principal --}}
                     <article class="lg:col-span-8 bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
