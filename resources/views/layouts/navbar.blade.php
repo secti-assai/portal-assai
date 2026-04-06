@@ -93,25 +93,84 @@
                 farmacia: null,
                 posto: null,
                 message: '',
+                rotationItems: [],
+                activeDutyIndex: 0,
+                rotationTimer: null,
 
-                get dutySummary() {
-                    const parts = [];
+                formatAddress(address) {
+                    if (!address) return '';
+
+                    const parts = String(address)
+                        .split(',')
+                        .map((part) => part.trim())
+                        .filter(Boolean);
+
+                    if (parts.length >= 2) {
+                        return parts[0] + ', ' + parts[1];
+                    }
+
+                    return parts[0] ?? '';
+                },
+
+                formatDutyText(item, fallbackType) {
+                    if (!item) return '';
+
+                    const name = String(item.title || item.type || fallbackType || 'Plantao').trim();
+                    const address = this.formatAddress(item.address || '');
+                    const phone = String(item.contact || '').trim();
+
+                    let output = name + ': ' + (address || 'Endereco indisponivel');
+
+                    if (phone) {
+                        output += ' (' + phone + ')';
+                    }
+
+                    return output;
+                },
+
+                buildRotationItems() {
+                    this.rotationItems = [];
 
                     if (this.farmacia) {
-                        const farmaciaInfo = this.farmacia.address || this.farmacia.title;
-                        if (farmaciaInfo) {
-                            parts.push('Farmacia: ' + farmaciaInfo);
-                        }
+                        this.rotationItems.push({
+                            kind: 'farmacia',
+                            text: this.formatDutyText(this.farmacia, 'Farmacia')
+                        });
                     }
 
                     if (this.posto) {
-                        const postoInfo = this.posto.address || this.posto.title;
-                        if (postoInfo) {
-                            parts.push('Posto: ' + postoInfo);
-                        }
+                        this.rotationItems.push({
+                            kind: 'posto',
+                            text: this.formatDutyText(this.posto, 'Posto')
+                        });
                     }
 
-                    return parts.join(' | ');
+                    this.activeDutyIndex = 0;
+                },
+
+                startRotation() {
+                    this.stopRotation();
+
+                    if (this.rotationItems.length > 1) {
+                        this.rotationTimer = setInterval(() => {
+                            this.activeDutyIndex = (this.activeDutyIndex + 1) % this.rotationItems.length;
+                        }, 5000);
+                    }
+                },
+
+                stopRotation() {
+                    if (this.rotationTimer) {
+                        clearInterval(this.rotationTimer);
+                        this.rotationTimer = null;
+                    }
+                },
+
+                get dutySummary() {
+                    if (!this.rotationItems.length) {
+                        return '';
+                    }
+
+                    return this.rotationItems[this.activeDutyIndex]?.text || '';
                 },
 
                 async init() {
@@ -132,13 +191,18 @@
                         this.farmacia = data?.farmacia ?? null;
                         this.posto = data?.posto ?? null;
                         this.message = data?.message ?? '';
+                        this.buildRotationItems();
+                        this.startRotation();
                         this.error = false;
                     } catch (err) {
+                        this.stopRotation();
                         this.error = true;
                         this.hasDuty = false;
                         this.farmacia = null;
                         this.posto = null;
                         this.message = 'Plantao indisponivel';
+                        this.rotationItems = [];
+                        this.activeDutyIndex = 0;
                     } finally {
                         this.loading = false;
                     }
@@ -151,6 +215,36 @@
         // Inversão Dinâmica de Cor
         const header = document.getElementById('site-header');
         const logo = document.getElementById('nav-logo-img');
+        const WHITE_LOGO_OFFSET_X = 0;
+        const BLACK_LOGO_OFFSET_X = 6;
+
+        function swapLogo(nextSrc, offsetX) {
+            if (!logo) return;
+
+            const currentSrc = logo.getAttribute('src') || '';
+            const isSameLogo = currentSrc.includes(nextSrc);
+
+            // Mantem o alinhamento sempre atualizado mesmo sem trocar de arquivo.
+            logo.style.transform = `translateX(${offsetX}px)`;
+
+            if (isSameLogo) return;
+
+            // Fade-out rapido, troca src, depois fade-in para evitar efeito de "deslizar".
+            logo.style.opacity = '0';
+
+            const reveal = () => {
+                logo.style.opacity = '1';
+                logo.removeEventListener('load', reveal);
+            };
+
+            logo.addEventListener('load', reveal, { once: true });
+            logo.src = nextSrc;
+
+            // Fallback de seguranca para cache instantaneo do navegador.
+            setTimeout(() => {
+                logo.style.opacity = '1';
+            }, 140);
+        }
 
         function updateNavbar() {
             if (window.scrollY > 50) {
@@ -158,13 +252,13 @@
                     header.classList.remove('bg-transparent', 'text-white', 'border-transparent');
                     header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'text-slate-700', 'border-slate-200/50');
                 }
-                if (logo) logo.src = "{{ asset('img/logo_preta.png') }}";
+                swapLogo("{{ asset('img/logo_preta.png') }}", BLACK_LOGO_OFFSET_X);
             } else {
                 if (header) {
                     header.classList.add('bg-transparent', 'text-white', 'border-transparent');
                     header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'text-slate-700', 'border-slate-200/50');
                 }
-                if (logo) logo.src = "{{ asset('img/logo_branca.png') }}";
+                swapLogo("{{ asset('img/logo_branca.png') }}", WHITE_LOGO_OFFSET_X);
             }
         }
 
@@ -269,7 +363,7 @@ return $sec;
                         <span class="text-xs font-medium text-white">Plantões de hoje: indisponivel</span>
                     </template>
                     <template x-if="!loading && !error && !hasDuty">
-                        <span class="text-xs font-medium text-white" x-text="'Plantães de hoje: ' + (message || 'Sem plantão hoje')"></span>
+                        <span class="text-xs font-medium text-white" x-text="'Plantoes de hoje: ' + (message || 'Sem plantao hoje')"></span>
                     </template>
                     <template x-if="!loading && !error && hasDuty">
                         <div class="flex items-center gap-2.5">
@@ -284,15 +378,15 @@ return $sec;
     </div>
 
     {{-- MAIN NAVBAR --}}
-    <div class="container mx-auto px-4 sm:px-6 py-2 lg:py-2.5 flex items-center justify-between relative" id="nav-inner">
+    <div class="w-full lg:container lg:mx-auto px-2 sm:px-4 lg:px-6 py-2 lg:py-2.5 flex items-center justify-start lg:justify-between relative" id="nav-inner">
 
         {{-- Logo --}}
-        <a href="{{ route('home2') }}" style="background: transparent !important; box-shadow: none !important;" class="flex items-center shrink-0 relative h-20 sm:h-24 lg:h-20 xl:h-20 w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 transition-transform hover:scale-[1.02]">
-            <img id="nav-logo-img" src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-300">
+        <a href="{{ route('home2') }}" style="background: transparent !important; box-shadow: none !important;" class="flex items-center shrink-0 relative ml-0 h-20 sm:h-24 lg:h-20 xl:h-20 w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 transition-transform hover:scale-[1.02]">
+            <img id="nav-logo-img" src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-200 ease-out">
         </a>
 
         {{-- Botão Mobile Hamburger --}}
-        <button id="mobile-open-btn" class="lg:hidden inline-flex flex-col items-center justify-center gap-0.5 px-3 py-2 -mr-1 text-inherit bg-blue-50/10 border border-white/20 rounded-xl hover:bg-blue-50/20 transition-colors" aria-label="Abrir menu">
+        <button id="mobile-open-btn" class="lg:hidden ml-auto inline-flex flex-col items-center justify-center gap-0.5 px-3 py-2 text-inherit bg-blue-50/10 border border-white/20 rounded-xl hover:bg-blue-50/20 transition-colors" aria-label="Abrir menu">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
