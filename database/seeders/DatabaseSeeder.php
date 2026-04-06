@@ -27,27 +27,50 @@ class DatabaseSeeder extends Seeder
 
         $this->call([SecretariaSeeder::class]);
 
-        // Banners do carrossel principal (ativos/inativos para filtro)
+        // Banners do carrossel principal
         Banner::factory(10)->create();
         
         // Programas municipais
         Programa::factory(50)->create();
 
-        // Serviços associados às secretarias (com ícones padronizados)
+        // Serviços associados às secretarias
         Servico::factory(100)->create();
 
-        // Garante cobertura dos filtros de ícone/status em serviços
-        foreach (['padrao', 'saude', 'vagas', 'documentos', 'ouvidoria', 'alvara', 'educacao'] as $icone) {
+        // MAPEAMENTO CORRETO: Classe do FontAwesome => Contexto
+        $iconesValidos = [
+            'file-alt'            => 'padrao',
+            'heart-pulse'         => 'saude',
+            'briefcase'           => 'vagas',
+            'file-lines'          => 'documentos',
+            'bullhorn'            => 'ouvidoria',
+            'file-signature'      => 'alvara',
+            'graduation-cap'      => 'educacao',
+        ];
+
+        $descricoesFixas = [
+            'padrao'    => 'Acesse os serviços digitais da Prefeitura de Assaí de forma prática, sem precisar sair de casa. Agilidade e comodidade para você e sua família.',
+            'saude'     => 'Consulte unidades de saúde, agende atendimentos e acesse informações sobre campanhas de vacinação, prevenção e promoção da saúde no município.',
+            'vagas'     => 'Confira as oportunidades de emprego disponíveis no município, cadastre seu currículo e acompanhe os processos seletivos da Prefeitura e parceiros.',
+            'documentos'=> 'Emita certidões, requerimentos e documentos oficiais de forma digital, com validade jurídica, sem precisar ir presencialmente à Prefeitura.',
+            'ouvidoria' => 'Registre sua reclamação, sugestão, elogio ou denúncia sobre os serviços públicos. Todas as manifestações são analisadas e respondidas em até 30 dias.',
+            'alvara'    => 'Solicite, acompanhe e renove alvarás de funcionamento, construção e habite-se de forma online, com orientação da equipe técnica municipal.',
+            'educacao'  => 'Acesse informações sobre matrículas, calendário escolar, transporte e demais serviços oferecidos pela Secretaria de Educação do município.',
+        ];
+
+        // Garante cobertura dos filtros com ícones válidos e descrições
+        foreach ($iconesValidos as $faClass => $contexto) {
             Servico::factory()->create([
-                'titulo' => 'Serviço de teste - ' . ucfirst($icone) . ' ativo',
-                'icone' => $icone,
-                'ativo' => true,
+                'titulo'    => 'Serviço de teste - ' . ucfirst($contexto) . ' ativo',
+                'descricao' => $descricoesFixas[$contexto],
+                'icone'     => $faClass,
+                'ativo'     => true,
             ]);
 
             Servico::factory()->create([
-                'titulo' => 'Serviço de teste - ' . ucfirst($icone) . ' inativo',
-                'icone' => $icone,
-                'ativo' => false,
+                'titulo'    => 'Serviço de teste - ' . ucfirst($contexto) . ' inativo',
+                'descricao' => $descricoesFixas[$contexto],
+                'icone'     => $faClass,
+                'ativo'     => false,
             ]);
         }
 
@@ -66,7 +89,7 @@ class DatabaseSeeder extends Seeder
             'data_publicacao' => now()->addDays(10),
         ]);
 
-        // Eventos (confirmado e cancelado + passado/futuro para agendado/realizado)
+        // Eventos
         Evento::factory(50)->create();
 
         Evento::factory()->create([
@@ -92,6 +115,5 @@ class DatabaseSeeder extends Seeder
 
         // Alertas para testar busca e status
         Alerta::factory(20)->create();
-
     }
 }

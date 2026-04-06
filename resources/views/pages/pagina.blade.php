@@ -12,6 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/home.css', 'resources/js/home.js'])
 </head>
@@ -23,18 +25,22 @@
 
         @php
         $heroVideos = [
-            asset('videos/DJI_0661.MP4'),
-            asset('videos/DJI_0611.MP4'),
-            asset('videos/DJI_0677.MP4'),
-            asset('videos/DJI_0633.MP4'),
-            asset('videos/' . rawurlencode('DJI_0613 (3).MP4')),
+        asset('videos/DJI_0611.MP4'),
+        asset('videos/' . rawurlencode('DJI_0613 (3).MP4')),
         ];
+
+        $sugestoesBusca = collect($sugestoesIA ?? [
+        'Emitir nota fiscal eletronica',
+        'Consultar protocolo digital',
+        'Agendar atendimento administrativo',
+        'Solicitar matricula na rede municipal',
+        ])->take(3);
         @endphp
 
-        {{-- ==============
-             HERO SECTION
-             ============== --}}
-        <section id="hero-oficial" class="relative w-full overflow-hidden bg-slate-950 flex flex-col items-center justify-center">
+           {{-- =================
+               HERO SECTION
+               ================= --}}
+           <section id="hero-oficial" class="relative w-full overflow-hidden bg-slate-950">
 
             {{-- 1. Camada de Fundo (Vídeo) --}}
             <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden" data-hero-videos='@json($heroVideos)'>
@@ -49,8 +55,8 @@
             {{-- 2. Camada de Contraste (Sombra) --}}
             <div class="absolute inset-0 z-10 pointer-events-none" style="background-color: rgba(2, 6, 23, 0.84) !important; opacity: 1 !important;"></div>
 
-            {{-- 3. Camada de Conteúdo Interativo (Alterado para justify-center para não empurrar a busca pro fundo) --}}
-            <div class="relative z-20 w-full flex flex-col items-center justify-center pt-[110px] md:pt-[130px] pb-12 md:pb-16 px-4 sm:px-6">
+            {{-- 3. Camada de Conteúdo Interativo --}}
+            <div class="relative z-20 w-full flex flex-col items-center justify-center pt-[116px] pb-10 md:pt-[180px] md:pb-24 px-4 sm:px-6">
 
                 {{-- Banners Dinâmicos (Swiper) --}}
                 <div class="w-full max-w-5xl flex flex-col justify-center">
@@ -58,52 +64,22 @@
                     <div class="swiper swiper-banners w-full">
                         <div class="swiper-wrapper">
                             @foreach($banners as $banner)
-                            <div class="swiper-slide bg-transparent flex flex-col items-center text-center justify-center pb-8">
+                            <div class="swiper-slide bg-transparent flex flex-col items-center text-center justify-center px-1">
 
-                                <h2 class="mt-4 sm:mt-0 text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-5 drop-shadow-md">
+                                {{-- TÍTULO: Adicionado 'mx-auto' para centralizar corretamente --}}
+                                <h2 class="w-full max-w-4xl mx-auto mb-2 sm:mb-4 text-lg sm:text-3xl md:text-5xl max-[360px]:text-base font-extrabold text-white break-words drop-shadow-lg font-heading leading-tight text-center">
                                     {{ $banner->titulo }}
                                 </h2>
 
-                                {{-- Barra de Pesquisa Integrada (entre título e subtítulo) --}}
-                                <div class="w-full max-w-4xl mx-auto mt-2 mb-6 shrink-0">
-
-                                    {{-- Form: Bloqueia submissão se estiver vazio (onsubmit) --}}
-                                    <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="w-full relative flex items-center bg-white rounded-full p-1.5 md:p-2 shadow-[0_15px_35px_rgba(0,0,0,0.25)] focus-within:ring-4 focus-within:ring-yellow-400/50 transition-all duration-300" role="search" aria-label="Buscar informações no portal">
-                                        <label for="busca-portal-{{ $loop->index }}" class="sr-only">Buscar no portal</label>
-
-                                        {{-- Ícone de Lupa --}}
-                                        <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0">
-                                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                            </svg>
-                                        </div>
-
-                                        {{-- Input (min-w-0 adicionado para evitar que empurre o botão) --}}
-                                        <input id="busca-portal-{{ $loop->index }}" type="text" name="q" placeholder="O que você procura?" required
-                                            class="flex-1 min-w-0 bg-transparent border-none text-slate-900 md:text-slate-800 text-[15px] md:text-lg focus:ring-0 placeholder:text-slate-500 md:placeholder:text-slate-400 px-2 py-3 md:py-4 outline-none font-semibold md:font-medium w-full">
-
-                                        {{-- Botão Redondo com melhor UX (tamanho generoso, feedback visual) --}}
-                                        <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-auto px-4 py-3 md:px-10 md:py-3.5 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
-                                            <span class="hidden md:inline">BUSCAR</span>
-                                            {{-- Ícone de seta no desktop / lupa no mobile --}}
-                                            <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                            </svg>
-                                            <svg class="w-5 h-5 hidden md:block transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 12h15"></path>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-
                                 @if($banner->subtitulo)
-                                <p class="text-sm md:text-lg lg:text-xl text-slate-100 font-medium max-w-3xl mx-auto drop-shadow mb-6 line-clamp-3 leading-relaxed">
+                                {{-- SUBTÍTULO: Adicionado 'mx-auto' para centralizar corretamente --}}
+                                <p class="w-full max-w-2xl mx-auto mt-1 mb-5 text-xs sm:text-base md:text-lg font-medium text-blue-100 break-words drop-shadow font-sans max-[360px]:hidden line-clamp-3 leading-relaxed text-center">
                                     {{ $banner->subtitulo }}
                                 </p>
                                 @endif
 
                                 @if($banner->link)
-                                <a href="{{ $banner->link }}" class="inline-flex items-center px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg hover:-translate-y-0.5">
+                                <a href="{{ $banner->link }}" class="inline-flex items-center px-6 py-2.5 text-sm md:text-base font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-lg hover:-translate-y-0.5 font-heading">
                                     Saiba mais
                                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -114,59 +90,121 @@
                             @endforeach
                         </div>
                     </div>
+
+                    {{-- Barra de Pesquisa Fixa (independente do banner ativo) --}}
+                    <div class="w-full max-w-3xl mx-auto mt-10 md:mt-14 shrink-0">
+
+                        <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search" aria-label="Buscar informações no portal">
+                            <label for="busca-portal-fixo" class="sr-only">Buscar no portal</label>
+
+                            <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+
+                            <input id="busca-portal-fixo" type="text" name="q" placeholder="O que você procura?" required
+                                class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full">
+
+                            <button type="submit" class="inline-flex items-center justify-center gap-2 min-w-[96px] px-3 py-2.5 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
+                                <span class="hidden md:inline">Buscar</span>
+                                <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 hidden md:inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 12h15"></path>
+                                </svg>
+                            </button>
+                        </form>
+
+                        @if($sugestoesBusca->count() > 0)
+                        <div class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
+                            @foreach($sugestoesBusca as $sugestao)
+                            <a href="{{ route('busca.index', ['q' => $sugestao]) }}"
+                                aria-label="Sugestão de busca: {{ $sugestao }}"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
+                                <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                {{ $sugestao }}
+                            </a>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
                     @else
                     {{-- Fallback Estático Melhorado se não existirem banners no DB --}}
-                    <div class="text-center flex flex-col items-center justify-center pb-8 md:pb-12">
+                    <div class="text-center flex flex-col items-center justify-center">
                         <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border border-white/30 shadow-sm">
                             Portal Oficial
                         </span>
 
-                        <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-5 drop-shadow-lg tracking-tight">
+                        <h2 class="mb-3 text-2xl sm:text-3xl md:text-5xl max-[360px]:text-[1.6rem] font-extrabold text-white drop-shadow-md font-heading leading-tight max-w-4xl mx-auto text-center break-words">
                             Prefeitura de <span class="text-yellow-400">Assaí</span>
                         </h2>
 
-                        {{-- Barra de Pesquisa Integrada (entre título e subtítulo) --}}
-                        <div class="w-full max-w-4xl mx-auto mt-2 mb-6 shrink-0">
+                        <p class="text-sm sm:text-base md:text-lg text-slate-100 font-medium max-w-3xl mx-auto drop-shadow-md mb-4 leading-relaxed text-center">
+                            Acesse serviços públicos, acompanhe ações da Prefeitura e encontre informações oficiais com rapidez.
+                        </p>
+
+                        <a href="{{ route('busca.index') }}" class="inline-flex items-center px-6 py-2.5 mb-10 text-sm md:text-base font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-lg hover:-translate-y-0.5 font-heading mx-auto">
+                            Saiba mais
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+
+                        {{-- Barra de Pesquisa Integrada (Fallback) --}}
+                        <div class="w-full max-w-3xl mx-auto mt-4 shrink-0">
 
                             {{-- Form: Bloqueia submissão se estiver vazio (onsubmit) --}}
-                            <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="w-full relative flex items-center bg-white rounded-full p-1.5 md:p-2 shadow-[0_15px_35px_rgba(0,0,0,0.25)] focus-within:ring-4 focus-within:ring-yellow-400/50 transition-all duration-300" role="search" aria-label="Buscar informações no portal">
+                            <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search" aria-label="Buscar informações no portal">
                                 <label for="busca-portal-fallback" class="sr-only">Buscar no portal</label>
 
                                 {{-- Ícone de Lupa --}}
-                                <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0">
-                                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
                                 </div>
 
-                                {{-- Input (min-w-0 adicionado para evitar que empurre o botão) --}}
                                 <input id="busca-portal-fallback" type="text" name="q" placeholder="O que você procura?" required
-                                    class="flex-1 min-w-0 bg-transparent border-none text-slate-900 md:text-slate-800 text-[15px] md:text-lg focus:ring-0 placeholder:text-slate-500 md:placeholder:text-slate-400 px-2 py-3 md:py-4 outline-none font-semibold md:font-medium w-full">
+                                    class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full">
 
-                                {{-- Botão Redondo com melhor UX (tamanho generoso, feedback visual) --}}
-                                <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-auto px-4 py-3 md:px-10 md:py-3.5 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
-                                    <span class="hidden md:inline">BUSCAR</span>
-                                    {{-- Ícone de seta no desktop / lupa no mobile --}}
-                                    <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <button type="submit" class="inline-flex items-center justify-center gap-2 min-w-[96px] px-3 py-2.5 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
+                                    <span class="hidden md:inline">Buscar</span>
+                                    <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
-                                    <svg class="w-5 h-5 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <svg class="w-5 h-5 hidden md:inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 12h15"></path>
                                     </svg>
                                 </button>
                             </form>
+
+                            {{-- Chips de Sugestão --}}
+                            @if($sugestoesBusca->count() > 0)
+                            <div class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
+                                @foreach($sugestoesBusca as $sugestao)
+                                <a href="{{ route('busca.index', ['q' => $sugestao]) }}"
+                                    aria-label="Sugestão de busca: {{ $sugestao }}"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
+                                    <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    {{ $sugestao }}
+                                </a>
+                                @endforeach
+                            </div>
+                            @endif
                         </div>
 
-                        <p class="text-sm md:text-lg lg:text-xl text-slate-100 font-medium max-w-3xl mx-auto drop-shadow-md mb-2 leading-relaxed">
-                            Acesse serviços públicos, acompanhe ações da Prefeitura e encontre informações oficiais com rapidez.
-                        </p>
                     </div>
                     @endif
                 </div>
 
             </div>
         </section>
-
         {{-- Espaçador para testes de scroll --}}
         <div style="height: 80vh; background: #f8fafc;"></div>
     </main>

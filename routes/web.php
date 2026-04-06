@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\NoticiaController;
@@ -44,6 +46,75 @@ Route::get('/secretarias/{id}', [PortalController::class, 'secretariaShow'])->na
 // Busca
 Route::get('/pesquisar', [PortalController::class, 'buscaGlobal'])->name('busca.index');
 Route::get('/busca/autocomplete', [PortalController::class, 'autocomplete'])->name('busca.autocomplete');
+
+Route::get('/api/plantao-hoje', function () {
+    $payload = Cache::remember('portal_plantao_hoje', now()->addMinutes(20), function () {
+        try {
+            $response = Http::timeout(15)->accept('text/html')->get('https://informativos.assai.pr.gov.br/');
+
+            if (!$response->ok()) {
+                return [
+                    'hasDuty' => false,
+                    'message' => 'Plantao indisponivel',
+                ];
+            }
+
+            $html = $response->body();
+            $matches = [];
+
+            if (!preg_match('/var\s+booking\s*=\s*(\[[\s\S]*?\]);/u', $html, $matches) || empty($matches[1])) {
+                return [
+                    'hasDuty' => false,
+                    'message' => 'Plantao indisponivel',
+                ];
+            }
+
+            $events = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
+            $today = now('America/Sao_Paulo')->toDateString();
+
+            $todayEvents = array_values(array_filter($events, static function (array $event) use ($today): bool {
+                if (!isset($event['start'])) {
+                    return false;
+                }
+
+                return str_starts_with((string) $event['start'], $today);
+            }));
+
+            $pickDuty = static function (string $type) use ($todayEvents): ?array {
+                foreach ($todayEvents as $event) {
+                    if (($event['type'] ?? '') === $type) {
+                        return [
+                            'title' => $event['title'] ?? null,
+                            'address' => $event['address'] ?? null,
+                            'contact' => $event['contact'] ?? null,
+                            'type' => $event['type'] ?? null,
+                        ];
+                    }
+                }
+
+                return null;
+            };
+
+            $farmacia = $pickDuty('Farmácia');
+            $posto = $pickDuty('Posto');
+
+            return [
+                'hasDuty' => ($farmacia !== null || $posto !== null),
+                'date' => $today,
+                'farmacia' => $farmacia,
+                'posto' => $posto,
+                'message' => ($farmacia !== null || $posto !== null) ? null : 'Sem plantao hoje',
+            ];
+        } catch (\Throwable $exception) {
+            return [
+                'hasDuty' => false,
+                'message' => 'Plantao indisponivel',
+            ];
+        }
+    });
+
+    return response()->json($payload);
+})->name('api.plantao.hoje');
 
 // Serviços ao Cidadão
 Route::get('/servicos', [PortalController::class, 'servicos'])->name('servicos.index');

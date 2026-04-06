@@ -14,25 +14,7 @@ class ServicoController extends Controller
     {
         $ordenacao = $request->string('ordenacao')->trim()->toString();
 
-        $icones = [
-            'padrao' => 'Padrão (Genérico)',
-            'saude' => 'Saúde (Coração/Cruz)',
-            'vagas' => 'Vagas/Emprego (Maleta)',
-            'documentos' => 'Documentos/Notas (Papel)',
-            'ouvidoria' => 'Ouvidoria (Megafone/Chat)',
-            'alvara' => 'Alvará/Empresa (Prédio)',
-            'educacao' => 'Educação (Capelo/Livro)',
-        ];
-
-        $iconesCompatibilidade = [
-            'padrao' => ['padrao', 'heroicon-o-currency-dollar', 'heroicon-o-wrench-screwdriver'],
-            'saude' => ['saude'],
-            'vagas' => ['vagas', 'heroicon-o-truck'],
-            'documentos' => ['documentos', 'heroicon-o-document-text', 'heroicon-o-clipboard-document-check'],
-            'ouvidoria' => ['ouvidoria', 'heroicon-o-phone', 'heroicon-o-envelope'],
-            'alvara' => ['alvara', 'heroicon-o-building-library', 'heroicon-o-key'],
-            'educacao' => ['educacao', 'heroicon-o-computer-desktop', 'heroicon-o-map-pin'],
-        ];
+        // Removido array de icones prefixados, pois agora usamos FontAwesome livremente
 
         $searchTerm = $request->string('search')->trim()->toString();
         if ($searchTerm === '') {
@@ -54,13 +36,6 @@ class ServicoController extends Controller
                 $status = $request->string('status')->trim()->toString();
 
                 $query->where('ativo', $status === 'ativo');
-            })
-            ->when($request->filled('icone'), function ($query) use ($request, $iconesCompatibilidade) {
-                $icone = $request->string('icone')->trim()->toString();
-
-                $iconesPermitidos = $iconesCompatibilidade[$icone] ?? [$icone];
-
-                $query->whereIn('icone', $iconesPermitidos);
             });
 
         if ($ordenacao === 'mais_acessados') {
@@ -73,7 +48,7 @@ class ServicoController extends Controller
 
         $servicos = $servicos->paginate(10)->appends($request->query());
 
-        return view('admin.servicos.index', compact('servicos', 'icones'));
+        return view('admin.servicos.index', compact('servicos'));
     }
 
     public function create()

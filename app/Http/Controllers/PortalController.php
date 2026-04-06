@@ -108,7 +108,7 @@ class PortalController extends Controller
                 $query->where('created_at', '>=', Carbon::now()->subDays(7));
             }])
             ->orderByDesc('acessos_recentes')
-            ->take(4)
+            ->take(3)
             ->pluck('titulo');
 
         return view('pages.index', compact('banners', 'alertasAtivos', 'noticias', 'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA'));
