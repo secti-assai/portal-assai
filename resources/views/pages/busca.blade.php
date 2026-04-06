@@ -34,8 +34,8 @@
                     </div>
                     <label for="campo-busca-portal" class="sr-only">Pesquisar no portal</label>
                     <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="Digite serviços, notícias, leis ou eventos..." class="flex-1 px-4 py-5 text-base md:text-lg text-gray-800 bg-transparent border-none focus:outline-none font-sans">
-                    <button type="submit" class="m-2 px-7 md:px-8 py-3 md:py-3.5 text-sm md:text-base font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all font-heading shrink-0 shadow-lg">
-                        Pesquisar
+                    <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-white transition-all bg-blue-600 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-blue-700 hover:shadow-lg font-heading">
+                        Buscar
                     </button>
                 </div>
             </form>

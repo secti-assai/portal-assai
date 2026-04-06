@@ -28,8 +28,17 @@ Route::get('/novo', function () {
         ->orderBy('created_at', 'desc')
         ->get();
 
+    // 2. Puxa as noticias para a seção "Noticias em destaque"
+    $noticias = Cache::remember('home_noticias', 3600, function () {
+        return \App\Models\Noticia::whereDate('data_publicacao', '<=', today())
+            ->orderBy('data_publicacao', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get();
+    });
+
     // 4. Envia os dados consolidados para a view
-    return view('pages.pagina', compact('banners'));
+    return view('pages.pagina', compact('banners', 'noticias'));
 })->name('home2');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
