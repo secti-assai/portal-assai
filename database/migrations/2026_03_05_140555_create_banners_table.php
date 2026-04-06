@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->string('subtitulo')->nullable();
-            $table->string('imagem');
             $table->string('link')->nullable();
             $table->boolean('ativo')->default(true);
             $table->timestamps();

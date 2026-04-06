@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
@@ -41,16 +40,13 @@ class BannerController extends Controller
         $request->validate([
             'titulo' => 'required|max:50', 
             'subtitulo' => 'nullable|max:80',
-            'imagem' => 'required|image|mimes:jpeg,png,jpg,webp|max:4096', // Imagens até 4MB
+            'link' => 'nullable|url',
         ]);
-
-        $caminhoImagem = $request->file('imagem')->store('banners', 'public');
 
         Banner::create([
             'titulo' => $request->titulo,
             'subtitulo' => $request->subtitulo,
             'link' => $request->link,
-            'imagem' => $caminhoImagem,
             'ativo' => $request->has('ativo'),
         ]);
 
@@ -70,20 +66,13 @@ class BannerController extends Controller
         $request->validate([
             'titulo' => 'required|max:50', 
             'subtitulo' => 'nullable|max:80',
-            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'link' => 'nullable|url',
         ]);
 
         $banner->titulo = $request->titulo;
         $banner->subtitulo = $request->subtitulo;
         $banner->link = $request->link;
         $banner->ativo = $request->has('ativo');
-
-        if ($request->hasFile('imagem')) {
-            if ($banner->imagem) {
-                Storage::disk('public')->delete($banner->imagem);
-            }
-            $banner->imagem = $request->file('imagem')->store('banners', 'public');
-        }
 
         $banner->save();
 
@@ -93,9 +82,6 @@ class BannerController extends Controller
     public function destroy($id)
     {
         $banner = Banner::findOrFail($id);
-        if ($banner->imagem) {
-            Storage::disk('public')->delete($banner->imagem);
-        }
         $banner->delete();
         return redirect()->route('admin.banners.index')->with('sucesso', 'Banner apagado!');
     }
@@ -114,5 +100,4 @@ class BannerController extends Controller
         $banner->save();
         return response()->json(['status' => 'success', 'ativo' => $banner->ativo]);
     }
-
 }

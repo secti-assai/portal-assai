@@ -83,7 +83,7 @@
                                             class="flex-1 min-w-0 bg-transparent border-none text-slate-900 md:text-slate-800 text-[15px] md:text-lg focus:ring-0 placeholder:text-slate-500 md:placeholder:text-slate-400 px-2 py-3 md:py-4 outline-none font-semibold md:font-medium w-full">
 
                                         {{-- Botão Redondo com melhor UX (tamanho generoso, feedback visual) --}}
-                                        <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-14 px-0 md:px-9 py-0 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
+                                        <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-auto px-4 py-3 md:px-10 md:py-3.5 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
                                             <span class="hidden md:inline">BUSCAR</span>
                                             {{-- Ícone de seta no desktop / lupa no mobile --}}
                                             <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -144,7 +144,7 @@
                                     class="flex-1 min-w-0 bg-transparent border-none text-slate-900 md:text-slate-800 text-[15px] md:text-lg focus:ring-0 placeholder:text-slate-500 md:placeholder:text-slate-400 px-2 py-3 md:py-4 outline-none font-semibold md:font-medium w-full">
 
                                 {{-- Botão Redondo com melhor UX (tamanho generoso, feedback visual) --}}
-                                <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-14 px-0 md:px-9 py-0 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
+                                <button type="submit" class="shrink-0 inline-flex items-center justify-center gap-3 w-14 h-14 md:w-auto md:h-auto px-4 py-3 md:px-10 md:py-3.5 bg-yellow-400 text-blue-950 font-black leading-none text-[11px] md:text-sm rounded-full hover:bg-yellow-300 active:scale-95 focus-visible:ring-4 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap">
                                     <span class="hidden md:inline">BUSCAR</span>
                                     {{-- Ícone de seta no desktop / lupa no mobile --}}
                                     <svg class="shrink-0 w-[16px] h-[16px] md:w-5 md:h-5 md:hidden transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

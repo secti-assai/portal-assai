@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.banners.update', $banner->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.banners.update', $banner->id) }}" method="POST" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
         @method('PUT')
 
@@ -60,17 +60,6 @@
         </div>
 
         <div class="space-y-6">
-            
-            <x-admin.panel title="Upload de Arquivo">
-                <x-admin.file-upload
-                    name="imagem"
-                    id="banner-imagem"
-                    label="Substituir Imagem"
-                    accept="image/*"
-                    help-text="PNG, JPG ou WEBP até 5MB"
-                    :preview-src="$banner->imagem ? asset('storage/' . $banner->imagem) : null"
-                />
-            </x-admin.panel>
 
             <x-admin.panel title="Visibilidade">
                 <x-admin.checkbox name="ativo" label="Exibir no carrossel" :checked="$banner->ativo" color="indigo" />
@@ -84,5 +73,4 @@
         </div>
     </form>
 </div>
-
 @endsection

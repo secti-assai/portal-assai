@@ -12,7 +12,7 @@ class Banner extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['titulo', 'subtitulo', 'imagem', 'link', 'ativo'];
+    protected $fillable = ['titulo', 'subtitulo', 'link', 'ativo'];
 
     protected $casts = [
         'ativo' => 'boolean',

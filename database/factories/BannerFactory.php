@@ -39,7 +39,6 @@ class BannerFactory extends Factory
         return [
             'titulo'    => $banner['titulo'],
             'subtitulo' => $banner['subtitulo'],
-            'imagem'    => 'img/Assaí.jpg',
             'link'      => $banner['link'],
             'ativo'     => fake()->boolean(80),
         ];
