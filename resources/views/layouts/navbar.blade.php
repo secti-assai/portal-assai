@@ -84,6 +84,69 @@
         };
     }
 
+    if (typeof window.dutyWidget !== 'function') {
+        window.dutyWidget = function() {
+            return {
+                loading: true,
+                error: false,
+                hasDuty: false,
+                farmacia: null,
+                posto: null,
+                message: '',
+
+                get dutySummary() {
+                    const parts = [];
+
+                    if (this.farmacia) {
+                        const farmaciaInfo = this.farmacia.address || this.farmacia.title;
+                        if (farmaciaInfo) {
+                            parts.push('Farmacia: ' + farmaciaInfo);
+                        }
+                    }
+
+                    if (this.posto) {
+                        const postoInfo = this.posto.address || this.posto.title;
+                        if (postoInfo) {
+                            parts.push('Posto: ' + postoInfo);
+                        }
+                    }
+
+                    return parts.join(' | ');
+                },
+
+                async init() {
+                    try {
+                        const response = await fetch("{{ route('api.plantao.hoje') }}", {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('API Error');
+                        }
+
+                        const data = await response.json();
+
+                        this.hasDuty = Boolean(data?.hasDuty);
+                        this.farmacia = data?.farmacia ?? null;
+                        this.posto = data?.posto ?? null;
+                        this.message = data?.message ?? '';
+                        this.error = false;
+                    } catch (err) {
+                        this.error = true;
+                        this.hasDuty = false;
+                        this.farmacia = null;
+                        this.posto = null;
+                        this.message = 'Plantao indisponivel';
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            };
+        };
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         // Inversão Dinâmica de Cor
         const header = document.getElementById('site-header');
@@ -150,6 +213,13 @@
 @php
 $navSecretarias = \App\Models\Secretaria::orderBy('nome')->get(['id', 'nome'])->map(function ($sec) {
 $sec->nome_curto = preg_replace('/^Secretaria(?:\s+Municipal)?\s+(?:de|da|do|das|dos)\s+/iu', '', $sec->nome) ?: $sec->nome;
+$nomeMenuBase = trim((string) $sec->nome_curto);
+
+if (in_array(mb_strtolower($nomeMenuBase), ['chefe de gabinete', 'procuradoria geral'], true)) {
+$sec->nome_menu = $nomeMenuBase;
+} else {
+$sec->nome_menu = 'Secretaria Municipal de ' . $nomeMenuBase;
+}
 return $sec;
 });
 @endphp
@@ -157,12 +227,12 @@ return $sec;
 <header class="fixed top-0 left-0 right-0 z-[60] w-full bg-transparent text-white border-b border-transparent transition-all duration-300 font-sans" id="site-header">
 
     {{-- TOP BAR (Sólida e Centralizada com o Container) --}}
-    <div class="bg-blue-950 border-b border-blue-900 transition-colors duration-300">
-        <div id="top-bar" class="hidden lg:flex container mx-auto items-center justify-center px-4 sm:px-6 py-1.5 text-xs font-medium">
-            <div class="flex items-center justify-center flex-wrap gap-3 text-blue-100">
-                <a href="{{ route('pages.acessibilidade') }}" class="font-medium text-white tracking-wide text-[11px] hover:text-yellow-400 transition-colors">Acessibilidade</a>
+    <div class="bg-blue-900 border-b border-white/10 transition-colors duration-300">
+        <div id="top-bar" class="hidden lg:flex container mx-auto items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans">
+            <div class="flex items-center justify-center flex-wrap gap-3 text-white">
+                <a href="{{ route('pages.acessibilidade') }}" class="font-bold hover:text-yellow-400 transition-colors">Acessibilidade</a>
                 <span class="text-white/20">|</span>
-                <button type="button" class="btn-contrast hover:text-yellow-400 transition-colors flex items-center gap-1.5">
+                <button type="button" class="btn-contrast font-bold hover:text-yellow-400 transition-colors flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
@@ -173,20 +243,39 @@ return $sec;
                 <span class="text-white/20">|</span>
                 <div x-data="weatherWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
                     <template x-if="loading">
-                        <span class="text-[11px] font-medium text-blue-100">Clima...</span>
+                        <span class="text-xs font-medium text-white">Clima...</span>
                     </template>
                     <template x-if="error && !loading">
-                        <span class="text-[11px] font-medium text-blue-100">Clima indisponível</span>
+                        <span class="text-xs font-medium text-white">Clima indisponível</span>
                     </template>
                     <template x-if="!loading && !error">
                         <div class="flex items-center gap-2.5">
                             <i :class="weatherIconClass" class="text-yellow-300 drop-shadow-sm text-sm"></i>
-                            <span class="text-[11px] font-semibold" x-text="weatherLabel"></span>
+                            <span class="text-xs font-semibold" x-text="weatherLabel"></span>
                             <span class="text-white/30">|</span>
-                            <span class="text-[11px] font-semibold" x-text="formatNumber(temperature) + '°C'"></span>
-                            <span class="hidden xl:inline text-[11px] text-blue-100" x-text="'Chuva: ' + formatNumber(precipitation) + ' mm'"></span>
-                            <span class="hidden xl:inline text-[11px] text-blue-100" x-text="'Umid.: ' + formatNumber(humidity) + '%'"></span>
-                            <span class="hidden 2xl:inline text-[11px] text-blue-100" x-text="'Vento: ' + formatNumber(windSpeed) + ' km/h'"></span>
+                            <span class="text-xs font-semibold" x-text="formatNumber(temperature) + '°C'"></span>
+                            <span class="hidden xl:inline text-xs text-white" x-text="'Chuva: ' + formatNumber(precipitation) + ' mm'"></span>
+                            <span class="hidden xl:inline text-xs text-white" x-text="'Umid.: ' + formatNumber(humidity) + '%'"></span>
+                            <span class="hidden 2xl:inline text-xs text-white" x-text="'Vento: ' + formatNumber(windSpeed) + ' km/h'"></span>
+                        </div>
+                    </template>
+                </div>
+                <span class="text-white/20">|</span>
+                <div x-data="dutyWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
+                    <template x-if="loading">
+                        <span class="text-xs font-medium text-white">Plantão de hoje...</span>
+                    </template>
+                    <template x-if="error && !loading">
+                        <span class="text-xs font-medium text-white">Plantões de hoje: indisponivel</span>
+                    </template>
+                    <template x-if="!loading && !error && !hasDuty">
+                        <span class="text-xs font-medium text-white" x-text="'Plantães de hoje: ' + (message || 'Sem plantão hoje')"></span>
+                    </template>
+                    <template x-if="!loading && !error && hasDuty">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-kit-medical text-yellow-300 text-sm"></i>
+                            <span class="text-xs font-semibold">Plantões de hoje:</span>
+                            <span class="text-xs font-semibold" x-text="dutySummary"></span>
                         </div>
                     </template>
                 </div>
@@ -203,14 +292,15 @@ return $sec;
         </a>
 
         {{-- Botão Mobile Hamburger --}}
-        <button id="mobile-open-btn" class="lg:hidden p-2 -mr-2 text-inherit hover:opacity-75 transition-opacity" aria-label="Abrir menu">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="mobile-open-btn" class="lg:hidden inline-flex flex-col items-center justify-center gap-0.5 px-3 py-2 -mr-1 text-inherit bg-blue-50/10 border border-white/20 rounded-xl hover:bg-blue-50/20 transition-colors" aria-label="Abrir menu">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
+            <span class="text-[10px] font-bold uppercase leading-none tracking-wide">Menu</span>
         </button>
 
         {{-- Menu Desktop --}}
-        <nav class="hidden lg:flex items-center lg:gap-3 xl:gap-5 text-[15px] xl:text-base font-bold transition-colors duration-300">
+        <nav class="hidden lg:flex items-center lg:gap-3 xl:gap-5 text-base font-medium transition-colors duration-300">
 
             <a href="{{ route('home2') }}" class="transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('home2') ? 'border-b-2 border-yellow-400' : '' }}">
                 Início
@@ -223,7 +313,7 @@ return $sec;
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <div class="absolute left-0 top-full mt-0 w-48 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-hidden text-slate-700">
+                <div class="absolute left-0 top-full mt-0 w-52 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-hidden text-slate-700">
                     <a href="{{ route('pages.sobre') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 {{ request()->routeIs('pages.sobre') ? 'bg-blue-50 text-blue-700' : '' }}">História e Perfil</a>
                     <a href="{{ route('pages.turismo') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 {{ request()->routeIs('pages.turismo') ? 'bg-blue-50 text-blue-700' : '' }}">Turismo</a>
                 </div>
@@ -236,12 +326,12 @@ return $sec;
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <div class="absolute left-0 top-full mt-0 w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 max-h-96 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full text-slate-700">
-                    <a href="{{ route('secretarias.index') }}" class="block px-4 py-3 bg-slate-50/80 text-[13px] text-blue-900 font-semibold border-b border-slate-200 hover:bg-blue-100/80">Todas</a>
+                <div class="absolute left-0 top-full mt-0 w-[34rem] max-w-[90vw] bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 max-h-96 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full text-slate-700">
+                    <a href="{{ route('secretarias.index') }}" class="block px-4 py-3 bg-slate-50/80 text-[13px] text-blue-900 font-medium border-b border-slate-200 hover:bg-blue-100/80">Todas</a>
 
                     @foreach($navSecretarias as $sec)
-                    <a href="{{ route('secretarias.show', $sec->id) }}" class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 last:border-0 transition-colors truncate" title="{{ $sec->nome }}">
-                        {{ $sec->nome_curto }}
+                    <a href="{{ route('secretarias.show', $sec->id) }}" class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 last:border-0 transition-colors whitespace-nowrap" title="{{ $sec->nome_menu }}">
+                        {{ $sec->nome_menu }}
                     </a>
                     @endforeach
                 </div>
@@ -252,7 +342,7 @@ return $sec;
             </a>
 
             <a href="{{ route('pages.transparencia') }}" target="_blank" rel="noopener noreferrer"
-                class="ml-1 flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 transition-colors font-bold text-sm shadow border border-transparent">
+                class="ml-1 flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 transition-colors font-medium text-sm shadow border border-transparent">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
@@ -262,7 +352,7 @@ return $sec;
             <a href="https://gov.assai.pr.gov.br/cpf-check"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="ml-3 px-5 py-2 rounded-lg flex items-center font-bold text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900">
+                class="ml-3 px-5 py-2 rounded-lg flex items-center font-medium text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900">
                 Entrar no Gov.Assai
                 <svg class="w-4 h-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -317,12 +407,33 @@ return $sec;
                         </div>
                     </template>
                 </div>
+
+                <div x-data="dutyWidget()" x-init="init()" class="flex items-center text-white text-xs border-t border-white/10 pt-2" aria-live="polite">
+                    <template x-if="loading">
+                        <span class="text-xs text-blue-100">Plantões de hoje...</span>
+                    </template>
+                    <template x-if="error && !loading">
+                        <span class="text-xs text-blue-100">Plantões de hoje: indisponível</span>
+                    </template>
+                    <template x-if="!loading && !error && !hasDuty">
+                        <span class="text-xs text-blue-100" x-text="'Plantões de hoje: ' + (message || 'Sem plantão hoje')"></span>
+                    </template>
+                    <template x-if="!loading && !error && hasDuty">
+                        <div class="flex items-start gap-2 text-xs">
+                            <i class="fa-solid fa-kit-medical text-yellow-300 mt-0.5"></i>
+                            <div class="flex-1 min-w-0 text-blue-100">
+                                <span class="font-semibold text-white">Plantões de hoje:</span>
+                                <span class="ml-1" x-text="dutySummary"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
 
             <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/40">
-                <div class="flex flex-col px-3 md:px-8 py-4 md:py-6 gap-1 md:gap-2 font-bold text-sm md:text-base">
+                <div class="flex flex-col px-3 md:px-8 py-4 md:py-6 gap-1 md:gap-2 font-medium text-base">
 
-                    <a href="{{ route('home2') }}" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between {{ request()->routeIs('home2') ? 'bg-white/10 text-white font-extrabold' : 'hover:bg-white/5 font-bold' }}">
+                    <a href="{{ route('home2') }}" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between {{ request()->routeIs('home2') ? 'bg-white/10 text-white font-medium' : 'hover:bg-white/5 font-medium' }}">
                         <span>Início</span>
                     </a>
 
@@ -336,8 +447,8 @@ return $sec;
                             </svg>
                         </button>
                         <div id="mobile-submenu" class="{{ request()->routeIs('pages.sobre') || request()->routeIs('pages.turismo') ? 'flex' : 'hidden' }} flex-col bg-black/20 divide-y divide-white/5">
-                            <a href="{{ route('pages.sobre') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-[13px] md:text-sm transition {{ request()->routeIs('pages.sobre') ? 'text-yellow-400 font-extrabold' : 'text-blue-100 hover:bg-white/5 hover:text-white font-medium' }}">História e Perfil</a>
-                            <a href="{{ route('pages.turismo') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-[13px] md:text-sm transition {{ request()->routeIs('pages.turismo') ? 'text-yellow-400 font-extrabold' : 'text-blue-100 hover:bg-white/5 hover:text-white font-medium' }}">Turismo</a>
+                            <a href="{{ route('pages.sobre') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-sm transition {{ request()->routeIs('pages.sobre') ? 'text-yellow-400' : 'text-blue-100 hover:bg-white/5 hover:text-white' }}">História e Perfil</a>
+                            <a href="{{ route('pages.turismo') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-sm transition {{ request()->routeIs('pages.turismo') ? 'text-yellow-400' : 'text-blue-100 hover:bg-white/5 hover:text-white' }}">Turismo</a>
                         </div>
                     </div>
 
@@ -351,21 +462,21 @@ return $sec;
                             </svg>
                         </button>
                         <div id="mobile-submenu-sec" class="{{ request()->routeIs('secretarias.*') && !request()->routeIs('secretarias.index') ? 'flex' : 'hidden' }} flex-col bg-black/20 divide-y divide-white/5 max-h-64 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
-                            <a href="{{ route('secretarias.index') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-[13px] md:text-sm transition text-yellow-400 hover:bg-white/5 font-normal whitespace-nowrap overflow-hidden text-ellipsis">Todas</a>
+                            <a href="{{ route('secretarias.index') }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-sm transition text-yellow-400 hover:bg-white/5 whitespace-nowrap overflow-hidden text-ellipsis">Todas</a>
 
                             @foreach($navSecretarias as $sec)
-                            <a href="{{ route('secretarias.show', $sec->id) }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-[13px] md:text-sm transition text-blue-100 hover:bg-white/5 hover:text-white font-normal whitespace-nowrap overflow-hidden text-ellipsis">
-                                {{ $sec->nome_curto }}
+                            <a href="{{ route('secretarias.show', $sec->id) }}" class="block w-full px-6 md:px-10 py-2 md:py-3 text-[13px] leading-tight transition text-blue-100 hover:bg-white/5 hover:text-white whitespace-normal break-words" title="{{ $sec->nome_menu }}">
+                                {{ $sec->nome_menu }}
                             </a>
                             @endforeach
                         </div>
                     </div>
 
-                    <a href="https://assai.atende.net/subportal/ouvidoria" target="_blank" rel="noopener noreferrer" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between hover:bg-white/5 font-bold">
+                    <a href="https://assai.atende.net/subportal/ouvidoria" target="_blank" rel="noopener noreferrer" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between hover:bg-white/5 font-medium">
                         <span>Ouvidoria</span>
                     </a>
 
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="px-4 md:px-6 py-2.5 md:py-3 rounded-xl transition flex items-center gap-2 hover:bg-emerald-800 bg-emerald-900/50 text-emerald-300 font-bold border border-emerald-700/50 mt-1">
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="px-4 md:px-6 py-2.5 md:py-3 rounded-xl transition flex items-center gap-2 hover:bg-emerald-800 bg-emerald-900/50 text-emerald-300 font-medium border border-emerald-700/50 mt-1">
                         <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
@@ -375,56 +486,13 @@ return $sec;
                     <a href="https://gov.assai.pr.gov.br/cpf-check"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="px-4 md:px-6 py-3 md:py-4 rounded-xl transition flex items-center justify-center gap-2 mt-2 md:mt-3 bg-yellow-400 hover:bg-yellow-300 text-blue-950 font-black shadow-lg active:scale-95 transform outline-none">
+                        class="px-4 md:px-6 py-3 md:py-4 rounded-xl transition flex items-center justify-center gap-2 mt-2 md:mt-3 bg-yellow-400 hover:bg-yellow-300 text-blue-950 font-medium shadow-lg active:scale-95 transform outline-none">
                         <span>Entrar no Gov.Assaí</span>
                         <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                         </svg>
                     </a>
 
-                </div>
-            </div>
-
-            <div class="p-4 md:p-8 bg-blue-950/50 shrink-0 border-t border-white/10 mt-auto">
-                <p class="text-[10px] md:text-sm uppercase tracking-widest text-blue-400 font-bold mb-2.5 md:mb-5 px-1">Links Oficiais</p>
-                <div class="grid grid-cols-2 gap-2 md:gap-4 text-xs md:text-lg text-blue-100">
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">Transparência</span>
-                    </a>
-                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">Diário Oficial</span>
-                    </a>
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">Licitações</span>
-                    </a>
-                    <a href="https://assai.atende.net/subportal/ouvidoria" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">Ouvidoria</span>
-                    </a>
-                    <a href="https://leismunicipais.com.br/prefeitura/pr/assai" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">Leis Mun.</span>
-                    </a>
-                    <a href="https://e-gov.betha.com.br/e-nota/login.faces" target="_blank" class="flex flex-col items-start gap-1 md:gap-2 p-2 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition group">
-                        <svg class="w-4 h-4 md:w-8 md:h-8 text-blue-400 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                        </svg>
-                        <span class="font-medium leading-tight text-[11px] sm:text-xs md:text-base">E-SIC</span>
-                    </a>
                 </div>
             </div>
         </div>
