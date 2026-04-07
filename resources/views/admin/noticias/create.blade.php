@@ -80,11 +80,21 @@
             <div class="bg-white border border-slate-200 shadow-sm rounded-xl p-6 space-y-5">
                 <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-4">Publicação</h3>
                 
+                {{-- Novo Toggle de Ativo/Inativo --}}
+                <div class="mb-2">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="ativo" value="1" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <span class="ml-3 text-sm font-bold text-slate-700">Notícia Ativa no Site</span>
+                    </label>
+                </div>
+
+                {{-- Categoria agora é opcional --}}
                 <x-admin.select
                     name="categoria"
                     label="Categoria"
-                    :options="$categorias"
-                    required="true"
+                    :options="['' => 'Nenhuma'] + $categorias"
+                    required="false"
                     class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
                 />
 

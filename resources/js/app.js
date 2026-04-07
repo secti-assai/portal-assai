@@ -5,6 +5,7 @@ import '@govbr-ds/core/dist/core.min.js';
 
 // Importa a lógica separada da Navbar
 import './navbar';
+import './widgets';
 
 /**
  * ==========================================================================

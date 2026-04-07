@@ -28,7 +28,6 @@ class PortalController extends Controller
     // Página inicial
     public function index()
     {
-        // 1. Busca os Banners (usando created_at em vez de ordem)
         $banners = Cache::remember('home_banners', 3600, function () {
             return Banner::where('ativo', true)
                 ->orderBy('created_at', 'desc')
@@ -41,16 +40,16 @@ class PortalController extends Controller
                 ->get();
         });
 
-        // 2. Busca as Notícias
+        // 2. Busca as Notícias: Esconde as inativas!
         $noticias = Cache::remember('home_noticias', 3600, function () {
-            return Noticia::whereDate('data_publicacao', '<=', today())
+            return Noticia::where('ativo', true)
+                ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->take(4)
                 ->get();
         });
 
-        // 3. Busca os Próximos 5 Eventos públicos (exceto cancelados; fechamento automático por data)
         $eventos = Cache::remember('home_eventos_v4', 3600, function () {
             return Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
@@ -58,7 +57,6 @@ class PortalController extends Controller
                 ->get();
         });
 
-        // 4. Busca os Programas (Assaí em Ação) — destaques primeiro, complementa com os mais recentes
         $programas = Cache::remember('home_programas', 3600, function () {
             $destaques = Programa::where('ativo', true)
                 ->where('destaque', true)
@@ -77,7 +75,6 @@ class PortalController extends Controller
                 );
         });
 
-        // 5. Grelha principal: serviços ordenados pelo total histórico de acessos
         $servicos = Cache::remember('home_servicos', 3600, function () {
             return Servico::where('ativo', true)
                 ->orderByDesc('acessos')
@@ -85,24 +82,18 @@ class PortalController extends Controller
                 ->get();
         });
 
-        // Pegando os dados do Conecta com CACHE de 30 minutos (1800 segundos)
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
-                // ATENÇÃO: Troque a URL pelo link oficial do Conecta se já estiver em produção
                 $response = Http::timeout(3)->get('https://conecta.assai.pr.gov.br/api/public/inscricoes-abertas');
-
                 if ($response->successful()) {
                     return $response->json()['editais'] ?? [];
                 }
             } catch (\Exception $e) {
-                // Em caso de erro (ex: Conecta caiu), retorna array vazio e não derruba o Portal!
                 return [];
             }
-
             return [];
         });
 
-        // 6. Trending Topics: 4 serviços mais acessados nos últimos 7 dias (barra de pesquisa)
         $sugestoesIA = Servico::where('ativo', true)
             ->withCount(['acessosLog as acessos_recentes' => function ($query) {
                 $query->where('created_at', '>=', Carbon::now()->subDays(7));
@@ -117,13 +108,15 @@ class PortalController extends Controller
     // Página de notícias
     public function noticias(Request $request)
     {
-        $categorias = Noticia::whereDate('data_publicacao', '<=', today())
+        $categorias = Noticia::where('ativo', true)
+            ->whereDate('data_publicacao', '<=', today())
             ->whereNotNull('categoria')
             ->distinct()
             ->orderBy('categoria')
             ->pluck('categoria');
 
-        $query = Noticia::whereDate('data_publicacao', '<=', today())
+        $query = Noticia::where('ativo', true)
+            ->whereDate('data_publicacao', '<=', today())
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc');
 
@@ -146,20 +139,17 @@ class PortalController extends Controller
 
     public function agenda(Request $request)
     {
-        // 1. Mês base: parâmetro ?mes=Y-m ou mês atual
         $mes      = $request->get('mes');
         $dataBase = $mes
             ? Carbon::createFromFormat('Y-m', $mes)->startOfMonth()
             : now()->startOfMonth();
 
-        // 2. Variáveis de navegação e cabeçalho do mini-calendário
         $mesAnterior       = $dataBase->copy()->subMonth()->format('Y-m');
         $mesProximo        = $dataBase->copy()->addMonth()->format('Y-m');
         $tituloMes         = $dataBase->translatedFormat('F Y');
         $diasNoMes         = $dataBase->daysInMonth;
-        $primeiroDiaSemana = $dataBase->dayOfWeek; // 0=Dom … 6=Sáb
+        $primeiroDiaSemana = $dataBase->dayOfWeek;
 
-        // 3. Dias com evento no mês visualizado (highlights do calendário)
         $diasComEvento = Evento::futurosPublicos()
             ->whereYear('data_inicio', $dataBase->year)
             ->whereMonth('data_inicio', $dataBase->month)
@@ -169,18 +159,15 @@ class PortalController extends Controller
             ->values()
             ->all();
 
-        // 4. Dados do calendário (compartilhados entre resposta AJAX e full-page)
         $calendarData = compact(
             'dataBase', 'mesAnterior', 'mesProximo', 'tituloMes',
             'diasNoMes', 'primeiroDiaSemana', 'diasComEvento'
         );
 
-        // Resposta AJAX: devolve apenas o HTML do widget do calendário
         if ($request->ajax()) {
             return response(view('partials.calendario-widget', $calendarData)->render());
         }
 
-        // 5. Feed principal: todos os eventos futuros paginados
         $eventos = Evento::publico()
             ->ordenarPorDataMaisProxima()
             ->paginate(8);
@@ -192,7 +179,6 @@ class PortalController extends Controller
     {
         $evento = Evento::findOrFail($id);
 
-        // Outros eventos futuros para sugestão no sidebar (exclui o atual)
         $outrosEventos = Evento::where('id', '!=', $id)
             ->publico()
             ->ordenarPorDataMaisProxima()
@@ -247,15 +233,9 @@ class PortalController extends Controller
     public function acessarServico($id)
     {
         $servico = Servico::findOrFail($id);
-
-        // Contabiliza no histórico geral
         $servico->increment('acessos');
-
-        // Regista no log semanal (usado pelas sugestões da barra de pesquisa)
         ServicoAcesso::create(['servico_id' => $servico->id]);
-
         $destino = $servico->url_acesso ?? $servico->link ?? route('servicos.index');
-
         return redirect($destino);
     }
 
@@ -272,7 +252,6 @@ class PortalController extends Controller
     {
         return view('pages.contato');
     }
-
 
     public function enviarContato(Request $request)
     {
@@ -339,7 +318,8 @@ class PortalController extends Controller
             return response()->json([]);
         }
 
-        $noticiasQuery = Noticia::query();
+        // Esconde notícias inativas no AutoComplete
+        $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
 
         $noticias = $noticiasQuery
@@ -408,7 +388,8 @@ class PortalController extends Controller
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
-            $noticiasQuery = Noticia::query();
+            // Esconde notícias inativas na Busca Global
+            $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
 
             $noticias = $noticiasQuery

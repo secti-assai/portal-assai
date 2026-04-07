@@ -31,7 +31,7 @@
         <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-3">
             <h2 class="font-semibold text-slate-700 mr-auto">Registros Cadastrados</h2>
             <form method="GET" action="{{ route('admin.noticias.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título ou conteúdo..." />
+                <x-admin.filter-search name="search" value="{{ request('search') }}" placeholder="Pesquisar por título..." />
                 <x-admin.filter-select
                     name="categoria"
                     :options="['' => 'Todas as categorias'] + $categorias"
@@ -40,7 +40,7 @@
                 />
                 <x-admin.filter-select
                     name="status"
-                    :options="['' => 'Qualquer status', 'publicado' => 'Publicado', 'rascunho' => 'Rascunho']"
+                    :options="['' => 'Qualquer status', 'publicado' => 'Ativo', 'rascunho' => 'Oculto/Inativo']"
                     :value="request('status')"
                     placeholder="Qualquer status"
                 />
@@ -58,8 +58,7 @@
                     <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
                         <th class="p-4 font-semibold w-24">Capa</th>
                         <th class="p-4 font-semibold">Título</th>
-                        <th class="p-4 font-semibold w-40">Categoria</th>
-                        <th class="p-4 font-semibold w-32">Publicação</th>
+                        <th class="p-4 font-semibold w-48">Info / Status</th>
                         <th class="p-4 font-semibold text-center w-40">Ações</th>
                     </tr>
                 </thead>
@@ -77,15 +76,21 @@
                             </td>
                             <td class="p-4 max-w-0 overflow-hidden">
                                 <p class="font-bold text-slate-800 truncate" title="{{ $noticia->titulo }}">{{ \Illuminate\Support\Str::limit($noticia->titulo, 100) }}</p>
+                                <p class="text-xs text-slate-400 mt-1">Data: {{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}</p>
+                            </td>
+                            <td class="p-4 flex flex-col items-start gap-1.5">
+                                @if($noticia->ativo)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">Ativa no Site</span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800">Oculta/Inativa</span>
+                                @endif
+                                
+                                @if($noticia->categoria)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">{{ $noticia->categoria }}</span>
+                                @endif
                             </td>
                             <td class="p-4">
-                                <x-admin.status-badge :label="$noticia->categoria" tone="blue" />
-                            </td>
-                            <td class="p-4 text-slate-500 font-medium">
-                                {{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}
-                            </td>
-                            <td class="p-4">
-                                <div class="flex items-center justify-end gap-2">
+                                <div class="flex items-center justify-center gap-2">
                                     <x-admin.icon-action href="{{ route('noticias.show', $noticia->slug) }}" target="_blank" color="slate" title="Visualizar no Portal">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </x-admin.icon-action>
@@ -104,7 +109,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-8 text-center text-slate-500">
+                            <td colspan="4" class="p-8 text-center text-slate-500">
                                 Nenhum registro encontrado. Utilize o botão "Nova Notícia" para iniciar.
                             </td>
                         </tr>

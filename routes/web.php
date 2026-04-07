@@ -33,7 +33,7 @@ Route::get('/novo', function () {
         return \App\Models\Noticia::whereDate('data_publicacao', '<=', today())
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(4)
+            ->take(3)
             ->get();
     });
 
@@ -124,6 +124,41 @@ Route::get('/api/plantao-hoje', function () {
 
     return response()->json($payload);
 })->name('api.plantao.hoje');
+
+Route::get('/api/clima-atual', function () {
+    $payload = Cache::remember('portal_clima_atual', now()->addMinutes(15), function () {
+        try {
+            $response = Http::timeout(15)->acceptJson()->get('https://api.open-meteo.com/v1/forecast', [
+                'latitude' => -23.3733,
+                'longitude' => -50.8417,
+                'current' => 'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m',
+                'temperature_unit' => 'celsius',
+                'wind_speed_unit' => 'kmh',
+                'precipitation_unit' => 'mm',
+                'timezone' => 'America/Sao_Paulo',
+            ]);
+
+            if (!$response->ok()) {
+                return [
+                    'current' => null,
+                    'error' => true,
+                ];
+            }
+
+            return [
+                'current' => $response->json('current'),
+                'error' => false,
+            ];
+        } catch (\Throwable $exception) {
+            return [
+                'current' => null,
+                'error' => true,
+            ];
+        }
+    });
+
+    return response()->json($payload);
+})->name('api.clima.atual');
 
 // Serviços ao Cidadão
 Route::get('/servicos', [PortalController::class, 'servicos'])->name('servicos.index');

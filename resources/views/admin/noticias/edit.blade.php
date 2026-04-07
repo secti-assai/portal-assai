@@ -80,12 +80,23 @@
             
             {{-- Bloco de Publicação --}}
             <x-admin.panel title="Publicação" class="space-y-5">
+                
+                {{-- Toggle de Ativo/Inativo inteligente baseado no banco --}}
+                <div class="mb-2">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="ativo" value="1" class="sr-only peer" {{ $noticia->ativo ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <span class="ml-3 text-sm font-bold text-slate-700">Notícia Ativa no Site</span>
+                    </label>
+                </div>
+
+                {{-- Categoria Opcional --}}
                 <x-admin.select
                     name="categoria"
                     label="Categoria"
-                    :options="$categorias"
+                    :options="['' => 'Nenhuma'] + $categorias"
                     :value="$noticia->categoria"
-                    required="true"
+                    required="false"
                     class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
                 />
 
@@ -104,7 +115,7 @@
                 <x-admin.file-upload
                     name="imagem_capa"
                     id="noticia-imagem-capa"
-                    label="Imagem de Capa"
+                    label="Nova Imagem de Capa"
                     accept="image/*"
                     help-text="PNG, JPG, GIF até 2MB"
                     :preview-src="$noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : null"
