@@ -10,8 +10,7 @@ export default defineConfig({
                 'resources/css/admin.css',
                 'resources/js/admin.js', 
                 'resources/css/home.css', 
-                'resources/js/home.js',
-                'resources/js/navbar.js' 
+                'resources/js/home.js'
             ],
             refresh: true,
         }),

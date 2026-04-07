@@ -74,21 +74,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Notícias (publicadas e rascunho)
-        Noticia::factory(200)->create();
-
-        Noticia::factory()->create([
-            'titulo' => 'Notícia de teste publicada',
-            'categoria' => 'Saúde',
-            'data_publicacao' => now()->subDays(2),
-        ]);
-
-        Noticia::factory()->create([
-            'titulo' => 'Notícia de teste rascunho',
-            'categoria' => 'Educação',
-            'data_publicacao' => now()->addDays(10),
-        ]);
-
         // Eventos
         Evento::factory(50)->create();
 

@@ -1,310 +1,8 @@
-<script>
-    if (typeof window.weatherWidget !== 'function') {
-        window.weatherWidget = function() {
-            return {
-                temperature: null,
-                apparentTemperature: null,
-                humidity: null,
-                windSpeed: null,
-                precipitation: null,
-                weatherCode: null,
-                loading: true,
-                error: false,
+﻿@php
+// Verifica se estamos na página inicial para aplicar o efeito transparente.
+// Ajuste 'home2' para o nome da rota da sua home oficial.
+$isHome = request()->routeIs('home2') || request()->routeIs('home');
 
-                formatNumber(value) {
-                    if (value === null || value === undefined || Number.isNaN(value)) {
-                        return '--';
-                    }
-                    return Math.round(value);
-                },
-
-                get weatherLabel() {
-                    const code = Number(this.weatherCode);
-
-                    if (code === 0) return 'Céu limpo';
-                    if ([1, 2].includes(code)) return 'Poucas nuvens';
-                    if (code === 3) return 'Nublado';
-                    if ([45, 48].includes(code)) return 'Nevoeiro';
-                    if ([51, 53, 55].includes(code)) return 'Garoa';
-                    if ([56, 57].includes(code)) return 'Garoa gelada';
-                    if ([61, 63, 65].includes(code)) return 'Chuva';
-                    if ([66, 67].includes(code)) return 'Chuva gelada';
-                    if ([71, 73, 75, 77, 85, 86].includes(code)) return 'Neve';
-                    if ([80, 81, 82].includes(code)) return 'Pancadas';
-                    if ([95, 96, 99].includes(code)) return 'Trovoadas';
-
-                    return 'Tempo instável';
-                },
-
-                get weatherIconClass() {
-                    const code = Number(this.weatherCode);
-
-                    if (code === 0) return 'fas fa-sun';
-                    if ([1, 2].includes(code)) return 'fas fa-cloud-sun';
-                    if (code === 3) return 'fas fa-cloud';
-                    if ([45, 48].includes(code)) return 'fas fa-smog';
-                    if ([51, 53, 55, 56, 57].includes(code)) return 'fas fa-cloud-rain';
-                    if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 'fas fa-cloud-showers-heavy';
-                    if ([71, 73, 75, 77, 85, 86].includes(code)) return 'fas fa-snowflake';
-                    if ([95, 96, 99].includes(code)) return 'fas fa-bolt';
-
-                    return 'fas fa-cloud';
-                },
-
-                async init() {
-                    try {
-                        const latitude = -23.3733;
-                        const longitude = -50.8417;
-                        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timezone=America/Sao_Paulo`;
-
-                        const response = await fetch(url);
-                        if (!response.ok) throw new Error('API Error');
-
-                        const data = await response.json();
-                        this.temperature = this.formatNumber(data?.current?.temperature_2m);
-                        this.apparentTemperature = this.formatNumber(data?.current?.apparent_temperature);
-                        this.humidity = this.formatNumber(data?.current?.relative_humidity_2m);
-                        this.windSpeed = this.formatNumber(data?.current?.wind_speed_10m);
-                        this.precipitation = this.formatNumber(data?.current?.precipitation);
-                        this.weatherCode = this.formatNumber(data?.current?.weather_code);
-                        this.error = false;
-                    } catch (err) {
-                        this.error = true;
-                        this.temperature = null;
-                        this.apparentTemperature = null;
-                        this.humidity = null;
-                        this.windSpeed = null;
-                        this.precipitation = null;
-                        this.weatherCode = null;
-                    } finally {
-                        this.loading = false;
-                    }
-                }
-            };
-        };
-    }
-
-    if (typeof window.dutyWidget !== 'function') {
-        window.dutyWidget = function() {
-            return {
-                loading: true,
-                error: false,
-                hasDuty: false,
-                farmacia: null,
-                posto: null,
-                message: '',
-                rotationItems: [],
-                activeDutyIndex: 0,
-                rotationTimer: null,
-
-                formatAddress(address) {
-                    if (!address) return '';
-
-                    const parts = String(address)
-                        .split(',')
-                        .map((part) => part.trim())
-                        .filter(Boolean);
-
-                    if (parts.length >= 2) {
-                        return parts[0] + ', ' + parts[1];
-                    }
-
-                    return parts[0] ?? '';
-                },
-
-                formatDutyText(item, fallbackType) {
-                    if (!item) return '';
-
-                    const name = String(item.title || item.type || fallbackType || 'Plantao').trim();
-                    const address = this.formatAddress(item.address || '');
-                    const phone = String(item.contact || '').trim();
-
-                    let output = name + ': ' + (address || 'Endereco indisponivel');
-
-                    if (phone) {
-                        output += ' (' + phone + ')';
-                    }
-
-                    return output;
-                },
-
-                buildRotationItems() {
-                    this.rotationItems = [];
-
-                    if (this.farmacia) {
-                        this.rotationItems.push({
-                            kind: 'farmacia',
-                            text: this.formatDutyText(this.farmacia, 'Farmacia')
-                        });
-                    }
-
-                    if (this.posto) {
-                        this.rotationItems.push({
-                            kind: 'posto',
-                            text: this.formatDutyText(this.posto, 'Posto')
-                        });
-                    }
-
-                    this.activeDutyIndex = 0;
-                },
-
-                startRotation() {
-                    this.stopRotation();
-
-                    if (this.rotationItems.length > 1) {
-                        this.rotationTimer = setInterval(() => {
-                            this.activeDutyIndex = (this.activeDutyIndex + 1) % this.rotationItems.length;
-                        }, 5000);
-                    }
-                },
-
-                stopRotation() {
-                    if (this.rotationTimer) {
-                        clearInterval(this.rotationTimer);
-                        this.rotationTimer = null;
-                    }
-                },
-
-                get dutySummary() {
-                    if (!this.rotationItems.length) {
-                        return '';
-                    }
-
-                    return this.rotationItems[this.activeDutyIndex]?.text || '';
-                },
-
-                async init() {
-                    try {
-                        const response = await fetch("{{ route('api.plantao.hoje') }}", {
-                            headers: {
-                                'Accept': 'application/json'
-                            }
-                        });
-
-                        if (!response.ok) {
-                            throw new Error('API Error');
-                        }
-
-                        const data = await response.json();
-
-                        this.hasDuty = Boolean(data?.hasDuty);
-                        this.farmacia = data?.farmacia ?? null;
-                        this.posto = data?.posto ?? null;
-                        this.message = data?.message ?? '';
-                        this.buildRotationItems();
-                        this.startRotation();
-                        this.error = false;
-                    } catch (err) {
-                        this.stopRotation();
-                        this.error = true;
-                        this.hasDuty = false;
-                        this.farmacia = null;
-                        this.posto = null;
-                        this.message = 'Plantao indisponivel';
-                        this.rotationItems = [];
-                        this.activeDutyIndex = 0;
-                    } finally {
-                        this.loading = false;
-                    }
-                }
-            };
-        };
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Inversão Dinâmica de Cor
-        const header = document.getElementById('site-header');
-        const logo = document.getElementById('nav-logo-img');
-        const WHITE_LOGO_OFFSET_X = 0;
-        const BLACK_LOGO_OFFSET_X = 6;
-
-        function swapLogo(nextSrc, offsetX) {
-            if (!logo) return;
-
-            const currentSrc = logo.getAttribute('src') || '';
-            const isSameLogo = currentSrc.includes(nextSrc);
-
-            // Mantem o alinhamento sempre atualizado mesmo sem trocar de arquivo.
-            logo.style.transform = `translateX(${offsetX}px)`;
-
-            if (isSameLogo) return;
-
-            // Fade-out rapido, troca src, depois fade-in para evitar efeito de "deslizar".
-            logo.style.opacity = '0';
-
-            const reveal = () => {
-                logo.style.opacity = '1';
-                logo.removeEventListener('load', reveal);
-            };
-
-            logo.addEventListener('load', reveal, { once: true });
-            logo.src = nextSrc;
-
-            // Fallback de seguranca para cache instantaneo do navegador.
-            setTimeout(() => {
-                logo.style.opacity = '1';
-            }, 140);
-        }
-
-        function updateNavbar() {
-            if (window.scrollY > 50) {
-                if (header) {
-                    header.classList.remove('bg-transparent', 'text-white', 'border-transparent');
-                    header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'text-slate-700', 'border-slate-200/50');
-                }
-                swapLogo("{{ asset('img/logo_preta.png') }}", BLACK_LOGO_OFFSET_X);
-            } else {
-                if (header) {
-                    header.classList.add('bg-transparent', 'text-white', 'border-transparent');
-                    header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'text-slate-700', 'border-slate-200/50');
-                }
-                swapLogo("{{ asset('img/logo_branca.png') }}", WHITE_LOGO_OFFSET_X);
-            }
-        }
-
-        window.addEventListener('scroll', updateNavbar);
-        updateNavbar();
-
-        // Gestão de Acessibilidade (Refatorado para suportar Desktop e Mobile via Classes)
-        const htmlEl = document.documentElement;
-        const MIN_SIZE = 14,
-            MAX_SIZE = 20,
-            STEP = 2;
-
-        function getCurrentFontSize() {
-            const stored = localStorage.getItem('a11y_fontSize');
-            return stored ? parseInt(stored) : 16;
-        }
-
-        document.querySelectorAll('.btn-increase-font').forEach(btn => {
-            btn.addEventListener('click', () => {
-                let next = Math.min(getCurrentFontSize() + STEP, MAX_SIZE);
-                htmlEl.style.fontSize = next + 'px';
-                localStorage.setItem('a11y_fontSize', next);
-            });
-        });
-
-        document.querySelectorAll('.btn-decrease-font').forEach(btn => {
-            btn.addEventListener('click', () => {
-                let next = Math.max(getCurrentFontSize() - STEP, MIN_SIZE);
-                htmlEl.style.fontSize = next + 'px';
-                localStorage.setItem('a11y_fontSize', next);
-            });
-        });
-
-        document.querySelectorAll('.btn-contrast').forEach(btn => {
-            btn.setAttribute('aria-pressed', htmlEl.classList.contains('contrast-mode') ? 'true' : 'false');
-            btn.addEventListener('click', function() {
-                htmlEl.classList.toggle('contrast-mode');
-                let active = htmlEl.classList.contains('contrast-mode');
-                localStorage.setItem('a11y_contrast', active ? '1' : '0');
-                document.querySelectorAll('.btn-contrast').forEach(b => b.setAttribute('aria-pressed', active ? 'true' : 'false'));
-            });
-        });
-    });
-</script>
-
-@php
 $navSecretarias = \App\Models\Secretaria::orderBy('nome')->get(['id', 'nome'])->map(function ($sec) {
 $sec->nome_curto = preg_replace('/^Secretaria(?:\s+Municipal)?\s+(?:de|da|do|das|dos)\s+/iu', '', $sec->nome) ?: $sec->nome;
 $nomeMenuBase = trim((string) $sec->nome_curto);
@@ -318,7 +16,23 @@ return $sec;
 });
 @endphp
 
-<header class="fixed top-0 left-0 right-0 z-[60] w-full bg-transparent text-white border-b border-transparent transition-all duration-300 font-sans" id="site-header">
+{{--
+    Configuração dos widgets Alpine.js via data-attributes.
+    Os arquivos widgets.js e navbar.js lêem estas URLs em vez de
+    depender de Blade inline, permitindo que funcionem corretamente
+    tanto quando incluídos via @include direto quanto via app.blade.php.
+--}}
+<div id="portal-config" class="hidden"
+    data-weather-url="{{ route('api.clima.atual') }}"
+    data-duty-url="{{ route('api.plantao.hoje') }}"
+    data-is-home="{{ $isHome ? 'true' : 'false' }}"
+    data-logo-white="{{ asset('img/logo_branca.png') }}"
+    data-logo-black="{{ asset('img/logo_preta.png') }}"
+></div>
+
+
+{{-- Define as classes iniciais da header baseado se é Home ou Interna --}}
+<header class="fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-transparent text-white border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}" id="site-header">
 
     {{-- TOP BAR (Sólida e Centralizada com o Container) --}}
     <div class="bg-blue-900 border-b border-white/10 transition-colors duration-300">
@@ -380,13 +94,13 @@ return $sec;
     {{-- MAIN NAVBAR --}}
     <div class="w-full lg:container lg:mx-auto px-2 sm:px-4 lg:px-6 py-2 lg:py-2.5 flex items-center justify-start lg:justify-between relative" id="nav-inner">
 
-        {{-- Logo --}}
+        {{-- Logo Dinâmica Baseada na Rota --}}
         <a href="{{ route('home2') }}" style="background: transparent !important; box-shadow: none !important;" class="flex items-center shrink-0 relative ml-0 h-20 sm:h-24 lg:h-20 xl:h-20 w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 transition-transform hover:scale-[1.02]">
-            <img id="nav-logo-img" src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-200 ease-out">
+            <img id="nav-logo-img" src="{{ $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-200 ease-out" style="transform: translateX({{ $isHome ? '0' : '6' }}px);">
         </a>
 
         {{-- Botão Mobile Hamburger --}}
-        <button id="mobile-open-btn" class="lg:hidden ml-auto inline-flex flex-col items-center justify-center gap-0.5 px-3 py-2 text-inherit bg-blue-50/10 border border-white/20 rounded-xl hover:bg-blue-50/20 transition-colors" aria-label="Abrir menu">
+        <button id="mobile-open-btn" class="lg:hidden ml-auto inline-flex flex-col items-center justify-center gap-0.5 px-3 py-2 text-inherit bg-slate-500/10 border border-slate-500/20 rounded-xl hover:bg-slate-500/20 transition-colors" aria-label="Abrir menu">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
@@ -455,7 +169,7 @@ return $sec;
         </nav>
     </div>
 
-    {{-- Gaveta Mobile --}}
+    {{-- Gaveta Mobile (Mantida idêntica para não quebrar funcionalidade) --}}
     <div id="mobile-drawer" class="fixed inset-0 z-[100] invisible lg:hidden">
         <div id="mobile-overlay" class="absolute inset-0 bg-blue-950/80 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
 
@@ -470,7 +184,6 @@ return $sec;
                 </button>
             </div>
 
-            {{-- UTILITÁRIOS MOBILE (Acessibilidade e Clima inseridos no topo da gaveta) --}}
             <div class="px-4 py-3 bg-blue-950/30 border-b border-white/5 flex flex-col gap-3 shrink-0">
                 <div class="flex items-center justify-between text-blue-100 text-xs">
                     <div class="flex items-center gap-2">

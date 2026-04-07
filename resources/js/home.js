@@ -4,7 +4,7 @@ import Swiper from 'swiper/bundle';
 document.addEventListener('DOMContentLoaded', () => {
     initHeroVideoRotator();
 
-    const swiperContainer = document.querySelector('.swiper-banners');
+    const swiperContainer = document.querySelector('.swiper-hero-banners');
 
     if (!swiperContainer) return;
 
@@ -37,6 +37,7 @@ function initHeroVideoRotator() {
     if (videoSources.length === 0 || videoLayers.length < 2) return;
 
     const [firstLayer, secondLayer] = videoLayers;
+    const hasSingleVideo = videoSources.length === 1;
     let activeLayer = firstLayer;
     let standbyLayer = secondLayer;
     let activeIndex = 0;
@@ -80,6 +81,7 @@ function initHeroVideoRotator() {
     const loadVideo = async (videoElement, source) => {
         videoElement.pause();
         videoElement.currentTime = 0;
+        videoElement.loop = false;
         videoElement.src = source;
         videoElement.load();
         await waitForReady(videoElement);
@@ -128,8 +130,11 @@ function initHeroVideoRotator() {
     const initialize = async () => {
         try {
             await loadVideo(activeLayer, videoSources[0]);
+            activeLayer.loop = hasSingleVideo;
             await playVideo(activeLayer);
-            activeLayer.onended = playNext;
+            if (!hasSingleVideo) {
+                activeLayer.onended = playNext;
+            }
         } catch (error) {
             console.error('Erro ao carregar vídeo inicial do hero:', error);
         }

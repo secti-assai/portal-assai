@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Noticia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage; // Necessário para apagar a foto física
+use Illuminate\Support\Facades\Storage;
 
 class NoticiaController extends Controller
 {
@@ -22,26 +22,23 @@ class NoticiaController extends Controller
         $noticias = Noticia::query()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->string('search')->trim()->toString();
-
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('titulo', 'like', "%{$search}%")
                         ->orWhere('conteudo', 'like', "%{$search}%");
                 });
             })
+            // Status Filtro atualizado para usar o campo 'ativo'
             ->when($request->filled('status'), function ($query) use ($request) {
                 $status = $request->string('status')->trim()->toString();
-
                 if ($status === 'publicado') {
-                    $query->whereDate('data_publicacao', '<=', now()->toDateString());
+                    $query->where('ativo', true);
                 }
-
                 if ($status === 'rascunho') {
-                    $query->whereDate('data_publicacao', '>', now()->toDateString());
+                    $query->where('ativo', false);
                 }
             })
             ->when($request->filled('categoria'), function ($query) use ($request) {
                 $categoria = $request->string('categoria')->trim()->toString();
-
                 $query->where('categoria', $categoria);
             })
             ->orderByDesc('data_publicacao')
@@ -63,7 +60,7 @@ class NoticiaController extends Controller
     {
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'required',
+            'categoria' => 'nullable|string', // Atualizado para nullable
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
@@ -83,16 +80,17 @@ class NoticiaController extends Controller
             'conteudo' => $request->conteudo,
             'imagem_capa' => $caminhoImagem,
             'data_publicacao' => $request->data_publicacao,
+            'ativo' => $request->has('ativo'), // Guarda o status do toggle
         ]);
 
-        // Redireciona de volta para a tabela
         return redirect()->route('admin.noticias.index')->with('sucesso', 'Notícia cadastrada com sucesso!');
     }
 
     // 4. MOSTRAR A NOTÍCIA PÚBLICA (Site)
     public function show($slug)
     {
-        $noticia = Noticia::where('slug', $slug)->firstOrFail();
+        // Garante que só carrega no portal público se estiver 'ativa'
+        $noticia = Noticia::where('slug', $slug)->where('ativo', true)->firstOrFail();
         return view('noticias.show', compact('noticia'));
     }
 
@@ -110,7 +108,7 @@ class NoticiaController extends Controller
 
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'required',
+            'categoria' => 'nullable|string', // Atualizado para nullable
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
@@ -118,14 +116,13 @@ class NoticiaController extends Controller
         ]);
 
         $noticia->titulo = $request->titulo;
-        // Atualiza o slug caso o título tenha mudado
         $noticia->slug = Str::slug($request->titulo) . '-' . time();
         $noticia->categoria = $request->categoria;
         $noticia->resumo = $request->resumo;
         $noticia->conteudo = $request->conteudo;
         $noticia->data_publicacao = $request->data_publicacao;
+        $noticia->ativo = $request->has('ativo'); // Atualiza o status do toggle
 
-        // Se a pessoa enviou uma FOTO NOVA, a gente apaga a antiga do servidor e salva a nova
         if ($request->hasFile('imagem_capa')) {
             if ($noticia->imagem_capa) {
                 Storage::disk('public')->delete($noticia->imagem_capa);
@@ -162,7 +159,6 @@ class NoticiaController extends Controller
     {
         $noticia = Noticia::findOrFail($id);
 
-        // Remove a foto da pasta do servidor antes de apagar a notícia do banco
         if ($noticia->imagem_capa) {
             Storage::disk('public')->delete($noticia->imagem_capa);
         }
