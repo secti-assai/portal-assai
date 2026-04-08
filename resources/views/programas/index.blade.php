@@ -30,15 +30,20 @@
 </section>
 
 {{-- ===== GRID DE PROGRAMAS ===== --}}
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 max-[360px]:py-10 pb-20">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-[#edf5ff] py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-6xl mx-auto px-4">
+
+        <div class="portal-section-title">
+            <h2>Programas em Destaque</h2>
+            <div class="bar"></div>
+        </div>
 
         @forelse ($programas as $programa)
             @if ($loop->first)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @endif
 
-            <article class="bg-white rounded-3xl shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
+            <article class="portal-card rounded-3xl flex flex-col overflow-hidden group hover:-translate-y-1">
 
                 {{-- Imagem / Ícone de Capa --}}
                 <div class="relative h-48 bg-gradient-to-br from-blue-800 to-blue-600 flex items-center justify-center overflow-hidden">

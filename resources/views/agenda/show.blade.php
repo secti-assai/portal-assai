@@ -87,7 +87,12 @@
 
             {{-- ── Coluna Principal: Conteúdo ── --}}
             <main class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200 p-6 max-[360px]:p-5 md:p-8">
+                <div class="portal-section-title !items-start !text-left mb-5">
+                    <h2>Detalhes do Evento</h2>
+                    <div class="bar"></div>
+                </div>
+
+                <div class="portal-card p-6 max-[360px]:p-5 md:p-8">
 
                     @if($evento->descricao)
                         <div class="prose prose-sm md:prose-base prose-blue max-w-none">
@@ -148,7 +153,7 @@
 
             {{-- ── Coluna Lateral: Metadados e Ações ── --}}
             <aside class="lg:col-span-1">
-                <div class="lg:sticky lg:top-8 bg-white border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl p-6 max-[360px]:p-5 space-y-5">
+                <div class="lg:sticky lg:top-8 portal-card rounded-2xl p-6 max-[360px]:p-5 space-y-5">
 
                     {{-- Data de início --}}
                     <div class="flex items-start gap-3">

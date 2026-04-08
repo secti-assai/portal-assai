@@ -1,7 +1,6 @@
 ﻿@php
 // Verifica se estamos na página inicial para aplicar o efeito transparente.
-// Ajuste 'home2' para o nome da rota da sua home oficial.
-$isHome = request()->routeIs('home2') || request()->routeIs('home');
+$isHome = request()->routeIs('home');
 
 $navSecretarias = \App\Models\Secretaria::orderBy('nome')->get(['id', 'nome'])->map(function ($sec) {
 $sec->nome_curto = preg_replace('/^Secretaria(?:\s+Municipal)?\s+(?:de|da|do|das|dos)\s+/iu', '', $sec->nome) ?: $sec->nome;
@@ -14,6 +13,8 @@ $sec->nome_menu = 'Secretaria Municipal de ' . $nomeMenuBase;
 }
 return $sec;
 });
+
+$navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png');
 @endphp
 
 {{--
@@ -35,8 +36,8 @@ return $sec;
 <header class="fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-transparent text-white border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}" id="site-header">
 
     {{-- TOP BAR (Sólida e Centralizada com o Container) --}}
-    <div class="bg-blue-900 border-b border-white/10 transition-colors duration-300">
-        <div id="top-bar" class="hidden lg:flex container mx-auto items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans">
+    <div class="hidden lg:block bg-blue-900 border-b border-white/10 transition-colors duration-300">
+        <div id="top-bar" class="container mx-auto flex items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans">
             <div class="flex items-center justify-center flex-wrap gap-3 text-white">
                 <a href="{{ route('pages.acessibilidade') }}" class="font-bold hover:text-yellow-400 transition-colors">Acessibilidade</a>
                 <span class="text-white/20">|</span>
@@ -92,11 +93,11 @@ return $sec;
     </div>
 
     {{-- MAIN NAVBAR --}}
-    <div class="w-full lg:container lg:mx-auto px-2 sm:px-4 lg:px-6 py-2 lg:py-2.5 flex items-center justify-start lg:justify-between relative" id="nav-inner">
+    <div class="w-full lg:container lg:mx-auto px-2 sm:px-4 lg:px-6 {{ $isHome ? 'py-0 lg:py-2.5' : 'py-2 lg:py-2.5' }} flex items-center justify-start lg:justify-between relative" id="nav-inner">
 
         {{-- Logo Dinâmica Baseada na Rota --}}
-        <a href="{{ route('home2') }}" style="background: transparent !important; box-shadow: none !important;" class="flex items-center shrink-0 relative ml-0 h-20 sm:h-24 lg:h-20 xl:h-20 w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 transition-transform hover:scale-[1.02]">
-            <img id="nav-logo-img" src="{{ $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png') }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-200 ease-out" style="transform: translateX({{ $isHome ? '0' : '6' }}px);">
+        <a href="{{ route('home') }}" style="background: transparent !important; box-shadow: none !important;" class="flex items-center shrink-0 relative ml-0 h-20 sm:h-20 lg:h-20 xl:h-20 w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 transition-transform hover:scale-[1.02]">
+            <img id="nav-logo-img" src="{{ $navLogoSrc }}" alt="Prefeitura de Assaí" class="h-full w-auto object-contain transition-opacity duration-200 ease-out {{ $isHome ? 'translate-x-0' : 'translate-x-[6px]' }}">
         </a>
 
         {{-- Botão Mobile Hamburger --}}
@@ -110,7 +111,7 @@ return $sec;
         {{-- Menu Desktop --}}
         <nav class="hidden lg:flex items-center lg:gap-3 xl:gap-5 text-base font-medium transition-colors duration-300">
 
-            <a href="{{ route('home2') }}" class="transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('home2') ? 'border-b-2 border-yellow-400' : '' }}">
+            <a href="{{ route('home') }}" class="transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('home') ? 'border-b-2 border-yellow-400' : '' }}">
                 Início
             </a>
 
@@ -240,7 +241,7 @@ return $sec;
             <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/40">
                 <div class="flex flex-col px-3 md:px-8 py-4 md:py-6 gap-1 md:gap-2 font-medium text-base">
 
-                    <a href="{{ route('home2') }}" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between {{ request()->routeIs('home2') ? 'bg-white/10 text-white font-medium' : 'hover:bg-white/5 font-medium' }}">
+                    <a href="{{ route('home') }}" class="px-4 md:px-6 py-2 md:py-3 rounded-xl transition flex items-center justify-between {{ request()->routeIs('home') ? 'bg-white/10 text-white font-medium' : 'hover:bg-white/5 font-medium' }}">
                         <span>Início</span>
                     </a>
 

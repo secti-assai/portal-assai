@@ -2,9 +2,6 @@
    MIGRADO DE public/css/style.css
    ========================================================================== */
 
-/* Importa a biblioteca de ícones do FontAwesome */
-@import "@fortawesome/fontawesome-free/css/all.min.css";
-
 /* Importa o Design System do Gov.br */
 @import "@govbr-ds/core/dist/core.min.css";
 
@@ -17,11 +14,42 @@
    ========================================================================== */
 @layer base {
     body {
+        margin: 0;
         @apply font-sans text-slate-800 bg-slate-50 antialiased;
     }
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply font-heading;
     }
+}
+
+/* Header fixo próprio do projeto: sem compensações automáticas externas */
+#site-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Classe própria para páginas sem offset; evita conflito com .pt-0 do gov.br */
+.content-offset-none {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Remove spacers automáticos de libs externas para evitar faixa extra no topo */
+.br-header-spacer,
+.br-magic-spacer,
+[class*="header-spacer"],
+[id*="header-spacer"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* ==========================================================================
@@ -321,5 +349,34 @@ html.contrast-mode body svg {
         bottom: 18px !important;
         right: 6px !important;
         transform: scale(0.82);
+    }
+}
+
+/* ==========================================================================
+   PADRAO VISUAL - PAGINAS INTERNAS
+   ========================================================================== */
+@layer components {
+    .portal-section-title {
+        @apply flex flex-col items-center mb-10 text-center;
+    }
+
+    .portal-section-title h2 {
+        @apply text-2xl font-extrabold text-blue-900 sm:text-3xl font-heading uppercase tracking-tight;
+    }
+
+    .portal-section-title .bar {
+        @apply w-10 h-1 mt-3 bg-yellow-400;
+    }
+
+    .portal-btn-primary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-white transition-all bg-blue-800 rounded-full shadow-lg hover:bg-blue-900 hover:-translate-y-0.5;
+    }
+
+    .portal-btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-blue-900 transition-all bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-300 hover:-translate-y-0.5;
+    }
+
+    .portal-card {
+        @apply bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300;
     }
 }

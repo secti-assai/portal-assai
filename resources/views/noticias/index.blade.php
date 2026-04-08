@@ -3,7 +3,7 @@
 @section('title', 'Notícias - Prefeitura Municipal de Assaí')
 
 @section('content')
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen pt-[130px] lg:pt-[160px] pb-16 bg-white">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen pt-[96px] lg:pt-[160px] pb-16 bg-white">
     <div class="container max-w-6xl px-4 mx-auto font-sans">
 
         {{-- Breadcrumb --}}

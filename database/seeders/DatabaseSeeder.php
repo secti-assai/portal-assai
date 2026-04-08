@@ -98,7 +98,5 @@ class DatabaseSeeder extends Seeder
             'data_fim' => now()->addDays(41),
         ]);
 
-        // Alertas para testar busca e status
-        Alerta::factory(20)->create();
     }
 }

@@ -106,8 +106,12 @@
                 <p>No dia <strong>1º de maio de 1932</strong>, um grupo liderado por <strong>Miyuki Saito</strong> — acompanhado por Itissuke Nishimura, Utaro Katsuda, Tokujiro Tsutsui e Junzo Nagai — embrenhou-se mata adentro e fundou a nova colônia.</p>
                 <p>A sede, já bastante povoada, recebeu o nome de <strong>"Assailand"</strong>: uma fusão de <em>Asahi</em> (朝日 — "Sol Nascente", em japonês) com a palavra inglesa <em>land</em> (terra), em homenagem aos colonizadores japoneses que ali se estabeleceram.</p>
                 <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100 mt-2">
-                    <span class="text-2xl mt-0.5">🌸</span>
-                    <p class="text-sm text-blue-800"><strong>Curiosidade:</strong> Assaí é a cidade com a <strong>maior proporção de descendentes japoneses do Brasil</strong> — cerca de 15% da população tem origem nipônica, segundo o Censo 2022 do IBGE.</p>
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-700 shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    <p class="text-sm text-blue-800"><strong>Curiosidade:</strong> Assaí é a cidade com a <strong>maior proporção de descendentes japoneses do Brasil</strong>, cerca de 15% da população com origem nipônica, segundo o Censo 2022 do IBGE.</p>
                 </div>
             </div>
         </div>
@@ -118,7 +122,7 @@
 <section class="py-16 bg-slate-100 md:py-24 lg:py-28 border-y border-slate-200">
     <div class="container px-4 mx-auto max-w-5xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-indigo-600 font-bold tracking-wider uppercase text-xs border border-indigo-200 bg-indigo-50 px-3 py-1 rounded-full mb-4">Linha do Tempo</span>
+            <span class="inline-block text-blue-700 font-bold tracking-wider uppercase text-xs border border-blue-200 bg-blue-50 px-3 py-1 rounded-full mb-4">Linha do Tempo</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Marcos da Nossa História</h2>
         </div>
 
@@ -130,13 +134,13 @@
                 {{-- Item --}}
                 @php
                 $eventos = [
-                ['ano' => '1927', 'cor' => 'indigo', 'titulo' => 'Cooperativa de Emigração', 'desc' => 'O cônsul japonês Noriyuki Akamatsu funda a Cooperativa de Imigração, presidida por Mitusada Umetani, após agrônomos confirmarem a fertilidade excepcional das terras do Norte do Paraná.'],
+                        ['ano' => '1927', 'cor' => 'blue', 'titulo' => 'Cooperativa de Emigração', 'desc' => 'O cônsul japonês Noriyuki Akamatsu funda a Cooperativa de Imigração, presidida por Mitusada Umetani, após agrônomos confirmarem a fertilidade excepcional das terras do Norte do Paraná.'],
                 ['ano' => '1928', 'cor' => 'blue', 'titulo' => 'Compra das Terras', 'desc' => 'Em 14 de novembro, a Companhia Colonizadora Bratac firma contrato de compra de uma gleba de 12 mil alqueires na localidade então conhecida como Três Barras.'],
                 ['ano' => '1932', 'cor' => 'yellow', 'titulo' => 'Fundação — 1º de Maio', 'desc' => 'Miyuki Saito e seu grupo fundam o núcleo que ficaria conhecido como Assailand. As primeiras famílias japonesas chegam e iniciam o desbravamento da mata virgem.'],
                 ['ano' => '1934', 'cor' => 'green', 'titulo' => 'A "Era do Ouro Branco"', 'desc' => 'Heiju Akagui colhe 360 arrobas de algodão por alqueire. O resultado impressionante dispara a venda de lotes: de 213 para 2.140 alqueires vendidos em um único ano.'],
                 ['ano' => '1944', 'cor' => 'blue', 'titulo' => 'Instalação do Município', 'desc' => 'Em 28 de janeiro, Assaí é solenemente instalada como município, presidida pelo Major José Scheleder. O Decreto Lei nº 199 de 30/12/1943 havia criado o município desmembrado de São Jerônimo da Serra.'],
                 ['ano' => '1978', 'cor' => 'pink', 'titulo' => '1º Tanabata Matsuri do Brasil', 'desc' => 'Assaí realiza o primeiro festival de Tanabata do Brasil, consolidando sua identidade como capital da cultura nipônica no país.'],
-                ['ano' => 'Hoje', 'cor' => 'emerald', 'titulo' => 'Top 7 Comunidades Inteligentes', 'desc' => 'Impulsionada pelo ecossistema Vale do Sol, Assaí é eleita pelo Intelligent Community Forum (ICF) como uma das 7 comunidades mais inteligentes do planeta, unindo tradição e inovação tecnológica.'],
+                        ['ano' => 'Hoje', 'cor' => 'blue', 'titulo' => 'Top 7 Comunidades Inteligentes', 'desc' => 'Impulsionada pelo ecossistema Vale do Sol, Assaí é eleita pelo Intelligent Community Forum (ICF) como uma das 7 comunidades mais inteligentes do planeta, unindo tradição e inovação tecnológica.'],
                 ];
                 @endphp
 

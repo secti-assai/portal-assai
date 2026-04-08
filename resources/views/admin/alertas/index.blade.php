@@ -7,7 +7,7 @@
         title="Gerenciar Alertas"
         :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('admin.dashboard'), 'class' => 'hover:text-red-600'],
-            ['label' => 'Alertas da Home'],
+            ['label' => 'Alertas da página inicial'],
         ]"
     >
         <x-slot:action>

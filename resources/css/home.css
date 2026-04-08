@@ -47,13 +47,13 @@
 
 @media (max-width: 768px) {
     .hero-video-layer {
-        object-position: center 45%;
+        object-position: center 52%;
     }
 }
 
 @media (max-width: 640px) {
     .hero-video-layer {
-        object-position: center 50%;
+        object-position: center 58%;
     }
 }
 

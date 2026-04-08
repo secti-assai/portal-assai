@@ -63,8 +63,9 @@
 <section class="py-16 bg-slate-50 md:py-20">
     <div class="container px-4 mx-auto max-w-6xl">
 
-        <div class="mb-10 text-center">
-            <h2 class="text-2xl font-extrabold text-slate-800 font-heading md:text-3xl">Portais e Sistemas de Transparência</h2>
+        <div class="portal-section-title mb-10">
+            <h2>Portais e Sistemas de Transparência</h2>
+            <div class="bar"></div>
             <p class="mt-3 text-sm text-slate-500 max-w-xl mx-auto">Acesse os portais oficiais de prestação de contas e informação pública do município de Assaí.</p>
         </div>
 

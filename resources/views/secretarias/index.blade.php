@@ -52,6 +52,11 @@
     <section class="py-12 max-[360px]:py-10 bg-slate-100/50 md:py-16 min-h-[50vh]">
         <div class="container px-4 mx-auto max-w-7xl">
 
+            <div class="portal-section-title">
+                <h2>Estrutura Administrativa</h2>
+                <div class="bar"></div>
+            </div>
+
             <div id="grid-secretarias" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @forelse($secretarias as $secretaria)
                     <a href="{{ route('secretarias.show', $secretaria->id) }}"

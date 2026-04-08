@@ -19,7 +19,7 @@
 
 @section('content')
 
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen bg-white pt-[130px] lg:pt-[160px] pb-20" x-data="{ openImage: false }">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen bg-white pt-[96px] lg:pt-[160px] pb-20" x-data="{ openImage: false }">
     <div class="container px-4 py-8 max-[360px]:py-5 mx-auto max-w-4xl font-sans">
 
         {{-- Breadcrumb --}}

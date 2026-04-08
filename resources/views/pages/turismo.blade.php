@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- ===== HERO ===== --}}
-<section class="relative py-20 overflow-hidden bg-emerald-900 md:py-28 lg:py-40">
+<section class="relative py-20 overflow-hidden bg-blue-900 md:py-28 lg:py-40">
     <div class="absolute inset-0">
         <svg class="absolute w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -16,7 +16,7 @@
             </defs>
             <rect width="100%" height="100%" fill="url(#bamboo)"/>
         </svg>
-        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-emerald-950 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-blue-950 to-transparent"></div>
     </div>
 
     <div class="container relative z-10 px-4 mx-auto text-center max-w-5xl">
@@ -24,18 +24,18 @@
             ['name' => 'Início', 'url' => route('home')],
             ['name' => 'Turismo'],
         ]" dark />
-        <span class="inline-flex items-center gap-2 px-5 py-2 mb-8 text-xs font-bold tracking-widest text-emerald-900 uppercase bg-yellow-400 rounded-full shadow-md">
+        <span class="inline-flex items-center gap-2 px-5 py-2 mb-8 text-xs font-bold tracking-widest text-blue-900 uppercase bg-yellow-400 rounded-full shadow-md">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
             Turismo e Cultura
         </span>
         <h1 class="text-4xl font-extrabold text-white md:text-6xl lg:text-7xl font-heading tracking-tight mb-6 leading-none">
             Descubra <span class="text-yellow-400">Assaí</span>
         </h1>
-        <p class="max-w-3xl mx-auto text-lg text-emerald-100 md:text-xl lg:text-2xl leading-relaxed font-light">
+        <p class="max-w-3xl mx-auto text-lg text-blue-100 md:text-xl lg:text-2xl leading-relaxed font-light">
             Uma viagem imersiva pela tradição da imigração japonesa, natureza exuberante e a gastronomia nipônica mais autêntica do Norte do Paraná.
         </p>
         <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10 w-full">
-            <a href="#castelo" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 font-bold text-emerald-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
+            <a href="#castelo" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 font-bold text-blue-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 Explorar os Pontos Turísticos
             </a>
@@ -93,7 +93,7 @@
             <div class="flex flex-col justify-center p-8 lg:w-1/2 lg:p-14">
                 <span class="inline-block text-emerald-700 font-bold tracking-wider uppercase text-xs border border-emerald-200 bg-emerald-50 px-3 py-1 rounded-full mb-4 w-fit">Memorial da Imigração Japonesa</span>
                 <h2 class="mb-5 text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
-                    Castelo Japonês<br><span class="text-emerald-700">— O Primeiro do Brasil</span>
+                    Castelo Japonês<br><span class="text-blue-700">— O Primeiro do Brasil</span>
                 </h2>
                 <div class="space-y-4 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-600">
                     <p>Erguido em 2018 para celebrar os <strong>110 anos da imigração japonesa no Brasil</strong>, o Castelo Japonês de Assaí é uma obra única: trata-se do <strong>primeiro castelo de arquitetura japonesa do país</strong>. Com 25 metros de altura distribuídos em 4 pavimentos majestosos, sua silhueta é inspirada no lendário <strong>Castelo de Himeji</strong>, na província de Hyogo — cidade coirmã do Paraná.</p>
@@ -339,7 +339,7 @@
 </section>
 
 {{-- ===== CTA FINAL ===== --}}
-<section class="py-20 bg-gradient-to-br from-emerald-900 via-emerald-800 to-blue-900 md:py-24 text-white relative overflow-hidden">
+<section class="py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 md:py-24 text-white relative overflow-hidden">
     <div class="absolute inset-0 opacity-5">
         <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="dots2" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#dots2)"/></svg>
     </div>
@@ -348,11 +348,11 @@
         <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6">
             Planeje a sua visita<br>ao coração japonês do Paraná.
         </h2>
-        <p class="text-emerald-100 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+        <p class="text-blue-100 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
             A 46&nbsp;km de Londrina e 339&nbsp;km de Curitiba, Assaí combina história, natureza e sabores únicos numa experiência turística que você não vai esquecer.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
-            <a href="{{ route('agenda.index') }}" class="inline-flex items-center gap-2 px-7 py-3 md:py-3.5 font-bold text-emerald-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
+            <a href="{{ route('agenda.index') }}" class="inline-flex items-center gap-2 px-7 py-3 md:py-3.5 font-bold text-blue-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 Ver na Agenda
             </a>

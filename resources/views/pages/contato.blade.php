@@ -33,6 +33,11 @@
 <section class="py-12 bg-slate-100/50 md:py-16">
     <div class="container px-4 mx-auto max-w-7xl">
 
+    <div class="portal-section-title">
+        <h2>Contatos Oficiais</h2>
+        <div class="bar"></div>
+    </div>
+
     {{-- ── TIER 1: Institucional ── --}}
         <div class="mb-10">
             <div class="flex items-center gap-3 mb-5">
@@ -362,7 +367,7 @@
     <div class="container px-4 mx-auto max-w-7xl">
 
         {{-- Cabeçalho da seção --}}
-        <div class="mb-10">
+        <div class="portal-section-title !items-start !text-left mb-10">
             <h2 class="flex items-center gap-3 mb-2 text-2xl font-bold text-slate-800 font-heading">
                 <span class="flex items-center justify-center w-10 h-10 text-blue-600 bg-blue-100 rounded-full shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -371,6 +376,7 @@
                 </span>
                 Envie uma Mensagem
             </h2>
+            <div class="bar !mt-1"></div>
             <p class="text-sm text-slate-500 ml-[52px]">Preencha o formulário abaixo e nossa equipe retornará o contato em breve.</p>
         </div>
 

@@ -30,10 +30,10 @@
 </section>
 
 {{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 max-[360px]:py-10 pb-20">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-[#edf5ff] py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-5xl mx-auto px-4">
 
-        <div class="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
+        <div class="portal-card rounded-3xl overflow-hidden">
 
             {{-- Imagem de capa --}}
             @if ($programa->icone)

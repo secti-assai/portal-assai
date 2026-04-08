@@ -7,7 +7,7 @@
         title="Gerenciar Banners"
         :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('admin.dashboard'), 'class' => 'hover:text-indigo-600'],
-            ['label' => 'Banners da Home'],
+            ['label' => 'Banners da página inicial'],
         ]"
     >
         <x-slot:action>

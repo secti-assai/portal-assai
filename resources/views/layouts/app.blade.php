@@ -3,11 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <title>@yield('title', 'Portal da Prefeitura de Assaí')</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('img/brasao.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/brasao.png') }}?v=2">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/brasao.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('img/brasao.png') }}?v=2">
+    <link rel="apple-touch-icon" href="{{ asset('img/brasao.png') }}?v=2">
 
     @yield('meta_tags')
 
@@ -17,12 +20,26 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    {{-- Bundle principal: app.js já importa navbar.js e widgets.js internamente --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/home.css', 'resources/js/home.js'])
+    @if(request()->routeIs('home'))
+    <link rel="preload" as="image" href="{{ asset('img/logo_branca.png') }}" fetchpriority="high">
+    <style>
+        html {
+            background-color: #020617 !important;
+        }
+    </style>
+    @endif
+
+    {{-- Bundle base global do portal --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Assets exclusivos da home (evita vazamento de estilos/scripts nas demais páginas) --}}
+    @if(request()->routeIs('home'))
+    @vite(['resources/css/home.css', 'resources/js/home.js'])
+    @endif
 
     {{--
     Alpine.js DEVE ser carregado APÓS os módulos Vite.
@@ -34,7 +51,7 @@
 
     <script>
         /* Aplica preferências salvas antes da 1ª pintura — evita flash de conteúdo */
-        (function () {
+        (function() {
             var s = localStorage.getItem('a11y_fontSize');
             if (s) document.documentElement.style.fontSize = s + 'px';
             if (localStorage.getItem('a11y_contrast') === '1') document.documentElement.classList.add('contrast-mode');
@@ -42,7 +59,7 @@
     </script>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
+<body class="{{ request()->routeIs('home') ? 'bg-slate-950' : 'bg-gray-50' }} text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
 
     {{-- Skip links (acessibilidade por teclado) --}}
     <a href="#conteudo-principal" accesskey="1"
@@ -56,9 +73,12 @@
 
     @include('layouts.navbar')
 
-    @yield('content')
+    {{-- Wrapper de compensação do header fixo (evita conflito de utilitários com CSS externo) --}}
+    <div class="{{ request()->routeIs('home') || request()->routeIs('noticias.*') ? 'content-offset-none' : 'pt-[100px] md:pt-[130px]' }}">
+        @yield('content')
+    </div>
 
-{{-- @include('layouts.footer') --}}
+    @include('layouts.footer')
 
     <div id="cookie-banner"
         class="fixed bottom-0 left-0 right-0 z-[100] hidden px-4 py-4 text-sm text-white bg-blue-950/95 backdrop-blur-md border-t border-blue-800 font-sans shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">

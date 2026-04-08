@@ -88,6 +88,11 @@
             {{-- ===== FEED DE EVENTOS ===== --}}
             <div class="lg:col-span-3">
 
+                <div class="portal-section-title !items-start !text-left mb-6">
+                    <h2>Próximos Eventos</h2>
+                    <div class="bar"></div>
+                </div>
+
                 @if($eventos->isEmpty())
 
                     {{-- Empty State --}}

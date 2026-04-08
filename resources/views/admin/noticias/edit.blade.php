@@ -59,7 +59,7 @@
                     name="resumo"
                     label="Resumo"
                     :value="$noticia->resumo"
-                    hint="(Exibido nos cards da Home)"
+                    hint="(Exibido nos cards da página inicial)"
                     rows="3"
                     class="bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-500 outline-none transition-all resize-none"
                 />
