@@ -40,107 +40,148 @@ Route::get('/pesquisar', [PortalController::class, 'buscaGlobal'])->name('busca.
 Route::get('/busca/autocomplete', [PortalController::class, 'autocomplete'])->name('busca.autocomplete');
 
 Route::get('/api/plantao-hoje', function () {
-    $payload = Cache::remember('portal_plantao_hoje', now()->addMinutes(20), function () {
+    $cacheKey = 'portal_plantao_hoje';
+    $cachedPayload = Cache::get($cacheKey);
+
+    if (
+        is_array($cachedPayload)
+        && ($cachedPayload['message'] ?? null) !== 'Plantao indisponivel'
+    ) {
+        return response()->json($cachedPayload);
+    }
+
+    try {
+        $endpoint = 'https://informativos.assai.pr.gov.br/';
+        $response = null;
+
         try {
-            $response = Http::timeout(15)->accept('text/html')->get('https://informativos.assai.pr.gov.br/');
-
-            if (!$response->ok()) {
-                return [
-                    'hasDuty' => false,
-                    'message' => 'Plantao indisponivel',
-                ];
-            }
-
-            $html = $response->body();
-            $matches = [];
-
-            if (!preg_match('/var\s+booking\s*=\s*(\[[\s\S]*?\]);/u', $html, $matches) || empty($matches[1])) {
-                return [
-                    'hasDuty' => false,
-                    'message' => 'Plantao indisponivel',
-                ];
-            }
-
-            $events = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
-            $today = now('America/Sao_Paulo')->toDateString();
-
-            $todayEvents = array_values(array_filter($events, static function (array $event) use ($today): bool {
-                if (!isset($event['start'])) {
-                    return false;
-                }
-
-                return str_starts_with((string) $event['start'], $today);
-            }));
-
-            $pickDuty = static function (string $type) use ($todayEvents): ?array {
-                foreach ($todayEvents as $event) {
-                    if (($event['type'] ?? '') === $type) {
-                        return [
-                            'title' => $event['title'] ?? null,
-                            'address' => $event['address'] ?? null,
-                            'contact' => $event['contact'] ?? null,
-                            'type' => $event['type'] ?? null,
-                        ];
-                    }
-                }
-
-                return null;
-            };
-
-            $farmacia = $pickDuty('Farmácia');
-            $posto = $pickDuty('Posto');
-
-            return [
-                'hasDuty' => ($farmacia !== null || $posto !== null),
-                'date' => $today,
-                'farmacia' => $farmacia,
-                'posto' => $posto,
-                'message' => ($farmacia !== null || $posto !== null) ? null : 'Sem plantao hoje',
-            ];
+            $response = Http::timeout(15)->accept('text/html')->get($endpoint);
         } catch (\Throwable $exception) {
-            return [
+            $response = null;
+        }
+
+        if (!$response || !$response->ok()) {
+            $response = Http::withoutVerifying()->timeout(15)->accept('text/html')->get($endpoint);
+        }
+
+        if (!$response->ok()) {
+            return response()->json([
                 'hasDuty' => false,
                 'message' => 'Plantao indisponivel',
-            ];
+            ]);
         }
-    });
 
-    return response()->json($payload);
+        $html = $response->body();
+        $matches = [];
+
+        if (!preg_match('/var\s+booking\s*=\s*(\[[\s\S]*?\]);/u', $html, $matches) || empty($matches[1])) {
+            return response()->json([
+                'hasDuty' => false,
+                'message' => 'Plantao indisponivel',
+            ]);
+        }
+
+        $events = json_decode($matches[1], true, 512, JSON_THROW_ON_ERROR);
+        $today = now('America/Sao_Paulo')->toDateString();
+
+        $todayEvents = array_values(array_filter($events, static function (array $event) use ($today): bool {
+            if (!isset($event['start'])) {
+                return false;
+            }
+
+            return str_starts_with((string) $event['start'], $today);
+        }));
+
+        $pickDuty = static function (string $type) use ($todayEvents): ?array {
+            foreach ($todayEvents as $event) {
+                if (($event['type'] ?? '') === $type) {
+                    return [
+                        'title' => $event['title'] ?? null,
+                        'address' => $event['address'] ?? null,
+                        'contact' => $event['contact'] ?? null,
+                        'type' => $event['type'] ?? null,
+                    ];
+                }
+            }
+
+            return null;
+        };
+
+        $farmacia = $pickDuty('Farmácia');
+        $posto = $pickDuty('Posto');
+
+        $payload = [
+            'hasDuty' => ($farmacia !== null || $posto !== null),
+            'date' => $today,
+            'farmacia' => $farmacia,
+            'posto' => $posto,
+            'message' => ($farmacia !== null || $posto !== null) ? null : 'Sem plantao hoje',
+        ];
+
+        Cache::put($cacheKey, $payload, now()->addMinutes(20));
+
+        return response()->json($payload);
+    } catch (\Throwable $exception) {
+        return response()->json([
+            'hasDuty' => false,
+            'message' => 'Plantao indisponivel',
+        ]);
+    }
 })->name('api.plantao.hoje');
 
 Route::get('/api/clima-atual', function () {
-    $payload = Cache::remember('portal_clima_atual', now()->addMinutes(15), function () {
+    $cacheKey = 'portal_clima_atual';
+    $cachedPayload = Cache::get($cacheKey);
+
+    if (is_array($cachedPayload) && ($cachedPayload['error'] ?? true) === false) {
+        return response()->json($cachedPayload);
+    }
+
+    try {
+        $endpoint = 'https://api.open-meteo.com/v1/forecast';
+        $query = [
+            'latitude' => -23.3733,
+            'longitude' => -50.8417,
+            'current' => 'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m',
+            'temperature_unit' => 'celsius',
+            'wind_speed_unit' => 'kmh',
+            'precipitation_unit' => 'mm',
+            'timezone' => 'America/Sao_Paulo',
+        ];
+
+        $response = null;
+
         try {
-            $response = Http::timeout(15)->acceptJson()->get('https://api.open-meteo.com/v1/forecast', [
-                'latitude' => -23.3733,
-                'longitude' => -50.8417,
-                'current' => 'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m',
-                'temperature_unit' => 'celsius',
-                'wind_speed_unit' => 'kmh',
-                'precipitation_unit' => 'mm',
-                'timezone' => 'America/Sao_Paulo',
-            ]);
-
-            if (!$response->ok()) {
-                return [
-                    'current' => null,
-                    'error' => true,
-                ];
-            }
-
-            return [
-                'current' => $response->json('current'),
-                'error' => false,
-            ];
+            $response = Http::timeout(15)->acceptJson()->get($endpoint, $query);
         } catch (\Throwable $exception) {
-            return [
+            $response = null;
+        }
+
+        if (!$response || !$response->ok()) {
+            $response = Http::withoutVerifying()->timeout(15)->acceptJson()->get($endpoint, $query);
+        }
+
+        if (!$response->ok()) {
+            return response()->json([
                 'current' => null,
                 'error' => true,
-            ];
+            ]);
         }
-    });
 
-    return response()->json($payload);
+        $payload = [
+            'current' => $response->json('current'),
+            'error' => false,
+        ];
+
+        Cache::put($cacheKey, $payload, now()->addMinutes(15));
+
+        return response()->json($payload);
+    } catch (\Throwable $exception) {
+        return response()->json([
+            'current' => null,
+            'error' => true,
+        ]);
+    }
 })->name('api.clima.atual');
 
 // Serviços ao Cidadão

@@ -10,6 +10,23 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const safeStorageGet = (key) => {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    };
+
+    const safeStorageSet = (key, value) => {
+        try {
+            window.localStorage.setItem(key, value);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     // ---- CONFIGURAÇÃO (via data-attributes do #portal-config) ----
     const config = document.getElementById('portal-config');
     const isHomePage = config?.dataset.isHome === 'true';
@@ -232,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MIN_SIZE = 14, MAX_SIZE = 20, STEP = 2;
 
     function getCurrentFontSize() {
-        const stored = localStorage.getItem('a11y_fontSize');
+        const stored = safeStorageGet('a11y_fontSize');
         return stored ? parseInt(stored, 10) : 16;
     }
 
@@ -241,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const next = Math.min(getCurrentFontSize() + STEP, MAX_SIZE);
             htmlEl.style.fontSize = next + 'px';
-            localStorage.setItem('a11y_fontSize', next);
+            safeStorageSet('a11y_fontSize', String(next));
         });
     });
 
@@ -249,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const next = Math.max(getCurrentFontSize() - STEP, MIN_SIZE);
             htmlEl.style.fontSize = next + 'px';
-            localStorage.setItem('a11y_fontSize', next);
+            safeStorageSet('a11y_fontSize', String(next));
         });
     });
 
@@ -259,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', function () {
             htmlEl.classList.toggle('contrast-mode');
             const active = htmlEl.classList.contains('contrast-mode');
-            localStorage.setItem('a11y_contrast', active ? '1' : '0');
+            safeStorageSet('a11y_contrast', active ? '1' : '0');
             document.querySelectorAll('.btn-contrast').forEach(b => {
                 b.setAttribute('aria-pressed', active ? 'true' : 'false');
             });

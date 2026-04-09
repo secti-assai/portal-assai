@@ -318,37 +318,124 @@ textarea:focus-visible {
 }
 
 /* ===== ALTO CONTRASTE ===== */
-html.contrast-mode body {
-    background-color: #0f172a !important;
-    color: #f8fafc !important;
+html.contrast-mode {
+    --hc-bg: #020617;
+    --hc-surface: #0f172a;
+    --hc-surface-2: #111827;
+    --hc-text: #f8fafc;
+    --hc-muted: #cbd5e1;
+    --hc-link: #facc15;
+    --hc-link-hover: #fde68a;
+    --hc-border: #94a3b8;
+    --hc-focus: #facc15;
+}
+
+html.contrast-mode body,
+html.contrast-mode main,
+html.contrast-mode section,
+html.contrast-mode article,
+html.contrast-mode aside,
+html.contrast-mode header,
+html.contrast-mode footer,
+html.contrast-mode nav {
+    background-color: var(--hc-bg) !important;
+    color: var(--hc-text) !important;
 }
 
 html.contrast-mode body *:not(script):not(style):not(svg):not(path):not(circle):not(img):not(video):not(iframe) {
     text-shadow: none !important;
-    box-shadow: none !important;
+}
+
+html.contrast-mode [class*="bg-white"],
+html.contrast-mode [class*="bg-slate"],
+html.contrast-mode [class*="bg-gray"],
+html.contrast-mode [class*="bg-blue"],
+html.contrast-mode [class*="bg-emerald"],
+html.contrast-mode [class*="bg-yellow"],
+html.contrast-mode [class*="bg-indigo"],
+html.contrast-mode [class*="bg-red"] {
+    background-color: var(--hc-surface) !important;
+}
+
+html.contrast-mode [class*="text-slate"],
+html.contrast-mode [class*="text-gray"],
+html.contrast-mode [class*="text-zinc"],
+html.contrast-mode [class*="text-neutral"],
+html.contrast-mode [class*="text-blue"],
+html.contrast-mode [class*="text-emerald"],
+html.contrast-mode [class*="text-yellow"] {
+    color: var(--hc-text) !important;
+}
+
+html.contrast-mode [class*="border-"],
+html.contrast-mode hr,
+html.contrast-mode table,
+html.contrast-mode th,
+html.contrast-mode td {
+    border-color: var(--hc-border) !important;
+}
+
+html.contrast-mode body p,
+html.contrast-mode body span,
+html.contrast-mode body li,
+html.contrast-mode body dt,
+html.contrast-mode body dd,
+html.contrast-mode body small,
+html.contrast-mode body label,
+html.contrast-mode body h1,
+html.contrast-mode body h2,
+html.contrast-mode body h3,
+html.contrast-mode body h4,
+html.contrast-mode body h5,
+html.contrast-mode body h6 {
+    color: var(--hc-text) !important;
+}
+
+html.contrast-mode body .text-white\/30,
+html.contrast-mode body .text-white\/40,
+html.contrast-mode body .text-white\/50,
+html.contrast-mode body .text-slate-400,
+html.contrast-mode body .text-slate-500,
+html.contrast-mode body .text-slate-600 {
+    color: var(--hc-muted) !important;
 }
 
 html.contrast-mode body a {
-    color: #fbbf24 !important;
+    color: var(--hc-link) !important;
     text-decoration: underline !important;
 }
 
-html.contrast-mode body a:hover {
-    color: #fde68a !important;
+html.contrast-mode body a:hover,
+html.contrast-mode body a:focus-visible {
+    color: var(--hc-link-hover) !important;
 }
 
-html.contrast-mode body button {
-    background-color: #1e293b !important;
-    border: 1px solid #475569 !important;
-    color: #e2e8f0 !important;
+html.contrast-mode body button,
+html.contrast-mode body [role="button"],
+html.contrast-mode body .portal-btn-primary,
+html.contrast-mode body .portal-btn-secondary {
+    background-color: var(--hc-surface-2) !important;
+    border: 1px solid var(--hc-border) !important;
+    color: var(--hc-text) !important;
+    box-shadow: none !important;
 }
 
 html.contrast-mode body input,
 html.contrast-mode body textarea,
 html.contrast-mode body select {
-    background-color: #0f172a !important;
-    color: #fff !important;
-    border: 1px solid #94a3b8 !important;
+    background-color: var(--hc-bg) !important;
+    color: var(--hc-text) !important;
+    border: 1px solid var(--hc-border) !important;
+}
+
+html.contrast-mode a:focus-visible,
+html.contrast-mode button:focus-visible,
+html.contrast-mode input:focus-visible,
+html.contrast-mode select:focus-visible,
+html.contrast-mode textarea:focus-visible {
+    outline: 2px solid var(--hc-focus) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.25) !important;
 }
 
 html.contrast-mode body img {
