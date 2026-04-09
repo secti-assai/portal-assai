@@ -217,7 +217,7 @@
         <section class="bg-gray-section">
             <h2 class="section-title">Últimas Notícias</h2>
             <div class="mobile-news-grid">
-                @if(isset($noticias) && $noticias->count() > 0)
+                @if(isset($noticias))
                 @foreach($noticias->take(3) as $noticia)
                 <article class="card-news relative h-[320px] overflow-hidden rounded-2xl group bg-slate-100 shadow-md">
                     <a href="{{ route('noticias.show', $noticia->slug) }}" class="block w-full h-full outline-none focus-within:ring-4 focus-within:ring-blue-500 focus-within:ring-inset">
@@ -229,10 +229,6 @@
                     </a>
                 </article>
                 @endforeach
-                @else
-                <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
-                    Nenhuma notícia publicada no momento.
-                </div>
                 @endif
             </div>
             <div class="all-btn-wrapper">
@@ -518,17 +514,13 @@
                 </article>
                 @endforeach
             </div>
-            @else
-            <div class="rounded-[16px] border border-dashed border-slate-300 bg-white px-6 py-10 text-center text-slate-500 shadow-sm">
-                Nenhuma notícia publicada no momento.
-            </div>
-            @endif
 
             <div class="mt-10 flex justify-center">
                 <a href="{{ route('noticias.index') }}" class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
                     <i class="fa-regular fa-newspaper"></i> Ver Todas Notícias
                 </a>
             </div>
+            @endif
         </div>
     </section>
 
