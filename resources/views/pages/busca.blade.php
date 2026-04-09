@@ -3,78 +3,67 @@
 @section('title', 'Resultados da Busca: ' . ($termo ?? 'Pesquisa') . ' - Prefeitura Municipal de Assaí')
 
 @section('meta_tags')
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3-busca">
+<link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3-busca">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/brasao.png') }}?v=3-busca">
 <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/brasao.png') }}?v=3-busca">
-<link rel="shortcut icon" href="{{ asset('img/brasao.png') }}?v=3-busca">
 <link rel="apple-touch-icon" href="{{ asset('img/brasao.png') }}?v=3-busca">
-<script>
-    (function () {
-        var href = "{{ asset('img/brasao.png') }}?v=3-busca";
-        var links = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
-        links.forEach(function (el) { el.parentNode.removeChild(el); });
-
-        ['icon', 'shortcut icon', 'apple-touch-icon'].forEach(function (rel) {
-            var link = document.createElement('link');
-            link.setAttribute('rel', rel);
-            link.setAttribute('href', href);
-            if (rel === 'icon') {
-                link.setAttribute('type', 'image/png');
-            }
-            document.head.appendChild(link);
-        });
-    })();
-</script>
 @endsection
 
 @section('content')
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-gradient-to-b from-slate-100 via-blue-50/50 to-slate-100 pb-20 font-sans">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-[#edf5ff] pb-20 font-sans">
 
     {{-- =================
          HERO SECTION (Busca - Padrão Gov.br)
          ================= --}}
-    <section class="bg-[#071D41] pt-32 pb-20 sm:pt-36 md:pt-44 md:pb-28 relative overflow-hidden border-b-4 border-[#FFCD00]">
-        {{-- Efeito de Fundo --}}
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <svg class="w-full h-full" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M0 100 C 20 0 50 0 100 100 Z"></path>
-            </svg>
+    <section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 pt-12 pb-16 sm:pt-16 sm:pb-20 shadow-inner min-h-[360px] sm:min-h-[420px]">
+        {{-- Elementos de fundo subtis --}}
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>
+            <div class="absolute -top-40 -right-32 w-96 h-96 bg-blue-800/30 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-indigo-800/25 rounded-full blur-3xl"></div>
         </div>
 
-        <div class="container px-4 mx-auto max-w-5xl relative z-10 text-center md:text-left">
-            <div class="flex justify-center md:justify-start mb-6">
-                <x-breadcrumb :items="[
-                    ['name' => 'Início', 'url' => route('home')],
-                    ['name' => 'Busca no Portal'],
-                ]" dark />
-            </div>
+        <div class="container relative z-10 px-4 sm:px-6 mx-auto max-w-5xl text-left">
+            <x-breadcrumb :items="[
+                ['name' => 'Início', 'url' => route('home')],
+                ['name' => 'Busca no Portal'],
+            ]" dark />
 
-            <h1 class="text-3xl md:text-5xl font-black text-white font-heading mb-8 leading-tight tracking-tight drop-shadow-md">
-                @if($termo)
-                Resultados para: <span class="text-[#FFCD00]">"{{ $termo }}"</span>
-                @else
-                O que você está procurando?
-                @endif
-            </h1>
+            <div class="mt-5 flex flex-col gap-8 sm:gap-10">
+                <div class="max-w-3xl">
+                    <h1 class="text-4xl sm:text-5xl font-black text-white font-heading leading-tight tracking-tight drop-shadow-sm">
+                        @if($termo)
+                        Resultados para: <span class="text-yellow-300 break-words">"{{ $termo }}"</span>
+                        @else
+                        O que você está procurando?
+                        @endif
+                    </h1>
+                    <p class="mt-3 text-sm sm:text-base text-blue-100 leading-relaxed">
+                        Encontre notícias, serviços, eventos, programas e secretarias em um único lugar.
+                    </p>
+                </div>
 
-            {{-- Barra de Busca --}}
-            <div class="w-full max-w-3xl mx-auto md:mx-0">
-                <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white focus-within:ring-4 focus-within:ring-[#FFCD00]/50 shadow-2xl rounded-full transition-all duration-300 p-1 md:p-1.5" role="search" aria-label="Buscar informações no portal">
+                {{-- Barra de Busca --}}
+                <div class="w-full mt-8 sm:mt-10 md:mt-12">
+                    <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search" aria-label="Buscar informações no portal">
                     <label for="campo-busca-portal" class="sr-only">Pesquisar no portal</label>
 
-                    <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-blue-900 shrink-0 hidden sm:flex" aria-hidden="true">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
 
-                    <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="Digite termo, serviço ou notícia..." required
-                        class="flex-1 min-w-0 px-4 py-3 text-sm sm:text-base text-slate-800 bg-transparent border-none focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
+                    <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="O que você procura?" required
+                        class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
                         autofocus>
 
-                    <button type="submit" class="m-1 px-5 py-3 sm:px-8 sm:py-3.5 font-bold text-sm sm:text-base text-[#071D41] transition-all bg-[#FFCD00] rounded-full shrink-0 hover:bg-yellow-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FFCD00] font-heading uppercase tracking-wide">
+                    <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
                         Buscar
                     </button>
                 </form>
+            </div>
             </div>
         </div>
     </section>
@@ -82,13 +71,23 @@
     {{-- =================
          SISTEMA DE RESULTADOS E ABAS
          ================= --}}
-    <div id="resultados-busca" class="container px-4 mx-auto max-w-5xl -mt-10 sm:-mt-12 pt-0 relative z-20">
+    <div id="resultados-busca" class="container px-4 mx-auto max-w-5xl -mt-6 sm:-mt-8 pt-0 relative z-20">
 
         {{-- Filtros de conteúdo (mobile-first) --}}
         <div class="mb-10 sm:mb-12">
             @php
             $totalResults = $noticias->count() + $servicos->count() + $eventos->count() + $programas->count() + $secretarias->count();
             $tabBaseClass = 'tab-btn group flex w-full items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD00] focus-visible:ring-offset-1 sm:w-auto sm:min-w-[155px] sm:justify-center sm:rounded-full sm:px-5 sm:py-2.5';
+            $availableTabs = [
+                'all' => $totalResults > 0,
+                'noticias' => $noticias->isNotEmpty(),
+                'servicos' => $servicos->isNotEmpty(),
+                'eventos' => $eventos->isNotEmpty(),
+                'programas' => $programas->isNotEmpty(),
+                'secretarias' => $secretarias->isNotEmpty(),
+            ];
+            $requestedTab = strtolower((string) request('tipo', 'all'));
+            $activeTab = (array_key_exists($requestedTab, $availableTabs) && $availableTabs[$requestedTab]) ? $requestedTab : 'all';
             @endphp
 
             <style>
@@ -103,19 +102,23 @@
                     color: #475569;
                 }
 
+                .tab-btn {
+                    letter-spacing: 0.01em;
+                }
+
                 .tab-btn.is-active .tab-count {
                     background: rgba(255, 255, 255, 0.2);
                     color: #fff;
                 }
             </style>
 
-            <nav aria-label="Filtrar categorias de busca" class="w-full rounded-2xl border border-blue-100 bg-white/95 backdrop-blur-sm p-3 shadow-lg shadow-blue-100/70 sm:rounded-3xl sm:p-4">
-                <p class="mb-3 px-1 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 sm:mb-4">Filtrar resultados por tipo</p>
+            <nav id="tab-filter-nav" data-active-tab="{{ $activeTab }}" aria-label="Filtrar categorias de busca" class="w-full rounded-3xl border border-slate-400 bg-slate-50/95 backdrop-blur-sm p-3 sm:p-4 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)]">
+                <p class="mb-3 text-center text-sm sm:text-base font-black uppercase tracking-[0.12em] text-slate-800 sm:mb-4">Filtrar resultados por tipo</p>
 
                 <ul role="tablist" aria-label="Categorias de resultados" class="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
                     <li>
-                        <button id="tab-all" type="button" role="tab" onclick="filterResults('all')" data-target="all" aria-selected="true" aria-controls="resultados-busca"
-                            class="{{ $tabBaseClass }} is-active">
+                        <button id="tab-all" type="button" role="tab" onclick="filterResults('all', true)" data-target="all" aria-selected="{{ $activeTab === 'all' ? 'true' : 'false' }}" aria-controls="resultados-busca"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'all' ? 'is-active' : '' }}">
                             Tudo
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $totalResults }}</span>
                         </button>
@@ -123,8 +126,8 @@
 
                     @if($noticias->isNotEmpty())
                     <li>
-                        <button id="tab-noticias" type="button" role="tab" onclick="filterResults('noticias')" data-target="noticias" aria-selected="false" aria-controls="sec-noticias"
-                            class="{{ $tabBaseClass }}">
+                        <button id="tab-noticias" type="button" role="tab" onclick="filterResults('noticias', true)" data-target="noticias" aria-selected="{{ $activeTab === 'noticias' ? 'true' : 'false' }}" aria-controls="sec-noticias"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'noticias' ? 'is-active' : '' }}">
                             Notícias
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $noticias->count() }}</span>
                         </button>
@@ -133,8 +136,8 @@
 
                     @if($servicos->isNotEmpty())
                     <li>
-                        <button id="tab-servicos" type="button" role="tab" onclick="filterResults('servicos')" data-target="servicos" aria-selected="false" aria-controls="sec-servicos"
-                            class="{{ $tabBaseClass }}">
+                        <button id="tab-servicos" type="button" role="tab" onclick="filterResults('servicos', true)" data-target="servicos" aria-selected="{{ $activeTab === 'servicos' ? 'true' : 'false' }}" aria-controls="sec-servicos"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'servicos' ? 'is-active' : '' }}">
                             Serviços
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $servicos->count() }}</span>
                         </button>
@@ -143,8 +146,8 @@
 
                     @if($eventos->isNotEmpty())
                     <li>
-                        <button id="tab-eventos" type="button" role="tab" onclick="filterResults('eventos')" data-target="eventos" aria-selected="false" aria-controls="sec-eventos"
-                            class="{{ $tabBaseClass }}">
+                        <button id="tab-eventos" type="button" role="tab" onclick="filterResults('eventos', true)" data-target="eventos" aria-selected="{{ $activeTab === 'eventos' ? 'true' : 'false' }}" aria-controls="sec-eventos"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'eventos' ? 'is-active' : '' }}">
                             Eventos
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $eventos->count() }}</span>
                         </button>
@@ -153,8 +156,8 @@
 
                     @if($programas->isNotEmpty())
                     <li>
-                        <button id="tab-programas" type="button" role="tab" onclick="filterResults('programas')" data-target="programas" aria-selected="false" aria-controls="sec-programas"
-                            class="{{ $tabBaseClass }}">
+                        <button id="tab-programas" type="button" role="tab" onclick="filterResults('programas', true)" data-target="programas" aria-selected="{{ $activeTab === 'programas' ? 'true' : 'false' }}" aria-controls="sec-programas"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'programas' ? 'is-active' : '' }}">
                             Programas
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $programas->count() }}</span>
                         </button>
@@ -163,8 +166,8 @@
 
                     @if($secretarias->isNotEmpty())
                     <li>
-                        <button id="tab-secretarias" type="button" role="tab" onclick="filterResults('secretarias')" data-target="secretarias" aria-selected="false" aria-controls="sec-secretarias"
-                            class="{{ $tabBaseClass }}">
+                        <button id="tab-secretarias" type="button" role="tab" onclick="filterResults('secretarias', true)" data-target="secretarias" aria-selected="{{ $activeTab === 'secretarias' ? 'true' : 'false' }}" aria-controls="sec-secretarias"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'secretarias' ? 'is-active' : '' }}">
                             Secretarias
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $secretarias->count() }}</span>
                         </button>
@@ -202,7 +205,7 @@
 
     {{-- 1. Resultados: Notícias --}}
     @if($noticias->isNotEmpty())
-    <section id="sec-noticias" role="tabpanel" aria-labelledby="tab-noticias" class="result-section mb-14">
+    <section id="sec-noticias" role="tabpanel" aria-labelledby="tab-noticias" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'noticias' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-8 bg-blue-600 rounded-sm"></div>
             <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Notícias</h2>
@@ -244,20 +247,20 @@
 
     {{-- 2. Resultados: Serviços --}}
     @if($servicos->isNotEmpty())
-    <section id="sec-servicos" role="tabpanel" aria-labelledby="tab-servicos" class="result-section mb-14">
+    <section id="sec-servicos" role="tabpanel" aria-labelledby="tab-servicos" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'servicos' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-8 bg-emerald-500 rounded-sm"></div>
             <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Serviços</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             @foreach($servicos as $servico)
-            <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" rel="noopener noreferrer" class="flex items-center p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-emerald-500 hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-4 focus-visible:ring-emerald-400">
+            <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" rel="noopener noreferrer" class="flex items-start p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-emerald-500 hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-4 focus-visible:ring-emerald-400">
                 <div class="w-12 h-12 flex items-center justify-center bg-slate-50 text-emerald-600 rounded-xl mr-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors shrink-0 border border-slate-100 group-hover:border-transparent">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 pt-0.5">
                     <h3 class="text-sm md:text-base font-bold text-slate-800 line-clamp-2 font-heading group-hover:text-[#071D41] transition-colors mb-1">{{ $servico->titulo }}</h3>
                     <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                         Acessar <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -273,19 +276,19 @@
 
     {{-- 3. Resultados: Eventos --}}
     @if($eventos->isNotEmpty())
-    <section id="sec-eventos" role="tabpanel" aria-labelledby="tab-eventos" class="result-section mb-14">
+    <section id="sec-eventos" role="tabpanel" aria-labelledby="tab-eventos" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'eventos' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-8 bg-yellow-500 rounded-sm"></div>
             <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Eventos</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             @foreach($eventos as $evento)
-            <div class="flex items-center gap-4 sm:gap-5 bg-white p-4 sm:p-5 border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-start gap-4 sm:gap-5 bg-white p-4 sm:p-5 border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
                 <div class="flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-[#071D41] rounded-xl text-white shrink-0 border-b-4 border-[#FFCD00]">
                     <span class="text-[10px] sm:text-xs font-bold tracking-widest uppercase opacity-90">{{ $evento->data_inicio->translatedFormat('M') }}</span>
                     <span class="text-2xl sm:text-3xl font-black leading-none">{{ $evento->data_inicio->format('d') }}</span>
                 </div>
-                <div class="min-w-0 flex-1 py-1">
+                <div class="min-w-0 flex-1 pt-1">
                     <h3 class="text-sm sm:text-base font-bold text-slate-800 font-heading leading-tight line-clamp-2 mb-2">{{ $evento->titulo }}</h3>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-[11px] sm:text-xs text-slate-600 font-medium">
                         <span class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded w-fit">
@@ -310,7 +313,7 @@
 
     {{-- 4. Resultados: Programas --}}
     @if($programas->isNotEmpty())
-    <section id="sec-programas" role="tabpanel" aria-labelledby="tab-programas" class="result-section mb-14">
+    <section id="sec-programas" role="tabpanel" aria-labelledby="tab-programas" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'programas' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-8 bg-purple-600 rounded-sm"></div>
             <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Programas</h2>
@@ -335,7 +338,7 @@
 
     {{-- 5. Resultados: Secretarias --}}
     @if($secretarias->isNotEmpty())
-    <section id="sec-secretarias" role="tabpanel" aria-labelledby="tab-secretarias" class="result-section mb-14">
+    <section id="sec-secretarias" role="tabpanel" aria-labelledby="tab-secretarias" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'secretarias' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-8 bg-slate-600 rounded-sm"></div>
             <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Secretarias</h2>
@@ -350,7 +353,7 @@
             ->implode('');
             @endphp
             <a href="{{ route('secretarias.show', $secretaria->id) }}"
-                class="flex items-center gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-[#FFCD00] hover:shadow-md hover:-translate-y-1 transition-all duration-300 group outline-none focus-visible:ring-4 focus-visible:ring-[#FFCD00]">
+                class="flex items-start gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-[#FFCD00] hover:shadow-md hover:-translate-y-1 transition-all duration-300 group outline-none focus-visible:ring-4 focus-visible:ring-[#FFCD00]">
                 <div class="w-14 h-14 shrink-0 rounded-xl overflow-hidden border border-slate-200">
                     @if($secretaria->foto)
                     <img src="{{ asset('storage/' . $secretaria->foto) }}" class="w-full h-full object-cover" alt="Foto" loading="lazy" decoding="async">
@@ -360,7 +363,7 @@
                     </div>
                     @endif
                 </div>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 pt-0.5">
                     <h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 font-heading group-hover:text-[#071D41] transition-colors mb-1">{{ $secretaria->nome }}</h3>
                     @if($secretaria->nome_secretario)
                     <p class="text-[11px] text-slate-500 truncate font-medium flex items-center gap-1">
@@ -383,10 +386,13 @@
     {{-- Script limpo para lidar com as abas via atributo data-state do Tailwind --}}
     @if($totalResults > 0)
     <script>
-        function filterResults(category) {
+        function filterResults(category, syncUrl = false) {
+            const allTargets = Array.from(document.querySelectorAll('.tab-btn')).map(btn => btn.dataset.target);
+            const resolvedCategory = allTargets.includes(category) ? category : 'all';
+
             // Atualiza estado visual dos botões
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.dataset.target === category) {
+                if (btn.dataset.target === resolvedCategory) {
                     btn.setAttribute('aria-selected', 'true');
                     btn.classList.add('is-active');
                 } else {
@@ -397,26 +403,42 @@
 
             // Mostra/Esconde as seções
             document.querySelectorAll('.result-section').forEach(section => {
-                if (category === 'all') {
-                    section.style.display = 'block';
-                    section.style.opacity = '0';
-                    setTimeout(() => {
-                        section.style.opacity = '1';
-                        section.style.transition = 'opacity 0.3s ease';
-                    }, 50);
+                if (resolvedCategory === 'all') {
+                    section.classList.remove('hidden');
+                    section.style.opacity = '1';
+                    section.style.transition = 'opacity 0.2s ease';
                 } else {
-                    if (section.id === 'sec-' + category) {
-                        section.style.display = 'block';
+                    if (section.id === 'sec-' + resolvedCategory) {
+                        section.classList.remove('hidden');
                         section.style.opacity = '0';
                         setTimeout(() => {
                             section.style.opacity = '1';
-                            section.style.transition = 'opacity 0.3s ease';
+                            section.style.transition = 'opacity 0.2s ease';
                         }, 50);
                     } else {
-                        section.style.display = 'none';
+                        section.classList.add('hidden');
                     }
                 }
             });
+
+            if (syncUrl) {
+                const url = new URL(window.location.href);
+                if (resolvedCategory === 'all') {
+                    url.searchParams.delete('tipo');
+                } else {
+                    url.searchParams.set('tipo', resolvedCategory);
+                }
+                window.history.replaceState({}, '', url.toString());
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.getElementById('tab-filter-nav');
+            const initialTab = nav?.dataset.activeTab || 'all';
+            filterResults(initialTab, false);
+        });
     </script>
     @endif
+
+</main>
+@endsection

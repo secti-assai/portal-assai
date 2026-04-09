@@ -112,7 +112,7 @@
 
         @if(method_exists($secretarias, 'hasPages') && $secretarias->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $secretarias->links() }}
+                {{ $secretarias->links('components.pagination.agenda-style') }}
             </div>
         @endif
     </div>

@@ -20,6 +20,84 @@ import './widgets';
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    const shouldSkipLazyForImage = function (imgElement) {
+        if (!(imgElement instanceof HTMLImageElement)) return true;
+        if (imgElement.hasAttribute('loading')) return true;
+        if (imgElement.dataset.noLazy === 'true') return true;
+        if ((imgElement.getAttribute('fetchpriority') || '').toLowerCase() === 'high') return true;
+        if (imgElement.closest('#site-header, #hero-video-loader, #hero-mobile-loader')) return true;
+        return false;
+    };
+
+    const applyGlobalLazyLoading = function (rootNode) {
+        if (!rootNode) return;
+
+        const candidates = [];
+        if (rootNode instanceof Element && (rootNode.tagName === 'IMG' || rootNode.tagName === 'IFRAME')) {
+            candidates.push(rootNode);
+        }
+
+        if (rootNode.querySelectorAll) {
+            rootNode.querySelectorAll('img, iframe').forEach(function (mediaEl) {
+                candidates.push(mediaEl);
+            });
+        }
+
+        candidates.forEach(function (mediaEl) {
+            if (mediaEl instanceof HTMLImageElement) {
+                if (shouldSkipLazyForImage(mediaEl)) return;
+                mediaEl.loading = 'lazy';
+                if (!mediaEl.hasAttribute('decoding')) {
+                    mediaEl.decoding = 'async';
+                }
+                return;
+            }
+
+            if (mediaEl instanceof HTMLIFrameElement && !mediaEl.hasAttribute('loading')) {
+                mediaEl.loading = 'lazy';
+            }
+        });
+    };
+
+    applyGlobalLazyLoading(document);
+
+    const lazyMediaObserver = new MutationObserver(function (mutationList) {
+        mutationList.forEach(function (mutation) {
+            mutation.addedNodes.forEach(function (addedNode) {
+                if (addedNode instanceof Element) {
+                    applyGlobalLazyLoading(addedNode);
+                }
+            });
+        });
+    });
+    lazyMediaObserver.observe(document.body, { childList: true, subtree: true });
+
+    const globalSiteHeader = document.getElementById('site-header');
+    const enforceGlobalTopReset = function () {
+        document.documentElement.style.marginTop = '0px';
+        document.documentElement.style.paddingTop = '0px';
+        document.body.style.marginTop = '0px';
+        document.body.style.paddingTop = '0px';
+
+        if (globalSiteHeader) {
+            globalSiteHeader.style.top = '0px';
+            globalSiteHeader.style.marginTop = '0px';
+            globalSiteHeader.style.paddingTop = '0px';
+        }
+    };
+
+    enforceGlobalTopReset();
+
+    const bodyTopResetObserver = new MutationObserver(function () {
+        enforceGlobalTopReset();
+    });
+    bodyTopResetObserver.observe(document.body, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    const htmlTopResetObserver = new MutationObserver(function () {
+        enforceGlobalTopReset();
+    });
+    htmlTopResetObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+
     /* ==========================================================================
        HERO VIDEO LAZY LOAD (Home)
        Só revela a home após o vídeo estar pronto e tocando
@@ -28,7 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (lazyVideo) {
         var homeMain = document.getElementById('home-main');
         var heroLoader = document.getElementById('hero-video-loader');
+        var mobileHeroLoader = document.getElementById('hero-mobile-loader');
         var siteHeader = document.getElementById('site-header');
+        var isMobileViewport = window.matchMedia('(max-width: 1023px)').matches;
         var hasInitializedVideo = false;
         var hasRevealedHome = false;
 
@@ -51,6 +131,85 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         enforceHomeTopReset();
+
+        if (isMobileViewport) {
+            var hasRevealedMobileHome = false;
+            var portalConfig = document.getElementById('portal-config');
+            var mobileLogoBlackSrc = portalConfig && portalConfig.dataset ? (portalConfig.dataset.logoBlack || '') : '';
+            var mobileNavLogo = document.getElementById('nav-logo-img');
+            var hardHideMobileLoader = function () {
+                if (!mobileHeroLoader) return;
+                mobileHeroLoader.classList.add('hidden');
+                mobileHeroLoader.style.display = 'none';
+                mobileHeroLoader.style.opacity = '0';
+                mobileHeroLoader.style.pointerEvents = 'none';
+                mobileHeroLoader.setAttribute('aria-hidden', 'true');
+            };
+
+            var revealMobileHome = function () {
+                if (hasRevealedMobileHome) return;
+                hasRevealedMobileHome = true;
+
+                // Mantém consistência visual: no mobile a home usa navbar sólida com logo preta.
+                if (siteHeader) {
+                    siteHeader.classList.remove('bg-transparent', 'text-white', 'border-transparent');
+                    siteHeader.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'text-slate-700', 'border-slate-200/50');
+                }
+
+                if (mobileNavLogo && mobileLogoBlackSrc) {
+                    if ((mobileNavLogo.getAttribute('src') || '') !== mobileLogoBlackSrc) {
+                        mobileNavLogo.setAttribute('src', mobileLogoBlackSrc);
+                    }
+                    mobileNavLogo.style.transform = 'translateX(6px)';
+                    mobileNavLogo.style.opacity = '1';
+                }
+
+                if (homeMain) {
+                    homeMain.classList.remove('opacity-0');
+                    homeMain.setAttribute('aria-busy', 'false');
+                }
+
+                if (siteHeader) {
+                    siteHeader.classList.remove('opacity-0', 'pointer-events-none');
+                }
+
+                if (mobileHeroLoader) {
+                    mobileHeroLoader.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(function () {
+                        hardHideMobileLoader();
+                    }, 520);
+                }
+            };
+
+            if (homeMain) {
+                homeMain.setAttribute('aria-busy', 'true');
+            }
+
+            if (homeMain) {
+                homeMain.classList.remove('opacity-0');
+            }
+
+            if (siteHeader) {
+                siteHeader.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            if (heroLoader) {
+                heroLoader.classList.add('hidden');
+            }
+
+            if (document.readyState === 'complete') {
+                requestAnimationFrame(revealMobileHome);
+            } else {
+                window.addEventListener('load', revealMobileHome, { once: true });
+            }
+
+            window.addEventListener('pageshow', revealMobileHome, { once: true });
+
+            setTimeout(revealMobileHome, 2200);
+            setTimeout(hardHideMobileLoader, 3200);
+
+            return;
+        }
 
         if (homeMain) {
             homeMain.setAttribute('aria-busy', 'true');
@@ -363,7 +522,11 @@ document.addEventListener('DOMContentLoaded', function () {
        INICIALIZAÇÃO DAS ABAS DA PÁGINA DE RESULTADOS DE BUSCA
        ========================================================================== */
     if (document.querySelector('.tab-btn')) {
-        window.filterResults('all');
+        var tabFilterNav = document.getElementById('tab-filter-nav');
+        var initialTab = tabFilterNav ? (tabFilterNav.getAttribute('data-active-tab') || 'all') : 'all';
+        if (typeof window.filterResults === 'function') {
+            window.filterResults(initialTab, false);
+        }
     }
 });
 
@@ -412,66 +575,16 @@ window.carregarCalendario = function(url) {
         });
 };
 
-/* Lógica das Abas de Resultados de Busca (Refatorado com Novas Cores) */
-window.filterResults = function(type) {
-    var sections = document.querySelectorAll('.result-section');
-    var buttons = document.querySelectorAll('.tab-btn');
-
-    buttons.forEach(function (btn) {
-        var target = btn.getAttribute('data-target');
-        var badge = btn.querySelector('span');
-
-        // Reset: Define todos como inativos primeiro
-        btn.setAttribute('aria-selected', 'false');
-        btn.classList.remove('active', 'bg-blue-800', 'text-white', 'border-blue-800', 'shadow-md');
-        btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
-
-        // Restaura os hovers originais das categorias inativas
-        if (target === 'noticias') btn.classList.add('hover:border-blue-300', 'hover:text-blue-700');
-        if (target === 'servicos') btn.classList.add('hover:border-emerald-300', 'hover:text-emerald-700');
-        if (target === 'eventos') btn.classList.add('hover:border-yellow-300', 'hover:text-yellow-700');
-        if (target === 'programas') btn.classList.add('hover:border-purple-300', 'hover:text-purple-700');
-        if (target === 'secretarias') btn.classList.add('hover:border-slate-300', 'hover:text-slate-700');
-
-        if (badge) {
-            badge.classList.add('bg-slate-100');
-            badge.classList.remove('bg-black/20');
-        }
-
-        // Estilo do botão CLICADO (Ativo)
-        if (target === type) {
-            btn.setAttribute('aria-selected', 'true');
-            btn.classList.add('active');
-            
-            // Remove as cores dinâmicas e o fundo branco
-            btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:border-blue-300', 'hover:text-blue-700', 'hover:border-emerald-300', 'hover:text-emerald-700', 'hover:border-yellow-300', 'hover:text-yellow-700', 'hover:border-purple-300', 'hover:text-purple-700', 'hover:border-slate-300', 'hover:text-slate-700');
-            
-            // Adiciona o Azul Sólido Institucional
-            btn.classList.add('bg-blue-800', 'text-white', 'border-blue-800', 'shadow-md');
-
-            if (badge) {
-                badge.classList.remove('bg-slate-100');
-                badge.classList.add('bg-black/20');
-            }
-        }
-    });
-
-    // Exibe ou Esconde as Seções
-    sections.forEach(function (section) {
-        if (type === 'all') {
-            section.style.display = 'block';
-        } else {
-            section.style.display = (section.id === 'sec-' + type) ? 'block' : 'none';
-        }
-    });
-};
-
 /* ==========================================================================
    BOTÃO BACK TO TOP (Regresso ao topo suave)
    ========================================================================== */
 (function () {
     var btn = document.getElementById('btn-back-to-top');
     if (!btn) return;
+
+    btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     window.addEventListener('scroll', function () {
         if (window.scrollY > 300) {

@@ -132,7 +132,7 @@
 
         @if($eventos->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $eventos->links() }}
+                {{ $eventos->links('components.pagination.agenda-style') }}
             </div>
         @endif
     </div>
