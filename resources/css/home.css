@@ -143,7 +143,7 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Montserrat', sans-serif; }
     }
 }
 
-@media (max-width: 921px) {
+@media (max-width: 1023px) {
     #pl-mobile-home { overflow-x: hidden !important; max-width: 100%; width: 100%; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; position: relative; }
     #pl-mobile-home *, #pl-mobile-home { box-sizing: border-box; }
 
@@ -241,4 +241,39 @@ h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Montserrat', sans-serif; }
     #pl-mobile-home .mobile-news-grid .card-news { min-width: 0; }
     #pl-mobile-home .mobile-drawer { top: var(--pl-mobile-topbar-height, 72px); max-height: calc(100dvh - var(--pl-mobile-topbar-height, 72px) - 12px); }
     #pl-mobile-home .mobile-drawer-body { max-height: calc(100dvh - var(--pl-mobile-topbar-height, 72px) - 12px); }
+}
+
+html.contrast-mode #pl-mobile-home .home-hero-mobile::before {
+    background: rgba(2, 6, 23, 0.92) !important;
+}
+
+html.contrast-mode #pl-mobile-home .bg-white-section,
+html.contrast-mode #pl-mobile-home .bg-gray-section,
+html.contrast-mode #pl-mobile-home .small-card,
+html.contrast-mode #pl-mobile-home .calendar-wrap,
+html.contrast-mode #pl-mobile-home .event-featured,
+html.contrast-mode #pl-mobile-home .all-btn,
+html.contrast-mode #pl-mobile-home .glide__slide,
+html.contrast-mode #pl-mobile-home .card-news {
+    background: #0f172a !important;
+    border-color: #94a3b8 !important;
+    color: #f8fafc !important;
+}
+
+html.contrast-mode #pl-mobile-home .section-title,
+html.contrast-mode #pl-mobile-home .small-card-title,
+html.contrast-mode #pl-mobile-home .event-title,
+html.contrast-mode #pl-mobile-home .event-meta,
+html.contrast-mode #pl-mobile-home .calendar-head,
+html.contrast-mode #pl-mobile-home .month-name,
+html.contrast-mode #pl-mobile-home .day-name,
+html.contrast-mode #pl-mobile-home .day-number {
+    color: #f8fafc !important;
+}
+
+html.contrast-mode #pl-mobile-home .all-btn,
+html.contrast-mode #pl-mobile-home .home-search-bar .wp-block-search__button {
+    background: #111827 !important;
+    color: #f8fafc !important;
+    border: 1px solid #94a3b8 !important;
 }

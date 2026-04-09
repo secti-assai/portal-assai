@@ -9,6 +9,26 @@
  */
 
 const registerWidgets = () => {
+    const resolvePortalEndpoint = (dataAttrName, fallbackPath) => {
+        const raw = document.querySelector('[data-' + dataAttrName + ']')?.dataset?.[dataAttrName] || '';
+
+        if (!raw) {
+            return fallbackPath;
+        }
+
+        try {
+            const parsed = new URL(raw, window.location.origin);
+
+            if (parsed.host === window.location.host) {
+                return parsed.pathname + parsed.search + parsed.hash;
+            }
+
+            return parsed.toString();
+        } catch (e) {
+            return fallbackPath;
+        }
+    };
+
     // ---- WIDGET DO CLIMA ----
     Alpine.data('weatherWidget', () => ({
         temperature: null,
@@ -56,10 +76,11 @@ const registerWidgets = () => {
 
         async init() {
             try {
-                const weatherUrl = document.querySelector('[data-weather-url]')?.dataset.weatherUrl;
-                if (!weatherUrl) throw new Error('Weather URL not found');
+                const weatherUrl = resolvePortalEndpoint('weatherUrl', '/api/clima-atual');
 
                 const response = await fetch(weatherUrl, {
+                    credentials: 'same-origin',
+                    cache: 'no-store',
                     headers: { 'Accept': 'application/json' }
                 });
                 if (!response.ok) throw new Error('API Error');
@@ -151,10 +172,11 @@ const registerWidgets = () => {
 
         async init() {
             try {
-                const dutyUrl = document.querySelector('[data-duty-url]')?.dataset.dutyUrl;
-                if (!dutyUrl) throw new Error('Duty URL not found');
+                const dutyUrl = resolvePortalEndpoint('dutyUrl', '/api/plantao-hoje');
 
                 const response = await fetch(dutyUrl, {
+                    credentials: 'same-origin',
+                    cache: 'no-store',
                     headers: { 'Accept': 'application/json' }
                 });
 

@@ -20,6 +20,23 @@ import './widgets';
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    const safeStorageGet = function (key) {
+        try {
+            return window.localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    };
+
+    const safeStorageSet = function (key, value) {
+        try {
+            window.localStorage.setItem(key, value);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     const shouldSkipLazyForImage = function (imgElement) {
         if (!(imgElement instanceof HTMLImageElement)) return true;
         if (imgElement.hasAttribute('loading')) return true;
@@ -97,6 +114,34 @@ document.addEventListener('DOMContentLoaded', function () {
         enforceGlobalTopReset();
     });
     htmlTopResetObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    // Fail-safe global: evita overlay preso da home em navegadores mobile/desktop mode.
+    const forceHideHeroLoader = function (loaderEl) {
+        if (!loaderEl) return;
+        loaderEl.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        loaderEl.style.display = 'none';
+        loaderEl.style.opacity = '0';
+        loaderEl.style.pointerEvents = 'none';
+        loaderEl.setAttribute('aria-hidden', 'true');
+    };
+
+    const forceHideAllHeroLoaders = function () {
+        forceHideHeroLoader(document.getElementById('hero-mobile-loader'));
+        forceHideHeroLoader(document.getElementById('hero-video-loader'));
+    };
+
+    if (document.getElementById('home-main')) {
+        setTimeout(forceHideAllHeroLoaders, 2600);
+        setTimeout(forceHideAllHeroLoaders, 4200);
+        setTimeout(forceHideAllHeroLoaders, 6500);
+
+        window.addEventListener('pageshow', forceHideAllHeroLoaders, { once: true });
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') {
+                forceHideAllHeroLoaders();
+            }
+        });
+    }
 
     /* ==========================================================================
        HERO VIDEO LAZY LOAD (Home)
@@ -363,11 +408,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var cookieBanner = document.getElementById('cookie-banner');
     var acceptBtn = document.getElementById('accept-cookies');
     if (cookieBanner && acceptBtn) {
-        if (!localStorage.getItem('cookiesAceitos_Assai')) {
+        if (!safeStorageGet('cookiesAceitos_Assai')) {
             cookieBanner.classList.remove('hidden');
         }
         acceptBtn.addEventListener('click', function () {
-            localStorage.setItem('cookiesAceitos_Assai', 'true');
+            safeStorageSet('cookiesAceitos_Assai', 'true');
             cookieBanner.classList.add('hidden');
         });
     }

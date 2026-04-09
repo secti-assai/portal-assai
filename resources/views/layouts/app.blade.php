@@ -47,9 +47,13 @@
     <script>
         /* Aplica preferências salvas antes da 1ª pintura — evita flash de conteúdo */
         (function() {
-            var s = localStorage.getItem('a11y_fontSize');
-            if (s) document.documentElement.style.fontSize = s + 'px';
-            if (localStorage.getItem('a11y_contrast') === '1') document.documentElement.classList.add('contrast-mode');
+            try {
+                var s = localStorage.getItem('a11y_fontSize');
+                if (s) document.documentElement.style.fontSize = s + 'px';
+                if (localStorage.getItem('a11y_contrast') === '1') document.documentElement.classList.add('contrast-mode');
+            } catch (e) {
+                // Storage pode ser bloqueado por políticas de privacidade do navegador.
+            }
         })();
     </script>
 </head>
