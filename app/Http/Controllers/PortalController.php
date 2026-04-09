@@ -40,15 +40,12 @@ class PortalController extends Controller
                 ->get();
         });
 
-        // 2. Busca as Notícias: Esconde as inativas!
-        $noticias = Cache::remember('home_noticias', 3600, function () {
-            return Noticia::where('ativo', true)
-                ->whereDate('data_publicacao', '<=', today())
-                ->orderBy('data_publicacao', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->take(3)
-                ->get();
-        });
+        // Notícias da home sem cache para refletir publicação imediatamente.
+        $noticias = Noticia::publicadas()
+            ->orderBy('data_publicacao', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
 
         $eventos = Cache::remember('home_eventos_v4', 3600, function () {
             return Evento::futurosPublicos()
@@ -108,15 +105,13 @@ class PortalController extends Controller
     // Página de notícias
     public function noticias(Request $request)
     {
-        $categorias = Noticia::where('ativo', true)
-            ->whereDate('data_publicacao', '<=', today())
+        $categorias = Noticia::publicadas()
             ->whereNotNull('categoria')
             ->distinct()
             ->orderBy('categoria')
             ->pluck('categoria');
 
-        $query = Noticia::where('ativo', true)
-            ->whereDate('data_publicacao', '<=', today())
+        $query = Noticia::publicadas()
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc');
 
