@@ -12,15 +12,14 @@ class NoticiaController extends Controller
     // 1. LISTAR TODAS (Para a tabela)
     public function index(Request $request)
     {
-
-        $categorias = Noticia::publicadas()
+        $categorias = Noticia::query()
             ->whereNotNull('categoria')
             ->distinct()
             ->orderBy('categoria')
             ->pluck('categoria', 'categoria')
             ->toArray();
 
-        $noticias = Noticia::publicadas()
+        $noticias = Noticia::query()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->string('search')->trim()->toString();
                 $query->where(function ($subQuery) use ($search) {

@@ -40,7 +40,7 @@ class PortalController extends Controller
                 ->get();
         });
 
-        // 2. Busca as Notícias publicadas para evitar cache desatualizado na home.
+        // Notícias da home sem cache para refletir publicação imediatamente.
         $noticias = Noticia::publicadas()
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
@@ -105,7 +105,6 @@ class PortalController extends Controller
     // Página de notícias
     public function noticias(Request $request)
     {
-
         $categorias = Noticia::publicadas()
             ->whereNotNull('categoria')
             ->distinct()
