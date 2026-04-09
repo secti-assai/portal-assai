@@ -28,77 +28,77 @@ class SecretariaSeeder extends Seeder
             [
                 'nome' => 'Chefe de Gabinete',
                 'email' => 'gabinete@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Paulo Roberto Moreira', 
             ],
             [
                 'nome' => 'Procuradoria Geral',
-                'email' => 'procuradoria@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'email' => 'juridico@assai.pr.gov.br',
+                'nome_secretario' => 'Whashington Rafael Proença da Fonseca',
             ],
             [
                 'nome' => 'Secretaria de Administração e Recursos Humanos',
                 'email' => 'adm@assai.pr.gov.br',
-                'nome_secretario' => 'Claudio Roberto Prudêncio', //
+                'nome_secretario' => 'Cláudio Roberto Prudêncio', 
             ],
             [
                 'nome' => 'Secretaria de Agricultura, Abastecimento e Meio Ambiente',
                 'email' => 'agricultura@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Adilson Lopes',
             ],
             [
                 'nome' => 'Secretaria de Assistência Social',
-                'email' => 'assistenciasocial@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'email' => 'smas@assai.pr.gov.br',
+                'nome_secretario' => 'Vera Lúcia Lourenço', 
             ],
             [
                 'nome' => 'Secretaria de Ciência Tecnologia e Inovação',
-                'email' => 'tecnologia@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'email' => 'secti@assai.pr.gov.br',
+                'nome_secretario' => 'Igor Lima Freire Oliveira', 
             ],
             [
                 'nome' => 'Secretaria de Cultura e Turismo',
                 'email' => 'cultura@assai.pr.gov.br',
-                'nome_secretario' => 'Mariana Valéria Leonardi', //
+                'nome_secretario' => 'Mariana Valéria Leonardi', 
             ],
             [
                 'nome' => 'Secretaria de Desenvolvimento Local',
                 'email' => 'desenvolvimento@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Flavio Valini',
             ],
             [
                 'nome' => 'Secretaria de Educação',
                 'email' => 'educacao@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Josiane Apª Santana Cheffer', 
             ],
             [
                 'nome' => 'Secretaria de Esporte e Lazer',
                 'email' => 'esporte@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Roberto Fernandes', 
             ],
             [
                 'nome' => 'Secretaria de Finanças',
                 'email' => 'financas@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Nilse Shinohata Menegazzo', 
             ],
             [
                 'nome' => 'Secretaria de Obras e Serviços',
                 'email' => 'obras@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Orlando Menegazzo Filho', 
             ],
             [
                 'nome' => 'Secretaria de Saúde',
                 'email' => 'saude@assai.pr.gov.br',
-                'nome_secretario' => 'Dylan Custódio', //
+                'nome_secretario' => 'Dylan Custódio ', 
             ],
             [
                 'nome' => 'Secretaria de Trabalho, Emprego e Geração de Renda',
                 'email' => 'trabalho@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'nome_secretario' => 'Orlando Júnior', 
             ],
             [
                 'nome' => 'Secretaria Municipal de Segurança Alimentar e Nutrição',
-                'email' => 'segurancaalimentar@assai.pr.gov.br',
-                'nome_secretario' => 'A Definir',
+                'email' => 'ouvidoria@assai.pr.gov.br',
+                'nome_secretario' => 'Margareth Ferreira',
             ],
         ];
 

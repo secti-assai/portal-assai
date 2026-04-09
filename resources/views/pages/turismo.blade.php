@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- ===== HERO ===== --}}
-<section class="relative py-20 overflow-hidden bg-blue-900 md:py-28 lg:py-40">
+<section class="relative pt-8 pb-20 overflow-hidden bg-blue-900 md:pt-12 md:pb-28 lg:pt-20 lg:pb-40">
     <div class="absolute inset-0">
         <svg class="absolute w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -50,23 +50,23 @@
 {{-- ===== DESTAQUES RÁPIDOS ===== --}}
 <section class="relative z-20 -mt-16">
     <div class="container px-4 mx-auto max-w-6xl">
-        <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4 md:gap-5">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">🏯</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">1º Castelo Japonês</span>
-                <span class="text-xs text-slate-400 mt-0.5">do Brasil</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">1º Castelo Japonês</span>
+                <span class="text-xs text-slate-600 mt-0.5">do Brasil</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">🌸</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">1º Tanabata Matsuri</span>
-                <span class="text-xs text-slate-400 mt-0.5">do Brasil — 1978</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">1º Tanabata Matsuri</span>
+                <span class="text-xs text-slate-600 mt-0.5">do Brasil — 1978</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">⛩️</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Templo Budista</span>
-                <span class="text-xs text-slate-400 mt-0.5">mais antigo do PR</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Templo Budista</span>
+                <span class="text-xs text-slate-600 mt-0.5">mais antigo do PR</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-xl rounded-2xl border-yellow-500 col-span-2 md:col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-lg rounded-2xl border-yellow-600 ring-1 ring-yellow-500/40 col-span-1 sm:col-span-2 md:col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-1">🍜</span>
                 <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Polo Gastronômico</span>
                 <span class="text-xs text-blue-900 mt-0.5">nipônico do PR</span>
@@ -76,18 +76,18 @@
 </section>
 
 {{-- ===== CASTELO JAPONÊS — DESTAQUE ===== --}}
-<section id="castelo" class="py-16 bg-white md:py-24 lg:py-32">
+<section id="castelo" class="py-16 bg-[#f8fbff] md:py-24 lg:py-32 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
-        <div class="flex flex-col overflow-hidden bg-white border shadow-2xl rounded-3xl border-slate-100 lg:flex-row">
+        <div class="flex flex-col overflow-hidden bg-slate-50 border shadow-2xl rounded-3xl border-slate-300/70 ring-1 ring-slate-200/70 lg:flex-row">
             <div class="lg:w-1/2 relative min-h-[320px] lg:min-h-[540px] bg-slate-200">
                 <img src="{{ asset('img/assai_1.jpg') }}" alt="Castelo Japonês de Assaí — Memorial da Imigração" class="absolute inset-0 object-cover w-full h-full transition duration-700 hover:scale-105" loading="lazy" decoding="async">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent lg:bg-gradient-to-r lg:from-black/60 lg:via-black/10 lg:to-transparent"></div>
                 <div class="absolute top-6 left-6">
                     <span class="px-3 py-1.5 text-xs font-bold tracking-wider text-emerald-900 uppercase bg-yellow-400 rounded-full shadow">Cartão Postal</span>
                 </div>
-                <div class="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 text-white">
+                <div class="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.6)]">
                     <p class="text-xs font-bold tracking-widest uppercase text-yellow-400 mb-1">Inaugurado em 2018</p>
-                    <p class="text-2xl font-extrabold font-heading leading-tight">25 m de altura<br>4 pavimentos</p>
+                    <p class="text-2xl font-extrabold font-heading leading-tight !text-white">25 m de altura<br>4 pavimentos</p>
                 </div>
             </div>
             <div class="flex flex-col justify-center p-8 lg:w-1/2 lg:p-14">
@@ -131,13 +131,13 @@
         <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
             <div class="space-y-5 text-white">
                 <span class="inline-block text-blue-200 font-bold tracking-wider uppercase text-xs border border-blue-600 bg-blue-800/60 px-3 py-1 rounded-full">Gastronomia</span>
-                <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight">
+                <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight !text-white">
                     Polo Gastronômico<br><span class="text-yellow-300">Nipônico do Paraná</span>
                 </h2>
-                <p class="text-blue-100 text-[15px] md:text-base leading-7 md:leading-relaxed">Assaí ostenta com orgulho o título de <strong>cidade com a maior proporção de descendentes japoneses do Brasil</strong>. Isso tem um reflexo direto e delicioso na mesa: aqui, a culinária japonesa não é uma tendência — é uma herança de mais de 90 anos.</p>
-                <p class="text-blue-100 text-[15px] md:text-base leading-7 md:leading-relaxed">Restaurantes familiares de receitas guardadas a sete chaves, centros gastronômicos como o <strong>Assahí</strong>, yakitorias e doceiras artesanais de wagashi atraem visitantes de toda a região Norte do Paraná em busca dos sabores genuínos do Japão profundo.</p>
+                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Assaí ostenta com orgulho o título de <strong class="text-white">cidade com a maior proporção de descendentes japoneses do Brasil</strong>. Isso tem um reflexo direto e delicioso na mesa: aqui, a culinária japonesa não é uma tendência — é uma herança de mais de 90 anos.</p>
+                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Restaurantes familiares de receitas guardadas a sete chaves, centros gastronômicos como o <strong class="text-white">Assahí</strong>, yakitorias e doceiras artesanais de wagashi atraem visitantes de toda a região Norte do Paraná em busca dos sabores genuínos do Japão profundo.</p>
 
-                <div class="grid grid-cols-2 gap-3 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     @php
                     $sabores = [
                         ['nome' => 'Sushi & Sashimi', 'icon' => '🍣', 'desc' => 'Ingredientes frescos'],
@@ -147,11 +147,11 @@
                     ];
                     @endphp
                     @foreach($sabores as $s)
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/20">
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-white/15 border border-white/30">
                         <span class="text-2xl">{{ $s['icon'] }}</span>
                         <div>
                             <p class="text-white font-bold text-sm font-heading">{{ $s['nome'] }}</p>
-                            <p class="text-blue-300 text-xs">{{ $s['desc'] }}</p>
+                            <p class="text-blue-100 text-xs">{{ $s['desc'] }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -190,12 +190,12 @@
 </section>
 
 {{-- ===== PASSEIOS E TRADIÇÃO ===== --}}
-<section class="py-16 bg-slate-100 md:py-24 lg:py-28 border-y border-slate-200">
+<section class="py-16 bg-[#eaf3ff] md:py-24 lg:py-28 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-emerald-700 font-bold tracking-wider uppercase text-xs border border-emerald-200 bg-emerald-50 px-3 py-1 rounded-full mb-4">Roteiro Cultural</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Passeios e Tradição</h2>
-            <p class="mt-4 text-base text-slate-500 max-w-2xl mx-auto">Parques arborizados, templos centenários e a alma nipônica de uma cidade única no Brasil.</p>
+            <p class="mt-4 text-base text-slate-700 max-w-2xl mx-auto">Parques arborizados, templos centenários e a alma nipônica de uma cidade única no Brasil.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -221,8 +221,8 @@
                         <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Parque Ikeda</h3>
                         <p class="mt-5 text-sm leading-relaxed text-slate-600">Um oásis verde de <strong>27 mil m²</strong> no coração de Assaí. A pista de caminhada contorna um lago sereno e leva ao imponente <strong>portal Torii</strong>, ideal para passeios em família.</p>
                         <ul class="mt-5 space-y-2">
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Trilha de Caminhada</li>
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Portal Torii</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Trilha de Caminhada</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-emerald-500"></span> Portal Torii</li>
                         </ul>
                     </div>
                 </div>
@@ -250,8 +250,8 @@
                         <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Templo Shoshinji</h3>
                         <p class="mt-5 text-sm leading-relaxed text-slate-600">O <strong>templo budista em atividade mais antigo do Paraná</strong>, inaugurado em 1948 e construído em madeira pelos próprios fiéis, preserva arquitetura nipônica original e ambiente de contemplação.</p>
                         <ul class="mt-5 space-y-2">
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Madeira original de 1948</li>
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Espaço para Meditação</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Madeira original de 1948</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-indigo-500"></span> Espaço para Meditação</li>
                         </ul>
                     </div>
                 </div>
@@ -279,8 +279,8 @@
                         <h3 class="mt-4 text-2xl font-extrabold text-slate-900 font-heading">Praça da Matriz</h3>
                         <p class="mt-5 text-sm leading-relaxed text-slate-600">O coração de Assaí. A <strong>Igreja Matriz São José</strong> domina a praça central, onde toda quarta-feira acontece a tradicional <strong>Feira Teia da Cidadania</strong> com artesanato e produtos locais.</p>
                         <ul class="mt-5 space-y-2">
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Igreja desde 1944</li>
-                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Feira às Quartas</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Igreja desde 1944</li>
+                            <li class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-slate-600"><span class="h-1.5 w-1.5 bg-yellow-500"></span> Feira às Quartas</li>
                         </ul>
                     </div>
                 </div>
@@ -290,16 +290,16 @@
 </section>
 
 {{-- ===== FESTIVIDADES ===== --}}
-<section class="py-20 bg-white md:py-28">
+<section class="py-20 bg-[#f8fbff] md:py-28 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-indigo-600 font-bold tracking-wider uppercase text-xs border border-indigo-200 bg-indigo-50 px-3 py-1 rounded-full mb-4">Calendário Cultural</span>
+            <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-indigo-700 bg-indigo-600 px-3 py-1 rounded-full mb-4">Calendário Cultural</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Festividades Inesquecíveis</h2>
-            <p class="mt-4 text-base text-slate-500 max-w-2xl mx-auto">Assaí celebra o ano inteiro com eventos únicos que misturam tradição japonesa, agropecuária e muita animação.</p>
+            <p class="mt-4 text-base text-slate-700 max-w-2xl mx-auto">Assaí celebra o ano inteiro com eventos únicos que misturam tradição japonesa, agropecuária e muita animação.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <div class="group relative p-7 rounded-2xl border border-yellow-100 bg-yellow-50 hover:bg-yellow-100 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
+            <div class="group relative p-7 rounded-2xl border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
                 <div class="absolute top-0 right-0 text-8xl opacity-10 leading-none font-black font-heading text-yellow-500 select-none">🌾</div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-center w-12 h-12 text-yellow-700 bg-yellow-200 rounded-xl mb-5 group-hover:scale-110 transition">
@@ -307,11 +307,11 @@
                     </div>
                     <span class="text-xs font-bold text-yellow-600 uppercase tracking-wider">Junho · Agro & Cultura</span>
                     <h4 class="text-xl font-extrabold text-slate-800 font-heading mt-1 mb-3">ExpoAsa</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Realizada desde <strong>1943</strong>, é considerada a <strong>exposição agropecuária mais antiga do Brasil</strong>. Durante dias, a cidade ferve com shows artísticos, leilões, gastronomia típica e tecnologia rural — uma celebração viva do orgulho do campo assaiense.</p>
+                    <p class="text-sm text-slate-700 leading-relaxed">Realizada desde <strong>1943</strong>, é considerada a <strong>exposição agropecuária mais antiga do Brasil</strong>. Durante dias, a cidade ferve com shows artísticos, leilões, gastronomia típica e tecnologia rural — uma celebração viva do orgulho do campo assaiense.</p>
                 </div>
             </div>
 
-            <div class="group relative p-7 rounded-2xl border border-blue-100 bg-blue-50 hover:bg-blue-100 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
+            <div class="group relative p-7 rounded-2xl border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
                 <div class="absolute top-0 right-0 text-8xl opacity-10 leading-none font-black font-heading text-blue-500 select-none">🎋</div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-center w-12 h-12 text-blue-700 bg-blue-200 rounded-xl mb-5 group-hover:scale-110 transition">
@@ -319,11 +319,11 @@
                     </div>
                     <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Outubro · Tradicional</span>
                     <h4 class="text-xl font-extrabold text-slate-800 font-heading mt-1 mb-3">Tanabata Matsuri</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">A <strong>primeira festa de Tanabata do Brasil</strong> nasceu em Assaí em 1978! Adultos e crianças registram seus sonhos em tanzaku coloridos e os dependuram em galhos de bambu. Uma noite mágica de estrelas, yukata e tradição centenária.</p>
+                    <p class="text-sm text-slate-700 leading-relaxed">A <strong>primeira festa de Tanabata do Brasil</strong> nasceu em Assaí em 1978! Adultos e crianças registram seus sonhos em tanzaku coloridos e os dependuram em galhos de bambu. Uma noite mágica de estrelas, yukata e tradição centenária.</p>
                 </div>
             </div>
 
-            <div class="group relative p-7 rounded-2xl border border-pink-100 bg-pink-50 hover:bg-pink-100 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
+            <div class="group relative p-7 rounded-2xl border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50 hover:-translate-y-1 hover:shadow-lg transition duration-300 overflow-hidden">
                 <div class="absolute top-0 right-0 text-8xl opacity-10 leading-none font-black font-heading text-pink-500 select-none">🎶</div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-center w-12 h-12 text-pink-700 bg-pink-200 rounded-xl mb-5 group-hover:scale-110 transition">
@@ -331,7 +331,7 @@
                     </div>
                     <span class="text-xs font-bold text-pink-600 uppercase tracking-wider">Agosto & Novembro · Ancestral</span>
                     <h4 class="text-xl font-extrabold text-slate-800 font-heading mt-1 mb-3">Bon Odori</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Dança sagrada da cultura japonesa para <strong>honrar e celebrar os antepassados</strong>. As ruas de Assaí se transformam com yukatas coloridas, tambores Taiko e coreografias que emocionam. Única no Estado, a festa acontece duas vezes por ano — uma raridade no Brasil.</p>
+                    <p class="text-sm text-slate-700 leading-relaxed">Dança sagrada da cultura japonesa para <strong>honrar e celebrar os antepassados</strong>. As ruas de Assaí se transformam com yukatas coloridas, tambores Taiko e coreografias que emocionam. Única no Estado, a festa acontece duas vezes por ano — uma raridade no Brasil.</p>
                 </div>
             </div>
         </div>
@@ -345,7 +345,7 @@
     </div>
     <div class="container relative z-10 px-4 mx-auto max-w-4xl text-center">
         <p class="text-yellow-400 font-bold tracking-widest uppercase text-xs mb-6">Assaí espera por você</p>
-        <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6">
+        <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6 !text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.45)]">
             Planeje a sua visita<br>ao coração japonês do Paraná.
         </h2>
         <p class="text-blue-100 text-lg leading-relaxed max-w-2xl mx-auto mb-10">

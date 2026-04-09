@@ -60,13 +60,13 @@
 </section>
 
 {{-- ===== GRID DE MÓDULOS ===== --}}
-<section class="py-16 bg-slate-50 md:py-20">
+<section class="py-16 bg-[#f8fbff] md:py-20 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
 
         <div class="portal-section-title mb-10">
             <h2>Portais e Sistemas de Transparência</h2>
             <div class="bar"></div>
-            <p class="mt-3 text-sm text-slate-500 max-w-xl mx-auto">Acesse os portais oficiais de prestação de contas e informação pública do município de Assaí.</p>
+            <p class="mt-3 text-sm text-slate-700 max-w-xl mx-auto">Acesse os portais oficiais de prestação de contas e informação pública do município de Assaí.</p>
         </div>
 
         @php
@@ -76,7 +76,7 @@
                 'desc'      => 'Acompanhe em tempo real a execução orçamentária, receitas arrecadadas, despesas realizadas, transferências e relatórios exigidos pela Lei de Responsabilidade Fiscal (LRF).',
                 'badge'     => 'LRF',
                 'badge_cor' => 'bg-blue-100 text-blue-700',
-                'icon_bg'   => 'bg-blue-50 text-blue-600',
+                'icon_bg'   => 'bg-blue-100 text-blue-700',
                 'cta'       => 'Aceder ao Portal',
                 'href'      => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>',
@@ -86,7 +86,7 @@
                 'desc'      => 'Consulte as publicações oficiais do município: decretos, portarias, leis, atos normativos e demais comunicados com validade jurídica, organizados por data de publicação.',
                 'badge'     => 'DOE',
                 'badge_cor' => 'bg-indigo-100 text-indigo-700',
-                'icon_bg'   => 'bg-indigo-50 text-indigo-600',
+                'icon_bg'   => 'bg-indigo-100 text-indigo-700',
                 'cta'       => 'Ver Publicações',
                 'href'      => 'https://www.doemunicipal.com.br/prefeituras/4',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>',
@@ -96,7 +96,7 @@
                 'desc'      => 'Acompanhe editais em aberto, resultado de pregões, dispensa de licitação, contratos firmados com fornecedores e o acompanhamento de compras públicas do município.',
                 'badge'     => 'ComprasNet',
                 'badge_cor' => 'bg-yellow-100 text-yellow-700',
-                'icon_bg'   => 'bg-yellow-50 text-yellow-600',
+                'icon_bg'   => 'bg-yellow-100 text-yellow-700',
                 'cta'       => 'Ver Licitações',
                 'href'      => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>',
@@ -106,7 +106,7 @@
                 'desc'      => 'Transparência na gestão de pessoas: quadro de pessoal ativo e inativo, cargos e funções, remuneração individualizada, folha de pagamento mensal e concursos públicos.',
                 'badge'     => 'RH',
                 'badge_cor' => 'bg-emerald-100 text-emerald-700',
-                'icon_bg'   => 'bg-emerald-50 text-emerald-600',
+                'icon_bg'   => 'bg-emerald-100 text-emerald-700',
                 'cta'       => 'Ver Quadro de Pessoal',
                 'href'      => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/210242',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>',
@@ -116,7 +116,7 @@
                 'desc'      => 'Registre pedidos de acesso à informação, acompanhe o andamento das solicitações e consulte respostas a demandas anteriores. Canal garantido pela Lei nº 12.527/2011.',
                 'badge'     => 'LAI',
                 'badge_cor' => 'bg-rose-100 text-rose-700',
-                'icon_bg'   => 'bg-rose-50 text-rose-600',
+                'icon_bg'   => 'bg-rose-100 text-rose-700',
                 'cta'       => 'Fazer uma Solicitação',
                 'href'      => 'https://e-gov.betha.com.br/e-nota/login.faces',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>',
@@ -126,7 +126,7 @@
                 'desc'      => 'Acesse a Lei Orgânica Municipal, o Código Tributário, o Código de Obras, estatutos, regimentos e toda a legislação produzida pela Câmara Municipal e pelo Executivo de Assaí.',
                 'badge'     => 'Legislação',
                 'badge_cor' => 'bg-slate-100 text-slate-600',
-                'icon_bg'   => 'bg-slate-100 text-slate-500',
+                'icon_bg'   => 'bg-slate-200 text-slate-700',
                 'cta'       => 'Ver Legislação',
                 'href'      => 'https://leismunicipais.com.br/prefeitura/pr/assai',
                 'icon'      => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>',
@@ -137,7 +137,7 @@
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             @foreach($modulos as $modulo)
             <a href="{{ $modulo['href'] }}"
-               class="group flex flex-col bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition transform overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+               class="group flex flex-col bg-slate-50 border border-slate-300/70 ring-1 ring-slate-200/70 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition transform overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
 
                 {{-- Cabeçalho do card --}}
                 <div class="flex items-start justify-between p-6 pb-4">
@@ -156,7 +156,7 @@
                     <h3 class="text-lg font-extrabold text-slate-800 font-heading mb-2 group-hover:text-blue-700 transition">
                         {{ $modulo['titulo'] }}
                     </h3>
-                    <p class="text-sm text-slate-500 leading-relaxed flex-1">
+                    <p class="text-sm text-slate-700 leading-relaxed flex-1">
                         {{ $modulo['desc'] }}
                     </p>
 
@@ -184,46 +184,46 @@
 </section>
 
 {{-- ===== AVISO / NOTA LEGAL ===== --}}
-<section class="py-10 bg-white border-t border-slate-100">
+<section class="py-10 bg-[#eaf3ff] border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="flex flex-col gap-6 md:flex-row md:items-start md:gap-10">
 
             {{-- Prazo de resposta --}}
-            <div class="flex items-start gap-4 flex-1 p-5 bg-blue-50 border border-blue-100 rounded-2xl">
-                <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-xl shrink-0">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-start gap-4 flex-1 p-5 bg-blue-700 border border-blue-800 rounded-2xl shadow-sm">
+                <div class="flex items-center justify-center w-10 h-10 bg-blue-100/20 rounded-xl shrink-0">
+                    <svg class="w-5 h-5 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-blue-800 mb-0.5">Prazo de Resposta</p>
-                    <p class="text-xs text-blue-700 leading-relaxed">Os pedidos de acesso à informação via e-SIC são respondidos em até <strong>20 dias úteis</strong>, prorrogáveis por mais 10 dias, conforme o Art. 11 da Lei nº 12.527/2011.</p>
+                    <p class="text-sm font-bold text-white mb-0.5">Prazo de Resposta</p>
+                    <p class="text-xs text-blue-100 leading-relaxed">Os pedidos de acesso à informação via e-SIC são respondidos em até <strong class="text-white">20 dias úteis</strong>, prorrogáveis por mais 10 dias, conforme o Art. 11 da Lei nº 12.527/2011.</p>
                 </div>
             </div>
 
             {{-- Responsável --}}
-            <div class="flex items-start gap-4 flex-1 p-5 bg-yellow-50 border border-yellow-100 rounded-2xl">
-                <div class="flex items-center justify-center w-10 h-10 bg-yellow-100 rounded-xl shrink-0">
-                    <svg class="w-5 h-5 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-start gap-4 flex-1 p-5 bg-yellow-700 border border-yellow-800 rounded-2xl shadow-sm">
+                <div class="flex items-center justify-center w-10 h-10 bg-yellow-100/20 rounded-xl shrink-0">
+                    <svg class="w-5 h-5 text-yellow-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-yellow-800 mb-0.5">Autoridade de Monitoramento</p>
-                    <p class="text-xs text-yellow-700 leading-relaxed">Em caso de negativa ou omissão, o cidadão pode interpor <strong>recurso administrativo</strong> à autoridade hierarquicamente superior ou acionar a CGU, nos termos do Art. 15 da LAI.</p>
+                    <p class="text-sm font-bold text-white mb-0.5">Autoridade de Monitoramento</p>
+                    <p class="text-xs text-yellow-100 leading-relaxed">Em caso de negativa ou omissão, o cidadão pode interpor <strong class="text-white">recurso administrativo</strong> à autoridade hierarquicamente superior ou acionar a CGU, nos termos do Art. 15 da LAI.</p>
                 </div>
             </div>
 
             {{-- Contato --}}
-            <div class="flex items-start gap-4 flex-1 p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+            <div class="flex items-start gap-4 flex-1 p-5 bg-slate-100/70 border border-slate-300/70 rounded-2xl">
                 <div class="flex items-center justify-center w-10 h-10 bg-slate-200 rounded-xl shrink-0">
-                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
                 <div>
                     <p class="text-sm font-bold text-slate-700 mb-0.5">Dúvidas e Contato</p>
-                    <p class="text-xs text-slate-500 leading-relaxed">Entre em contato com a Ouvidoria ou Setor de Transparência pelo e-mail <a href="mailto:ouvidoria@assai.pr.gov.br" class="font-bold text-blue-600 hover:underline">ouvidoria@assai.pr.gov.br</a> ou presencialmente na Prefeitura Municipal.</p>
+                    <p class="text-xs text-slate-700 leading-relaxed">Entre em contato com a Ouvidoria ou Setor de Transparência pelo e-mail <a href="mailto:ouvidoria@assai.pr.gov.br" class="font-bold text-blue-700 hover:underline">ouvidoria@assai.pr.gov.br</a> ou presencialmente na Prefeitura Municipal.</p>
                 </div>
             </div>
 

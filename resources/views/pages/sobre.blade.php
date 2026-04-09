@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- ===== HERO ===== --}}
-<section class="relative py-20 overflow-hidden bg-blue-900 md:py-28 lg:py-40">
+<section class="relative pt-8 pb-20 overflow-hidden bg-blue-900 md:pt-12 md:pb-28 lg:pt-20 lg:pb-40">
     <div class="absolute inset-0">
         <svg class="absolute w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -32,7 +32,7 @@
         <h1 class="text-4xl font-extrabold text-white md:text-6xl lg:text-7xl font-heading tracking-tight mb-6 leading-none">
             Assaí <span class="text-yellow-400">— PR</span>
         </h1>
-        <p class="max-w-3xl mx-auto text-lg text-blue-100 md:text-xl lg:text-2xl leading-relaxed font-light">
+        <p class="max-w-3xl mx-auto text-lg text-blue-50 md:text-xl lg:text-2xl leading-relaxed font-light">
             Do "Sol Nascente" (朝日) plantado pelos pioneiros japoneses em 1932 ao reconhecimento como uma das <strong class="text-white font-bold">Top 7 Comunidades mais Inteligentes do Mundo</strong>.
         </p>
         <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10 w-full">
@@ -54,26 +54,26 @@
 </section>
 
 {{-- ===== CARDS DE DADOS ===== --}}
-<section class="relative z-20 -mt-16">
+<section class="relative z-20 -mt-24">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-5">
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">1932</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fundação</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Fundação</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">13.797</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Habitantes (2022)</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Habitantes (2022)</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">440 km²</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Área Territorial</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Área Territorial</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-white border shadow-xl rounded-2xl border-slate-100 col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">15%</span>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Descendência Japonesa</span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Descendência Japonesa</span>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-xl rounded-2xl border-yellow-500 col-span-2 md:col-span-1">
+            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-lg rounded-2xl border-yellow-600 ring-1 ring-yellow-500/40 col-span-2 md:col-span-1">
                 <span class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-1">Top 7</span>
                 <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Smart Communities — ICF</span>
             </div>
@@ -87,18 +87,18 @@
         <div class="grid items-center grid-cols-1 gap-16 md:grid-cols-2">
             <div class="relative group">
                 <div class="overflow-hidden shadow-2xl rounded-3xl bg-slate-200 relative aspect-square">
-                    <img src="{{ asset('img/Assaí.jpg') }}" alt="Fundação de Assaí — pioneiros japoneses em 1932" class="object-cover w-full h-full transition duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                    <img src="{{ asset('img/Assai.jpg') }}" alt="Fundação de Assaí — pioneiros japoneses em 1932" class="object-cover w-full h-full transition duration-700 group-hover:scale-105" loading="lazy" decoding="async">
                     <div class="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl"></div>
                 </div>
                 <div class="absolute -bottom-5 -right-5 p-5 shadow-2xl bg-blue-900 text-white rounded-2xl md:-bottom-8 md:-right-8 md:p-7">
                     <p class="mb-1 text-xs font-bold tracking-widest uppercase text-yellow-400">Aniversário</p>
-                    <p class="text-3xl font-extrabold font-heading leading-none">1º de Maio</p>
-                    <p class="text-blue-300 text-sm mt-0.5">desde 1932</p>
+                    <p class="text-3xl font-extrabold font-heading leading-none text-white">1º de Maio</p>
+                    <p class="text-blue-100 text-sm mt-0.5">desde 1932</p>
                 </div>
             </div>
 
             <div class="space-y-5 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-600 md:pl-6">
-                <span class="inline-block text-blue-600 font-bold tracking-wider uppercase text-xs border border-blue-200 bg-blue-50 px-3 py-1 rounded-full">Raízes Históricas</span>
+                <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full">Raízes Históricas</span>
                 <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
                     O Nascimento de <span class="text-blue-700">Assailand</span>
                 </h2>
@@ -119,10 +119,10 @@
 </section>
 
 {{-- ===== LINHA DO TEMPO ===== --}}
-<section class="py-16 bg-slate-100 md:py-24 lg:py-28 border-y border-slate-200">
+<section class="py-16 bg-[#eaf3ff] md:py-24 lg:py-28 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-5xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-blue-700 font-bold tracking-wider uppercase text-xs border border-blue-200 bg-blue-50 px-3 py-1 rounded-full mb-4">Linha do Tempo</span>
+            <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full mb-4">Linha do Tempo</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Marcos da Nossa História</h2>
         </div>
 
@@ -158,7 +158,7 @@
                     </div>
                     {{-- conteúdo --}}
                     <div class="md:w-5/12 {{ $direita ? 'md:pr-10' : 'md:pl-10' }}">
-                        <div class="relative p-6 md:p-8 bg-white border border-slate-200 shadow-md rounded-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden text-left">
+                        <div class="relative p-6 md:p-8 bg-white border border-slate-200 shadow-sm rounded-2xl hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden text-left">
                             {{-- Filete de cor superior --}}
                             <div class="absolute top-0 left-0 w-full h-1.5 
                                 {{ $evento['cor'] === 'yellow' ? 'bg-yellow-400' :
@@ -198,55 +198,55 @@
 </section>
 
 {{-- ===== ECONOMIA ===== --}}
-<section class="py-20 bg-white md:py-28">
+<section class="py-20 bg-[#f8fbff] md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-green-700 font-bold tracking-wider uppercase text-xs border border-green-200 bg-green-50 px-3 py-1 rounded-full mb-4">A Força do Campo e da Cidade</span>
+            <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-green-700 bg-green-700 px-3 py-1 rounded-full mb-4">A Força do Campo e da Cidade</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Uma Economia em Constante Evolução</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-slate-500 text-base">De colônia agrícola de imigrantes a polo industrial do Norte Pioneiro Paranaense.</p>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">De colônia agrícola de imigrantes a polo industrial do Norte Pioneiro Paranaense.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div class="group p-8 rounded-2xl border border-slate-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 transition bg-white">
+            <div class="group p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 transition bg-white">
                 <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-yellow-100 text-yellow-700 mb-6">
                     <svg class="w-7 h-7 transform group-hover:scale-110 group-hover:rotate-3 transition duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
                     </svg>
                 </div>
                 <h3 class="text-lg font-extrabold text-slate-800 font-heading mb-3">Era do Ouro Branco</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">No auge da era do algodão, Assaí chegou a ter mais de <strong>200 mil habitantes</strong> e era conhecida como a <strong>"Rainha do Algodão"</strong> ou "Capital do Ouro Branco" — famosa em todo o território nacional pela abundância e qualidade de sua produção.</p>
+                <p class="text-sm text-slate-700 leading-relaxed">No auge da era do algodão, Assaí chegou a ter mais de <strong>200 mil habitantes</strong> e era conhecida como a <strong>"Rainha do Algodão"</strong> ou "Capital do Ouro Branco" — famosa em todo o território nacional pela abundância e qualidade de sua produção.</p>
             </div>
 
-            <div class="group p-8 rounded-2xl border border-slate-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 transition bg-white">
+            <div class="group p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 transition bg-white">
                 <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-green-100 text-green-700 mb-6">
                     <svg class="w-7 h-7 transform group-hover:scale-110 group-hover:rotate-3 transition duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                 </div>
                 <h3 class="text-lg font-extrabold text-slate-800 font-heading mb-3">Agropecuária Moderna</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">Com a modernização do campo, a cidade reinventou-se. Hoje, o município destaca-se na produção de <strong>soja, trigo e café</strong>, além da famosa <strong>Uva Itália</strong> — que coloca Assaí no mapa como referência em fruticultura de qualidade no Paraná.</p>
+                <p class="text-sm text-slate-700 leading-relaxed">Com a modernização do campo, a cidade reinventou-se. Hoje, o município destaca-se na produção de <strong>soja, trigo e café</strong>, além da famosa <strong>Uva Itália</strong> — que coloca Assaí no mapa como referência em fruticultura de qualidade no Paraná.</p>
             </div>
 
-            <div class="group p-8 rounded-2xl border border-slate-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 transition bg-white">
+            <div class="group p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 transition bg-white">
                 <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-blue-100 text-blue-700 mb-6">
                     <svg class="w-7 h-7 transform group-hover:scale-110 group-hover:rotate-3 transition duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                 </div>
                 <h3 class="text-lg font-extrabold text-slate-800 font-heading mb-3">Polo Industrial</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">A instalação de indústrias na cidade gerou mais de <strong>6.000 empregos diretos</strong>, transformando Assaí em um dos municípios mais dinâmicos do Norte Pioneiro Paranaense. Um novo ciclo de crescimento sustentado pela inovação e pelo investimento.</p>
+                <p class="text-sm text-slate-700 leading-relaxed">A instalação de indústrias na cidade gerou mais de <strong>6.000 empregos diretos</strong>, transformando Assaí em um dos municípios mais dinâmicos do Norte Pioneiro Paranaense. Um novo ciclo de crescimento sustentado pela inovação e pelo investimento.</p>
             </div>
         </div>
     </div>
 </section>
 
 {{-- ===== LOCALIZAÇÃO E GEOGRAFIA ===== --}}
-<section class="py-20 bg-slate-100/50 md:py-28 border-y border-slate-200">
+<section class="py-20 bg-[#eaf3ff] md:py-28 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-blue-700 font-bold tracking-wider uppercase text-xs border border-blue-200 bg-blue-50 px-3 py-1 rounded-full mb-4">Norte Pioneiro do Paraná</span>
+            <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full mb-4">Norte Pioneiro do Paraná</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Localização Estratégica</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-slate-500 text-base">Assaí está no coração do Norte Pioneiro Paranaense, a poucos quilômetros das principais cidades da região.</p>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">Assaí está no coração do Norte Pioneiro Paranaense, a poucos quilômetros das principais cidades da região.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 items-start">
@@ -256,13 +256,13 @@
 
                 {{-- Distâncias --}}
                 <div>
-                    <h3 class="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-4">
+                    <h3 class="flex items-center gap-2 text-xs font-extrabold text-slate-700 uppercase tracking-widest mb-4">
                         <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                         </svg>
                         Distâncias Rodoviárias
                     </h3>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @php
                         $distancias = [
                         ['cidade' => 'Londrina', 'km' => '46 km', 'info' => 'Aeroporto Internacional', 'cor' => 'blue'],
@@ -274,9 +274,9 @@
                         ];
                         @endphp
                         @foreach($distancias as $dist)
-                        <div class="flex items-center gap-3 p-3.5 bg-white border border-slate-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-3 p-3.5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
                             <div class="flex items-center justify-center w-10 h-10 rounded-xl shrink-0
-                                {{ $dist['cor'] === 'blue' ? 'bg-blue-50 text-blue-500' : ($dist['cor'] === 'indigo' ? 'bg-indigo-50 text-indigo-500' : 'bg-slate-100 text-slate-400') }}">
+                                {{ $dist['cor'] === 'blue' ? 'bg-blue-50 text-blue-700' : ($dist['cor'] === 'indigo' ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-100 text-slate-600') }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -284,8 +284,8 @@
                             </div>
                             <div>
                                 <p class="text-sm font-black text-slate-800 font-heading">{{ $dist['km'] }}</p>
-                                <p class="text-xs text-slate-500 leading-tight">{{ $dist['cidade'] }}</p>
-                                <p class="text-xs text-slate-400">{{ $dist['info'] }}</p>
+                                <p class="text-xs text-slate-700 leading-tight">{{ $dist['cidade'] }}</p>
+                                <p class="text-xs text-slate-600">{{ $dist['info'] }}</p>
                             </div>
                         </div>
                         @endforeach
@@ -294,51 +294,51 @@
 
                 {{-- Limites Territoriais --}}
                 <div>
-                    <h3 class="flex items-center gap-2 text-xs font-extrabold text-slate-500 uppercase tracking-widest mb-4">
+                    <h3 class="flex items-center gap-2 text-xs font-extrabold text-slate-700 uppercase tracking-widest mb-4">
                         <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
                         </svg>
                         Limites Territoriais
                     </h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center">
                             <p class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-1">↑ Norte</p>
                             <p class="text-sm font-bold text-slate-700">Sertanópolis</p>
-                            <p class="text-xs text-slate-400">e Ibiporã</p>
+                            <p class="text-xs text-slate-600">e Ibiporã</p>
                         </div>
-                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center">
+                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center">
                             <p class="text-xs font-black text-blue-600 uppercase tracking-widest mb-1">↓ Sul</p>
                             <p class="text-sm font-bold text-slate-700">São Jerônimo</p>
-                            <p class="text-xs text-slate-400">da Serra</p>
+                            <p class="text-xs text-slate-600">da Serra</p>
                         </div>
-                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center">
+                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center">
                             <p class="text-xs font-black text-yellow-600 uppercase tracking-widest mb-1">→ Leste</p>
                             <p class="text-sm font-bold text-slate-700">Uraí</p>
-                            <p class="text-xs text-slate-400">e Leópolis</p>
+                            <p class="text-xs text-slate-600">e Leópolis</p>
                         </div>
-                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 text-center">
+                        <div class="p-3.5 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center">
                             <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-1">← Oeste</p>
                             <p class="text-sm font-bold text-slate-700">Primeiro de Maio</p>
-                            <p class="text-xs text-slate-400">e Sertaneja</p>
+                            <p class="text-xs text-slate-600">e Sertaneja</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Coordenadas --}}
-                <div class="flex items-start gap-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                    <svg class="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-start gap-4 p-4 bg-blue-800 border border-blue-900 rounded-xl shadow-sm">
+                    <svg class="w-5 h-5 text-blue-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div>
-                        <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-1">Coordenadas Geográficas</p>
-                        <p class="text-sm text-blue-900 font-mono font-bold">23°21'31" S &nbsp;·&nbsp; 50°00'33" O</p>
-                        <p class="text-xs text-blue-600 mt-1">Altitude média: 595 m &nbsp;·&nbsp; Fuso: UTC−3</p>
+                        <p class="text-xs font-bold text-blue-100 uppercase tracking-wider mb-1">Coordenadas Geográficas</p>
+                        <p class="text-sm text-white font-mono font-bold">23°21'31" S &nbsp;·&nbsp; 50°00'33" O</p>
+                        <p class="text-xs text-blue-200 mt-1">Altitude média: 595 m &nbsp;·&nbsp; Fuso: UTC−3</p>
                     </div>
                 </div>
             </div>
 
             {{-- Mapa --}}
-            <div class="overflow-hidden rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200 bg-white">
+            <div class="overflow-hidden rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 bg-white">
                 <iframe
                     title="Mapa de Assaí"
                     src="https://maps.google.com/maps?q=Assa%C3%AD,+Paran%C3%A1&output=embed"
@@ -371,14 +371,14 @@
     <div class="container relative z-10 px-4 mx-auto max-w-6xl">
         <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
             <div class="space-y-5 text-white">
-                <span class="inline-block text-blue-200 font-bold tracking-wider uppercase text-xs border border-blue-600 bg-blue-800/60 px-3 py-1 rounded-full">Tradição Viva</span>
-                <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight">
+                <span class="inline-block text-blue-50 font-bold tracking-wider uppercase text-xs border border-blue-600 bg-blue-800/60 px-3 py-1 rounded-full">Tradição Viva</span>
+                <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight text-white">
                     O Coração <span class="text-yellow-300">Japonês</span> do Paraná
                 </h2>
-                <p class="text-blue-100 text-[15px] md:text-base leading-7 md:leading-relaxed">A cultura nipônica não está apenas no nome de Assaí — ela pulsa nas ruas arborizadas com <strong>Sakura (cerejeiras)</strong> e Ipês, na arquitetura do imponente <strong>Castelo Japonês (Memorial da Imigração Japonesa)</strong> e no calendário de festividades ao longo do ano.</p>
-                <p class="text-blue-100 text-[15px] md:text-base leading-7 md:leading-relaxed">Em 1978, Assaí realizou o <strong>primeiro festival Tanabata Matsuri do Brasil</strong>. Hoje, o município celebra o Bon Odori, o Tenrankai e a Expoasa, mantendo viva a herança dos pioneiros que cruzaram oceanos para construir um novo lar.</p>
+                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">A cultura nipônica não está apenas no nome de Assaí — ela pulsa nas ruas arborizadas com <strong>Sakura (cerejeiras)</strong> e Ipês, na arquitetura do imponente <strong>Castelo Japonês (Memorial da Imigração Japonesa)</strong> e no calendário de festividades ao longo do ano.</p>
+                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Em 1978, Assaí realizou o <strong>primeiro festival Tanabata Matsuri do Brasil</strong>. Hoje, o município celebra o Bon Odori, o Tenrankai e a Expoasa, mantendo viva a herança dos pioneiros que cruzaram oceanos para construir um novo lar.</p>
 
-                <div class="grid grid-cols-2 gap-3 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     @php
                     $festas = [
                     ['nome' => 'Tanabata Matsuri', 'data' => 'Out.', 'icon' => '🌟', 'bg' => 'bg-yellow-100', 'text' => 'text-yellow-700'],
@@ -392,7 +392,7 @@
                         <span class="text-2xl {{ $festa['text'] }}">{{ $festa['icon'] }}</span>
                         <div>
                             <p class="font-bold text-sm font-heading {{ $festa['text'] }}">{{ $festa['nome'] }}</p>
-                            <p class="text-xs text-slate-500">{{ $festa['data'] }}</p>
+                            <p class="text-xs text-slate-900">{{ $festa['data'] }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -406,11 +406,11 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-blue-800 flex flex-col items-center justify-center p-8 text-center border border-blue-700 transform hover:-translate-y-1 transition">
                     <span class="text-6xl mb-4">🏯</span>
                     <p class="font-extrabold font-heading text-white text-sm leading-tight">Castelo Japonês</p>
-                    <p class="text-blue-300 text-xs mt-1">Memorial da Imigração</p>
+                    <p class="text-blue-100 text-xs mt-1">Memorial da Imigração</p>
                 </div>
                 <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-pink-600 flex flex-col items-center justify-center p-8 text-center border border-pink-700 transform hover:-translate-y-1 transition">
                     <span class="text-6xl mb-4">🌸</span>
@@ -425,7 +425,7 @@
                 <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-blue-700 flex flex-col items-center justify-center p-8 text-center border border-blue-600 transform hover:-translate-y-1 transition">
                     <span class="text-6xl mb-4">⛩️</span>
                     <p class="font-extrabold font-heading text-white text-sm leading-tight">Templo Budista</p>
-                    <p class="text-blue-200 text-xs mt-1">Shoshinji</p>
+                    <p class="text-blue-100 text-xs mt-1">Shoshinji</p>
                 </div>
             </div>
         </div>
@@ -433,7 +433,7 @@
 </section>
 
 {{-- ===== SMART CITY / VALE DO SOL ===== --}}
-<section class="py-20 bg-white md:py-28">
+<section class="py-20 bg-[#f8fbff] md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
             <div class="space-y-5">
@@ -447,19 +447,19 @@
                 <div class="grid grid-cols-2 gap-4 pt-2">
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
                         <div class="text-2xl font-black text-emerald-600 font-heading mb-1">6.000+</div>
-                        <p class="text-xs text-slate-500 font-medium">Empregos gerados pela indústria</p>
+                        <p class="text-xs text-slate-700 font-medium">Empregos gerados pela indústria</p>
                     </div>
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
                         <div class="text-2xl font-black text-emerald-600 font-heading mb-1">0,748</div>
-                        <p class="text-xs text-slate-500 font-medium">IDH Municipal — PNUD</p>
+                        <p class="text-xs text-slate-700 font-medium">IDH Municipal — PNUD</p>
                     </div>
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
                         <div class="text-2xl font-black text-emerald-600 font-heading mb-1">93 anos</div>
-                        <p class="text-xs text-slate-500 font-medium">De história e resiliência</p>
+                        <p class="text-xs text-slate-700 font-medium">De história e resiliência</p>
                     </div>
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
                         <div class="text-2xl font-black text-emerald-600 font-heading mb-1">Top 7</div>
-                        <p class="text-xs text-slate-500 font-medium">ICF Smart Communities</p>
+                        <p class="text-xs text-slate-700 font-medium">ICF Smart Communities</p>
                     </div>
                 </div>
             </div>
@@ -486,10 +486,10 @@
                         </div>
                         <p class="text-yellow-400 font-bold text-xs tracking-widest uppercase mb-3">Intelligent Community Forum</p>
                         <p class="text-4xl font-black font-heading text-white mb-2">Top 7</p>
-                        <p class="text-blue-200 text-sm leading-relaxed mb-6">Assaí integra o seleto grupo das 7 comunidades mais inteligentes do mundo, ao lado de cidades de países como EUA, Canadá e Taiwan.</p>
+                        <p class="text-blue-100 text-sm leading-relaxed mb-6">Assaí integra o seleto grupo das 7 comunidades mais inteligentes do mundo, ao lado de cidades de países como EUA, Canadá e Taiwan.</p>
                         <div class="border-t border-white/20 pt-6">
                             <p class="text-white font-extrabold font-heading text-lg mb-1">Ecossistema Vale do Sol</p>
-                            <p class="text-blue-300 text-sm">Conectando educação · tecnologia · empreendedorismo</p>
+                            <p class="text-blue-100 text-sm">Conectando educação · tecnologia · empreendedorismo</p>
                         </div>
                     </div>
                 </div>
@@ -501,12 +501,12 @@
 </section>
 
 {{-- ===== SÍMBOLOS CÍVICOS ===== --}}
-<section id="simbolos" class="py-20 bg-slate-100/50 md:py-28 border-t border-slate-200">
+<section id="simbolos" class="py-20 bg-[#eaf3ff] md:py-28 border-t border-blue-100/70">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
-            <span class="inline-block text-yellow-700 font-bold tracking-wider uppercase text-xs border border-yellow-200 bg-yellow-50 px-3 py-1 rounded-full mb-4">Identidade Municipal</span>
+            <span class="inline-block text-slate-900 font-bold tracking-wider uppercase text-xs border border-yellow-500 bg-yellow-400 px-3 py-1 rounded-full mb-4">Identidade Municipal</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Símbolos Cívicos</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-slate-500 text-base">A bandeira, o brasão e o hino que representam a identidade e os valores do povo assaiense.</p>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">A bandeira, o brasão e o hino que representam a identidade e os valores do povo assaiense.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 items-stretch">
@@ -515,7 +515,7 @@
             <div class="space-y-6">
 
                 {{-- Bandeira Municipal --}}
-                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group">
+                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
                     <div class="bg-slate-100/50 border border-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[220px]">
                         <img src="/img/bandeira.png" alt="Bandeira do município" loading="lazy" decoding="async" class="w-full max-w-xs h-auto rounded shadow-sm group-hover:scale-[1.02] transition" />
                     </div>
@@ -523,7 +523,7 @@
                 </div>
 
                 {{-- Brasão de Armas --}}
-                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group">
+                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
                     <div class="bg-slate-100/50 border border-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[220px]">
                         <img src="/img/brasao.png" alt="Brasão de Armas de Assaí" loading="lazy" decoding="async" class="w-full max-w-xs h-auto rounded shadow-sm group-hover:scale-[1.02] transition" />
                     </div>
@@ -532,7 +532,7 @@
             </div>
 
             {{-- Coluna 2: Hino --}}
-            <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+            <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
 
                 {{-- Header do card --}}
                 <div class="flex items-center gap-3 mb-5">
@@ -543,7 +543,7 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-extrabold text-slate-800 font-heading leading-tight">Hino de Assaí</h3>
-                        <p class="text-xs text-slate-400">Letra e Composição Oficiais</p>
+                        <p class="text-xs text-slate-600">Letra e Composição Oficiais</p>
                     </div>
                 </div>
 
@@ -584,7 +584,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="mt-5 pt-4 border-t border-slate-100 text-xs text-slate-400 italic text-center">* Letra oficial do Hino de Assaí.</p>
+                <p class="mt-5 pt-4 border-t border-slate-100 text-xs text-slate-600 italic text-center">* Letra oficial do Hino de Assaí.</p>
             </div>
 
         </div>
@@ -605,10 +605,10 @@
     </div>
     <div class="container relative z-10 px-4 mx-auto max-w-4xl text-center">
         <p class="text-yellow-400 font-bold tracking-widest uppercase text-xs mb-6">Assaí — Norte Pioneiro do Paraná</p>
-        <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6">
+        <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6 text-white">
             Tradição e Inovação<br>caminham lado a lado.
         </h2>
-        <p class="text-blue-200 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+        <p class="text-blue-100 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
             Com 93 anos de história, Assaí segue a saga dos seus fundadores: determinada, resiliente e de olhos voltados para o horizonte. Uma cidade que honra as suas raízes enquanto constrói o futuro.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
