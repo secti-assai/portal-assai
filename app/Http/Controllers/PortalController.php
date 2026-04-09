@@ -78,7 +78,7 @@ class PortalController extends Controller
         $servicos = Cache::remember('home_servicos', 3600, function () {
             return Servico::where('ativo', true)
                 ->orderByDesc('acessos')
-                ->take(10)
+                ->take(8)
                 ->get();
         });
 
@@ -170,8 +170,7 @@ class PortalController extends Controller
 
         $eventos = Evento::publico()
             ->ordenarPorDataMaisProxima()
-            ->paginate(4)
-            ->withQueryString();
+            ->paginate(8);
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
     }
@@ -242,15 +241,11 @@ class PortalController extends Controller
 
     public function secretariaShow($id)
     {
-        $secretaria = \App\Models\Secretaria::findOrFail($id);
+        $secretaria = \App\Models\Secretaria::with(['servicos' => function ($query) {
+            $query->where('ativo', true)->orderBy('titulo', 'asc');
+        }])->findOrFail($id);
 
-        $servicos = $secretaria->servicos()
-            ->where('ativo', true)
-            ->orderBy('titulo', 'asc')
-            ->paginate(6)
-            ->withQueryString();
-
-        return view('secretarias.show', compact('secretaria', 'servicos'));
+        return view('secretarias.show', compact('secretaria'));
     }
 
     public function contato()

@@ -126,7 +126,7 @@
 
         @if(method_exists($servicos, 'hasPages') && $servicos->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $servicos->links('components.pagination.agenda-style') }}
+                {{ $servicos->links() }}
             </div>
         @endif
     </div>

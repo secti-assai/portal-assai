@@ -97,148 +97,33 @@ button[type="submit"]:active::before {
     }
 }
 
+/* Animação do ícone no hover */
 button[type="submit"]:hover svg {
     animation: iconPulse 0.3s ease-out;
 }
 
 @keyframes iconPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-body { font-family: 'Poppins', sans-serif; }
-h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Montserrat', sans-serif; }
-
-
-/* ==========================================================================
-   ESTILOS MIGRADOS DA VIEW (home.blade.php) - Estilo Pedro Leopoldo Mobile
-   ========================================================================== */
-:root {
-    --pl-mobile-blue-700: #005ea2;
-    --pl-mobile-blue-500: #2491ff;
-    --pl-mobile-bg: #f9f6f5;
-    --pl-mobile-card: #ffffff;
-    --pl-mobile-text: #11181d;
-    --pl-mobile-muted: #3d4551;
-    --pl-mobile-border: #d1d5db;
-    --pl-mobile-radius: 6px;
-    --pl-mobile-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-}
-
-@media (max-width: 1023px) {
-    #hero-oficial { margin-top: -2px; }
-    
-    html, body {
-        max-width: 100%; overflow-x: clip !important; background: #fff; margin: 0 !important; padding: 0 !important;
+    0% {
+        transform: scale(1);
     }
-    
-    body > div.content-offset-none, body > div.pt-\[100px\], body > div.md\:pt-\[130px\] {
-        padding-top: 0 !important; margin-top: 0 !important;
+    50% {
+        transform: scale(1.1);
     }
-
-    #home-main {
-        font-family: 'Open Sans', sans-serif; color: #3d4551; max-width: 100%;
-        overflow-x: clip !important; margin-top: 0 !important; padding-top: 0 !important;
+    100% {
+        transform: scale(1);
     }
 }
 
-@media (max-width: 921px) {
-    #pl-mobile-home { overflow-x: hidden !important; max-width: 100%; width: 100%; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; position: relative; }
-    #pl-mobile-home *, #pl-mobile-home { box-sizing: border-box; }
-
-    #pl-mobile-home .topbar { background: #fff; border-bottom: 1px solid #e2e8f0; position: relative; z-index: 2147483646; margin-top: 0 !important; padding-top: 0 !important; }
-    #pl-mobile-home .topbar-color-strip { height: 6px; width: 100%; background: linear-gradient(90deg, #0071b8 0 25%, #1f9f5b 25% 50%, #d92f2f 50% 75%, #e7c500 75% 100%); }
-    #pl-mobile-home .topbar-inner { display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 1.25rem; width: 100%; }
-
-    #pl-mobile-home .brand { font-family: 'Montserrat', sans-serif; font-size: 1.45rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
-    #pl-mobile-home .brand .b1 { color: #006eb7; } #pl-mobile-home .brand .b2 { color: #eab308; } #pl-mobile-home .brand .b3 { color: #dc2626; } #pl-mobile-home .brand .b4 { color: #eab308; } #pl-mobile-home .brand .gov { color: #334155; font-weight: 400; }
-
-    #pl-mobile-home .menu-mobile-btn { color: #006eb7; font-weight: 800; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; border: 0; background: transparent; cursor: pointer; }
-    #pl-mobile-home .menu-mobile-btn i { font-size: 1.3rem; }
-    #pl-mobile-home .menu-mobile-btn .icon-close { display: none; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; line-height: 1; }
-    #pl-mobile-home.menu-open .menu-mobile-btn .icon-open { display: none; }
-    #pl-mobile-home.menu-open .menu-mobile-btn .icon-close { display: inline-block; }
-
-    #pl-mobile-home .mobile-drawer { position: absolute; top: var(--pl-mobile-topbar-height, 64px); left: 0; right: 0; width: 100%; max-height: calc(100dvh - var(--pl-mobile-topbar-height, 64px) - 8px); background: #ffffff; transform: none; transition: opacity 0.15s ease, visibility 0.15s ease; z-index: 2147483647; box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12); border-top: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; }
-    #pl-mobile-home.menu-open .mobile-drawer { transform: translateY(0); opacity: 1; visibility: visible; pointer-events: auto; }
-    #pl-mobile-home .mobile-drawer-body { padding: 0 1rem 0.7rem; overflow-y: auto; max-height: calc(100dvh - var(--pl-mobile-topbar-height, 64px) - 8px); }
-    #pl-mobile-home .mobile-nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
-    #pl-mobile-home .mobile-nav-link, #pl-mobile-home .mobile-nav-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; color: #334155; font-size: 1.14rem; line-height: 1.22; font-weight: 400; padding: 0.94rem 0; border: 0; border-bottom: 1px solid #eef2f6; background: transparent; text-align: left; }
-    #pl-mobile-home .mobile-nav-toggle { cursor: pointer; font-family: 'Open Sans', sans-serif; }
-    #pl-mobile-home .mobile-nav-toggle .caret { color: #3e4d5d; font-size: 0.95rem; transition: transform 0.2s ease; }
-    #pl-mobile-home .mobile-nav-group.open .mobile-nav-toggle .caret { transform: rotate(180deg); }
-    #pl-mobile-home .mobile-submenu { list-style: none; margin: 0; padding: 0 0 0.35rem; display: none; border-bottom: 1px solid #eef2f6; max-height: 240px; overflow-y: auto; }
-    #pl-mobile-home .mobile-nav-group.open .mobile-submenu { display: block; }
-    #pl-mobile-home .mobile-submenu-link { display: block; text-decoration: none; color: #516273; font-size: 0.92rem; line-height: 1.3; padding: 0.55rem 0 0.55rem 0.4rem; }
-
-    #pl-mobile-home .home-hero-mobile { position: relative; background-image: url("/public/img/Assai.jpg"); background-size: cover; background-position: center; margin-top: 0; padding: calc(3rem + var(--site-header-height, 88px)) 1.5rem 3rem; }
-    #pl-mobile-home .home-hero-mobile::before { content: ''; position: absolute; inset: 0; background: rgba(14, 38, 70, 0.75); }
-    #pl-mobile-home .home-hero-content { position: relative; z-index: 1; }
-    #pl-mobile-home .hero-title { color: #fff; font-size: clamp(1.55rem, 6vw, 1.85rem); line-height: 1.24; text-align: center; margin: 0 0 1.5rem 0; font-weight: 300; font-family: 'Montserrat', sans-serif; letter-spacing: 0.01em; }
-    #pl-mobile-home .hero-title strong { font-weight: 800; }
-    
-    #pl-mobile-home .home-search-bar { background: #fff; border-radius: 50px; overflow: hidden; display: flex; align-items: center; padding: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    #pl-mobile-home .home-search-bar .wp-block-search__input { width: 100%; border: 0; padding: 0.7rem 1rem; font-size: 1rem; color: #334155; background: transparent; outline: none; }
-    #pl-mobile-home .home-search-bar .wp-block-search__button { border: 0; width: 44px; height: 44px; border-radius: 50px; background: #2394df; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    #pl-mobile-home .home-search-bar .wp-block-search__button i { font-size: 1.2rem; }
-
-    #pl-mobile-home .section-title { font-family: 'Montserrat', sans-serif; font-size: clamp(1.55rem, 5.2vw, 1.72rem); font-weight: 300; text-align: center; margin: 0 0 1.5rem; color: #4a5c6a; line-height: 1.2; letter-spacing: 0.01em; }
-    #pl-mobile-home .bg-white-section { background: #ffffff; padding: 2.25rem 0.85rem 2.1rem; }
-    #pl-mobile-home .bg-gray-section { background: #eef1f5; padding: 2.5rem 1rem; }
-    #pl-mobile-home .bg-white-section .section-title { font-size: clamp(1.82rem, 6.2vw, 2.05rem); line-height: 1.18; }
-
-    #pl-mobile-home .small-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 372px; margin: 0 auto; }
-    #pl-mobile-home .small-card { background: #fff; border-radius: 22px; box-shadow: 0 6px 14px rgba(15, 23, 42, 0.07); border: 1px solid #edf2f7; padding: 1rem 0.56rem 0.78rem; min-height: 132px; display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; position: relative; width: 100%; min-width: 0; }
-    #pl-mobile-home .small-card .helper-dot { position: absolute; right: 14px; top: 9px; color: #006eb7; font-family: 'Montserrat', sans-serif; font-size: 1.75rem; font-weight: 500; line-height: 1; }
-    #pl-mobile-home .small-card .service-icon { color: #006eb7; font-size: 2.8rem; margin-bottom: 0.58rem; margin-top: 0.3rem; }
-    #pl-mobile-home .small-card-title { font-size: 1.1rem; font-weight: 500; line-height: 1.28; margin: 0; color: #006eb7; text-wrap: balance; max-width: 96%; letter-spacing: 0.005em; }
-
-    #pl-mobile-home .all-btn-wrapper { display: flex; justify-content: center; margin-top: 1.5rem; }
-    #pl-mobile-home .all-btn { background: #006eb7; color: #fff; border-radius: 50px; padding: 0.8rem 1.8rem; font-size: 0.98rem; font-weight: 700; line-height: 1.15; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
-
-    #pl-mobile-home .glide__slides { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-    #pl-mobile-home .glide__slides::-webkit-scrollbar { display: none; }
-    #pl-mobile-home .glide__slide, #pl-mobile-home .card-news { scroll-snap-align: start; min-width: 90%; margin-bottom: 1rem; }
-    #pl-mobile-home .glide__slide img, #pl-mobile-home .card-news img { width: 100%; height: 320px; object-fit: cover; display: block; }
-    #pl-mobile-home .mobile-news-grid { display: flex; flex-direction: column; gap: 0.85rem; }
-    #pl-mobile-home .mobile-news-grid .card-news { margin-bottom: 0; }
-
-    #pl-mobile-home .calendar-wrap { border-radius: 16px; background: #fff; padding: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
-    #pl-mobile-home .calendar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; color: #11181d; }
-    #pl-mobile-home .calendar-head .month-name { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 700; }
-    #pl-mobile-home .calendar-head .arrow-btn { width: 36px; height: 36px; border-radius: 50px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #334155; }
-    #pl-mobile-home .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 5px; }
-    #pl-mobile-home .calendar-grid .day-name { color: #94a3b8; font-size: 0.8rem; font-weight: 700; padding-bottom: 0.5rem; }
-    #pl-mobile-home .calendar-grid .day-number { color: #334155; font-size: 0.95rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border-radius: 50px; }
-    #pl-mobile-home .calendar-grid .day-number.muted { color: #cbd5e1; }
-    #pl-mobile-home .calendar-grid .day-number.today { border: 2px solid #14b8a6; color: #334155; }
-    #pl-mobile-home .calendar-grid .day-number.event { background: #64748b; color: #fff; }
-    
-    #pl-mobile-home .event-featured { margin-top: 1rem; border-radius: 12px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.04); display: flex; padding: 1rem; gap: 1rem; }
-    #pl-mobile-home .event-featured .date-chip { display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0; padding-right: 1rem; color: #006eb7; }
-    #pl-mobile-home .event-featured .date-chip .day { font-size: 2.2rem; font-weight: 800; line-height: 1; font-family: 'Montserrat', sans-serif;}
-    #pl-mobile-home .event-featured .date-chip .month { font-size: 0.9rem; font-weight: 600; text-transform: lowercase; }
-    #pl-mobile-home .event-title { font-size: 0.98rem; font-weight: 700; color: #006eb7; margin: 0 0 0.5rem 0; line-height: 1.24; }
-    #pl-mobile-home .event-meta { font-size: 0.82rem; color: #334155; margin: 0.24rem 0; display: flex; align-items: center; gap: 6px; line-height: 1.35;}
-
-    #pl-mobile-home .social-header { display: flex; align-items: center; gap: 0.8rem; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1rem; color: #111; margin-bottom: 1rem; line-height: 1.2; overflow-wrap: anywhere; }
-    #pl-mobile-home .social-avatar { width: 36px; height: 36px; border-radius: 8px; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
+body {
+    font-family: 'Poppins', sans-serif;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-    #pl-mobile-home { max-width: 920px; margin: 0 auto; }
-    #pl-mobile-home .topbar-inner, #pl-mobile-home .home-hero-mobile, #pl-mobile-home .bg-white-section, #pl-mobile-home .bg-gray-section { padding-left: 1.5rem; padding-right: 1.5rem; }
-    #pl-mobile-home .hero-title { font-size: clamp(2rem, 4.2vw, 2.45rem); }
-    #pl-mobile-home .home-search-bar { max-width: 680px; margin: 0.95rem auto 0; }
-    #pl-mobile-home .small-cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: none; gap: 14px; }
-    #pl-mobile-home .small-card { min-height: 156px; padding: 1rem 0.6rem 0.85rem; }
-    #pl-mobile-home .small-card-title { font-size: 0.86rem; line-height: 1.24; }
-    #pl-mobile-home .glide__slide, #pl-mobile-home .card-news { border-radius: 18px; }
-    #pl-mobile-home .glide__slide img, #pl-mobile-home .card-news img { height: 320px; }
-    #pl-mobile-home .calendar-wrap, #pl-mobile-home .event-featured { max-width: 760px; margin-left: auto; margin-right: auto; }
-    #pl-mobile-home .mobile-news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-    #pl-mobile-home .mobile-news-grid .card-news { min-width: 0; }
-    #pl-mobile-home .mobile-drawer { top: var(--pl-mobile-topbar-height, 72px); max-height: calc(100dvh - var(--pl-mobile-topbar-height, 72px) - 12px); }
-    #pl-mobile-home .mobile-drawer-body { max-height: calc(100dvh - var(--pl-mobile-topbar-height, 72px) - 12px); }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    font-family: 'Montserrat', sans-serif;
 }

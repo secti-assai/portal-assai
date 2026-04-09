@@ -122,7 +122,7 @@
 
         @if(method_exists($alertas, 'hasPages') && $alertas->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $alertas->links('components.pagination.agenda-style') }}
+                {{ $alertas->links() }}
             </div>
         @endif
     </div>

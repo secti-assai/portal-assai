@@ -136,7 +136,7 @@
 
         @if($programas->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $programas->links('components.pagination.agenda-style') }}
+                {{ $programas->links() }}
             </div>
         @endif
     </div>

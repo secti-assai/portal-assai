@@ -34,54 +34,10 @@
     padding-top: 0 !important;
 }
 
-/* Navbar sólida no mobile/tablet; transparência liberada apenas no desktop */
-@media (max-width: 1023px) {
-    #site-header {
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        color: #334155 !important;
-        border-color: rgba(226, 232, 240, 0.5) !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-    }
-}
-
 /* Classe própria para páginas sem offset; evita conflito com .pt-0 do gov.br */
 .content-offset-none {
     margin-top: 0 !important;
     padding-top: 0 !important;
-}
-
-/* Compensa o header fixo com altura real medida em runtime (exceto home/notícias). */
-.content-offset-dynamic-header {
-    margin-top: 0 !important;
-    padding-top: 100px !important;
-}
-
-@media (min-width: 768px) {
-    .content-offset-dynamic-header {
-        padding-top: 130px !important;
-    }
-}
-
-@media (max-width: 1023px) {
-    .content-offset-dynamic-header {
-        padding-top: 0 !important;
-    }
-
-    .content-offset-dynamic-header > :first-child {
-        margin-top: 0 !important;
-        padding-top: var(--site-header-height, 100px) !important;
-    }
-
-    .content-offset-dynamic-header > .content-offset-none {
-        padding-top: 0 !important;
-    }
-
-    .content-offset-dynamic-header > .content-offset-none > :first-child {
-        margin-top: 0 !important;
-        padding-top: var(--site-header-height, 100px) !important;
-    }
 }
 
 /* Remove spacers automáticos de libs externas para evitar faixa extra no topo */
@@ -319,13 +275,25 @@ textarea:focus-visible {
 
 /* ===== ALTO CONTRASTE ===== */
 html.contrast-mode body {
-    background-color: #0f172a !important;
-    color: #f8fafc !important;
+    background-color: #000 !important;
+    color: #e2e8f0 !important;
 }
 
 html.contrast-mode body *:not(script):not(style):not(svg):not(path):not(circle):not(img):not(video):not(iframe) {
+    background-color: #000 !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
     text-shadow: none !important;
     box-shadow: none !important;
+}
+
+html.contrast-mode body h1,
+html.contrast-mode body h2,
+html.contrast-mode body h3,
+html.contrast-mode body h4,
+html.contrast-mode body h5,
+html.contrast-mode body h6 {
+    color: #facc15 !important;
 }
 
 html.contrast-mode body a {
@@ -352,8 +320,8 @@ html.contrast-mode body select {
 }
 
 html.contrast-mode body img {
-    filter: contrast(1.08) saturate(1.05) !important;
-    opacity: 1 !important;
+    filter: grayscale(80%) contrast(1.2) !important;
+    opacity: 0.85 !important;
     background: transparent !important;
 }
 

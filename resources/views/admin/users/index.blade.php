@@ -139,7 +139,7 @@
 
         @if($usuarios->hasPages())
             <div class="px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-                {{ $usuarios->links('components.pagination.agenda-style') }}
+                {{ $usuarios->links() }}
             </div>
         @endif
     </div>

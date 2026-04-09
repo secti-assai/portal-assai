@@ -50,6 +50,7 @@
             <table class="w-full text-left border-collapse table-fixed">
                 <thead>
                     <tr class="text-xs tracking-wider uppercase border-b bg-slate-50 text-slate-500 border-slate-200">
+                        <th class="p-4 font-semibold w-48">Pré-visualização</th>
                         <th class="p-4 font-semibold">Conteúdo (Título e Subtítulo)</th>
                         <th class="p-4 font-semibold w-56">Link de Destino</th>
                         <th class="p-4 font-semibold text-center w-28">Status</th>
@@ -59,6 +60,17 @@
                 <tbody class="text-sm divide-y divide-slate-100">
                     @forelse($banners as $banner)
                         <tr class="transition group hover:bg-slate-50">
+                            <td class="p-4">
+                                <a href="{{ route('admin.banners.edit', $banner->id) }}" class="block group">
+                                    <div class="w-40 h-20 overflow-hidden bg-slate-100 border border-slate-200 rounded-lg shadow-sm">
+                                        @if($banner->imagem)
+                                            <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner" class="object-cover w-full h-full transition-transform group-hover:scale-105">
+                                        @else
+                                            <div class="flex items-center justify-center w-full h-full text-xs font-bold text-slate-400">ERRO</div>
+                                        @endif
+                                    </div>
+                                </a>
+                            </td>
                             <td class="p-4 max-w-0 overflow-hidden">
                                 <p class="font-bold text-slate-800 truncate" title="{{ $banner->titulo }}">{{ \Illuminate\Support\Str::limit($banner->titulo, 90) }}</p>
                                 @if($banner->subtitulo)
@@ -101,7 +113,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-500">
+                            <td colspan="5" class="p-8 text-center text-slate-500">
                                 Nenhum banner cadastrado. O portal exibirá a imagem padrão da cidade.
                             </td>
                         </tr>
@@ -112,7 +124,7 @@
 
         @if(method_exists($banners, 'hasPages') && $banners->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $banners->links('components.pagination.agenda-style') }}
+                {{ $banners->links() }}
             </div>
         @endif
     </div>

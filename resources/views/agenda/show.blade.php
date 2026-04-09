@@ -58,16 +58,16 @@
         </h1>
 
         {{-- Meta rápida --}}
-        <div class="flex flex-wrap items-center gap-4 mt-4 text-sm text-blue-100">
+        <div class="flex flex-wrap items-center gap-4 mt-4 text-sm text-blue-200">
             <span class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
                 {{ $evento->data_inicio->translatedFormat('l, d \d\e F \d\e Y') }}
             </span>
             @if($evento->local)
                 <span class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
@@ -80,7 +80,7 @@
 </section>
 
 {{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<section class="py-10 max-[360px]:py-7 bg-[#f8fbff] md:py-14 border-y border-blue-100/70">
+<section class="py-10 max-[360px]:py-7 bg-slate-100/50 md:py-14">
     <div class="container px-4 mx-auto max-w-5xl">
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -92,14 +92,14 @@
                     <div class="bar"></div>
                 </div>
 
-                <div class="portal-card p-6 max-[360px]:p-5 md:p-8 border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50">
+                <div class="portal-card p-6 max-[360px]:p-5 md:p-8">
 
                     @if($evento->descricao)
                         <div class="prose prose-sm md:prose-base prose-blue max-w-none">
                             {!! $evento->descricao !!}
                         </div>
                     @else
-                        <p class="text-slate-600 italic">Nenhuma descrição disponível para este evento.</p>
+                        <p class="text-slate-400 italic">Nenhuma descrição disponível para este evento.</p>
                     @endif
 
                 </div>
@@ -117,11 +117,11 @@
                 {{-- Outros eventos --}}
                 @if($outrosEventos->isNotEmpty())
                     <div class="mt-10">
-                        <h2 class="text-lg font-extrabold text-slate-800 mb-5">Outros eventos na Agenda</h2>
+                        <h2 class="text-lg font-bold text-slate-700 mb-5">Outros eventos na Agenda</h2>
                         <div class="flex flex-col gap-4">
                             @foreach($outrosEventos as $outro)
                                 <a href="{{ route('agenda.show', $outro->id) }}"
-                                   class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-300/70 ring-1 ring-slate-200/70 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                                   class="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                                     <div class="flex flex-col items-center justify-center w-12 h-12 bg-blue-900 rounded-lg text-white shrink-0 shadow-inner">
                                         <span class="text-[9px] font-bold tracking-wider uppercase opacity-70">{{ $outro->data_inicio->translatedFormat('M') }}</span>
                                         <span class="text-lg font-extrabold leading-none">{{ $outro->data_inicio->format('d') }}</span>
@@ -129,13 +129,13 @@
                                     <div class="min-w-0">
                                         <p class="font-bold text-slate-800 line-clamp-1 group-hover:text-blue-700 transition-colors">{{ $outro->titulo }}</p>
                                         @if($outro->local)
-                                            <p class="text-xs text-slate-700 mt-0.5 line-clamp-1">{{ $outro->local }}</p>
+                                            <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">{{ $outro->local }}</p>
                                         @endif
                                     </div>
                                     @php
                                         $outroCfg = match($outro->status) {
-                                            'cancelado' => 'bg-red-100 text-red-800 border-red-300',
-                                            default     => 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                                            'cancelado' => 'bg-red-50 text-red-700 border-red-200',
+                                            default     => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                         };
                                         $outroLabel = match($outro->status) {
                                             'cancelado' => 'Cancelado',
@@ -157,18 +157,18 @@
 
                     {{-- Data de início --}}
                     <div class="flex items-start gap-3">
-                        <div class="flex items-center justify-center w-9 h-9 bg-blue-100 rounded-lg ring-1 ring-blue-200 shrink-0 text-blue-700">
+                        <div class="flex items-center justify-center w-9 h-9 bg-blue-50 rounded-lg shrink-0 text-blue-600">
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Início</p>
-                            <p class="text-sm font-bold text-slate-800 mt-0.5">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Início</p>
+                            <p class="text-sm font-bold text-slate-700 mt-0.5">
                                 {{ $evento->data_inicio->translatedFormat('l') }},
                                 {{ $evento->data_inicio->format('d/m/Y') }}
                                 @if($evento->data_inicio->format('H:i') !== '00:00')
-                                    <span class="font-normal text-slate-800">às {{ $evento->data_inicio->format('H:i') }}</span>
+                                    <span class="font-normal text-slate-500">às {{ $evento->data_inicio->format('H:i') }}</span>
                                 @endif
                             </p>
                         </div>
@@ -177,17 +177,17 @@
                     {{-- Data de fim (opcional) --}}
                     @if($evento->data_fim)
                         <div class="flex items-start gap-3">
-                            <div class="flex items-center justify-center w-9 h-9 bg-red-100 rounded-lg ring-1 ring-red-200 shrink-0 text-red-600">
+                            <div class="flex items-center justify-center w-9 h-9 bg-red-50 rounded-lg shrink-0 text-red-400">
                                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Término</p>
-                                <p class="text-sm font-bold text-slate-800 mt-0.5">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Término</p>
+                                <p class="text-sm font-bold text-slate-700 mt-0.5">
                                     {{ $evento->data_fim->format('d/m/Y') }}
                                     @if($evento->data_fim->format('H:i') !== '00:00')
-                                        <span class="font-normal text-slate-800">às {{ $evento->data_fim->format('H:i') }}</span>
+                                        <span class="font-normal text-slate-500">às {{ $evento->data_fim->format('H:i') }}</span>
                                     @endif
                                 </p>
                             </div>
@@ -197,28 +197,28 @@
                     {{-- Local --}}
                     @if($evento->local)
                         <div class="flex items-start gap-3">
-                            <div class="flex items-center justify-center w-9 h-9 bg-emerald-100 rounded-lg ring-1 ring-emerald-200 shrink-0 text-emerald-700">
+                            <div class="flex items-center justify-center w-9 h-9 bg-emerald-50 rounded-lg shrink-0 text-emerald-600">
                                 <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Local</p>
-                                <p class="text-sm font-bold text-slate-800 mt-0.5">{{ $evento->local }}</p>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Local</p>
+                                <p class="text-sm font-bold text-slate-700 mt-0.5">{{ $evento->local }}</p>
                             </div>
                         </div>
                     @endif
 
                     {{-- Status --}}
                     <div class="flex items-start gap-3">
-                        <div class="flex items-center justify-center w-9 h-9 bg-slate-100 rounded-lg ring-1 ring-slate-200 shrink-0 text-slate-700">
+                        <div class="flex items-center justify-center w-9 h-9 bg-slate-100/50 rounded-lg shrink-0 text-slate-500">
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Status</p>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</p>
                             @php
                                 $statusCfg = match($evento->status) {
                                     'cancelado' => 'bg-red-50 text-red-700 border-red-200',
@@ -259,7 +259,7 @@
 
                         {{-- Voltar --}}
                         <a href="{{ route('agenda.index') }}"
-                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-slate-700 bg-slate-50 border border-slate-300/70 rounded-xl hover:bg-slate-100/70 transition">
+                           class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100/50 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>

@@ -115,6 +115,7 @@
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
                 @php
                     $permissionLabels = [
+                        'gerir alertas' => 'Gerenciar Alertas',
                         'gerir banners' => 'Gerenciar Banners',
                         'gerir servicos' => 'Gerenciar Serviços',
                         'gerir programas' => 'Gerenciar Programas',

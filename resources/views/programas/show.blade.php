@@ -13,7 +13,13 @@
             ['name' => $programa->titulo],
         ]" dark />
 
-        <h1 class="font-heading font-black text-3xl max-[360px]:text-2xl md:text-5xl leading-tight mb-4 break-words text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)]">
+        {{-- Badge de status --}}
+        <div class="mt-6 mb-4 inline-flex items-center gap-2 bg-green-500 text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow">
+            <span class="w-2 h-2 bg-white rounded-full inline-block"></span>
+            Em andamento
+        </div>
+
+        <h1 class="font-heading font-black text-3xl max-[360px]:text-2xl md:text-5xl leading-tight mb-4 break-words">
             {{ $programa->titulo }}
         </h1>
 
@@ -27,7 +33,7 @@
 <main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-[#edf5ff] py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-5xl mx-auto px-4">
 
-        <div class="portal-card rounded-3xl overflow-hidden border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50">
+        <div class="portal-card rounded-3xl overflow-hidden">
 
             {{-- Imagem de capa --}}
             @if ($programa->icone)
@@ -49,7 +55,7 @@
             @endif
 
             {{-- Metadados --}}
-            <div class="flex flex-wrap items-center gap-4 px-5 max-[360px]:px-4 sm:px-8 py-5 border-b border-slate-200 bg-slate-100/70 text-sm text-slate-700">
+            <div class="flex flex-wrap items-center gap-4 px-5 max-[360px]:px-4 sm:px-8 py-5 border-b border-gray-100 bg-gray-50 text-sm text-gray-500">
                 {{-- Data --}}
                 <span class="flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,6 +63,12 @@
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     Publicado em {{ $programa->created_at->translatedFormat('d \d\e F \d\e Y') }}
+                </span>
+
+                {{-- Status ativo --}}
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full {{ $programa->ativo ? 'bg-green-500' : 'bg-red-400' }}"></span>
+                    {{ $programa->ativo ? 'Ativo' : 'Inativo' }}
                 </span>
 
                 @if ($programa->destaque)
@@ -73,7 +85,7 @@
 
             {{-- Descrição completa --}}
             <div class="px-5 max-[360px]:px-4 sm:px-8 py-8 max-[360px]:py-6 sm:py-10">
-                <div class="prose prose-sm md:prose-base prose-blue max-w-none text-slate-700 leading-7 md:leading-relaxed text-[15px] md:text-base">
+                <div class="prose prose-sm md:prose-base prose-blue max-w-none text-gray-700 leading-7 md:leading-relaxed text-[15px] md:text-base">
                     {!! nl2br(e($programa->descricao)) !!}
                 </div>
             </div>

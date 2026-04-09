@@ -11,7 +11,7 @@
 @if($noticia->imagem_capa)
 <meta property="og:image" content="{{ asset('storage/' . $noticia->imagem_capa) }}" />
 @else
-<meta property="og:image" content="{{ asset('img/Assai.jpg') }}" />
+<meta property="og:image" content="{{ asset('img/Assaí.jpg') }}" />
 @endif
 
 <meta name="twitter:card" content="summary_large_image">

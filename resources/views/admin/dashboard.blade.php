@@ -2,24 +2,22 @@
 
 @section('content')
 {{-- ===== HEADER ===== --}}
-<div class="mb-8 rounded-2xl border border-slate-200 bg-gradient-to-r from-white via-slate-50 to-blue-50/60 p-5 sm:p-6 shadow-sm">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Visão Geral</h1>
-            <p class="mt-1 text-slate-500">Painel de inteligência e monitoramento do portal · {{ \Carbon\Carbon::now()->isoFormat('D [de] MMMM [de] YYYY') }}</p>
-        </div>
-        <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
-            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Sistema online
-        </span>
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-slate-800">Visão Geral</h1>
+        <p class="mt-1 text-slate-500">Painel de inteligência e monitoramento do portal · {{ \Carbon\Carbon::now()->isoFormat('D [de] MMMM [de] YYYY') }}</p>
     </div>
+    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
+        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        Sistema online
+    </span>
 </div>
 
 {{-- ===== LINHA 1: KPIs ===== --}}
 <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
 
     {{-- KPI Notícias --}}
-    <div class="group bg-white border border-slate-200 shadow-sm rounded-xl p-6 flex items-center gap-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div class="bg-white border-l-4 border-l-blue-600 shadow-sm rounded-xl p-6 flex items-center gap-5">
         <div class="flex-shrink-0 p-3 rounded-lg bg-blue-50 text-blue-600">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2" />
@@ -32,7 +30,7 @@
     </div>
 
     {{-- KPI Eventos Ativos --}}
-    <div class="group bg-white border border-slate-200 shadow-sm rounded-xl p-6 flex items-center gap-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div class="bg-white border-l-4 border-l-amber-500 shadow-sm rounded-xl p-6 flex items-center gap-5">
         <div class="flex-shrink-0 p-3 rounded-lg bg-amber-50 text-amber-500">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -45,7 +43,7 @@
     </div>
 
     {{-- KPI Serviços --}}
-    <div class="group bg-white border border-slate-200 shadow-sm rounded-xl p-6 flex items-center gap-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div class="bg-white border-l-4 border-l-emerald-500 shadow-sm rounded-xl p-6 flex items-center gap-5">
         <div class="flex-shrink-0 p-3 rounded-lg bg-emerald-50 text-emerald-600">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -57,16 +55,16 @@
         </div>
     </div>
 
-    {{-- KPI Banners Ativos --}}
-    <div class="group bg-white border border-slate-200 shadow-sm rounded-xl p-6 flex items-center gap-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
-        <div class="flex-shrink-0 p-3 rounded-lg bg-indigo-50 text-indigo-600">
+    {{-- KPI Alertas --}}
+    <div class="bg-white border-l-4 border-l-red-600 shadow-sm rounded-xl p-6 flex items-center gap-5">
+        <div class="flex-shrink-0 p-3 rounded-lg bg-red-50 text-red-600">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.5a1 1 0 00-1 1v5m0 0H9m4 0h4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
         </div>
         <div>
-            <p class="text-sm font-medium text-slate-500">Banners ativos</p>
-            <p class="text-3xl font-black text-slate-800 leading-tight">{{ isset($bannersAtivos) ? $bannersAtivos->count() : 0 }}</p>
+            <p class="text-sm font-medium text-slate-500">Alertas ativos</p>
+            <p class="text-3xl font-black text-slate-800 leading-tight">{{ $totalAlertas }}</p>
         </div>
     </div>
 
@@ -77,6 +75,14 @@
     <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-500">Acesso Rápido — Criar Conteúdo</h2>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 
+        @role('admin')
+        <a href="{{ route('admin.alertas.create') }}" class="inline-flex items-center justify-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-600 hover:text-white hover:border-red-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Novo Alerta
+        </a>
+        @endrole
 
         @can('gerir banners')
         <a href="{{ route('admin.banners.create') }}" class="inline-flex items-center justify-start gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-600 hover:text-white hover:border-indigo-600">
@@ -137,6 +143,31 @@
 {{-- ===== LINHA 3: ALERTAS + BANNERS ===== --}}
 <div class="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-2">
 
+    {{-- ALERTAS ATIVOS NA PÁGINA PÚBLICA --}}
+    <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-base font-bold text-slate-800">Alertas Ativos</h2>
+            </div>
+            <a href="{{ route('admin.alertas.index') }}" class="text-xs font-medium text-blue-600 hover:underline">Ver todos</a>
+        </div>
+        <ul class="divide-y divide-slate-100">
+            @forelse($alertasAtivos as $alerta)
+            <li class="px-6 py-4 hover:bg-slate-50 transition-colors">
+                <p class="text-sm font-semibold text-slate-700 line-clamp-2 mb-1">{{ $alerta->titulo }}</p>
+                <p class="text-xs text-slate-500 line-clamp-1">{{ $alerta->mensagem }}</p>
+                <span class="inline-block mt-2 rounded-full bg-red-50 text-red-700 text-xs font-semibold px-2.5 py-0.5">Ativo</span>
+            </li>
+            @empty
+            <li class="px-6 py-8 text-center text-slate-400 text-sm">
+                Nenhum alerta ativo no momento.
+            </li>
+            @endforelse
+        </ul>
+    </div>
 
     {{-- BANNERS ATIVOS NA PÁGINA PÚBLICA --}}
     <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
@@ -151,8 +182,19 @@
         </div>
         <ul class="divide-y divide-slate-100">
             @forelse($bannersAtivos as $banner)
-            <li class="px-6 py-4 hover:bg-slate-50 transition-colors">
-                <div class="min-w-0">
+            <li class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start gap-3">
+                @if($banner->imagem)
+                <div class="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-lg overflow-hidden">
+                    <img src="{{ Storage::url($banner->imagem) }}" alt="{{ $banner->titulo }}" class="w-full h-full object-cover">
+                </div>
+                @else
+                <div class="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                @endif
+                <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-slate-700 line-clamp-1">{{ $banner->titulo }}</p>
                     @if($banner->subtitulo)
                     <p class="text-xs text-slate-500 line-clamp-1">{{ $banner->subtitulo }}</p>

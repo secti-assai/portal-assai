@@ -28,13 +28,13 @@ class DatabaseSeeder extends Seeder
         $this->call([SecretariaSeeder::class]);
 
         // Banners do carrossel principal
-        Banner::factory(3)->create();
+        Banner::factory(10)->create();
         
         // Programas municipais
-        Programa::factory(10)->create();
+        Programa::factory(50)->create();
 
         // Serviços associados às secretarias
-        Servico::factory(50)->create();
+        Servico::factory(100)->create();
 
         // MAPEAMENTO CORRETO: Classe do FontAwesome => Contexto
         $iconesValidos = [
@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Eventos
-        Evento::factory(10)->create();
+        Evento::factory(50)->create();
 
         Evento::factory()->create([
             'titulo' => 'Evento de teste agendado',
