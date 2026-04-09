@@ -82,7 +82,7 @@
     {{-- ==========================================
          FILTROS HORIZONTAIS COMPACTOS
          ========================================== --}}
-    <section class="border-b border-slate-200 bg-white sticky top-[100px] md:top-[130px] z-30 shadow-sm">
+    <section class="border-b border-slate-200 bg-white z-30 shadow-sm">
         <div class="container px-4 sm:px-6 py-4 mx-auto max-w-7xl">
             
             <form method="GET" action="{{ route('servicos.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-4">
