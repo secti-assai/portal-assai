@@ -30,15 +30,20 @@
 </section>
 
 {{-- ===== GRID DE PROGRAMAS ===== --}}
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-gray-50 py-14 max-[360px]:py-10 pb-20">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="bg-[#edf5ff] py-14 max-[360px]:py-10 pb-20">
     <div class="container max-w-6xl mx-auto px-4">
+
+        <div class="portal-section-title">
+            <h2>Programas em Destaque</h2>
+            <div class="bar"></div>
+        </div>
 
         @forelse ($programas as $programa)
             @if ($loop->first)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @endif
 
-            <article class="bg-white rounded-3xl shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
+            <article class="portal-card rounded-3xl flex flex-col overflow-hidden group hover:-translate-y-1 border border-slate-300/70 ring-1 ring-slate-200/70 bg-slate-50">
 
                 {{-- Imagem / Ícone de Capa --}}
                 <div class="relative h-48 bg-gradient-to-br from-blue-800 to-blue-600 flex items-center justify-center overflow-hidden">
@@ -58,15 +63,11 @@
                         </svg>
                     @endif
 
-                    {{-- Badge de ativo --}}
-                    <span class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full shadow">
-                        Ativo
-                    </span>
                 </div>
 
                 {{-- Corpo do Card --}}
                 <div class="flex flex-col flex-1 p-6">
-                    <p class="text-xs text-gray-500 mb-2 flex items-center gap-1.5">
+                    <p class="text-xs text-slate-600 mb-2 flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -74,11 +75,11 @@
                         {{ $programa->created_at->translatedFormat('d \d\e F \d\e Y') }}
                     </p>
 
-                    <h2 class="font-heading font-black text-xl text-blue-900 leading-snug mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 break-words" title="{{ $programa->titulo }}">
+                    <h2 class="font-heading font-black text-xl text-slate-900 leading-snug mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 break-words" title="{{ $programa->titulo }}">
                         {{ \Illuminate\Support\Str::limit($programa->titulo, 100) }}
                     </h2>
 
-                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-3 break-words flex-1">
+                    <p class="text-sm text-slate-700 leading-relaxed line-clamp-3 break-words flex-1">
                         {{ \Illuminate\Support\Str::limit(strip_tags((string) $programa->descricao), 160) }}
                     </p>
 
@@ -102,7 +103,7 @@
                                 href="{{ $programa->link }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex items-center gap-2 w-full justify-center bg-white hover:bg-gray-50 text-blue-900 border border-blue-200 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                class="inline-flex items-center gap-2 w-full justify-center bg-slate-50 hover:bg-slate-100 text-blue-900 border border-blue-300/70 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                 aria-label="Acessar site externo do programa {{ $programa->titulo }}"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +134,7 @@
                     </svg>
                 </div>
                 <h2 class="font-heading font-black text-2xl text-blue-900 mb-2">Nenhum programa encontrado</h2>
-                <p class="text-gray-500 max-w-md">
+                <p class="text-slate-700 max-w-md">
                     No momento não há programas ou projetos ativos cadastrados. Volte em breve para acompanhar as iniciativas municipais.
                 </p>
                 <a href="{{ route('home') }}" class="mt-8 inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors">
@@ -148,7 +149,7 @@
         {{-- Paginação --}}
         @if ($programas->hasPages())
             <div class="mt-12 flex justify-center">
-                {{ $programas->links() }}
+                {{ $programas->links('components.pagination.agenda-style') }}
             </div>
         @endif
 

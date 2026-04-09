@@ -3,7 +3,7 @@
 @section('title', 'Notícias - Prefeitura Municipal de Assaí')
 
 @section('content')
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen pt-[130px] lg:pt-[160px] pb-16 bg-white">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="flex flex-col min-h-screen pt-[96px] lg:pt-[160px] pb-16 bg-white">
     <div class="container max-w-6xl px-4 mx-auto font-sans">
 
         {{-- Breadcrumb --}}
@@ -78,7 +78,7 @@
                 <a href="{{ route('noticias.show', $noticia->slug) }}" class="block w-full h-full outline-none focus-within:ring-4 focus-within:ring-blue-500 focus-within:ring-inset">
 
                     {{-- Foto (Estilo object-cover) --}}
-                    <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assaí.jpg') }}"
+                    <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assai.jpg') }}"
                         alt=""
                         class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110"
                         loading="lazy" decoding="async">
@@ -137,7 +137,7 @@
 
         {{-- Paginação --}}
         <div class="mt-12">
-            {{ $noticias->appends(request()->query())->links() }}
+            {{ $noticias->appends(request()->query())->links('components.pagination.agenda-style') }}
         </div>
 
     </div>

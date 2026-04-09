@@ -46,14 +46,14 @@ class PortalController extends Controller
                 ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->take(4)
+                ->take(3)
                 ->get();
         });
 
         $eventos = Cache::remember('home_eventos_v4', 3600, function () {
             return Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
-                ->take(5)
+                ->take(4)
                 ->get();
         });
 
@@ -61,16 +61,16 @@ class PortalController extends Controller
             $destaques = Programa::where('ativo', true)
                 ->where('destaque', true)
                 ->latest()
-                ->take(6)
+                ->take(3)
                 ->get();
 
-            return $destaques->count() >= 6
+            return $destaques->count() >= 3
                 ? $destaques
                 : $destaques->concat(
                     Programa::where('ativo', true)
                         ->where('destaque', false)
                         ->latest()
-                        ->take(6 - $destaques->count())
+                        ->take(3 - $destaques->count())
                         ->get()
                 );
         });
@@ -78,7 +78,7 @@ class PortalController extends Controller
         $servicos = Cache::remember('home_servicos', 3600, function () {
             return Servico::where('ativo', true)
                 ->orderByDesc('acessos')
-                ->take(7)
+                ->take(10)
                 ->get();
         });
 
@@ -102,7 +102,7 @@ class PortalController extends Controller
             ->take(3)
             ->pluck('titulo');
 
-        return view('pages.index', compact('banners', 'alertasAtivos', 'noticias', 'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA'));
+        return view('pages.pagina', compact('banners', 'alertasAtivos', 'noticias', 'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA'));
     }
 
     // Página de notícias
@@ -170,7 +170,8 @@ class PortalController extends Controller
 
         $eventos = Evento::publico()
             ->ordenarPorDataMaisProxima()
-            ->paginate(8);
+            ->paginate(4)
+            ->withQueryString();
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
     }
@@ -241,11 +242,15 @@ class PortalController extends Controller
 
     public function secretariaShow($id)
     {
-        $secretaria = \App\Models\Secretaria::with(['servicos' => function ($query) {
-            $query->where('ativo', true)->orderBy('titulo', 'asc');
-        }])->findOrFail($id);
+        $secretaria = \App\Models\Secretaria::findOrFail($id);
 
-        return view('secretarias.show', compact('secretaria'));
+        $servicos = $secretaria->servicos()
+            ->where('ativo', true)
+            ->orderBy('titulo', 'asc')
+            ->paginate(6)
+            ->withQueryString();
+
+        return view('secretarias.show', compact('secretaria', 'servicos'));
     }
 
     public function contato()

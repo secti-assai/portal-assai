@@ -3,210 +3,261 @@
 @section('title', 'Serviços ao Cidadão - Prefeitura Municipal de Assaí')
 
 @section('content')
+@php
+    $termoBusca = trim((string) request('search'));
+    $secretariaAtiva = request('secretaria');
+    $totalServicos = $servicos->total();
+@endphp
 
-{{-- ===== CABEÇALHO PADRONIZADO ===== --}}
-<section class="relative py-12 overflow-hidden bg-blue-900 md:py-20 lg:py-24">
-    {{-- Textura Vetorial e Gradiente de Profundidade --}}
-    <div class="absolute inset-0 pointer-events-none">
-        <svg class="absolute w-full h-full opacity-40 text-blue-800" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.5" />
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-        </svg>
-        <div class="absolute inset-y-0 right-0 w-full bg-gradient-to-l from-blue-950/70 via-blue-900/35 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-950 to-transparent"></div>
-    </div>
+<div id="conteudo-principal" accesskey="1" tabindex="-1" class="content-offset-none min-h-screen pb-20 m-0 p-0">
+    
+    {{-- ==========================================
+         HERO SECTION (Cores originais Tailwind)
+         ========================================== --}}
+    <section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-8 sm:py-12 shadow-inner">
+        {{-- Elementos de Fundo Subtis --}}
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>
+            <div class="absolute -top-40 -right-32 w-96 h-96 bg-blue-800/30 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-32 w-96 h-96 bg-indigo-800/25 rounded-full blur-3xl"></div>
+        </div>
 
-    <div class="container relative z-10 px-4 mx-auto max-w-7xl text-left">
-        <div class="flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
-            <div class="max-w-2xl">
-                <x-breadcrumb :items="[
+        <div class="container relative z-10 px-4 sm:px-6 mx-auto max-w-7xl">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                
+                {{-- Título e Breadcrumb --}}
+                <div class="flex-1">
+                    <x-breadcrumb :items="[
                         ['name' => 'Início', 'url' => route('home')],
                         ['name' => 'Serviços'],
                     ]" dark />
 
-                <h1 class="text-3xl font-extrabold text-white md:text-5xl font-heading mb-4">Serviços ao Cidadão</h1>
-                <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light">Encontre rapidamente os serviços digitais e presenciais oferecidos pela Prefeitura de Assaí.</p>
-            </div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-4 tracking-tight drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">
+                        Serviços ao Cidadão
+                    </h1>
+                    <p class="text-sm sm:text-base text-blue-100 max-w-2xl mt-3 leading-relaxed">
+                        Consulte os serviços disponíveis da Prefeitura de Assaí, encontre informações rápidas e acesse os canais oficiais de atendimento.
+                    </p>
+                </div>
 
-            <div class="inline-flex w-fit self-start xl:self-auto flex-col items-center justify-center px-4 pt-2.5 pb-2 rounded-xl bg-white border border-white/80 shadow-xl">
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest leading-none">Powered by</span>
-                <img src="{{ asset('img/conecta.png') }}" alt="Conecta Assaí" class="w-auto h-8 object-contain mt-1" loading="lazy" decoding="async">
-            </div>
-        </div>
-
-        {{-- Barra de busca --}}
-        <form method="GET" action="{{ route('servicos.index') }}" class="flex flex-col sm:flex-row gap-2 max-w-xl mt-8">
-            @if(request('secretaria'))
-            <input type="hidden" name="secretaria" value="{{ request('secretaria') }}">
-            @endif
-            <div class="relative flex-1">
-                <span class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-white/40">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </span>
-                <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Buscar serviço..."
-                    class="w-full py-3 pl-12 pr-4 text-sm text-white bg-white/10 border border-white/20 rounded-xl placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/15 transition">
-            </div>
-            <button type="submit"
-                class="px-5 py-3 text-sm font-bold text-blue-900 bg-yellow-400 rounded-xl hover:bg-yellow-300 transition shrink-0 w-full sm:w-auto">
-                Buscar
-            </button>
-        </form>
-    </div>
-</section>
-
-{{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<div class="container px-4 mx-auto max-w-6xl py-10">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-        {{-- ===== SIDEBAR: FILTROS ===== --}}
-        <aside class="lg:col-span-1">
-            <div class="lg:sticky lg:top-8 bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">
-                <h2 class="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Filtrar por Secretaria</h2>
-
-                <ul class="space-y-1 text-sm">
-                    <li>
-                        <a href="{{ route('servicos.index', request()->only('search')) }}"
-                            class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                                      {{ !request('secretaria') ? 'bg-blue-50 font-bold text-blue-700' : 'text-slate-600 hover:bg-slate-100/50' }}">
-                            <svg class="w-4 h-4 shrink-0 {{ !request('secretaria') ? 'text-blue-500' : 'text-slate-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            Todos os Serviços
-                        </a>
-                    </li>
-                    @foreach($secretarias as $sec)
-                    <li>
-                        <a href="{{ route('servicos.index', array_merge(request()->only('search'), ['secretaria' => $sec->id])) }}"
-                            class="flex items-center gap-2 px-3 py-2 rounded-lg transition
-                                      {{ request('secretaria') == $sec->id ? 'bg-blue-50 font-bold text-blue-700' : 'text-slate-600 hover:bg-slate-100/50' }}">
-                            <svg class="w-4 h-4 shrink-0 {{ request('secretaria') == $sec->id ? 'text-blue-500' : 'text-slate-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                            {{ $sec->nome }}
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-        </aside>
-
-        {{-- ===== FEED DE SERVIÇOS ===== --}}
-        <section class="lg:col-span-3">
-
-            {{-- Cabeçalho do feed --}}
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <p class="text-sm text-slate-500">
-                    <span class="font-bold text-slate-700">{{ $servicos->total() }}</span> serviço(s) encontrado(s)
-                    @if(request('search'))
-                    para <span class="font-semibold text-blue-700">"{{ request('search') }}"</span>
-                    @endif
-                </p>
-                @if(request('search') || request('secretaria'))
-                <a href="{{ route('servicos.index') }}" class="text-xs font-semibold text-slate-500 hover:text-red-500 transition flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    Limpar filtros
-                </a>
-                @endif
-            </div>
-
-            @if($servicos->isEmpty())
-            {{-- Empty state --}}
-            <div class="flex flex-col items-center justify-center py-20 text-center bg-white border-2 border-dashed border-slate-200 rounded-2xl">
-                <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <h3 class="text-lg font-bold text-slate-600 mb-1">Nenhum serviço encontrado</h3>
-                <p class="text-sm text-slate-500 max-w-xs">Tente outros termos ou remova os filtros ativos.</p>
-                <a href="{{ route('servicos.index') }}" class="mt-5 px-5 py-2.5 text-sm font-bold text-blue-700 bg-blue-50 rounded-xl hover:bg-blue-100 transition">
-                    Ver todos os serviços
-                </a>
-            </div>
-            @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($servicos as $servico)
-                <div class="flex flex-col h-full bg-white border border-slate-100 rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <div class="flex flex-col flex-1 p-6">
-
-                        {{-- Ícone --}}
-                        <svg class="w-10 h-10 text-blue-600 mb-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            @switch($servico->icone)
-                            @case('saude')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            @break
-                            @case('vagas')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            @break
-                            @case('documentos')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            @break
-                            @case('ouvidoria')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                            @break
-                            @case('alvara')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                            @break
-                            @case('educacao')
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                            @break
-                            @default
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                            @endswitch
-                        </svg>
-
-                        {{-- Secretaria badge --}}
-                        <span class="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide block truncate w-full" title="{{ $servico->secretaria->nome ?? 'Administração Geral' }}">
-                            {{ \Illuminate\Support\Str::limit($servico->secretaria->nome ?? 'Administração Geral', 55) }}
-                        </span>
-
-                        {{-- Título --}}
-                        <h3 class="text-lg font-bold text-slate-800 leading-snug mb-2 line-clamp-2 break-words" title="{{ $servico->titulo }}">
-                            {{ \Illuminate\Support\Str::limit($servico->titulo, 100) }}
-                        </h3>
-
-                        {{-- Descrição do Serviço (Novo Bloco) --}}
-                        @if($servico->descricao)
-                        <p class="text-sm text-slate-500 mb-4 line-clamp-3 leading-relaxed" title="{{ strip_tags($servico->descricao) }}">
-                            {{ \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 120) }}
-                        </p>
+                {{-- Barra de Pesquisa (padrão visual da página de notícias, adaptada) --}}
+                <div class="w-full md:w-96 lg:w-[30rem] shrink-0">
+                    <form method="GET" action="{{ route('servicos.index') }}">
+                        @if($secretariaAtiva)
+                        <input type="hidden" name="secretaria" value="{{ $secretariaAtiva }}">
                         @endif
 
-                        {{-- Botão CTA --}}
-                        <div class="mt-auto pt-4 border-t border-slate-100">
-                            <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}"
-                                target="_blank" rel="noopener noreferrer"
-                                class="flex items-center justify-center gap-2 w-full py-2 text-sm font-bold text-blue-700 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition">
-                                Acessar Serviço
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <div class="relative flex items-center w-full bg-white rounded-full border border-slate-400 hover:border-slate-500 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300 p-1 h-[52px] sm:h-[58px] md:h-16">
+
+                            <div class="flex items-center justify-center pl-3 sm:pl-4 md:pl-5 pr-1 sm:pr-2 text-slate-400 shrink-0">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                            </a>
+                            </div>
+                            
+                            <input 
+                                id="search-servicos" 
+                                type="text" 
+                                name="search" 
+                                value="{{ $termoBusca }}" 
+                                placeholder="Busque por serviço, secretaria ou tema..." 
+                                class="flex-1 min-w-0 px-1 sm:px-2 py-2 text-sm md:text-base text-slate-700 bg-transparent border-none outline-none focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 placeholder:italic w-full truncate"
+                            />
+
+                            <button 
+                                type="submit" 
+                                class="h-full px-4 sm:px-6 md:px-8 font-bold text-xs sm:text-sm md:text-base text-blue-950 transition-all duration-200 bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 active:scale-95 rounded-full shrink-0 font-heading select-none touch-manipulation"
+                            >
+                                Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    {{-- ==========================================
+         FILTROS HORIZONTAIS COMPACTOS
+         ========================================== --}}
+    <section class="border-b border-slate-200 bg-white sticky top-[100px] md:top-[130px] z-30 shadow-sm">
+        <div class="container px-4 sm:px-6 py-4 mx-auto max-w-7xl">
+            
+            <form method="GET" action="{{ route('servicos.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-4">
+                {{-- Manter o termo de busca se existir --}}
+                @if($termoBusca)
+                <input type="hidden" name="search" value="{{ $termoBusca }}">
+                @endif
+
+                <div class="flex items-center gap-3 shrink-0">
+                    <div class="w-9 h-9 rounded-full bg-blue-100 ring-1 ring-blue-200 flex items-center justify-center text-blue-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M10 18h4" />
+                        </svg>
+                    </div>
+                    <label for="filtro-secretaria" class="text-sm font-bold text-slate-700 uppercase tracking-wider hidden sm:block" style="font-family: 'Montserrat', sans-serif;">
+                        Filtrar por secretaria:
+                    </label>
+                </div>
+
+                {{-- Caixa de Seleção das Secretarias --}}
+                <div class="flex-1 flex items-center gap-3">
+                    <div class="relative w-full sm:w-80 lg:w-96">
+                        <select 
+                            id="filtro-secretaria" 
+                            name="secretaria" 
+                            class="appearance-none w-full bg-slate-50 border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm font-medium transition-colors cursor-pointer"
+                            onchange="this.form.submit()"
+                        >
+                            <option value="" class="font-bold">Todos os Serviços</option>
+                            @foreach($secretarias as $sec)
+                                <option value="{{ $sec->id }}" {{ $secretariaAtiva == $sec->id ? 'selected' : '' }}>
+                                    {{ $sec->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
                     </div>
                 </div>
-                @endforeach
+
+                {{-- Mostrar resumo de filtros ativos / Limpar --}}
+                @if($termoBusca || $secretariaAtiva)
+                <div class="flex items-center shrink-0">
+                    <a 
+                        href="{{ route('servicos.index') }}" 
+                        class="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2.5 rounded-xl transition-colors border border-red-100"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                        Limpar Filtros
+                    </a>
+                </div>
+                @endif
+            </form>
+
+        </div>
+    </section>
+
+    {{-- ==========================================
+         GRID PRINCIPAL DE SERVIÇOS
+         ========================================== --}}
+    <section class="container px-4 sm:px-6 py-10 mx-auto max-w-7xl">
+        
+        <div class="mb-8">
+            <p class="text-sm font-medium text-slate-500">
+                <strong class="text-2xl text-blue-900" style="font-family: 'Montserrat', sans-serif;">{{ $totalServicos }}</strong>
+                <span class="ml-1 text-slate-600">serviço(s) encontrado(s)</span>
+                @if($termoBusca)
+                <span class="block sm:inline text-sm font-normal text-slate-500 mt-1 sm:mt-0">
+                    para a busca <span class="font-bold text-blue-800">"{{ $termoBusca }}"</span>
+                </span>
+                @endif
+            </p>
+        </div>
+
+        @if($servicos->isEmpty())
+        <div class="bg-white rounded-3xl border border-slate-200 py-20 px-6 text-center flex flex-col items-center shadow-sm max-w-3xl mx-auto mt-10">
+            <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-50 text-blue-400 text-3xl mb-6">
+                <i class="fa-solid fa-magnifying-glass-minus"></i>
             </div>
+            <h2 class="text-xl lg:text-2xl font-bold text-slate-800 mb-2" style="font-family: 'Montserrat', sans-serif;">Nenhum serviço encontrado</h2>
+            <p class="text-slate-500 max-w-md mx-auto">
+                Não encontrámos serviços correspondentes aos filtros aplicados. Tente usar outros termos de busca ou selecione "Todos os Serviços".
+            </p>
+            <a href="{{ route('servicos.index') }}" class="mt-8 bg-blue-700 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-md">
+                Ver Todos os Serviços
+            </a>
+        </div>
+        @else
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @foreach($servicos as $servico)
+            
+            @php
+                $iconeBruto = trim((string) ($servico->icone ?? ''));
+                $temPrefixoFa = Str::contains($iconeBruto, ['fa-solid', 'fa-regular', 'fa-brands', 'fas', 'far', 'fab', 'fal', 'fad']);
+                $iconeClasse = '';
 
-            {{-- Paginação --}}
-            @if($servicos->hasPages())
-            <div class="mt-10">
-                {{ $servicos->links() }}
+                if ($iconeBruto !== '') {
+                    if ($temPrefixoFa) {
+                        $iconeClasse = $iconeBruto;
+                    } elseif (Str::startsWith($iconeBruto, 'fa-')) {
+                        $iconeClasse = 'fa-solid ' . $iconeBruto;
+                    } else {
+                        $iconeClasse = 'fa-solid fa-' . $iconeBruto;
+                    }
+                } else {
+                    $iconeClasse = 'fa-solid fa-file-lines';
+                }
+            @endphp
+
+            <article class="group bg-white rounded-2xl border border-slate-300/80 ring-1 ring-slate-200/80 p-6 flex flex-col h-full shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 relative">
+                
+                {{-- Tooltip CORRIGIDA - Agora presa ao ícone de ? --}}
+                <div class="absolute right-4 top-4 group/tooltip z-20">
+                    <button type="button" tabindex="-1" aria-hidden="true" class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 border border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-200 cursor-help transition-colors shadow-sm">
+                        <i class="fa-solid fa-circle-question text-[0.95rem] leading-none"></i>
+                    </button>
+                    
+                    {{-- O balão de texto escuro --}}
+                    <div class="absolute bottom-full right-[-8px] mb-2 w-64 bg-slate-900 text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 pointer-events-none shadow-xl leading-relaxed">
+                        {{ $servico->descricao ? \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 120) : 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
+                        {{-- Setinha apontando para o '?' --}}
+                        <div class="absolute top-full right-[12px] border-[6px] border-transparent border-t-slate-900"></div>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-4 mb-4 pr-6">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 ring-1 ring-blue-200 shrink-0 group-hover:scale-110 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300">
+                        <i class="{{ $iconeClasse }} text-[1.35rem]"></i>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 pt-1">
+                        <h3 class="text-lg font-extrabold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2" style="font-family: 'Montserrat', sans-serif;">
+                            {{ $servico->titulo }}
+                        </h3>
+                        @if($servico->secretaria)
+                        <span class="inline-block bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded w-fit max-w-full truncate border border-slate-200">
+                            {{ $servico->secretaria->nome }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
+
+                <p class="text-sm text-slate-700 leading-relaxed line-clamp-3 mb-6 flex-grow">
+                    {{ $servico->descricao ? \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 110) : 'Informações e acesso para este serviço oferecido ao cidadão.' }}
+                </p>
+
+                <div class="mt-auto border-t border-slate-200 pt-4 flex justify-between items-center">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Acesso Rápido</span>
+                    
+                    <a 
+                        href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-slate-50 text-blue-700 border border-slate-300 hover:bg-blue-700 hover:text-white transition-all duration-300 group/btn"
+                        aria-label="Acessar {{ $servico->titulo }}"
+                    >
+                        <i class="fa-solid fa-arrow-right transition-transform group-hover/btn:translate-x-0.5"></i>
+                    </a>
+                </div>
+            </article>
+            @endforeach
+        </div>
+
+        @if($servicos->hasPages())
+        <div class="mt-12 pt-8 border-t border-slate-200">
+            <div class="flex justify-center">
+                {{ $servicos->links('components.pagination.agenda-style') }}
             </div>
-            @endif
-            @endif
+        </div>
+        @endif
+        
+        @endif
 
-        </section>
-
-    </div>
+    </section>
 </div>
-
 @endsection

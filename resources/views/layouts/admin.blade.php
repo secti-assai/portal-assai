@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Painel Administrativo - Assaí</title>
-    <link rel="icon" type="image/png" href="{{ asset('img/brasao.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/brasao.png') }}?v=3">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/brasao.png') }}?v=3">
+    <link rel="apple-touch-icon" href="{{ asset('img/brasao.png') }}?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,16 +45,6 @@
             @if(auth()->user()->canAny(['gerir alertas', 'gerir banners', 'gerir servicos', 'gerir programas', 'gerir noticias', 'gerir eventos', 'gerir secretarias']))
             <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Conteúdo</div>
             @endif
-
-            @can('gerir alertas')
-            <a href="{{ route('admin.alertas.index') }}"
-                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.alertas.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-                Alertas da Home
-            </a>
-            @endcan
 
             @can('gerir banners')
             <a href="{{ route('admin.banners.index') }}"
@@ -169,9 +163,6 @@
                         @endcan
                         @can('gerir servicos')
                         <a href="{{ route('admin.servicos.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Serviços</a>
-                        @endcan
-                        @can('gerir alertas')
-                        <a href="{{ route('admin.alertas.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Alertas</a>
                         @endcan
                         @role('admin')
                         <a href="{{ route('admin.activity-logs.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Auditoria</a>

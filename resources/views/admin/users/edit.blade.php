@@ -121,7 +121,6 @@
             @endphp
                 @php
                     $permissionLabels = [
-                        'gerir alertas' => 'Gerenciar Alertas',
                         'gerir banners' => 'Gerenciar Banners',
                         'gerir servicos' => 'Gerenciar Serviços',
                         'gerir programas' => 'Gerenciar Programas',

@@ -73,37 +73,43 @@
 
                     {{-- Preview + campo de busca --}}
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 shrink-0">
-                            <i :class="'fas fa-' + selected + ' text-xl'"></i>
+                        <div class="flex items-center justify-center w-16 h-16 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 shrink-0">
+                            <i :class="'fas fa-' + selected + ' text-3xl'"></i>
                         </div>
                         <div class="flex-1">
-                            <input type="text" x-model="search" placeholder="Buscar ícone (ex: home, user, file...)"
+                            <input type="text" x-model="search" placeholder="Buscar ícone (ex: documento, saúde, educação, tributo...)"
                                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-sm">
                         </div>
-                        <code class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded font-mono whitespace-nowrap" x-text="'fa-' + selected"></code>
+                        <code class="text-sm text-slate-600 bg-slate-100 px-2.5 py-1 rounded font-mono whitespace-nowrap" x-text="'fa-' + selected"></code>
                     </div>
 
                     {{-- Grid de ícones --}}
-                    <div class="border border-slate-200 rounded-xl bg-slate-50 p-3 max-h-60 overflow-y-auto">
-                        <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1.5">
-                            <template x-for="icon in filteredIcons" :key="icon">
-                                <button type="button"
-                                    @click="selected = icon"
-                                    :title="'fa-' + icon"
-                                    :class="selected === icon
-                                        ? 'bg-orange-500 text-white border-orange-500 shadow-md scale-105'
-                                        : 'bg-white text-slate-600 border-slate-200 hover:border-orange-400 hover:text-orange-600 hover:bg-orange-50'"
-                                    class="flex flex-col items-center justify-center gap-1 p-2 rounded-lg border transition-all duration-150 aspect-square min-w-0">
-                                    <i :class="'fas fa-' + icon + ' text-base'"></i>
-                                    <span class="text-[9px] leading-none truncate w-full text-center" x-text="icon"></span>
-                                </button>
-                            </template>
-                            <div x-show="filteredIcons.length === 0" class="col-span-full text-center py-6 text-slate-400 text-sm">
-                                Nenhum ícone encontrado para "<span x-text="search"></span>"
+                    <div class="border border-slate-200 rounded-xl bg-slate-50 p-4 max-h-80 overflow-y-auto space-y-4">
+                        <template x-for="group in filteredGroups" :key="group.label">
+                            <div>
+                                <div class="sticky top-0 z-10 px-2 py-1.5 mb-2 text-[11px] font-bold tracking-wider uppercase rounded-md bg-slate-100 text-slate-600 border border-slate-200" x-text="group.label"></div>
+                                <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                                    <template x-for="icon in group.icons" :key="group.label + '-' + icon">
+                                        <button type="button"
+                                            @click="selected = icon"
+                                            :title="'fa-' + icon"
+                                            :class="selected === icon
+                                                ? 'bg-orange-500 text-white border-orange-500 shadow-md scale-105'
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-orange-400 hover:text-orange-600 hover:bg-orange-50'"
+                                            class="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border transition-all duration-150 aspect-square min-w-0">
+                                            <i :class="'fas fa-' + icon + ' text-2xl'"></i>
+                                            <span class="text-[10px] leading-none truncate w-full text-center" x-text="icon"></span>
+                                        </button>
+                                    </template>
+                                </div>
                             </div>
+                        </template>
+
+                        <div x-show="filteredGroups.length === 0" class="text-center py-6 text-slate-400 text-sm">
+                            Nenhum ícone encontrado para "<span x-text="search"></span>"
                         </div>
                     </div>
-                    <p class="mt-1.5 text-xs text-slate-400">Clique no ícone desejado. Use a busca para filtrar por nome.</p>
+                    <p class="mt-1.5 text-xs text-slate-400">Clique no ícone desejado. Lista prioriza ícones comuns de serviços públicos e portais governamentais.</p>
                 </div>
 
                 <div class="flex items-center">
@@ -134,38 +140,26 @@ window.iconPicker = function(initial) {
     return {
         selected: initial || 'file-alt',
         search: '',
-        icons: [
-            'address-book','address-card','adjust','arrow-circle-down','arrow-circle-left','arrow-circle-right','arrow-circle-up',
-            'arrow-down','arrow-left','arrow-right','arrow-up','asterisk','at','baby','ban','bars','bell','bell-slash',
-            'book','book-open','bookmark','briefcase','building','bullhorn','bullseye','bus','calendar','calendar-alt',
-            'calendar-check','calendar-times','camera','car','chart-bar','chart-line','chart-pie','check','check-circle',
-            'check-square','chess','city','clipboard','clock','cloud','code','cog','cogs','comment','comment-alt',
-            'comments','compass','credit-card','database','desktop','dizzy','dollar-sign','door-open','download',
-            'edit','ellipsis-h','ellipsis-v','envelope','envelope-open','eraser','exclamation','exclamation-circle',
-            'exclamation-triangle','external-link-alt','eye','eye-slash','fax','file','file-alt','file-archive',
-            'file-audio','file-code','file-excel','file-image','file-invoice','file-invoice-dollar','file-lines',
-            'file-medical','file-pdf','file-signature','file-video','file-word','filter','flag','folder','folder-open',
-            'font','forward','frown','gavel','globe','graduation-cap','grip-horizontal','grip-vertical','hand-holding',
-            'hand-holding-heart','hand-holding-usd','hands-helping','handshake','hashtag','headset','heart','heart-pulse',
-            'history','home','hospital','hourglass','id-badge','id-card','image','inbox','info','info-circle',
-            'key','landmark','laptop','layer-group','leaf','lightbulb','link','list','list-alt','location-arrow',
-            'lock','lock-open','magic','magnifying-glass','map','map-marker','map-marker-alt','map-pin','medal',
-            'microphone','minus','minus-circle','mobile','mobile-alt','money-bill','money-bill-wave','moon',
-            'newspaper','paint-brush','paperclip','parking','passport','pause','pencil-alt','people-arrows',
-            'percent','person-running','phone','phone-alt','phone-volume','place-of-worship','plane','plus',
-            'plus-circle','poll','print','puzzle-piece','question','question-circle','receipt','recycle','redo',
-            'reply','robot','running','save','scale-balanced','school','search','share','shield-alt','sign-in-alt',
-            'sign-out-alt','sitemap','smile','sort','star','star-half-alt','sticky-note','store','sun','syringe',
-            'table','tag','tags','tasks','thumbs-down','thumbs-up','times','times-circle','toggle-off','toggle-on',
-            'tools','tooth','trash','trash-alt','tree','trophy','truck','umbrella','undo','university','unlock',
-            'upload','user','user-check','user-circle','user-cog','user-friends','user-graduate','user-lock',
-            'user-md','user-minus','user-plus','user-shield','user-slash','user-tag','user-tie','users',
-            'users-cog','video','vote-yea','wallet','warehouse','wifi','wrench','x-ray'
+        iconGroups: [
+            { label: 'Institucional e Cidadão', icons: ['home','city','building','landmark','flag','university','school','graduation-cap','book','book-open','id-card','id-badge','address-card','address-book','passport','user','users','user-tie','user-check','user-plus','user-cog'] },
+            { label: 'Documentos e Processos', icons: ['clipboard','clipboard-check','file','file-alt','file-lines','file-signature','file-invoice','file-invoice-dollar','file-medical','file-pdf','folder','folder-open','calendar','calendar-alt','calendar-check','clock','history','tasks'] },
+            { label: 'Saúde e Assistência', icons: ['hospital','heartbeat','stethoscope','ambulance','syringe','pills','briefcase-medical','notes-medical','hand-holding-medical'] },
+            { label: 'Segurança e Jurídico', icons: ['gavel','balance-scale','scale-balanced','shield-alt','lock','lock-open','key','fingerprint','user-lock'] },
+            { label: 'Finanças e Tributos', icons: ['money-bill','money-bill-wave','coins','wallet','credit-card','receipt','calculator','chart-line','chart-bar','chart-pie'] },
+            { label: 'Mobilidade e Território', icons: ['bus','car','road','traffic-light','map','map-marked-alt','map-marker-alt','route','parking','truck','warehouse'] },
+            { label: 'Digital e Atendimento', icons: ['wifi','mobile-alt','laptop','desktop','database','server','cloud','globe','search','print','phone','phone-alt','envelope','envelope-open','comment','comments','bullhorn','newspaper','info-circle','question-circle'] },
+            { label: 'Utilitários', icons: ['leaf','tree','recycle','sun','tint','water','seedling','tools','wrench','hammer','hard-hat','store','shopping-cart','external-link-alt','download','upload','link','share','plus-circle','minus-circle','edit','save','trash-alt','check-circle','exclamation-triangle','times-circle'] }
         ],
-        get filteredIcons() {
-            if (!this.search.trim()) return this.icons;
+        get filteredGroups() {
             const q = this.search.toLowerCase().trim();
-            return this.icons.filter(i => i.includes(q));
+            if (!q) return this.iconGroups;
+
+            return this.iconGroups
+                .map(group => ({
+                    label: group.label,
+                    icons: group.icons.filter(icon => icon.includes(q) || group.label.toLowerCase().includes(q))
+                }))
+                .filter(group => group.icons.length > 0);
         }
     };
 };

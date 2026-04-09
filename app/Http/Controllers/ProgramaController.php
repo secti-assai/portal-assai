@@ -48,9 +48,9 @@ class ProgramaController extends Controller
 
         if ($dados['destaque']) {
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 6) {
+            if ($totalDestaques >= 3) {
                 return back()
-                    ->withErrors(['destaque' => 'Limite de 6 destaques atingido. Remova um destaque antes de adicionar outro.'])
+                    ->withErrors(['destaque' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'])
                     ->withInput();
             }
         }
@@ -87,9 +87,9 @@ class ProgramaController extends Controller
 
         if ($dados['destaque'] && !$programa->destaque) {
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 6) {
+            if ($totalDestaques >= 3) {
                 return back()
-                    ->withErrors(['destaque' => 'Limite de 6 destaques atingido. Remova um destaque antes de adicionar outro.'])
+                    ->withErrors(['destaque' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'])
                     ->withInput();
             }
         }
@@ -142,9 +142,9 @@ class ProgramaController extends Controller
                 ], 422);
             }
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 6) {
+            if ($totalDestaques >= 3) {
                 return response()->json([
-                    'message' => 'Limite de 6 destaques atingido. Remova um destaque antes de adicionar outro.'
+                    'message' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'
                 ], 422);
             }
         }

@@ -2,9 +2,6 @@
    MIGRADO DE public/css/style.css
    ========================================================================== */
 
-/* Importa a biblioteca de ícones do FontAwesome */
-@import "@fortawesome/fontawesome-free/css/all.min.css";
-
 /* Importa o Design System do Gov.br */
 @import "@govbr-ds/core/dist/core.min.css";
 
@@ -17,11 +14,86 @@
    ========================================================================== */
 @layer base {
     body {
+        margin: 0;
         @apply font-sans text-slate-800 bg-slate-50 antialiased;
     }
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply font-heading;
     }
+}
+
+/* Header fixo próprio do projeto: sem compensações automáticas externas */
+#site-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Navbar sólida no mobile/tablet; transparência liberada apenas no desktop */
+@media (max-width: 1023px) {
+    #site-header {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #334155 !important;
+        border-color: rgba(226, 232, 240, 0.5) !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+    }
+}
+
+/* Classe própria para páginas sem offset; evita conflito com .pt-0 do gov.br */
+.content-offset-none {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Compensa o header fixo com altura real medida em runtime (exceto home/notícias). */
+.content-offset-dynamic-header {
+    margin-top: 0 !important;
+    padding-top: 100px !important;
+}
+
+@media (min-width: 768px) {
+    .content-offset-dynamic-header {
+        padding-top: 130px !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .content-offset-dynamic-header {
+        padding-top: 0 !important;
+    }
+
+    .content-offset-dynamic-header > :first-child {
+        margin-top: 0 !important;
+        padding-top: var(--site-header-height, 100px) !important;
+    }
+
+    .content-offset-dynamic-header > .content-offset-none {
+        padding-top: 0 !important;
+    }
+
+    .content-offset-dynamic-header > .content-offset-none > :first-child {
+        margin-top: 0 !important;
+        padding-top: var(--site-header-height, 100px) !important;
+    }
+}
+
+/* Remove spacers automáticos de libs externas para evitar faixa extra no topo */
+.br-header-spacer,
+.br-magic-spacer,
+[class*="header-spacer"],
+[id*="header-spacer"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* ==========================================================================
@@ -247,25 +319,13 @@ textarea:focus-visible {
 
 /* ===== ALTO CONTRASTE ===== */
 html.contrast-mode body {
-    background-color: #000 !important;
-    color: #e2e8f0 !important;
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
 }
 
 html.contrast-mode body *:not(script):not(style):not(svg):not(path):not(circle):not(img):not(video):not(iframe) {
-    background-color: #000 !important;
-    color: #e2e8f0 !important;
-    border-color: #334155 !important;
     text-shadow: none !important;
     box-shadow: none !important;
-}
-
-html.contrast-mode body h1,
-html.contrast-mode body h2,
-html.contrast-mode body h3,
-html.contrast-mode body h4,
-html.contrast-mode body h5,
-html.contrast-mode body h6 {
-    color: #facc15 !important;
 }
 
 html.contrast-mode body a {
@@ -292,8 +352,8 @@ html.contrast-mode body select {
 }
 
 html.contrast-mode body img {
-    filter: grayscale(80%) contrast(1.2) !important;
-    opacity: 0.85 !important;
+    filter: contrast(1.08) saturate(1.05) !important;
+    opacity: 1 !important;
     background: transparent !important;
 }
 
@@ -321,5 +381,34 @@ html.contrast-mode body svg {
         bottom: 18px !important;
         right: 6px !important;
         transform: scale(0.82);
+    }
+}
+
+/* ==========================================================================
+   PADRAO VISUAL - PAGINAS INTERNAS
+   ========================================================================== */
+@layer components {
+    .portal-section-title {
+        @apply flex flex-col items-center mb-10 text-center;
+    }
+
+    .portal-section-title h2 {
+        @apply text-2xl font-extrabold text-blue-900 sm:text-3xl font-heading uppercase tracking-tight;
+    }
+
+    .portal-section-title .bar {
+        @apply w-10 h-1 mt-3 bg-yellow-400;
+    }
+
+    .portal-btn-primary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-white transition-all bg-blue-800 rounded-full shadow-lg hover:bg-blue-900 hover:-translate-y-0.5;
+    }
+
+    .portal-btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-blue-900 transition-all bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-300 hover:-translate-y-0.5;
+    }
+
+    .portal-card {
+        @apply bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300;
     }
 }

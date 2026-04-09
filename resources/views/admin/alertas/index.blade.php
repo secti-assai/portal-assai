@@ -7,7 +7,7 @@
         title="Gerenciar Alertas"
         :breadcrumbs="[
             ['label' => 'Dashboard', 'url' => route('admin.dashboard'), 'class' => 'hover:text-red-600'],
-            ['label' => 'Alertas da Home'],
+            ['label' => 'Alertas da página inicial'],
         ]"
     >
         <x-slot:action>
@@ -122,7 +122,7 @@
 
         @if(method_exists($alertas, 'hasPages') && $alertas->hasPages())
             <div class="p-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $alertas->links() }}
+                {{ $alertas->links('components.pagination.agenda-style') }}
             </div>
         @endif
     </div>

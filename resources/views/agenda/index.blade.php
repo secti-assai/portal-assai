@@ -29,33 +29,8 @@
     </div>
 </section>
 
-{{-- ===== CARD: PLANTÃO DE FARMÁCIAS ===== --}}
-<section class="py-6 bg-white border-b border-slate-100">
-    <div class="container px-4 mx-auto max-w-7xl">
-          <a href="https://informativos.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer"
-              class="group flex flex-col sm:flex-row items-center gap-6 p-6 max-[360px]:p-5 md:p-8 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-[1.015] transition-all duration-300 overflow-hidden relative">
-            <div class="absolute -right-10 -top-10 w-52 h-52 bg-white/5 rounded-full pointer-events-none"></div>
-            <div class="absolute -right-4 -bottom-8 w-32 h-32 bg-white/5 rounded-full pointer-events-none"></div>
-            <div class="flex items-center justify-center w-20 h-20 bg-white/15 rounded-2xl shrink-0 group-hover:bg-white/25 transition-colors duration-300">
-                <svg class="w-11 h-11 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
-            </div>
-            <div class="flex-1 text-center sm:text-left">
-                <span class="inline-block px-3 py-1 mb-2 text-xs font-bold tracking-widest text-emerald-100 uppercase bg-white/15 rounded-full">Saúde &amp; Plantões</span>
-                <h2 class="text-2xl font-extrabold text-white md:text-3xl font-heading leading-tight">Plantão de Farmácias</h2>
-                <p class="mt-1 text-sm text-emerald-100 max-w-lg">Consulte rapidamente as farmácias abertas neste final de semana e feriados em Assaí.</p>
-            </div>
-            <div class="flex items-center justify-center gap-2 px-6 max-[360px]:px-4 py-3 font-bold text-center text-teal-700 transition-all duration-300 bg-white rounded-xl shrink-0 shadow-md group-hover:bg-emerald-50 group-hover:shadow-lg w-full sm:w-auto sm:whitespace-nowrap">
-                Acessar Calendário de Plantões
-                <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </div>
-        </a>
-    </div>
-</section>
-
 {{-- ===== CONTEÚDO PRINCIPAL ===== --}}
-<section class="py-10 bg-slate-100/50 md:py-14">
+<section class="py-10 bg-[#eaf3ff] md:py-14 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-7xl">
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -70,15 +45,15 @@
 
                 {{-- Legenda --}}
                 <div class="p-5 bg-white border shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl border-slate-200">
-                    <h3 class="mb-3 text-xs font-bold tracking-widest text-slate-500 uppercase">Legenda</h3>
+                    <h3 class="mb-3 text-xs font-bold tracking-widest text-slate-800 uppercase">Legenda</h3>
                     <ul class="space-y-2.5 text-sm">
                         <li class="flex items-center gap-2.5">
                             <span class="inline-block w-3 h-3 rounded-full bg-blue-900 shrink-0"></span>
-                            <span class="text-slate-600">Confirmado</span>
+                            <span class="text-slate-700">Confirmado</span>
                         </li>
                         <li class="flex items-center gap-2.5">
                             <span class="inline-block w-3 h-3 rounded-full bg-red-600 shrink-0"></span>
-                            <span class="text-slate-600">Cancelado</span>
+                            <span class="text-slate-700">Cancelado</span>
                         </li>
                     </ul>
                 </div>
@@ -87,6 +62,11 @@
 
             {{-- ===== FEED DE EVENTOS ===== --}}
             <div class="lg:col-span-3">
+
+                <div class="portal-section-title !items-start !text-left mb-6">
+                    <h2>Próximos Eventos</h2>
+                    <div class="bar"></div>
+                </div>
 
                 @if($eventos->isEmpty())
 
@@ -97,7 +77,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6"/>
                         </svg>
                         <h3 class="text-xl font-bold text-slate-600">Nenhum evento agendado</h3>
-                        <p class="mt-2 text-sm text-slate-500 max-w-sm">Não há eventos cadastrados para o período atual. Acompanhe as nossas redes sociais para ficar por dentro das novidades.</p>
+                        <p class="mt-2 text-sm text-slate-700 max-w-sm">Não há eventos cadastrados para o período atual. Acompanhe as nossas redes sociais para ficar por dentro das novidades.</p>
                     </div>
 
                 @else
@@ -117,7 +97,7 @@
                                     . ($evento->descricao ? '&details='  . rawurlencode(strip_tags($evento->descricao)) : '');
                             @endphp
 
-                            <article class="flex flex-col md:flex-row bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden {{ $isCancelado ? 'opacity-70' : '' }} transition-shadow hover:shadow-md">
+                            <article class="flex flex-col md:flex-row bg-slate-50 border border-slate-300/70 ring-1 ring-slate-200/70 shadow-sm rounded-2xl overflow-hidden {{ $isCancelado ? 'opacity-70' : '' }} transition-shadow hover:shadow-md">
 
                                 {{-- ── Bloco Esquerdo: Imagem + Data ── --}}
                                 <div class="relative w-full md:w-48 shrink-0 bg-slate-100 min-h-[140px] md:min-h-0">
@@ -128,15 +108,15 @@
                                              class="absolute inset-0 object-cover w-full h-full {{ $isCancelado ? 'grayscale opacity-60' : '' }}"
                                              loading="lazy" decoding="async">
                                     @else
-                                        <div class="absolute inset-0 flex items-center justify-center bg-blue-50">
-                                            <svg class="w-10 h-10 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="absolute inset-0 flex items-center justify-center bg-blue-100">
+                                            <svg class="w-10 h-10 text-blue-600 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                             </svg>
                                         </div>
                                     @endif
 
                                     {{-- Data flutuante reduzida --}}
-                                    <div class="absolute bottom-3 left-3 z-10 flex flex-col items-center justify-center w-12 h-12 bg-white rounded-lg shadow-md text-blue-900">
+                                    <div class="absolute bottom-3 left-3 z-10 flex flex-col items-center justify-center w-12 h-12 bg-white rounded-lg shadow-md ring-1 ring-blue-200 text-blue-900">
                                         <span class="text-[9px] font-extrabold uppercase tracking-wider leading-none opacity-70">{{ $evento->data_inicio->translatedFormat('M') }}</span>
                                         <span class="text-xl font-extrabold leading-none mt-0.5">{{ $evento->data_inicio->format('d') }}</span>
                                     </div>
@@ -155,12 +135,12 @@
                                     @endif
 
                                     {{-- Título --}}
-                                    <h2 class="text-lg md:text-xl font-bold leading-tight text-slate-800 mb-2">{{ $evento->titulo }}</h2>
+                                    <h2 class="text-lg md:text-xl font-extrabold leading-tight text-slate-900 mb-2">{{ $evento->titulo }}</h2>
 
                                     {{-- Metadados --}}
-                                    <ul class="flex flex-col gap-1.5 mb-3 text-xs md:text-sm text-slate-500">
+                                    <ul class="flex flex-col gap-1.5 mb-3 text-xs md:text-sm text-slate-700">
                                         <li class="flex items-start gap-2">
-                                            <svg class="w-4 h-4 shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            <svg class="w-4 h-4 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                             <span>
                                                 {{ $evento->data_inicio->translatedFormat('l, d \d\e F \d\e Y') }}
                                                 @if($evento->data_inicio->format('H:i') !== '00:00')
@@ -173,7 +153,7 @@
                                         </li>
                                         @if($evento->local)
                                         <li class="flex items-start gap-2">
-                                            <svg class="w-4 h-4 shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            <svg class="w-4 h-4 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                             <span>{{ $evento->local }}</span>
                                         </li>
                                         @endif
@@ -181,15 +161,15 @@
 
                                     {{-- Descrição --}}
                                     @if($evento->descricao)
-                                        <div class="prose prose-sm max-w-none text-slate-600 line-clamp-2 mb-4 text-[13px] leading-relaxed">
+                                        <div class="prose prose-sm max-w-none text-slate-700 line-clamp-2 mb-4 text-[13px] leading-relaxed">
                                             {!! strip_tags($evento->descricao) !!}
                                         </div>
                                     @endif
 
                                     {{-- Rodapé do card --}}
                                     <div class="mt-auto flex items-center justify-between gap-3 pt-3 border-t border-slate-100">
-                                        <a href="{{ $gcUrl }}" target="_blank" rel="noopener noreferrer"
-                                           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 rounded-md hover:bg-blue-100 transition-colors shrink-0">
+                                                     <a href="{{ $gcUrl }}" target="_blank" rel="noopener noreferrer"
+                                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-blue-800 bg-blue-100 border border-blue-200 rounded-md hover:bg-blue-200 transition-colors shrink-0">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                             Adicionar
                                         </a>
@@ -206,8 +186,40 @@
                     </div>
 
                     @if($eventos->hasPages())
-                        <div class="mt-8">
-                            {{ $eventos->links() }}
+                        <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
+                            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                <p class="text-sm text-slate-700">
+                                    Mostrando
+                                    <span class="font-bold text-slate-900">{{ $eventos->firstItem() }}</span>
+                                    a
+                                    <span class="font-bold text-slate-900">{{ $eventos->lastItem() }}</span>
+                                    de
+                                    <span class="font-bold text-slate-900">{{ $eventos->total() }}</span>
+                                    resultados
+                                </p>
+
+                                <nav class="flex flex-wrap items-center gap-2" aria-label="Paginação da agenda">
+                                    @if($eventos->onFirstPage())
+                                        <span class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-400 cursor-not-allowed">Anterior</span>
+                                    @else
+                                        <a href="{{ $eventos->previousPageUrl() }}" class="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Anterior</a>
+                                    @endif
+
+                                    @foreach($eventos->getUrlRange(1, $eventos->lastPage()) as $page => $url)
+                                        @if($page == $eventos->currentPage())
+                                            <span aria-current="page" class="inline-flex min-w-[2.25rem] items-center justify-center rounded-lg border border-blue-700 bg-blue-700 px-3 py-2 text-sm font-bold text-white">{{ $page }}</span>
+                                        @else
+                                            <a href="{{ $url }}" class="inline-flex min-w-[2.25rem] items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-800 hover:border-blue-200 transition-colors">{{ $page }}</a>
+                                        @endif
+                                    @endforeach
+
+                                    @if($eventos->hasMorePages())
+                                        <a href="{{ $eventos->nextPageUrl() }}" class="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Próxima</a>
+                                    @else
+                                        <span class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-400 cursor-not-allowed">Próxima</span>
+                                    @endif
+                                </nav>
+                            </div>
                         </div>
                     @endif
 
