@@ -17,12 +17,6 @@ return $sec;
 $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png');
 @endphp
 
-{{--
-    Configuração dos widgets Alpine.js via data-attributes.
-    Os arquivos widgets.js e navbar.js lêem estas URLs em vez de
-    depender de Blade inline, permitindo que funcionem corretamente
-    tanto quando incluídos via @include direto quanto via app.blade.php.
---}}
 <div id="portal-config" class="hidden"
     data-weather-url="{{ route('api.clima.atual') }}"
     data-duty-url="{{ route('api.plantao.hoje') }}"
@@ -30,11 +24,9 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
     data-logo-white="{{ asset('img/logo_branca.png') }}"
     data-logo-black="{{ asset('img/logo_preta.png') }}"></div>
 
-
-{{-- Define as classes iniciais da header baseado se é Home ou Interna --}}
 <header class="fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50 lg:bg-transparent lg:backdrop-blur-none lg:shadow-none lg:text-white lg:border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}" id="site-header">
 
-    {{-- TOP BAR (Sólida e Centralizada com o Container) --}}
+    {{-- TOP BAR --}}
     <div class="hidden lg:block bg-blue-900 border-b border-white/10 transition-colors duration-300">
         <div id="top-bar" class="container mx-auto flex items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans">
             <div class="flex items-center justify-center flex-wrap gap-3 text-white">
@@ -107,14 +99,18 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
         </button>
 
         {{-- Menu Desktop --}}
-        <nav class="hidden lg:flex items-center lg:gap-3 xl:gap-5 text-base font-medium transition-colors duration-300">
+        <nav class="hidden lg:flex items-center lg:gap-2.5 xl:gap-4 text-sm xl:text-base font-medium transition-colors duration-300">
 
-            <a href="{{ route('home') }}" class="transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('home') ? 'border-b-2 border-yellow-400' : '' }}">
+            <a href="{{ route('home') }}" class="py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('home') ? 'border-b-2 border-yellow-400' : '' }}">
                 Início
+            </a>
+            
+            <a href="{{ route('servicos.index') }}" class="py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('servicos.*') ? 'border-b-2 border-yellow-400' : '' }}">
+                Serviços
             </a>
 
             <div class="relative group py-2">
-                <button class="flex items-center gap-1 transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('pages.sobre') || request()->routeIs('pages.turismo') ? 'border-b-2 border-yellow-400' : '' }}">
+                <button class="flex items-center gap-1 py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('pages.sobre') || request()->routeIs('pages.turismo') ? 'border-b-2 border-yellow-400' : '' }}">
                     A Cidade
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -127,7 +123,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
             </div>
 
             <div class="relative group py-2">
-                <button class="flex items-center gap-1 transition-opacity hover:opacity-75 py-1 {{ request()->routeIs('secretarias.*') ? 'border-b-2 border-yellow-400' : '' }}">
+                <button class="flex items-center gap-1 py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('secretarias.*') ? 'border-b-2 border-yellow-400' : '' }}">
                     Secretarias
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -144,57 +140,98 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                 </div>
             </div>
 
-            <a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="transition-opacity hover:opacity-75">
-                Ouvidoria
-            </a>
+            {{-- DROPDOWN: Atendimento (Desktop) --}}
+            <div class="relative group py-2">
+                <button class="flex items-center gap-1 py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('contato.*') ? 'border-b-2 border-yellow-400' : '' }}">
+                    Atendimento
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="absolute left-0 top-full mt-0 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-hidden text-slate-700">
+                    <a href="https://sde.assai.pr.gov.br/sala" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 transition-colors">Sala do Empreendedor</a>
+                    <a href="{{ route('contato.index') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 transition-colors">Contato</a>
+                    <a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 transition-colors">Ouvidoria</a>
+                </div>
+            </div>
 
-            <a href="{{ route('pages.transparencia') }}" target="_blank" rel="noopener noreferrer"
-                class="ml-1 flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 transition-colors font-medium text-sm shadow border border-transparent">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-                Transparência
-            </a>
+            {{-- Dropdown Transparência & Diário Oficial (Desktop) --}}
+            <div class="relative group lg:ml-1 py-2">
+                <a href="{{ route('pages.transparencia') }}" class="flex items-center gap-1.5 px-3 xl:px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 transition-colors font-medium text-xs xl:text-sm shadow border border-transparent focus:outline-none">
+                    <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    Transparência
+                    <svg class="w-3 h-3 xl:w-3.5 xl:h-3.5 ml-0.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </a>
+
+                <div class="absolute right-0 top-full mt-0 w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-hidden text-slate-700 flex flex-col">
+                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-100 transition-colors">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 shrink-0">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        Diário Oficial
+                    </a>
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-emerald-50 hover:text-emerald-700 border-b border-slate-100 transition-colors">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 shrink-0">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        Portal da Transparência
+                    </a>
+
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-sky-50 hover:text-sky-700 transition-colors">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-600 shrink-0">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                        </div>
+                        E-SIC (Acesso à Informação)
+                    </a>
+                </div>
+            </div>
 
             <a href="https://gov.assai.pr.gov.br/cpf-check"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="ml-3 px-5 py-2 rounded-lg flex items-center font-medium text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900">
-                    Entrar no Gov.Assai
+                class="lg:ml-1 xl:ml-3 px-4 xl:px-5 py-2 rounded-lg flex items-center font-medium text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900 text-xs xl:text-sm whitespace-nowrap">
+                Entrar no Gov.Assai
                 <svg class="w-4 h-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
             </a>
         </nav>
-    </div>
 
-    {{-- Dropdown Mobile (padronizado com a Home) --}}
+    {{-- Dropdown Mobile --}}
     <aside id="mobile-drawer-nav" class="lg:hidden absolute top-full left-0 right-0 bg-white shadow-[0_10px_22px_rgba(15,23,42,0.12)] border-t border-slate-100 overflow-hidden opacity-0 invisible pointer-events-none transition-all duration-150" aria-hidden="true" aria-label="Menu principal mobile">
         <nav class="max-h-[72vh] overflow-y-auto px-4 pb-3" aria-label="Links principais">
             <ul class="list-none m-0 p-0 flex flex-col">
-                <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100" href="{{ route('home') }}">Início</a></li>
+                <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="{{ route('home') }}">Início</a></li>
 
-                <li class="mobile-nav-group">
-                    <button type="button" class="mobile-nav-toggle flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 text-left" data-submenu-target="mobile-submenu-cidade" aria-expanded="false">
+                <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="{{ route('servicos.index') }}">Serviços</a></li>
+
+                {{-- A Cidade (Mobile) --}}
+                <li x-data="{ open: false }" class="border-b border-slate-100">
+                    <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-yellow-500 transition-colors">
                         <span>A Cidade</span>
-                        <i class="fa-solid fa-chevron-down caret text-slate-500 text-sm transition-transform duration-200" aria-hidden="true"></i>
+                        <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                     </button>
-                    <ul id="mobile-submenu-cidade" class="mobile-submenu hidden list-none m-0 pb-2 border-b border-slate-100 max-h-60 overflow-y-auto">
-                        <li><a class="block text-slate-600 text-sm py-2 pl-2" href="{{ route('pages.sobre') }}">História e Perfil</a></li>
-                        <li><a class="block text-slate-600 text-sm py-2 pl-2" href="{{ route('pages.turismo') }}">Turismo</a></li>
+                    <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 rounded-b-lg">
+                        <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('pages.sobre') }}">História e Perfil</a></li>
+                        <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('pages.turismo') }}">Turismo</a></li>
                     </ul>
                 </li>
 
-                <li class="mobile-nav-group">
-                    <button type="button" class="mobile-nav-toggle flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 text-left" data-submenu-target="mobile-submenu-secretarias" aria-expanded="false">
+                {{-- Secretarias (Mobile) --}}
+                <li x-data="{ open: false }" class="border-b border-slate-100">
+                    <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-yellow-500 transition-colors">
                         <span>Secretarias</span>
-                        <i class="fa-solid fa-chevron-down caret text-slate-500 text-sm transition-transform duration-200" aria-hidden="true"></i>
+                        <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                     </button>
-                    <ul id="mobile-submenu-secretarias" class="mobile-submenu hidden list-none m-0 pb-2 border-b border-slate-100 max-h-64 overflow-y-auto">
-                        <li><a class="block text-slate-600 text-sm py-2 pl-2" href="{{ route('secretarias.index') }}">Todas as Secretarias</a></li>
+                    <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 max-h-[40vh] overflow-y-auto rounded-b-lg">
+                        <li><a class="block text-blue-700 font-semibold text-sm py-2.5 pl-3 border-l-2 border-blue-600 mb-1 hover:text-yellow-500 hover:border-yellow-500 transition-colors" href="{{ route('secretarias.index') }}">Todas as Secretarias</a></li>
                         @foreach($navSecretarias as $sec)
                         <li>
-                            <a class="block text-slate-600 text-sm py-2 pl-2" href="{{ route('secretarias.show', $sec->id) }}" title="{{ $sec->nome_menu }}">
+                            <a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('secretarias.show', $sec->id) }}" title="{{ $sec->nome_menu }}">
                                 {{ $sec->nome_menu }}
                             </a>
                         </li>
@@ -202,13 +239,46 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     </ul>
                 </li>
 
-                <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100" href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer">Ouvidoria</a></li>
-                <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100" href="{{ route('pages.transparencia') }}" target="_blank" rel="noopener noreferrer">Transparência</a></li>
-                <li class="pt-3">
+                {{-- DROPDOWN: Atendimento (Mobile) --}}
+                <li x-data="{ open: false }" class="border-b border-slate-100">
+                    <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-yellow-500 transition-colors">
+                        <span>Atendimento</span>
+                        <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 rounded-b-lg">
+                        <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="https://sde.assai.pr.gov.br/sala">Sala do Empreendedor</a></li>
+                        <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('contato.index') }}">Contato</a></li>
+                        <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer">Ouvidoria</a></li>
+                    </ul>
+                </li>
+
+                <li class="pt-4 pb-2 px-2 flex flex-col gap-3 border-b border-slate-100">
+                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 10h6M9 14h6M9 18h6"></path>
+                        </svg>
+                        Diário Oficial
+                    </a>
+
+                    <a href="{{ route('pages.transparencia') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Transparência
+                    </a>
+
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-sky-600 text-white rounded-xl hover:bg-sky-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
+                        <i class="fa-solid fa-file-circle-question w-4 h-4 text-center"></i>
+                        E-SIC (Acesso à Informação)
+                    </a>
+                </li>
+
+                <li class="pt-4">
                     <a href="https://gov.assai.pr.gov.br/cpf-check"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-semibold shadow-md transition-all active:scale-95">
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-yellow-400 font-bold shadow-md transition-all active:scale-95">
                         <span>Entrar no Gov.Assaí</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>

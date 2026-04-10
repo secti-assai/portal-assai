@@ -12,10 +12,11 @@ class Banner extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['titulo', 'subtitulo', 'link', 'ativo'];
+    protected $fillable = ['imagem', 'exibir_inteira', 'ativo'];
 
     protected $casts = [
         'ativo' => 'boolean',
+        'exibir_inteira' => 'boolean',
     ];
 
     public function getActivitylogOptions(): LogOptions

@@ -14,9 +14,8 @@ use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ServicoController;
+use App\Http\Controllers\ExecutivoController;
 use App\Http\Controllers\Admin\UserController;
-use App\Models\Banner;
-use App\Models\Servico;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
@@ -302,6 +301,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     });
 
     Route::middleware(['permission:gerir secretarias'])->group(function () {
+
+        // Módulo do Executivo (Prefeito e Vice)
+        Route::get('/executivos', [ExecutivoController::class, 'index'])->name('admin.executivos.index');
+        Route::put('/executivos/{id}', [ExecutivoController::class, 'update'])->name('admin.executivos.update');
+
         // Módulo de Secretarias
         Route::resource('secretarias', SecretariaController::class)->except(['show'])->names([
             'index'   => 'admin.secretarias.index',

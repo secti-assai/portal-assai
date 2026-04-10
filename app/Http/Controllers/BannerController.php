@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
@@ -12,15 +13,10 @@ class BannerController extends Controller
         $banners = Banner::query()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->string('search')->trim()->toString();
-
-                $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('titulo', 'like', "%{$search}%")
-                        ->orWhere('subtitulo', 'like', "%{$search}%");
-                });
+                $query->where('id', 'like', "%{$search}%");
             })
             ->when($request->filled('status'), function ($query) use ($request) {
                 $status = $request->string('status')->trim()->toString();
-
                 $query->where('ativo', $status === 'ativo');
             })
             ->orderBy('created_at', 'desc')
@@ -38,15 +34,14 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'titulo' => 'required|max:50', 
-            'subtitulo' => 'nullable|max:80',
-            'link' => 'nullable|url',
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
+        $imagePath = $request->file('imagem')->store('banners', 'public');
+
         Banner::create([
-            'titulo' => $request->titulo,
-            'subtitulo' => $request->subtitulo,
-            'link' => $request->link,
+            'imagem' => $imagePath,
+            'exibir_inteira' => $request->has('exibir_inteira'),
             'ativo' => $request->has('ativo'),
         ]);
 
@@ -64,16 +59,18 @@ class BannerController extends Controller
         $banner = Banner::findOrFail($id);
 
         $request->validate([
-            'titulo' => 'required|max:50', 
-            'subtitulo' => 'nullable|max:80',
-            'link' => 'nullable|url',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
-        $banner->titulo = $request->titulo;
-        $banner->subtitulo = $request->subtitulo;
-        $banner->link = $request->link;
-        $banner->ativo = $request->has('ativo');
+        if ($request->hasFile('imagem')) {
+            if ($banner->imagem && Storage::disk('public')->exists($banner->imagem)) {
+                Storage::disk('public')->delete($banner->imagem);
+            }
+            $banner->imagem = $request->file('imagem')->store('banners', 'public');
+        }
 
+        $banner->exibir_inteira = $request->has('exibir_inteira');
+        $banner->ativo = $request->has('ativo');
         $banner->save();
 
         return redirect()->route('admin.banners.index')->with('sucesso', 'Banner atualizado!');
@@ -82,6 +79,9 @@ class BannerController extends Controller
     public function destroy($id)
     {
         $banner = Banner::findOrFail($id);
+        if ($banner->imagem && Storage::disk('public')->exists($banner->imagem)) {
+            Storage::disk('public')->delete($banner->imagem);
+        }
         $banner->delete();
         return redirect()->route('admin.banners.index')->with('sucesso', 'Banner apagado!');
     }

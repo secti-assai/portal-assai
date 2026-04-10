@@ -28,34 +28,36 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.banners.update', $banner->id) }}" method="POST" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
+    <form action="{{ route('admin.banners.update', $banner->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
         @csrf
         @method('PUT')
 
         <div class="space-y-6 lg:col-span-2">
             <x-admin.panel class="space-y-6">
-                <x-admin.input
-                    name="titulo"
-                    label="Título Principal"
-                    :value="$banner->titulo"
-                    required="true"
-                    class="px-4 py-2.5 bg-slate-50 border-slate-200 rounded-lg focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                />
+                @if($banner->imagem)
+                    <div class="mb-4">
+                        <span class="block text-sm font-semibold text-slate-700 mb-2">Imagem Atual</span>
+                        <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner" class="w-full max-w-md rounded-lg shadow-sm border border-slate-200 object-contain bg-slate-100 h-32">
+                    </div>
+                @endif
 
-                <x-admin.input
-                    name="subtitulo"
-                    label="Subtítulo"
-                    :value="$banner->subtitulo"
-                    class="px-4 py-2.5 bg-slate-50 border-slate-200 rounded-lg focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                />
+                <div>
+                    <label for="imagem" class="block text-sm font-semibold text-slate-700 mb-2">Substituir Imagem</label>
+                    <input type="file" name="imagem" id="imagem" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
+                    <p class="mt-2 text-xs text-slate-500">Deixe em branco para manter a imagem atual.</p>
+                </div>
 
-                <x-admin.input
-                    type="url"
-                    name="link"
-                    label="Botão de Ação / Link de Destino"
-                    :value="$banner->link"
-                    class="px-4 py-2.5 bg-slate-50 border-slate-200 rounded-lg focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                />
+                <div class="pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" name="exibir_inteira" value="1" {{ $banner->exibir_inteira ? 'checked' : '' }} class="w-5 h-5 text-indigo-600 rounded bg-slate-100 border-slate-300 focus:ring-indigo-600 focus:ring-2 transition">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-indigo-600 transition">
+                            Modo Imagem Inteira (Sem cortes)
+                        </span>
+                    </label>
+                    <p class="mt-1 text-xs text-slate-500 pl-7">Ideal para panfletos e flyers onde todo o texto da imagem precisa ficar visível sem ser cortado pelo ajuste da tela.</p>
+                </div>
+
+
             </x-admin.panel>
         </div>
 

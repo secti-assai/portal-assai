@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([SecretariaSeeder::class]);
 
+        $this->call([ExecutivosSeeder::class]);
+
         // Banners do carrossel principal
         Banner::factory(3)->create();
         

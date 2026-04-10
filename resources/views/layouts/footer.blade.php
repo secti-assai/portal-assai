@@ -57,7 +57,7 @@
                     <ul class="space-y-3 text-sm font-medium text-slate-400">
                         <li><a href="https://conecta.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Conecta Assaí</a></li>
                         <li><a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Gov.Assaí</a></li>
-                        <li><a href="https://conecta.assai.pr.gov.br/servico/99" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">IPTU                        <a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Ouvidoria Municipal</a></a></li>
+                        <li><a href="https://conecta.assai.pr.gov.br/servico/99" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">IPTU</a></li>
                         <li><a href="https://e-gov.betha.com.br/e-nota/login.faces" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Nota Fiscal</a></li>
                         <li><a href="{{ route('servicos.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Serviços ao Cidadão</a></li>
                     </ul>
@@ -70,7 +70,7 @@
                 <nav aria-label="Navegação de Legislação">
                     <ul class="space-y-3 text-sm font-medium text-slate-400">
                         <li><a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Leis Municipais</a></li>
-                        <li><a href="https://www.assai.pr.gov.br/licitacoes" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Licitações</a></li>
+                        <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Licitações</a></li>
                         <li><a href="https://valedosol.assai.pr.gov.br/lgpd" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Política de Privacidade</a></li>
                         <li><a href="{{ route('pages.acessibilidade') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Acessibilidade</a></li>
                     </ul>
@@ -85,7 +85,7 @@
                         <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Portal da Transparência</a></li>
                         <li><a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Diário Oficial</a></li>
                         <li><a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Ouvidoria Municipal</a></li>
-                        <li><a href="https://assai.atende.net/subportal/e-sic" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">e-SIC</a></li>
+                        <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">e-SIC</a></li>
                     </ul>
                 </nav>
             </div>

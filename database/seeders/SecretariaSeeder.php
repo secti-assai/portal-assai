@@ -44,21 +44,25 @@ class SecretariaSeeder extends Seeder
                 'nome' => 'Secretaria de Agricultura, Abastecimento e Meio Ambiente',
                 'email' => 'agricultura@assai.pr.gov.br',
                 'nome_secretario' => 'Adilson Lopes',
+                'telefone' => '(43) 3262-0089',
             ],
             [
                 'nome' => 'Secretaria de Assistência Social',
                 'email' => 'smas@assai.pr.gov.br',
                 'nome_secretario' => 'Vera Lúcia Lourenço', 
+                'telefone' => '(43) 3262-1223',
             ],
             [
                 'nome' => 'Secretaria de Ciência Tecnologia e Inovação',
                 'email' => 'secti@assai.pr.gov.br',
                 'nome_secretario' => 'Igor Lima Freire Oliveira', 
+                'telefone' => '(43) 3262-0516',
             ],
             [
                 'nome' => 'Secretaria de Cultura e Turismo',
                 'email' => 'cultura@assai.pr.gov.br',
                 'nome_secretario' => 'Mariana Valéria Leonardi', 
+                'telefone' => '(43) 3262-3232'
             ],
             [
                 'nome' => 'Secretaria de Desenvolvimento Local',
@@ -69,11 +73,13 @@ class SecretariaSeeder extends Seeder
                 'nome' => 'Secretaria de Educação',
                 'email' => 'educacao@assai.pr.gov.br',
                 'nome_secretario' => 'Josiane Apª Santana Cheffer', 
+                'telefone' => '(43) 3262-8451'
             ],
             [
                 'nome' => 'Secretaria de Esporte e Lazer',
                 'email' => 'esporte@assai.pr.gov.br',
                 'nome_secretario' => 'Roberto Fernandes', 
+                'telefone' => '(43) 3262-1964'
             ],
             [
                 'nome' => 'Secretaria de Finanças',
@@ -84,21 +90,25 @@ class SecretariaSeeder extends Seeder
                 'nome' => 'Secretaria de Obras e Serviços',
                 'email' => 'obras@assai.pr.gov.br',
                 'nome_secretario' => 'Orlando Menegazzo Filho', 
+                'telefone' => '(43) 3262-0089'
             ],
             [
                 'nome' => 'Secretaria de Saúde',
                 'email' => 'saude@assai.pr.gov.br',
                 'nome_secretario' => 'Dylan Custódio ', 
+                'telefone' => '(43) 3262-8405'
             ],
             [
                 'nome' => 'Secretaria de Trabalho, Emprego e Geração de Renda',
                 'email' => 'trabalho@assai.pr.gov.br',
                 'nome_secretario' => 'Orlando Júnior', 
+                'telefone' => '(43) 3262-4958'
             ],
             [
                 'nome' => 'Secretaria Municipal de Segurança Alimentar e Nutrição',
                 'email' => 'ouvidoria@assai.pr.gov.br',
                 'nome_secretario' => 'Margareth Ferreira',
+                'telefone' => '(43) 3262-4349'
             ],
         ];
 
@@ -111,9 +121,9 @@ class SecretariaSeeder extends Seeder
                             'nome_secretario' => $secretaria['nome_secretario'],
                             'descricao' => "Página institucional da {$secretaria['nome']} do município de Assaí. Responsável pela formulação, planejamento e execução de políticas públicas correlatas à pasta, garantindo atendimento, transparência e eficiência para a população.",
                             'foto' => null,
-                            'telefone' => $telefonePadrao,
+                            'telefone' => $secretaria['telefone'] ?? $telefonePadrao,
                             'email' => $secretaria['email'],
-                            'endereco' => $enderecoPadrao,
+                            'endereco' => $secretaria['endereco'] ?? $enderecoPadrao
                         ]
                     );
                 }

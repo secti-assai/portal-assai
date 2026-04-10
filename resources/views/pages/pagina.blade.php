@@ -16,15 +16,36 @@
         </div>
     </div>
 
-    @php
-    $heroVideos = [ asset('videos/panorama.mp4') ];
+    <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[120] items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
+        <div class="flex flex-col items-center gap-5 px-6 text-center">
+            <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
+            <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
+                <span class="inline-block h-5 w-5 rounded-full border-2 border-white/35 border-t-white animate-spin" aria-hidden="true"></span>
+                Preparando experiência
+            </div>
+        </div>
+    </div>
 
+    @php
     $sugestoesBusca = collect($sugestoesIA ?? [
     'Emitir nota fiscal eletronica',
     'Consultar protocolo digital',
     'Agendar atendimento administrativo',
     'Solicitar matricula na rede municipal',
     ])->take(3);
+
+    $servicosPlMobile = [
+        ['titulo' => 'Nota Fiscal Pr. / ISS', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
+        ['titulo' => 'Alvará Web', 'icone' => 'fa-building-columns', 'link' => '#'],
+        ['titulo' => 'Holerite Online', 'icone' => 'fa-file-invoice', 'link' => '#'],
+        ['titulo' => 'ITBI', 'icone' => 'fa-house-circle-check', 'link' => '#'],
+        ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
+        ['titulo' => 'Portal da Transparência', 'icone' => 'fa-money-bill-trend-up', 'link' => '#'],
+        ['titulo' => 'Ouvidoria', 'icone' => 'fa-bullhorn', 'link' => '#'],
+        ['titulo' => 'Procon', 'icone' => 'fa-scale-balanced', 'link' => '#'],
+        ['titulo' => 'Diário Oficial', 'icone' => 'fa-book-bookmark', 'link' => '#'],
+        ['titulo' => 'Licitações', 'icone' => 'fa-file-contract', 'link' => '#'],
+    ];
 
     $calendarMesParam = request()->query('mes');
     $calendarMonth = null;
@@ -66,18 +87,17 @@
     $calendarMesProximo = $calendarMonth->copy()->addMonth()->format('Y-m');
     $calendarTituloMes = mb_strtolower($calendarMonth->locale('pt_BR')->translatedFormat('F Y'));
     @endphp
-
     {{-- ==========================================
-         MOBILE SECTION
+         HERO MOBILE
          ========================================== --}}
-    <section id="pl-mobile-home" class="lg:hidden">
+    <div class="lg:hidden pl-mobile-home">
 
         {{-- Hero --}}
         <div class="home-hero-mobile">
             <div class="home-hero-content">
                 <h1 class="hero-title">O QUE VOCÊ <strong>PRECISA?</strong></h1>
                 <form action="{{ route('busca.index') }}" method="GET" class="home-search-bar" role="search">
-                    <input class="wp-block-search__input" type="search" name="q" placeholder="Horário ônibus" required>
+                    <input id="busca-portal-mobile" class="wp-block-search__input" type="search" name="q" placeholder="Emitir Nota fiscal..." required>
                     <button class="wp-block-search__button" type="submit" aria-label="Pesquisar">
                         <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     </button>
@@ -85,6 +105,61 @@
             </div>
         </div>
 
+    </div>
+
+
+    {{-- HERO DESKTOP --}}
+    <section id="hero-oficial" class="hidden lg:block relative w-full overflow-hidden bg-slate-950 py-28 md:py-44">
+        <div class="absolute inset-0 z-0 bg-slate-950">
+            <video id="hero-video-lazy" class="w-full h-full object-cover object-center opacity-0 transition-opacity duration-1000" muted loop playsinline poster="{{ asset('img/Assai.jpg') }}" preload="none">
+                <source data-src="{{ asset('videos/panorama.mp4') }}" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-950/40 to-slate-900/60"></div>
+        </div>
+        <div class="relative z-10 container mx-auto max-w-4xl flex flex-col items-center justify-center px-4">
+            <h1 class="mb-6 text-3xl md:text-5xl font-extrabold text-white drop-shadow-md font-heading leading-tight text-center break-words">O QUE VOCÊ <strong>PRECISA?</strong></h1>
+            <form action="{{ route('busca.index') }}" method="GET" class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search">
+                <label for="busca-portal-fixo" class="sr-only">Buscar no portal</label>
+                <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input id="busca-portal-fixo" type="text" name="q" placeholder="Emitir Nota Fiscal..." required class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full">
+                <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
+                    Buscar
+                </button>
+            </form>
+            @if($sugestoesBusca->count() > 0)
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
+                @foreach($sugestoesBusca as $sugestao)
+                <a href="{{ route('busca.index', ['q' => $sugestao]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
+                    <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    {{ $sugestao }}
+                </a>
+                @endforeach
+            </div>
+            @endif
+        </div>
+        <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center">
+            <span class="hidden md:block mb-3 text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">Role para explorar</span>
+            <a href="#servicos-desktop" class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 text-white transition-all duration-300 border border-white/20 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 hover:scale-110 animate-bounce focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg"><svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg></a>
+        </div>
+    </section>
+
+
+
+
+
+
+    {{-- ==========================================
+         MOBILE SECTION
+         ========================================== --}}
+    <section class="lg:hidden pl-mobile-home">
         {{-- Mais Acessados --}}
         <section class="bg-white-section">
             <h2 class="section-title font-bold">Mais Acessados</h2>
@@ -92,34 +167,8 @@
 
                 @if(isset($servicos) && $servicos->count() > 0)
                 @foreach($servicos->take(8) as $servicoItem)
-                @php
-                $ancoraBalão = $loop->odd ? 'left-[-4px]' : 'right-[-4px]';
-                @endphp
-
-                <div x-data="{ open: false }" class="small-card group relative" @click.outside="open = false">
-                    <button
-                        @click.prevent="open = !open"
-                        type="button"
-                        class="absolute right-4 top-2 w-8 h-8 flex items-center justify-center text-[#006eb7] text-xl font-medium focus:outline-none z-20 bg-transparent rounded-full"
-                        style="font-family: 'Montserrat', sans-serif;"
-                        aria-label="Informações sobre o serviço">
-                        ?
-                    </button>
-
-                    <div
-                        x-show="open"
-                        x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 translate-y-2"
-                        x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-in duration-150"
-                        x-transition:leave-start="opacity-100 translate-y-0"
-                        x-transition:leave-end="opacity-0 translate-y-2"
-                        class="absolute top-11 {{ $ancoraBalão }} z-30 w-[220px] p-3.5 text-[0.8rem] leading-relaxed text-left text-white bg-[#11181d] rounded-xl shadow-2xl pointer-events-none"
-                        style="display: none;">
-                        {{ $servicoItem->descricao ?? 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
-                    </div>
-
-                    <a href="{{ route('servicos.acessar', $servicoItem->id) }}" target="_blank" rel="noopener" class="flex flex-col items-center w-full mt-2 px-1 z-0">
+                <div class="small-card group relative">
+                    <a href="{{ route('servicos.acessar', $servicoItem->id) }}" target="_blank" rel="noopener" class="flex flex-col items-center justify-center w-full h-full px-1 z-0 py-3">
                         @php
                         $iconeServico = !empty($servicoItem->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servicoItem->icone) : 'file-lines';
                         @endphp
@@ -130,29 +179,8 @@
                 @endforeach
                 @else
                 @foreach(collect($servicosPlMobile)->take(8) as $servicoItem)
-                @php
-                $ancoraBalão = $loop->odd ? 'left-[-4px]' : 'right-[-4px]';
-                @endphp
-
-                <div x-data="{ open: false }" class="small-card group relative" @click.outside="open = false">
-                    <button
-                        @click.prevent="open = !open"
-                        type="button"
-                        class="absolute right-4 top-2 w-8 h-8 flex items-center justify-center text-[#006eb7] text-xl font-medium focus:outline-none z-20 bg-transparent rounded-full"
-                        style="font-family: 'Montserrat', sans-serif;"
-                        aria-label="Informações">
-                        ?
-                    </button>
-
-                    <div
-                        x-show="open"
-                        x-transition
-                        class="absolute top-11 {{ $ancoraBalão }} z-30 w-[220px] p-3.5 text-[0.8rem] leading-relaxed text-left text-white bg-[#11181d] rounded-xl shadow-2xl pointer-events-none"
-                        style="display: none;">
-                        {{ $servicoItem['descricao'] }}
-                    </div>
-
-                    <a href="{{ $servicoItem['link'] }}" target="_blank" rel="noopener" class="flex flex-col items-center w-full mt-2 px-1 z-0">
+                <div class="small-card group relative">
+                    <a href="{{ $servicoItem['link'] }}" target="_blank" rel="noopener" class="flex flex-col items-center justify-center w-full h-full px-1 z-0 py-3">
                         <i class="fa-solid {{ $servicoItem['icone'] }} service-icon" aria-hidden="true"></i>
                         <h4 class="small-card-title">{{ $servicoItem['titulo'] }}</h4>
                     </a>
@@ -231,7 +259,7 @@
         </section>
 
         {{-- Calendário --}}
-        <section class="bg-gray-section" style="padding-top: 0;">
+        <section class="bg-gray-section" style="padding-top: 2.5rem;">
             <h2 class="section-title font-bold">Calendário de Eventos</h2>
 
             <div class="calendar-wrap">
@@ -286,106 +314,6 @@
     {{-- ==========================================
          DESKTOP SECTION
          ========================================== --}}
-
-    {{-- HERO DESKTOP --}}
-    <section id="hero-oficial" class="hidden lg:block relative w-full overflow-hidden bg-slate-950">
-
-        <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-slate-950">
-            <video id="hero-video-lazy"
-                class="hero-video-layer absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000"
-                autoplay muted loop playsinline preload="none">
-                <source data-src="{{ asset('videos/panorama.mp4') }}" type="video/mp4">
-            </video>
-        </div>
-
-        <div class="absolute inset-0 z-10 pointer-events-none" style="background-color: rgba(2, 6, 23, 0.70) !important; opacity: 1 !important;"></div>
-
-        <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[120] items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
-            <div class="flex flex-col items-center gap-5 px-6 text-center">
-                <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
-                <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
-                    <span class="inline-block h-5 w-5 rounded-full border-2 border-white/35 border-t-white animate-spin" aria-hidden="true"></span>
-                    Preparando experiência
-                </div>
-            </div>
-        </div>
-
-        <div class="relative z-30 w-full flex flex-col items-center justify-center pt-24 pb-20 md:pt-[196px] md:pb-[160px] px-4 sm:px-6 h-full">
-            <div class="w-full max-w-5xl flex flex-col justify-center">
-                @if(isset($banners) && $banners->count() > 0)
-                <div class="swiper swiper-hero-banners w-full">
-                    <div class="swiper-wrapper">
-                        @foreach($banners as $banner)
-                        <div class="swiper-slide bg-transparent flex flex-col items-center text-center justify-center px-1">
-                            <h2 class="w-full max-w-4xl mx-auto mb-2 sm:mb-4 text-lg sm:text-3xl md:text-5xl max-[360px]:text-base font-extrabold text-white break-words drop-shadow-lg font-heading leading-tight text-center">
-                                {{ $banner->titulo }}
-                            </h2>
-                            @if($banner->subtitulo)
-                            <p class="w-full max-w-2xl mx-auto mt-1 mb-5 text-xs sm:text-base md:text-lg font-medium text-blue-100 break-words drop-shadow font-sans max-[360px]:hidden line-clamp-3 leading-relaxed text-center">
-                                {{ $banner->subtitulo }}
-                            </p>
-                            @endif
-                            @if($banner->link)
-                            <a href="{{ $banner->link }}" class="inline-flex items-center px-6 py-2.5 text-sm md:text-base font-bold bg-blue-600 hover:bg-blue-50 text-white rounded-full transition-all shadow-lg hover:-translate-y-0.5 font-heading">
-                                Saiba mais
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
-                            </a>
-                            @endif
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="w-full max-w-3xl mx-auto mt-10 md:mt-14 shrink-0">
-                    <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search">
-                        <label for="busca-portal-fixo" class="sr-only">Buscar no portal</label>
-                        <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <input id="busca-portal-fixo" type="text" name="q" placeholder="O que você procura?" required class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full">
-                        <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
-                            Buscar
-                        </button>
-                    </form>
-
-                    @if($sugestoesBusca->count() > 0)
-                    <div class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
-                        @foreach($sugestoesBusca as $sugestao)
-                        <a href="{{ route('busca.index', ['q' => $sugestao]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
-                            <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            {{ $sugestao }}
-                        </a>
-                        @endforeach
-                    </div>
-                    @endif
-                </div>
-                @else
-                <div class="text-center flex flex-col items-center justify-center">
-                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 border border-white/30 shadow-sm">Portal Oficial</span>
-                    <h2 class="mb-3 text-2xl sm:text-3xl md:text-5xl max-[360px]:text-[1.6rem] font-extrabold text-white drop-shadow-md font-heading leading-tight max-w-4xl mx-auto text-center break-words">Prefeitura de <span class="text-yellow-400">Assaí</span></h2>
-                    <p class="text-sm sm:text-base md:text-lg text-slate-100 font-medium max-w-3xl mx-auto drop-shadow-md mb-4 leading-relaxed text-center">Acesse serviços públicos, acompanhe ações da Prefeitura e encontre informações oficiais com rapidez.</p>
-                    <a href="{{ route('busca.index') }}" class="inline-flex items-center px-6 py-2.5 mb-10 text-sm md:text-base font-bold bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-lg hover:-translate-y-0.5 font-heading mx-auto">Saiba mais<svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg></a>
-                </div>
-                @endif
-            </div>
-        </div>
-
-        <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center">
-            <span class="hidden md:block mb-3 text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">Role para explorar</span>
-            <a href="#servicos-desktop" class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 text-white transition-all duration-300 border border-white/20 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 hover:scale-110 animate-bounce focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg"><svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg></a>
-        </div>
-    </section>
-
     {{-- SERVIÇOS (DESKTOP) --}}
     <section id="servicos-desktop" class="hidden lg:block py-16 bg-white border-b border-[#e2e8f0]" style="scroll-margin-top: calc(var(--site-header-height, 130px) + 16px);">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
@@ -394,19 +322,10 @@
             @if(isset($servicos) && $servicos->count() > 0)
             <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach($servicos->take(10) as $servico)
-                <a href="{{ route('servicos.acessar', $servico->id) }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-
-                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 bg-[#11181d] text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-20 pointer-events-none shadow-xl leading-relaxed">
-                        {{ $servico->descricao ?? 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[#11181d]"></div>
-                    </div>
-
-                    <span class="absolute right-4 top-2 text-[#006eb7] text-xl font-medium" style="font-family: 'Montserrat', sans-serif;">?</span>
-
+                <a href="{{ route('servicos.acessar', $servico->id) }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
                     @php
                     $iconeServico = !empty($servico->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servico->icone) : 'file-lines';
                     @endphp
-
                     <i class="fa-solid fa-{{ $iconeServico }} text-6xl text-[#006eb7] mb-3 mt-2"></i>
                     <h3 class="text-lg font-medium text-[#006eb7] leading-snug">{{ $servico->titulo }}</h3>
                 </a>
@@ -421,14 +340,7 @@
             @else
             <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach(collect($servicosPlMobile)->take(10) as $servico)
-                <a href="{{ $servico['link'] }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-
-                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 bg-[#11181d] text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-20 pointer-events-none shadow-xl leading-relaxed">
-                        {{ $servico['descricao'] }}
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[#11181d]"></div>
-                    </div>
-
-                    <span class="absolute right-4 top-2 text-[#006eb7] text-xl font-medium" style="font-family: 'Montserrat', sans-serif;">?</span>
+                <a href="{{ $servico['link'] }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
                     <i class="fa-solid {{ $servico['icone'] }} text-4xl text-[#006eb7] mb-3 mt-2"></i>
                     <h3 class="text-[0.95rem] font-medium text-[#006eb7] leading-snug">{{ $servico['titulo'] }}</h3>
                 </a>
@@ -592,4 +504,148 @@
         </div>
     </section>
 </main>
+
+{{-- Script para o efeito de Digitação nos placeholders de busca --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchIdeas = [
+            "Emitir Nota Fiscal...",
+            "IPTU...",
+            "Telefones...",
+            "Ouvidoria municipal..."
+        ];
+        
+        const inputs = [
+            document.getElementById('busca-portal-mobile'),
+            document.getElementById('busca-portal-fixo')
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        const typingSpeed = 100;
+        const erasingSpeed = 50;
+        const delayBetweenPhrases = 2000;
+        const delayBeforeRestart = 500;
+
+        function typePlaceholder() {
+            const currentPhrase = searchIdeas[phraseIndex];
+
+            inputs.forEach(input => {
+                if (input) {
+                    if (isDeleting) {
+                        input.setAttribute('placeholder', currentPhrase.substring(0, charIndex - 1));
+                    } else {
+                        input.setAttribute('placeholder', currentPhrase.substring(0, charIndex + 1));
+                    }
+                }
+            });
+
+            if (isDeleting) {
+                charIndex--;
+            } else {
+                charIndex++;
+            }
+
+            let loopDelay = isDeleting ? erasingSpeed : typingSpeed;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                loopDelay = delayBetweenPhrases;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % searchIdeas.length;
+                loopDelay = delayBeforeRestart;
+            }
+
+            setTimeout(typePlaceholder, loopDelay);
+        }
+
+        if (inputs[0] || inputs[1]) {
+            setTimeout(typePlaceholder, delayBetweenPhrases);
+        }
+    });
+</script>
+    @if(isset($banners) && $banners->count() > 0)
+    {{-- ==========================================
+         BANNER POPUP MODAL
+         ========================================== --}}
+    <div id="banner-popup-modal" class="fixed inset-0 items-center justify-center bg-black/80 backdrop-blur-sm p-4 z-[9999] opacity-0 pointer-events-none flex transition-all duration-500" aria-modal="true" role="dialog">
+        <div class="relative w-full max-w-4xl bg-slate-950 rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-500" id="banner-popup-content">
+            
+            {{-- Close Button --}}
+            <button type="button" class="absolute top-3 right-3 md:top-4 md:right-4 z-[10000] text-white bg-black/40 hover:bg-black/80 rounded-full w-10 h-10 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-white/50" onclick="closeBannerPopup()" aria-label="Fechar Banner">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            {{-- Slider (Uses existing .swiper-banners class for app.js initialization) --}}
+            <div class="swiper swiper-banners w-full bg-slate-950 group">
+                <div class="swiper-wrapper flex items-start">
+                    @foreach($banners as $banner)
+                    <div class="swiper-slide w-full flex justify-center items-center relative overflow-hidden bg-slate-950">
+                        <picture class="block w-full flex justify-center bg-slate-950">
+                            @if($banner->link)
+                            <a href="{{ $banner->link }}" target="{{ $banner->abrir_nova_guia ? '_blank' : '_self' }}" class="w-full flex justify-center outline-none">
+                            @endif
+                                <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner Informativo" class="w-full {{ $banner->exibir_inteira ? 'object-contain' : 'object-cover' }} max-h-[75vh] mx-auto block" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
+                            @if($banner->link)
+                            </a>
+                            @endif
+                        </picture>
+                    </div>
+                    @endforeach
+                </div>
+
+                @if($banners->count() > 1)
+                <div class="swiper-pagination !bottom-4 drop-shadow-md z-[10000]"></div>
+                <div class="swiper-button-prev banner-swiper-prev !text-white opacity-100 md:!opacity-0 md:group-hover:!opacity-100 transition-opacity !left-2 md:!left-4 drop-shadow-md mix-blend-difference flex z-[10000]"></div>
+                <div class="swiper-button-next banner-swiper-next !text-white opacity-100 md:!opacity-0 md:group-hover:!opacity-100 transition-opacity !right-2 md:!right-4 drop-shadow-md mix-blend-difference flex z-[10000]"></div>
+                @endif
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function initBannerPopup() {
+            // TEST MODE: Check temporariamente desativado para facilitar testes visuais
+            // if (!sessionStorage.getItem('portal_banner_popup_v2')) {
+                setTimeout(() => {
+                    const modal = document.getElementById('banner-popup-modal');
+                    const content = document.getElementById('banner-popup-content');
+                    if (modal && content) {
+                        modal.classList.remove('opacity-0', 'pointer-events-none');
+                        content.classList.remove('scale-95');
+                        content.classList.add('scale-100');
+                        
+                        document.body.style.overflow = 'hidden';
+                    }
+                }, 1500); 
+            // }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBannerPopup);
+        } else {
+            initBannerPopup();
+        }
+
+        function closeBannerPopup() {
+            const modal = document.getElementById('banner-popup-modal');
+            const content = document.getElementById('banner-popup-content');
+            if (modal && content) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                }, 500);
+
+                sessionStorage.setItem('portal_banner_popup_v2', 'true');
+            }
+        }
+    </script>
+    @endif
 @endsection
