@@ -11,7 +11,6 @@ use App\Models\Alerta;
 use App\Models\Banner;
 use App\Models\Secretaria;
 use App\Models\ServicoAcesso;
-use App\Models\TelefoneUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -20,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Support\Concerns\NormalizesSearch;
+use App\Models\Executivo;
 
 class PortalController extends Controller
 {
@@ -28,17 +28,13 @@ class PortalController extends Controller
     // Página inicial
     public function index()
     {
-        $banners = Cache::remember('home_banners', 3600, function () {
-            return Banner::where('ativo', true)
-                ->orderBy('created_at', 'desc')
-                ->get();
-        });
+        $banners = Banner::where('ativo', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $alertasAtivos = Cache::remember('home_alertas', 3600, function () {
-            return Alerta::where('ativo', true)
-                ->orderBy('created_at', 'desc')
-                ->get();
-        });
+        $alertasAtivos = Alerta::where('ativo', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Notícias da home sem cache para refletir publicação imediatamente.
         $noticias = Noticia::publicadas()
@@ -47,37 +43,31 @@ class PortalController extends Controller
             ->take(3)
             ->get();
 
-        $eventos = Cache::remember('home_eventos_v4', 3600, function () {
-            return Evento::futurosPublicos()
+        $eventos = Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
-                ->take(4)
-                ->get();
-        });
+            ->take(4)
+            ->get();
 
-        $programas = Cache::remember('home_programas', 3600, function () {
-            $destaques = Programa::where('ativo', true)
-                ->where('destaque', true)
-                ->latest()
-                ->take(3)
-                ->get();
+        $destaques = Programa::where('ativo', true)
+            ->where('destaque', true)
+            ->latest()
+            ->take(3)
+            ->get();
 
-            return $destaques->count() >= 3
-                ? $destaques
-                : $destaques->concat(
-                    Programa::where('ativo', true)
-                        ->where('destaque', false)
-                        ->latest()
-                        ->take(3 - $destaques->count())
-                        ->get()
-                );
-        });
+        $programas = $destaques->count() >= 3
+            ? $destaques
+            : $destaques->concat(
+                Programa::where('ativo', true)
+                    ->where('destaque', false)
+                    ->latest()
+                    ->take(3 - $destaques->count())
+                    ->get()
+            );
 
-        $servicos = Cache::remember('home_servicos', 3600, function () {
-            return Servico::where('ativo', true)
-                ->orderByDesc('acessos')
-                ->take(10)
-                ->get();
-        });
+        $servicos = Servico::where('ativo', true)
+            ->orderByDesc('acessos')
+            ->take(10)
+            ->get();
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -119,8 +109,8 @@ class PortalController extends Controller
             $termo = $request->q;
             $query->where(function ($q) use ($termo) {
                 $q->whereRaw('unaccent(titulo) ILIKE unaccent(?)', ["%{$termo}%"])
-                  ->orWhereRaw('unaccent(resumo) ILIKE unaccent(?)', ["%{$termo}%"])
-                  ->orWhereRaw('unaccent(conteudo) ILIKE unaccent(?)', ["%{$termo}%"]);
+                    ->orWhereRaw('unaccent(resumo) ILIKE unaccent(?)', ["%{$termo}%"])
+                    ->orWhereRaw('unaccent(conteudo) ILIKE unaccent(?)', ["%{$termo}%"]);
             });
         }
 
@@ -155,8 +145,13 @@ class PortalController extends Controller
             ->all();
 
         $calendarData = compact(
-            'dataBase', 'mesAnterior', 'mesProximo', 'tituloMes',
-            'diasNoMes', 'primeiroDiaSemana', 'diasComEvento'
+            'dataBase',
+            'mesAnterior',
+            'mesProximo',
+            'tituloMes',
+            'diasNoMes',
+            'primeiroDiaSemana',
+            'diasComEvento'
         );
 
         if ($request->ajax()) {
@@ -199,7 +194,11 @@ class PortalController extends Controller
 
         $secretarias = $query->orderBy('nome', 'asc')->paginate(12)->withQueryString();
 
-        return view('secretarias.index', compact('secretarias'));
+        $gestores = Executivo::all();
+        $prefeito = $gestores->where('cargo', 'Prefeito')->first();
+        $vicePrefeito = $gestores->where('cargo', 'Vice-Prefeito')->first();
+
+        return view('secretarias.index', compact('secretarias', 'prefeito', 'vicePrefeito'));
     }
 
     public function servicos(Request $request)
@@ -255,36 +254,46 @@ class PortalController extends Controller
 
     public function contato()
     {
-        return view('pages.contato');
+        // Coleta as secretarias que possuem e-mail cadastrado, em ordem alfabética
+        $secretarias = Secretaria::whereNotNull('email')
+            ->orderBy('nome', 'asc')
+            ->get(['nome', 'email']);
+
+        return view('pages.contato', compact('secretarias'));
     }
 
     public function enviarContato(Request $request)
     {
         $validated = $request->validate([
-            'nome'     => 'required|string|min:2|max:120',
-            'email'    => 'required|email|max:120',
-            'assunto'  => 'required|string|min:3|max:200',
-            'mensagem' => 'required|string|min:10|max:4000',
+            'nome'         => 'required|string|min:2|max:120',
+            'email'        => 'required|email|max:120',
+            'destinatario' => 'required|email', // <-- Novo campo validado
+            'assunto'      => 'required|string|min:3|max:200',
+            'mensagem'     => 'required|string|min:10|max:4000',
         ], [
-            'nome.required'     => 'O nome é obrigatório.',
-            'nome.min'          => 'O nome deve ter pelo menos 2 caracteres.',
-            'email.required'    => 'O e-mail é obrigatório.',
-            'email.email'       => 'Informe um e-mail válido.',
-            'assunto.required'  => 'O assunto é obrigatório.',
-            'assunto.min'       => 'O assunto deve ter pelo menos 3 caracteres.',
-            'mensagem.required' => 'A mensagem é obrigatória.',
-            'mensagem.min'      => 'A mensagem deve ter pelo menos 10 caracteres.',
-            'mensagem.max'      => 'A mensagem pode ter no máximo 4000 caracteres.',
+            'nome.required'         => 'O nome é obrigatório.',
+            'nome.min'              => 'O nome deve ter pelo menos 2 caracteres.',
+            'email.required'        => 'O e-mail é obrigatório.',
+            'email.email'           => 'Informe um e-mail válido.',
+            'destinatario.required' => 'Selecione o setor de destino.', // <-- Nova mensagem
+            'destinatario.email'    => 'Setor de destino inválido.',    // <-- Nova mensagem
+            'assunto.required'      => 'O assunto é obrigatório.',
+            'assunto.min'           => 'O assunto deve ter pelo menos 3 caracteres.',
+            'mensagem.required'     => 'A mensagem é obrigatória.',
+            'mensagem.min'          => 'A mensagem deve ter pelo menos 10 caracteres.',
+            'mensagem.max'          => 'A mensagem pode ter no máximo 4000 caracteres.',
         ]);
 
         try {
-            Mail::to(config('services.contato.to_address'))->send(new ContatoSiteMail($validated));
+            // Substitui a variável estática do config() pelo e-mail selecionado pelo usuário
+            Mail::to($validated['destinatario'])->send(new ContatoSiteMail($validated));
         } catch (\Throwable $exception) {
             Log::error('Falha ao enviar formulário de contato do portal.', [
-                'erro' => $exception->getMessage(),
-                'nome' => $validated['nome'] ?? null,
-                'email' => $validated['email'] ?? null,
-                'assunto' => $validated['assunto'] ?? null,
+                'erro'         => $exception->getMessage(),
+                'nome'         => $validated['nome'] ?? null,
+                'email'        => $validated['email'] ?? null,
+                'destinatario' => $validated['destinatario'] ?? null,
+                'assunto'      => $validated['assunto'] ?? null,
             ]);
 
             return back()
@@ -292,12 +301,29 @@ class PortalController extends Controller
                 ->with('error', 'Não foi possível enviar sua mensagem no momento. Tente novamente em instantes.');
         }
 
-        return back()->with('success', 'Mensagem enviada com sucesso! Entraremos em contato em breve.');
+        return back()->with('success', 'Mensagem enviada com sucesso! O setor responsável entrará em contato em breve.');
     }
 
-    public function contatoStore(Request $request)
+    public function storeContato(Request $request)
     {
-        return $this->enviarContato($request);
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'destinatario' => 'required|email', // Validação estrita do payload do select
+            'assunto' => 'required|string|max:255',
+            'mensagem' => 'required|string|min:10',
+        ]);
+
+        // O endereço de e-mail selecionado é utilizado na classe Mail (Mailable)
+        $emailDestino = $validated['destinatario'];
+
+        try {
+            Mail::to($emailDestino)->send(new ContatoSiteMail($validated));
+
+            return redirect()->back()->with('success', 'Mensagem enviada com sucesso para o departamento selecionado.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withInput()->with('error', 'Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.');
+        }
     }
 
     public function programas()

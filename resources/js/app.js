@@ -120,10 +120,11 @@ document.addEventListener('DOMContentLoaded', function () {
        Só revela a home após o vídeo estar pronto e tocando
        ========================================================================== */
     var lazyVideo = document.getElementById('hero-video-lazy');
-    if (lazyVideo) {
-        var homeMain = document.getElementById('home-main');
-        var heroLoader = document.getElementById('hero-video-loader');
-        var mobileHeroLoader = document.getElementById('hero-mobile-loader');
+    var homeMain = document.getElementById('home-main');
+    var heroLoader = document.getElementById('hero-video-loader');
+    var mobileHeroLoader = document.getElementById('hero-mobile-loader');
+
+    if (homeMain && (heroLoader || mobileHeroLoader || lazyVideo)) {
         var siteHeader = document.getElementById('site-header');
         var viewportQuery = window.matchMedia('(max-width: 1023px)');
         var isMobileViewport = viewportQuery.matches;
@@ -286,8 +287,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             hasRevealedHome = true;
 
-            lazyVideo.classList.remove('opacity-0');
-            lazyVideo.classList.add('opacity-80');
+            if (lazyVideo) {
+                lazyVideo.classList.remove('opacity-0');
+                lazyVideo.classList.add('opacity-80');
+            }
 
             if (homeMain) {
                 homeMain.classList.remove('opacity-0');
@@ -309,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         var hydrateSources = function () {
+            if (!lazyVideo) return;
             var sources = lazyVideo.querySelectorAll('source');
             sources.forEach(function (videoSource) {
                 if (videoSource.dataset.src && !videoSource.src) {
@@ -320,6 +324,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var startVideoLazy = function () {
             if (hasInitializedVideo) return;
             hasInitializedVideo = true;
+
+            if (!lazyVideo) {
+                revealHome();
+                return;
+            }
 
             hydrateSources();
 
@@ -352,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 9000);
         };
 
-        if ('IntersectionObserver' in window) {
+        if (lazyVideo && 'IntersectionObserver' in window) {
             var lazyVideoObserver = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {

@@ -11,10 +11,10 @@
         <svg class="absolute w-full h-full opacity-40 text-blue-800" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.5" />
                 </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#grid-pattern)"/>
+            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
         </svg>
         <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-950 to-transparent"></div>
     </div>
@@ -33,12 +33,12 @@
 <section class="py-12 bg-[#f8fbff] md:py-16 border-y border-blue-100/70">
     <div class="container px-4 mx-auto max-w-7xl">
 
-    <div class="portal-section-title">
-        <h2>Contatos Oficiais</h2>
-        <div class="bar"></div>
-    </div>
+        <div class="portal-section-title">
+            <h2>Contatos Oficiais</h2>
+            <div class="bar"></div>
+        </div>
 
-    {{-- ── TIER 1: Institucional ── --}}
+        {{-- ── TIER 1: Institucional ── --}}
         <div class="mb-10">
             <div class="flex items-center gap-3 mb-5">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold tracking-wider uppercase text-yellow-700 bg-yellow-100 rounded-full">
@@ -159,31 +159,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-slate-700">Administração e RH</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-slate-700">Secretaria de Administração e Recursos Humanos</h3>
                     <p class="text-sm text-slate-600 mb-3 flex-1">Gestão de pessoas e processos administrativos da Prefeitura.</p>
                     <a href="mailto:adm@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
                         adm@assai.pr.gov.br
-                    </a>
-                    <div class="flex items-center gap-1.5 mt-2">
-                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <a href="tel:+554332621313" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-1313</a>
-                    </div>
-                </div>
-
-                {{-- Departamento de Licitação --}}
-                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1.5 bg-slate-500"></div>
-                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-slate-600 rounded-2xl ring-2 ring-slate-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-slate-700">Departamento de Licitação</h3>
-                    <p class="text-sm text-slate-600 mb-3 flex-1">Compras públicas, contratos e processos licitatórios.</p>
-                    <a href="mailto:licitacao@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
-                        licitacao@assai.pr.gov.br
                     </a>
                     <div class="flex items-center gap-1.5 mt-2">
                         <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,7 +238,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Assistência Social</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Assistência Social</h3>
                     <p class="text-sm text-slate-600 mb-3 flex-1">Programas sociais e atendimento ao cidadão em situação de vulnerabilidade.</p>
                     <a href="mailto:smas@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
                         smas@assai.pr.gov.br
@@ -280,7 +259,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Agricultura e Meio Ambiente</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Agricultura e Meio Ambiente</h3>
                     <p class="text-sm text-slate-600 mb-3 flex-1">Agropecuária, meio ambiente e abastecimento alimentar.</p>
                     <a href="mailto:agricultura@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
                         agricultura@assai.pr.gov.br
@@ -356,9 +335,251 @@
                     </div>
                 </div>
 
+                {{-- Secretaria de Obras e Serviços --}}
+                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
+                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-blue-600 rounded-2xl ring-2 ring-blue-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Obras e Serviços</h3>
+                    <p class="text-sm text-slate-600 mb-3 flex-1">Infraestrutura urbana, manutenção e serviços públicos municipais.</p>
+                    <a href="mailto:obras@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
+                        obras@assai.pr.gov.br
+                    </a>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href="tel:+554332620089" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-0089</a>
+                    </div>
+                </div>
+
+                {{-- Secretaria de Esporte e Lazer --}}
+                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
+                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-blue-600 rounded-2xl ring-2 ring-blue-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Esporte e Lazer</h3>
+                    <p class="text-sm text-slate-600 mb-3 flex-1">Promoção de esportes, lazer e atividades recreativas municipais.</p>
+                    <a href="mailto:esporte@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
+                        esporte@assai.pr.gov.br
+                    </a>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href="tel:+554332621964" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-1964</a>
+                    </div>
+                </div>
+
+                {{-- Secretaria de Desenvolvimento Local --}}
+                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
+                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-blue-600 rounded-2xl ring-2 ring-blue-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Desenvolvimento Local</h3>
+                    <p class="text-sm text-slate-600 mb-3 flex-1">Fomento ao desenvolvimento econômico, empreendedorismo e geração de emprego.</p>
+                    <a href="mailto:desenvolvimento@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
+                        desenvolvimento@assai.pr.gov.br
+                    </a>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href="tel:+554332621313" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-1313</a>
+                    </div>
+                </div>
+
+                {{-- Secretaria Municipal de Segurança Alimentar e Nutrição --}}
+                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
+                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-blue-600 rounded-2xl ring-2 ring-blue-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria Municipal de Segurança Alimentar e Nutrição</h3>
+                    <p class="text-sm text-slate-600 mb-3 flex-1">Políticas de segurança alimentar, nutrição e combate à fome.</p>
+                    <a href="mailto:ouvidoria@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
+                        ouvidoria@assai.pr.gov.br
+                    </a>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href="tel:+554332624349" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-4349</a>
+                    </div>
+                </div>
+
+                {{-- Secretaria de Trabalho, Emprego e Geração de Renda --}}
+                <div class="group relative flex flex-col p-6 bg-white border border-slate-300/70 ring-1 ring-slate-200/70 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
+                    <div class="flex items-center justify-center w-12 h-12 mb-4 bg-blue-600 rounded-2xl ring-2 ring-blue-100 shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 font-heading transition-colors duration-300 group-hover:text-blue-700">Secretaria de Trabalho, Emprego e Geração de Renda</h3>
+                    <p class="text-sm text-slate-600 mb-3 flex-1">Intermediação de mão de obra, qualificação e políticas de emprego.</p>
+                    <a href="mailto:trabalho@assai.pr.gov.br" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">
+                        trabalho@assai.pr.gov.br
+                    </a>
+                    <div class="flex items-center gap-1.5 mt-2">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href="tel:+554332624958" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline break-all transition-colors">(43) 3262-4958</a>
+                    </div>
+                </div>
+
             </div>
         </div>
 
+        {{-- ── TIER 4: Telefones Úteis e Emergência ── --}}
+        <div class="mt-12 mb-4">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold tracking-wider uppercase text-red-700 bg-red-100 rounded-full shadow-sm">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Telefones Úteis e Emergência
+                </span>
+                <div class="flex-1 h-px bg-red-200"></div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {{-- URGÊNCIA/EMERGÊNCIA --}}
+                <a href="tel:192" class="group flex items-center gap-4 p-4 bg-white border border-red-200 ring-1 ring-red-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    {{-- Alterado: A cor padrão do SVG é definida explicitamente na própria tag SVG via classe text-* --}}
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 text-red-600 text-2xl">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-red-700 transition-colors">SAMU (Ambulância)</h3>
+                        <p class="text-lg font-black text-red-600 font-heading">192</p>
+                    </div>
+                </a>
+
+                <a href="tel:193" class="group flex items-center gap-4 p-4 bg-white border border-red-200 ring-1 ring-red-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 text-red-600 text-2xl">
+                        <i class="fa-solid fa-fire"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-red-700 transition-colors">Corpo de Bombeiros</h3>
+                        <p class="text-lg font-black text-red-600 font-heading">193</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621234" class="group flex items-center gap-4 p-4 bg-white border border-red-200 ring-1 ring-red-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 text-red-600 text-2xl">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-red-700 transition-colors">Pronto Socorro</h3>
+                        <p class="text-lg font-black text-red-600 font-heading">3262-1234</p>
+                    </div>
+                </a>
+
+                <a href="tel:190" class="group flex items-center gap-4 p-4 bg-white border border-red-200 ring-1 ring-red-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 text-red-600 text-2xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-red-700 transition-colors">Polícia Militar</h3>
+                        <p class="text-lg font-black text-red-600 font-heading">190</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621441" class="group flex items-center gap-4 p-4 bg-white border border-red-200 ring-1 ring-red-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 text-red-600 text-2xl">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-red-700 transition-colors">Polícia Civil</h3>
+                        <p class="text-lg font-black text-red-600 font-heading">3262-1441</p>
+                    </div>
+                </a>
+                
+                {{-- SERVIÇOS PÚBLICOS --}}
+                <a href="tel:08005100116" class="group flex items-center gap-4 p-4 bg-white border border-yellow-200 ring-1 ring-yellow-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-yellow-100 text-yellow-700 text-2xl">
+                        <i class="fa-solid fa-bolt"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-yellow-700 transition-colors">COPEL</h3>
+                        <p class="text-lg font-black text-yellow-600 font-heading">0800 51 00 116</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621202" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-droplet"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">SANEPAR</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-1202</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621155" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-id-card-clip"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">DETRAN</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-1155</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621156" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-bus"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">Terminal Rodoviário</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-1156</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621313" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-landmark"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">Prefeitura Municipal</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-1313</p>
+                    </div>
+                </a>
+
+                <a href="tel:32621414" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-gavel"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">Câmara Municipal</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-1414</p>
+                    </div>
+                </a>
+
+                <a href="tel:32623201" class="group flex items-center gap-4 p-4 bg-white border border-blue-200 ring-1 ring-blue-50 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <span class="flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">Fórum</h3>
+                        <p class="text-lg font-black text-blue-600 font-heading">3262-3201</p>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -443,6 +664,47 @@
                             </div>
                         </div>
 
+                        {{-- Setor de Destino (Novo Campo) --}}
+                        <div class="mb-5">
+                            <label for="destinatario" class="block mb-1.5 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                Setor de Destino <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select
+                                    id="destinatario"
+                                    name="destinatario"
+                                    required
+                                    class="w-full px-4 py-3 text-sm text-slate-800 bg-slate-100/50 border appearance-none rounded-xl transition focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 focus:ring-offset-2 focus:bg-white {{ $errors->has('destinatario') ? 'border-red-400 bg-red-50' : 'border-slate-200' }}">
+                                    <option value="" disabled {{ old('destinatario') ? '' : 'selected' }}>Selecione o setor desejado...</option>
+
+                                    {{-- Ouvidoria como opção primária estática --}}
+                                    <option value="ouvidoria@assai.pr.gov.br" {{ old('destinatario') == 'ouvidoria@assai.pr.gov.br' ? 'selected' : '' }}>
+                                        Ouvidoria Municipal (Padrão)
+                                    </option>
+
+                                    {{-- Iteração de Secretarias Dinâmicas --}}
+                                    @if(isset($secretarias))
+                                    @foreach($secretarias as $secretaria)
+                                    @if($secretaria->email)
+                                    <option value="{{ $secretaria->email }}" {{ old('destinatario') == $secretaria->email ? 'selected' : '' }}>
+                                        {{ $secretaria->nome }}
+                                    </option>
+                                    @endif
+                                    @endforeach
+                                    @endif
+                                </select>
+                                {{-- Ícone Customizado para Select --}}
+                                <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('destinatario')
+                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         {{-- Assunto --}}
                         <div class="mb-5">
                             <label for="assunto" class="block mb-1.5 text-xs font-semibold text-slate-600 uppercase tracking-wider">
@@ -476,11 +738,9 @@
                             @enderror
                         </div>
 
-                        <button type="submit"
-                            class="inline-flex items-center gap-2 px-8 py-3 text-sm font-bold text-white bg-blue-700 rounded-xl hover:bg-blue-800 active:scale-95 transition shadow-md hover:shadow-xl transition-all duration-300">
+                        <button type="submit" class="inline-flex items-center gap-2 px-8 py-3 text-sm font-bold text-white bg-blue-700 rounded-xl hover:bg-blue-800 active:scale-95 transition shadow-md hover:shadow-xl transition-all duration-300">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                             Enviar mensagem
                         </button>

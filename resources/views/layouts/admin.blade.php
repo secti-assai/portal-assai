@@ -97,6 +97,16 @@
             @endcan
 
             @can('gerir secretarias')
+            <a href="{{ route('admin.executivos.index') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.executivos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                Executivo (Prefeito)
+            </a>
+            @endcan
+
+            @can('gerir secretarias')
             <a href="{{ route('admin.secretarias.index') }}"
                 class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.secretarias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,6 +169,7 @@
                         <a href="{{ route('admin.programas.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Programas</a>
                         @endcan
                         @can('gerir secretarias')
+                        <a href="{{ route('admin.executivos.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Executivo</a>
                         <a href="{{ route('admin.secretarias.index') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Secretarias</a>
                         @endcan
                         @can('gerir servicos')
