@@ -87,7 +87,7 @@
 
         {{-- Mais Acessados --}}
         <section class="bg-white-section">
-            <h2 class="section-title">Mais Acessados</h2>
+            <h2 class="section-title font-bold">Mais Acessados</h2>
             <div class="small-cards-grid">
 
                 @if(isset($servicos) && $servicos->count() > 0)
@@ -169,8 +169,8 @@
         </section>
 
         {{-- Fique Ligado (Swiper Mobile) --}}
-        <section class="bg-white-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
-            <h2 class="section-title mb-6">Fique ligado</h2>
+        <section class="bg-gray-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
+            <h2 class="section-title mb-6 font-bold">Fique ligado</h2>
             @if(isset($programas) && $programas->count() > 0)
             <div class="px-4 w-full">
                 <div class="swiper swiper-fique-ligado h-[360px] w-full rounded-[16px] shadow-md overflow-hidden relative">
@@ -202,8 +202,8 @@
         </section>
 
         {{-- Últimas Notícias --}}
-        <section class="bg-gray-section">
-            <h2 class="section-title">Últimas Notícias</h2>
+        <section class="bg-white-section">
+            <h2 class="section-title font-bold">Últimas Notícias</h2>
             <div class="mobile-news-grid">
                 @if(isset($noticias) && $noticias->count() > 0)
                 @foreach($noticias->take(3) as $noticia)
@@ -232,7 +232,7 @@
 
         {{-- Calendário --}}
         <section class="bg-gray-section" style="padding-top: 0;">
-            <h2 class="section-title">Calendário de Eventos</h2>
+            <h2 class="section-title font-bold">Calendário de Eventos</h2>
 
             <div class="calendar-wrap">
                 <div class="calendar-head">
@@ -389,7 +389,7 @@
     {{-- SERVIÇOS (DESKTOP) --}}
     <section id="servicos-desktop" class="hidden lg:block py-16 bg-white border-b border-[#e2e8f0]" style="scroll-margin-top: calc(var(--site-header-height, 130px) + 16px);">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <h2 class="text-[1.72rem] font-light text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>
+            <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>
 
             @if(isset($servicos) && $servicos->count() > 0)
             <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
@@ -444,9 +444,9 @@
     </section>
 
     {{-- PROGRAMAS E AÇÕES (Swiper Desktop) --}}
-    <section id="programas-desktop" class="hidden lg:block pb-16 pt-10 bg-white">
+    <section id="programas-desktop" class="hidden lg:block pb-16 pt-10 bg-[#eef1f5]">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <h2 class="text-[1.72rem] font-light text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
+            <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
 
             @if(isset($programas) && $programas->count() > 0)
             <div class="relative h-[520px] w-full rounded-[22px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
@@ -483,14 +483,14 @@
     </section>
 
     {{-- NOTÍCIAS (DESKTOP) --}}
-    <section id="noticias-desktop" class="hidden lg:block py-16 bg-[#eef1f5]">
+    <section id="noticias-desktop" class="hidden lg:block py-16 bg-white">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <h2 class="text-[1.72rem] font-light text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Últimas Notícias</h2>
+            <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Últimas Notícias</h2>
 
             @if(isset($noticias) && $noticias->count() > 0)
             <div class="grid grid-cols-3 gap-6">
                 @foreach($noticias->take(3) as $noticia)
-                <article class="relative rounded-[16px] overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.08)] group h-[460px] bg-white">
+                <article class="relative rounded-[16px] overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.08)] group h-[460px] bg-slate-50">
                     <a href="{{ route('noticias.show', $noticia->slug) }}" class="block w-full h-full outline-none focus-within:ring-4 focus-within:ring-blue-500 focus-within:ring-inset">
                         <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $noticia->titulo }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-[#020617]/10 to-transparent pointer-events-none"></div>
@@ -527,7 +527,7 @@
     {{-- AGENDA (DESKTOP) --}}
     <section id="agenda-desktop" class="hidden lg:block py-16 bg-[#eef1f5]">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <h2 class="text-[1.72rem] font-light text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Calendário de Eventos</h2>
+            <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Calendário de Eventos</h2>
 
             <div class="grid grid-cols-12 gap-8 items-start">
 

@@ -515,7 +515,7 @@ h6,
     #pl-mobile-home .section-title {
         font-family: 'Montserrat', sans-serif;
         font-size: clamp(1.55rem, 5.2vw, 1.72rem);
-        font-weight: 300;
+        font-weight: 700 !important;
         text-align: center;
         margin: 0 0 1.5rem;
         color: #4a5c6a;
