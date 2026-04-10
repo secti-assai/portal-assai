@@ -26,19 +26,6 @@
     'Solicitar matricula na rede municipal',
     ])->take(3);
 
-    $servicosPlMobile = [
-    ['titulo' => 'Lista de Espera para CEMAI', 'descricao' => 'Consulte informações sobre inscrições e vagas disponíveis nas creches municipais de Pedro Leopoldo.', 'link' => '#', 'icone' => 'fa-baby'],
-    ['titulo' => 'Vagas de Emprego', 'descricao' => 'Veja as vagas de emprego atualizadas pelo SINE e saiba como se candidatar.', 'link' => '#', 'icone' => 'fa-briefcase'],
-    ['titulo' => 'Coleta de Lixo', 'descricao' => 'Confira aqui os locais e horários das coletas de lixo domiciliar e seletiva.', 'link' => '#', 'icone' => 'fa-trash-can'],
-    ['titulo' => 'Concursos e Proc. Seletivos', 'descricao' => 'Acompanhe editais, inscrições e resultados dos processos seletivos da administração municipal.', 'link' => '#', 'icone' => 'fa-file-circle-check'],
-    ['titulo' => 'Multas de Trânsito', 'descricao' => 'Consulte infrações e como realizar pagamento ou recurso de multas.', 'link' => '#', 'icone' => 'fa-car-burst'],
-    ['titulo' => 'IPTU', 'descricao' => 'Emita guias, consulte débitos e obtenha informações sobre o IPTU.', 'link' => '#', 'icone' => 'fa-file-invoice-dollar'],
-    ['titulo' => 'Iluminação Pública', 'descricao' => 'Solicite troca de lâmpadas queimadas e falhas na iluminação pública.', 'link' => '#', 'icone' => 'fa-lightbulb'],
-    ['titulo' => 'Horário de Ônibus', 'descricao' => 'Confira horários e itinerários do transporte coletivo municipal.', 'link' => '#', 'icone' => 'fa-bus'],
-    ['titulo' => 'Telefones Úteis', 'descricao' => 'Encontre contatos importantes de serviços públicos e emergenciais da cidade.', 'link' => '#', 'icone' => 'fa-phone'],
-    ['titulo' => 'Ouvidoria', 'descricao' => 'Saiba como registrar sugestões, elogios, solicitações ou denúncias.', 'link' => '#', 'icone' => 'fa-circle-info'],
-    ];
-
     $calendarMesParam = request()->query('mes');
     $calendarMonth = null;
 
@@ -81,7 +68,7 @@
     @endphp
 
     {{-- ==========================================
-         MOBILE SECTION (ESTILO PEDRO LEOPOLDO)
+         MOBILE SECTION
          ========================================== --}}
     <section id="pl-mobile-home" class="lg:hidden">
 
@@ -110,8 +97,6 @@
                 @endphp
 
                 <div x-data="{ open: false }" class="small-card group relative" @click.outside="open = false">
-
-                    {{-- Botão de Interrogação --}}
                     <button
                         @click.prevent="open = !open"
                         type="button"
@@ -121,7 +106,6 @@
                         ?
                     </button>
 
-                    {{-- Balão de Descrição (Sem Seta) --}}
                     <div
                         x-show="open"
                         x-transition:enter="transition ease-out duration-200"
@@ -135,8 +119,7 @@
                         {{ $servicoItem->descricao ?? 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
                     </div>
 
-                    {{-- Link do Card --}}
-                    <a href="{{ $servicoItem->url_acesso ?? $servicoItem->link ?? '#' }}" target="_blank" rel="noopener" class="flex flex-col items-center w-full mt-2 px-1 z-0">
+                    <a href="{{ route('servicos.acessar', $servicoItem->id) }}" target="_blank" rel="noopener" class="flex flex-col items-center w-full mt-2 px-1 z-0">
                         @php
                         $iconeServico = !empty($servicoItem->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servicoItem->icone) : 'file-lines';
                         @endphp
@@ -145,17 +128,13 @@
                     </a>
                 </div>
                 @endforeach
-
                 @else
-                {{-- Bloco Secundário (Fallback de Dados) --}}
                 @foreach(collect($servicosPlMobile)->take(8) as $servicoItem)
                 @php
                 $ancoraBalão = $loop->odd ? 'left-[-4px]' : 'right-[-4px]';
                 @endphp
 
                 <div x-data="{ open: false }" class="small-card group relative" @click.outside="open = false">
-
-                    {{-- Botão de Interrogação --}}
                     <button
                         @click.prevent="open = !open"
                         type="button"
@@ -165,7 +144,6 @@
                         ?
                     </button>
 
-                    {{-- Balão de Descrição (Sem Seta) --}}
                     <div
                         x-show="open"
                         x-transition
@@ -181,7 +159,6 @@
                 </div>
                 @endforeach
                 @endif
-
             </div>
 
             <div class="all-btn-wrapper">
@@ -191,26 +168,37 @@
             </div>
         </section>
 
-        {{-- Fique Ligado --}}
-        <section class="bg-white-section" style="padding-top: 0; padding-bottom: 1.5rem;">
-            <h2 class="section-title">Fique ligado</h2>
+        {{-- Fique Ligado (Swiper Mobile) --}}
+        <section class="bg-white-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
+            <h2 class="section-title mb-6">Fique ligado</h2>
             @if(isset($programas) && $programas->count() > 0)
-            <div class="glide__slides">
-                @foreach($programas->take(3) as $programa)
-                <a href="{{ $programa->link ?? '#' }}" class="glide__slide relative h-[320px] overflow-hidden rounded-2xl group bg-slate-100 shadow-md">
-                    <img src="{{ $programa->imagem ? asset('storage/' . $programa->imagem) : asset('img/Assai.jpg') }}" alt="" loading="lazy" class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 pointer-events-none"></div>
-                    <span class="absolute bottom-0 left-0 w-full p-5 bg-white/10 backdrop-blur-lg border-t border-white/30 z-10 block text-sm font-bold leading-snug text-white font-heading drop-shadow-md">{{ Str::limit(ucfirst(Str::lower($programa->titulo)), 66) }}</span>
-                </a>
-                @endforeach
+            <div class="px-4 w-full">
+                <div class="swiper swiper-fique-ligado h-[360px] w-full rounded-[16px] shadow-md overflow-hidden relative">
+                    <div class="swiper-wrapper">
+                        @foreach($programas as $programa)
+                        <div class="swiper-slide relative h-[360px] bg-slate-100">
+                            <a href="{{ route('programas.show', $programa) }}" class="block w-full h-full">
+                                <img src="{{ $programa->imagem ? asset('storage/' . $programa->imagem) : asset('img/Assai.jpg') }}" alt="{{ $programa->titulo }}" loading="lazy" class="absolute inset-0 object-cover w-full h-full">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-0 left-0 w-full p-4 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10 flex flex-col justify-end">
+                                    <h3 class="text-xl font-bold text-white leading-snug drop-shadow-lg text-center w-full flex justify-center items-center" style="font-family: 'Montserrat', sans-serif;">{{ Str::limit($programa->titulo, 70) }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <div class="swiper-pagination !bottom-3"></div>
+                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
+                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
+                </div>
             </div>
-            <div class="all-btn-wrapper">
-                <a href="{{ route('programas.index') }}" class="all-btn">
+            <div class="mt-8 flex justify-center w-full pb-4">
+                <a href="{{ route('programas.index') }}" class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-sm font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
                     <i class="fa-solid fa-bullhorn"></i> Ver Todos Programas
                 </a>
             </div>
             @endif
-
         </section>
 
         {{-- Últimas Notícias --}}
@@ -296,10 +284,10 @@
     </section>
 
     {{-- ==========================================
-         DESKTOP SECTION (ALINHADO COM MOBILE)
+         DESKTOP SECTION
          ========================================== --}}
 
-    {{-- HERO DESKTOP (MANTIDO INTACTO) --}}
+    {{-- HERO DESKTOP --}}
     <section id="hero-oficial" class="hidden lg:block relative w-full overflow-hidden bg-slate-950">
 
         <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-slate-950">
@@ -312,7 +300,7 @@
 
         <div class="absolute inset-0 z-10 pointer-events-none" style="background-color: rgba(2, 6, 23, 0.70) !important; opacity: 1 !important;"></div>
 
-        <div id="hero-video-loader" class="fixed inset-0 z-[120] flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
+        <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[120] items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
             <div class="flex flex-col items-center gap-5 px-6 text-center">
                 <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
                 <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
@@ -406,9 +394,8 @@
             @if(isset($servicos) && $servicos->count() > 0)
             <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach($servicos->take(10) as $servico)
-                <a href="{{ $servico->url_acesso ?? $servico->link ?? '#' }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
+                <a href="{{ route('servicos.acessar', $servico->id) }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
 
-                    {{-- Tooltip Escuro (Surge no Hover) --}}
                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 bg-[#11181d] text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-20 pointer-events-none shadow-xl leading-relaxed">
                         {{ $servico->descricao ?? 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
                         <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[#11181d]"></div>
@@ -436,7 +423,6 @@
                 @foreach(collect($servicosPlMobile)->take(10) as $servico)
                 <a href="{{ $servico['link'] }}" target="_blank" rel="noopener" class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
 
-                    {{-- Tooltip Escuro (Surge no Hover) --}}
                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 bg-[#11181d] text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-20 pointer-events-none shadow-xl leading-relaxed">
                         {{ $servico['descricao'] }}
                         <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[#11181d]"></div>
@@ -457,25 +443,37 @@
         </div>
     </section>
 
-    {{-- PROGRAMAS E AÇÕES (DESKTOP) --}}
-    <section id="programas-desktop" class="hidden lg:block pb-16 pt-4 bg-white">
+    {{-- PROGRAMAS E AÇÕES (Swiper Desktop) --}}
+    <section id="programas-desktop" class="hidden lg:block pb-16 pt-10 bg-white">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
             <h2 class="text-[1.72rem] font-light text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
 
             @if(isset($programas) && $programas->count() > 0)
-            <div class="grid grid-cols-3 gap-6">
-                @foreach($programas->take(3) as $programa)
-                <a href="{{ $programa->link ?? '#' }}" class="relative rounded-[16px] overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.08)] group h-[340px] bg-white">
-                    <img src="{{ $programa->imagem ? asset('storage/' . $programa->imagem) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $programa->titulo }}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-[#020617]/10 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-6 bg-white/10 backdrop-blur-md border-t border-white/30 z-10">
-                        <h3 class="text-lg font-semibold text-white leading-snug drop-shadow-md" style="font-family: 'Montserrat', sans-serif;">{{ $programa->titulo }}</h3>
+            <div class="relative h-[520px] w-full rounded-[22px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
+                <div class="swiper swiper-fique-ligado h-[520px] w-full">
+                    <div class="swiper-wrapper">
+                        @foreach($programas as $programa)
+                        <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
+                            <a href="{{ route('programas.show', $programa) }}" class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
+                                <img src="{{ $programa->imagem ? asset('storage/' . $programa->imagem) : asset('img/Assai.jpg') }}" alt="{{ $programa->titulo }}" loading="lazy" class="absolute inset-0 object-cover w-full h-full">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10">
+                                    <h3 class="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg max-w-4xl mx-auto text-center" style="font-family: 'Montserrat', sans-serif;">
+                                        {{ $programa->titulo }}
+                                    </h3>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
                     </div>
-                </a>
-                @endforeach
+
+                    <div class="swiper-pagination !bottom-5"></div>
+                    <div class="swiper-button-prev program-swiper-arrow !text-[#0b2f57]"></div>
+                    <div class="swiper-button-next program-swiper-arrow !text-[#0b2f57]"></div>
+                </div>
             </div>
 
-            <div class="mt-10 flex justify-center">
+            <div class="mt-10 flex justify-center w-full">
                 <a href="{{ route('programas.index') }}" class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
                     <i class="fa-solid fa-bullhorn"></i> Ver Todos Programas
                 </a>
@@ -497,11 +495,9 @@
                         <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $noticia->titulo }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-[#020617]/10 to-transparent pointer-events-none"></div>
 
-                        {{-- Caixa de Vidro Inferior com a transição sanfona no hover --}}
                         <div class="absolute bottom-0 left-0 w-full p-6 bg-white/10 backdrop-blur-md border-t border-white/30 z-10 flex flex-col justify-end transition-all duration-500">
                             <h3 class="text-[1.05rem] font-semibold text-white leading-snug drop-shadow-md" style="font-family: 'Montserrat', sans-serif;">{{ ucfirst(Str::lower($noticia->titulo)) }}</h3>
 
-                            {{-- Conteúdo Revelado no Hover --}}
                             <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out mt-2">
                                 <div class="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">
                                     <p class="pt-2 text-[13px] leading-relaxed text-gray-100 font-sans line-clamp-4 mb-4">

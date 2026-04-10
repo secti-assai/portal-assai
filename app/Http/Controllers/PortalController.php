@@ -231,7 +231,12 @@ class PortalController extends Controller
         $servico = Servico::findOrFail($id);
         $servico->increment('acessos');
         ServicoAcesso::create(['servico_id' => $servico->id]);
-        $destino = $servico->url_acesso ?? $servico->link ?? route('servicos.index');
+        $destino = trim((string) ($servico->url_acesso ?? $servico->link ?? ''));
+
+        if ($destino === '' || $destino === '#') {
+            return redirect()->back();
+        }
+
         return redirect($destino);
     }
 
