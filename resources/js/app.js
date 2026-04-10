@@ -115,34 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     htmlTopResetObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
 
-    // Fail-safe global: evita overlay preso da home em navegadores mobile/desktop mode.
-    const forceHideHeroLoader = function (loaderEl) {
-        if (!loaderEl) return;
-        loaderEl.classList.add('hidden', 'opacity-0', 'pointer-events-none');
-        loaderEl.style.display = 'none';
-        loaderEl.style.opacity = '0';
-        loaderEl.style.pointerEvents = 'none';
-        loaderEl.setAttribute('aria-hidden', 'true');
-    };
-
-    const forceHideAllHeroLoaders = function () {
-        forceHideHeroLoader(document.getElementById('hero-mobile-loader'));
-        forceHideHeroLoader(document.getElementById('hero-video-loader'));
-    };
-
-    if (document.getElementById('home-main')) {
-        setTimeout(forceHideAllHeroLoaders, 2600);
-        setTimeout(forceHideAllHeroLoaders, 4200);
-        setTimeout(forceHideAllHeroLoaders, 6500);
-
-        window.addEventListener('pageshow', forceHideAllHeroLoaders, { once: true });
-        document.addEventListener('visibilitychange', function () {
-            if (document.visibilityState === 'visible') {
-                forceHideAllHeroLoaders();
-            }
-        });
-    }
-
     /* ==========================================================================
        HERO VIDEO LAZY LOAD (Home)
        Só revela a home após o vídeo estar pronto e tocando
@@ -153,9 +125,32 @@ document.addEventListener('DOMContentLoaded', function () {
         var heroLoader = document.getElementById('hero-video-loader');
         var mobileHeroLoader = document.getElementById('hero-mobile-loader');
         var siteHeader = document.getElementById('site-header');
-        var isMobileViewport = window.matchMedia('(max-width: 1023px)').matches;
+        var viewportQuery = window.matchMedia('(max-width: 1023px)');
+        var isMobileViewport = viewportQuery.matches;
+        var viewportReloadKey = 'portal_assai_viewport_reload_at';
         var hasInitializedVideo = false;
         var hasRevealedHome = false;
+
+        var reloadOnViewportModeChange = function () {
+            var now = Date.now();
+            var lastReloadAt = 0;
+
+            try {
+                lastReloadAt = Number(window.sessionStorage.getItem(viewportReloadKey) || '0');
+                if (now - lastReloadAt < 1500) return;
+                window.sessionStorage.setItem(viewportReloadKey, String(now));
+            } catch (e) {
+                // Ignora falhas de storage e segue com reload.
+            }
+
+            window.location.reload();
+        };
+
+        if (viewportQuery.addEventListener) {
+            viewportQuery.addEventListener('change', reloadOnViewportModeChange);
+        } else if (viewportQuery.addListener) {
+            viewportQuery.addListener(reloadOnViewportModeChange);
+        }
 
         var enforceHomeTopReset = function () {
             document.documentElement.style.marginTop = '0px';
@@ -264,6 +259,11 @@ document.addEventListener('DOMContentLoaded', function () {
             siteHeader.classList.add('opacity-0', 'pointer-events-none');
         }
 
+        // Garantir que o loader desktop fique visível
+        if (heroLoader) {
+            heroLoader.classList.remove('hidden');
+        }
+
         var bodyStyleObserver = new MutationObserver(function () {
             enforceHomeTopReset();
         });
@@ -274,10 +274,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         htmlStyleObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
 
-        window.addEventListener('resize', enforceHomeTopReset, { passive: true });
+        var desktopLoaderStartAt = Date.now();
+        var desktopLoaderMinDurationMs = 1400;
 
         var revealHome = function () {
             if (hasRevealedHome) return;
+            var elapsed = Date.now() - desktopLoaderStartAt;
+            if (elapsed < desktopLoaderMinDurationMs) {
+                setTimeout(revealHome, desktopLoaderMinDurationMs - elapsed);
+                return;
+            }
             hasRevealedHome = true;
 
             lazyVideo.classList.remove('opacity-0');
@@ -320,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var tryPlayAndReveal = function () {
                 lazyVideo.play()
                     .then(function () {
-                        revealHome();
+                        // A liberação principal ocorre no evento "playing".
                     })
                     .catch(function () {
                         revealHome();
@@ -328,7 +334,9 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             lazyVideo.addEventListener('playing', revealHome, { once: true });
-            lazyVideo.addEventListener('error', revealHome, { once: true });
+            lazyVideo.addEventListener('error', function () {
+                revealHome();
+            }, { once: true });
 
             if (lazyVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
                 tryPlayAndReveal();
@@ -339,7 +347,9 @@ document.addEventListener('DOMContentLoaded', function () {
             lazyVideo.load();
 
             // Fail-safe para nunca travar a página em conexões ruins
-            setTimeout(revealHome, 12000);
+            setTimeout(function () {
+                revealHome();
+            }, 9000);
         };
 
         if ('IntersectionObserver' in window) {
@@ -353,8 +363,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { root: null, rootMargin: '120px 0px', threshold: 0.01 });
 
             lazyVideoObserver.observe(lazyVideo);
+            
+            // Fallback: se o vídeo já está em viewport no load, inicia imediatamente
+            setTimeout(function () {
+                if (!hasInitializedVideo) {
+                    startVideoLazy();
+                }
+            }, 100);
         } else {
             startVideoLazy();
+        }
+
+        // Trigger alternativo: quando a seção desktop fica visível (para "visualizar como computador")
+        var heroOficial = document.getElementById('hero-oficial');
+        if (heroOficial && 'IntersectionObserver' in window) {
+            var heroSectionObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting && !hasInitializedVideo) {
+                        startVideoLazy();
+                    }
+                });
+            }, { root: null, threshold: 0.1 });
+
+            heroSectionObserver.observe(heroOficial);
         }
     }
 

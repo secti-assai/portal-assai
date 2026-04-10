@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.addEventListener('click', (event) => {
                 if (!root.classList.contains('menu-open')) return;
-                
+
                 const clickedInsideMenu = drawer.contains(event.target);
                 const clickedTrigger = trigger.contains(event.target);
 
@@ -107,4 +107,51 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const fiqueLigadoSwipers = document.querySelectorAll('.swiper-fique-ligado');
+
+    fiqueLigadoSwipers.forEach(function (swiperElement) {
+        if (swiperElement.offsetParent === null) {
+            return;
+        }
+
+        const slideCount = swiperElement.querySelectorAll('.swiper-slide').length;
+        if (slideCount === 0) {
+            return;
+        }
+
+        const canLoop = slideCount > 1;
+
+        new Swiper(swiperElement, {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: canLoop,
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            autoplay: canLoop
+                ? {
+                    delay: 6000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: false,
+                }
+                : false,
+            observer: true,
+            observeParents: true,
+            watchOverflow: true,
+            allowTouchMove: false,
+            simulateTouch: false,
+            pagination: {
+                el: swiperElement.querySelector('.swiper-pagination'),
+                clickable: false,
+            },
+            navigation: {
+                nextEl: swiperElement.querySelector('.swiper-button-next'),
+                prevEl: swiperElement.querySelector('.swiper-button-prev'),
+            },
+        });
+    });
 });
