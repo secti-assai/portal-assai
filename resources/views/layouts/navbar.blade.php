@@ -1,4 +1,4 @@
-﻿@php
+@php
 // Verifica se estamos na página inicial para aplicar o efeito transparente.
 $isHome = request()->routeIs('home');
 
@@ -181,11 +181,25 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                         Portal da Transparência
                     </a>
 
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-sky-50 hover:text-sky-700 transition-colors">
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-sky-50 hover:text-sky-700 border-b border-slate-100 transition-colors">
                         <div class="flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-600 shrink-0">
                             <i class="fa-solid fa-file-circle-question"></i>
                         </div>
                         E-SIC (Acesso à Informação)
+                    </a>
+
+                    <a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-amber-50 hover:text-amber-700 border-b border-slate-100 transition-colors">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-600 shrink-0">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        Leis Municipais
+                    </a>
+
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-teal-50 hover:text-teal-700 transition-colors">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 text-teal-600 shrink-0">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        Licitações
                     </a>
                 </div>
             </div>
@@ -271,6 +285,16 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-sky-600 text-white rounded-xl hover:bg-sky-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
                         <i class="fa-solid fa-file-circle-question w-4 h-4 text-center"></i>
                         E-SIC (Acesso à Informação)
+                    </a>
+
+                    <a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-amber-600 text-white rounded-xl hover:bg-amber-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
+                        <i class="fa-solid fa-scale-balanced w-4 h-4 text-center"></i>
+                        Leis Municipais
+                    </a>
+                    
+                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-teal-600 text-white rounded-xl hover:bg-teal-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
+                        <i class="fa-solid fa-file-contract w-4 h-4 text-center"></i>
+                        Licitações
                     </a>
                 </li>
 
