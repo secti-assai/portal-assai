@@ -812,7 +812,7 @@
     }
 </style>
 
-<div id="banner-portal-modal">
+<div id="banner-portal-modal" onclick="if(event.target === this) fecharBannerModal()">
     <button class="modal-banner-close" onclick="fecharBannerModal()" aria-label="Fechar">
         <i class="fa-solid fa-xmark"></i>
     </button>
