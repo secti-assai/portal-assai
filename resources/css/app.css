@@ -18,6 +18,8 @@
         @apply font-sans text-slate-800 bg-slate-50 antialiased;
     }
 
+    [x-cloak] { display: none !important; }
+
     h1,
     h2,
     h3,
@@ -71,7 +73,7 @@
 
     .content-offset-dynamic-header > :first-child {
         margin-top: 0 !important;
-        padding-top: var(--site-header-height, 100px) !important;
+        padding-top: calc(var(--site-header-height, 100px) + 2rem) !important;
     }
 
     .content-offset-dynamic-header > .content-offset-none {

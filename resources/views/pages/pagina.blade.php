@@ -6,7 +6,7 @@
 
 <main id="home-main" class="transition-opacity duration-300">
 
-    <div id="hero-mobile-loader" class="fixed inset-0 z-[120] flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500 lg:hidden" aria-live="polite">
+    <div id="hero-mobile-loader" class="fixed inset-0 z-[200] !important flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500 lg:hidden" aria-live="polite">
         <div class="flex flex-col items-center gap-5 px-6 text-center">
             <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
             <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[120] items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
+    <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[200] !important items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
         <div class="flex flex-col items-center gap-5 px-6 text-center">
             <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
             <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
@@ -90,17 +90,60 @@
     {{-- ==========================================
          HERO MOBILE
          ========================================== --}}
-    <div class="lg:hidden pl-mobile-home">
+    <div class="lg:hidden pl-mobile-home" id="pl-mobile-home">
+
+
 
         {{-- Hero --}}
         <div class="home-hero-mobile">
             <div class="home-hero-content">
                 <h1 class="hero-title">O QUE VOCÊ <strong>PRECISA?</strong></h1>
-                <form action="{{ route('busca.index') }}" method="GET" class="home-search-bar" role="search">
-                    <input id="busca-portal-mobile" class="wp-block-search__input" type="search" name="q" placeholder="Emitir Nota fiscal..." required>
-                    <button class="wp-block-search__button" type="submit" aria-label="Pesquisar">
-                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <form action="{{ route('busca.index') }}" method="GET" 
+                      class="home-search-bar relative" 
+                      role="search"
+                      x-data="searchAutocomplete()"
+                      x-on:click.outside="open = false"
+                      @submit="open = false">
+                    <input id="busca-portal-mobile" class="home-search-input-custom" type="search" name="q" placeholder="Emitir Nota fiscal..." required
+                           x-model.debounce.300ms="query"
+                           @focus="if(results.length > 0) open = true"
+                           @keydown.escape="open = false"
+                           autocomplete="off">
+                    <button class="home-search-button-custom" type="submit" aria-label="Pesquisar">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true" x-show="!loading"></i>
+                        <template x-if="loading">
+                            <span class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        </template>
                     </button>
+
+                    {{-- Dropdown de Sugestões (Mobile) --}}
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-1"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-cloak
+                         class="search-suggestions-dropdown text-left">
+                        
+                        <template x-for="(items, tipo) in groupedResults" :key="tipo">
+                            <div class="search-category-group">
+                                <div class="search-category-title">
+                                    <i class="fa-solid" :class="getIcon(tipo)"></i>
+                                    <span x-text="tipo"></span>
+                                </div>
+                                <template x-for="item in items" :key="item.url">
+                                    <a :href="item.url" class="search-suggestion-item">
+                                        <span x-text="item.titulo"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template x-if="results.length === 0 && query.length >= 2 && !loading">
+                            <div class="p-6 text-center text-slate-500 text-sm italic">
+                                Sem resultados para "<span x-text="query"></span>"
+                            </div>
+                        </template>
+                    </div>
                 </form>
             </div>
         </div>
@@ -108,30 +151,75 @@
     </div>
 
 
+
+
     {{-- HERO DESKTOP --}}
-    <section id="hero-oficial" class="hidden lg:block relative w-full overflow-hidden bg-slate-950 py-28 md:py-44">
+    <section id="hero-oficial" class="hidden lg:block relative w-full bg-slate-950 py-28 md:py-44">
         <div class="absolute inset-0 z-0 bg-slate-950">
             <video id="hero-video-lazy" class="w-full h-full object-cover object-center opacity-0 transition-opacity duration-1000" muted loop playsinline poster="{{ asset('img/Assai.jpg') }}" preload="none">
                 <source data-src="{{ asset('videos/panorama.mp4') }}" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-950/40 to-slate-900/60"></div>
         </div>
-        <div class="relative z-10 container mx-auto max-w-4xl flex flex-col items-center justify-center px-4">
+        <div class="relative z-50 container mx-auto max-w-4xl flex flex-col items-center justify-center px-4" x-data="searchAutocomplete()" @click.outside="open = false">
             <h1 class="mb-6 text-3xl md:text-5xl font-extrabold text-white drop-shadow-md font-heading leading-tight text-center break-words">O QUE VOCÊ <strong>PRECISA?</strong></h1>
-            <form action="{{ route('busca.index') }}" method="GET" class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search">
+            <form action="{{ route('busca.index') }}" method="GET" 
+                  class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" 
+                  role="search"
+                  @submit="open = false">
                 <label for="busca-portal-fixo" class="sr-only">Buscar no portal</label>
                 <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
+                    <template x-if="!loading">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </template>
+                    <template x-if="loading">
+                        <div class="search-loader"></div>
+                    </template>
                 </div>
-                <input id="busca-portal-fixo" type="text" name="q" placeholder="Emitir Nota Fiscal..." required class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full">
+                <input id="busca-portal-fixo" type="text" name="q" placeholder="Emitir Nota Fiscal..." required 
+                       class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
+                       x-model.debounce.300ms="query"
+                       @focus="if(results.length > 0) open = true"
+                       @keydown.escape="open = false"
+                       autocomplete="off">
                 <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
                     Buscar
                 </button>
+
+                {{-- Dropdown de Sugestões --}}
+                <div x-show="open" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-cloak
+                     class="search-suggestions-dropdown text-left">
+                    
+                    <template x-for="(items, tipo) in groupedResults" :key="tipo">
+                        <div class="search-category-group">
+                            <div class="search-category-title">
+                                <i class="fa-solid" :class="getIcon(tipo)"></i>
+                                <span x-text="tipo"></span>
+                            </div>
+                            <template x-for="item in items" :key="item.url">
+                                <a :href="item.url" class="search-suggestion-item">
+                                    <span x-text="item.titulo"></span>
+                                </a>
+                            </template>
+                        </div>
+                    </template>
+
+                    {{-- No Results State --}}
+                    <template x-if="results.length === 0 && query.length >= 2 && !loading">
+                        <div class="p-6 text-center text-slate-500 text-sm italic">
+                            Nenhum resultado rápido encontrado para "<span x-text="query"></span>"
+                        </div>
+                    </template>
+                </div>
             </form>
             @if($sugestoesBusca->count() > 0)
-            <div class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
+            <div x-show="!open" x-transition.opacity class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
                 @foreach($sugestoesBusca as $sugestao)
                 <a href="{{ route('busca.index', ['q' => $sugestao]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-white cursor-pointer select-none transition-all duration-200 bg-white/10 border border-white/25 backdrop-blur-sm rounded-full hover:bg-blue-600 hover:text-white hover:border-transparent hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/60 font-sans whitespace-nowrap">
                     <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -500,12 +588,63 @@
                         </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-</main>
+    {{-- Logic for Search Autocomplete --}}
+    <script>
+        function searchAutocomplete() {
+            return {
+                query: '',
+                results: [],
+                open: false,
+                loading: false,
 
-{{-- Script para o efeito de Digitação nos placeholders de busca --}}
+                init() {
+                    // Watch query changes with debounce
+                    this.$watch('query', value => {
+                        if (value.length < 2) {
+                            this.results = [];
+                            this.open = false;
+                            return;
+                        }
+                        this.fetchResults();
+                    });
+                },
+
+                async fetchResults() {
+                    this.loading = true;
+                    try {
+                        const response = await fetch(`/busca/autocomplete?q=${encodeURIComponent(this.query)}`);
+                        const data = await response.json();
+                        this.results = data;
+                        this.open = true;
+                    } catch (e) {
+                        console.error('Erro na busca rápida:', e);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                get groupedResults() {
+                    return this.results.reduce((acc, curr) => {
+                        if (!acc[curr.tipo]) acc[curr.tipo] = [];
+                        acc[curr.tipo].push(curr);
+                        return acc;
+                    }, {});
+                },
+
+                getIcon(tipo) {
+                    const icons = {
+                        'Notícia': 'fa-newspaper',
+                        'Serviço': 'fa-bolt-lightning',
+                        'Programa': 'fa-bullhorn',
+                        'Secretaria': 'fa-building-columns'
+                    };
+                    return icons[tipo] || 'fa-magnifying-glass';
+                }
+            }
+        }
+    </script>
+
+    {{-- Script para o efeito de Digitação nos placeholders de busca --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const searchIdeas = [
@@ -567,85 +706,66 @@
         }
     });
 </script>
-    @if(isset($banners) && $banners->count() > 0)
-    {{-- ==========================================
-         BANNER POPUP MODAL
-         ========================================== --}}
-    <div id="banner-popup-modal" class="fixed inset-0 items-center justify-center bg-black/80 backdrop-blur-sm p-4 z-[9999] opacity-0 pointer-events-none flex transition-all duration-500" aria-modal="true" role="dialog">
-        <div class="relative w-full max-w-4xl bg-slate-950 rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-500" id="banner-popup-content">
-            
-            {{-- Close Button --}}
-            <button type="button" class="absolute top-3 right-3 md:top-4 md:right-4 z-[10000] text-white bg-black/40 hover:bg-black/80 rounded-full w-10 h-10 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-white/50" onclick="closeBannerPopup()" aria-label="Fechar Banner">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
 
-            {{-- Slider (Uses existing .swiper-banners class for app.js initialization) --}}
-            <div class="swiper swiper-banners w-full bg-slate-950 group">
-                <div class="swiper-wrapper flex items-start">
-                    @foreach($banners as $banner)
-                    <div class="swiper-slide w-full flex justify-center items-center relative overflow-hidden bg-slate-950">
-                        <picture class="block w-full flex justify-center bg-slate-950">
-                            @if($banner->link)
-                            <a href="{{ $banner->link }}" target="{{ $banner->abrir_nova_guia ? '_blank' : '_self' }}" class="w-full flex justify-center outline-none">
-                            @endif
-                                <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner Informativo" class="w-full {{ $banner->exibir_inteira ? 'object-contain' : 'object-cover' }} max-h-[75vh] mx-auto block" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
-                            @if($banner->link)
-                            </a>
-                            @endif
-                        </picture>
-                    </div>
-                    @endforeach
+@push('modals')
+@if(isset($banners) && $banners->count() > 0)
+{{-- ==========================================
+     BANNER MODAL (UNIFICADO MOBILE & DESKTOP)
+     ========================================== --}}
+<div id="banner-portal-modal"
+     x-cloak
+     x-data="{ 
+        show: false,
+        init() {
+            setTimeout(() => { 
+                this.show = true;
+                document.body.style.overflow = 'hidden';
+            }, 1500);
+        },
+        close() {
+            this.show = false;
+            document.body.style.overflow = '';
+        }
+     }"
+     {{-- O bind de classe garante que o flex seja aplicado e evita conflitos de display do x-show --}}
+     :class="show ? 'flex' : 'hidden'"
+     class="fixed inset-0 z-[25000] items-center justify-center bg-black/95 backdrop-blur-md p-0 md:p-4"
+     @keydown.escape.window="close()">
+    
+    {{-- Contêiner do Modal --}}
+    <div class="relative w-full h-full md:h-auto md:max-w-4xl bg-slate-950 md:rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-center border-none md:border md:border-white/10" @click.away="close()">
+        
+        {{-- Botão Fechar (Tamanho dinâmico: grande no mobile, menor no desktop) --}}
+        <button type="button" 
+                class="absolute top-6 right-6 md:top-4 md:right-4 z-[25010] text-white bg-white/20 md:bg-black/40 backdrop-blur-lg hover:bg-red-600 rounded-full w-14 h-14 md:w-10 md:h-10 flex items-center justify-center transition-all border border-white/30 md:border-none shadow-2xl md:shadow-none" 
+                aria-label="Fechar Banner"
+                @click="close()">
+            <i class="fa-solid fa-xmark text-2xl md:text-lg"></i>
+        </button>
+
+        {{-- Área do Carrossel --}}
+        <div class="swiper swiper-final-desktop w-full h-full md:h-auto relative group flex items-center">
+            <div class="swiper-wrapper">
+                @foreach($banners as $banner)
+                <div class="swiper-slide bg-transparent flex items-center justify-center min-h-[50vh]">
+                    @if($banner->link) <a href="{{ $banner->link }}" target="_blank" class="w-full block"> @endif
+                        <img src="{{ asset('storage/' . $banner->imagem) }}" 
+                             class="mx-auto w-full h-auto max-h-[85vh] object-contain block px-2 md:px-0"
+                             loading="eager"
+                             alt="Banner Informativo">
+                    @if($banner->link) </a> @endif
                 </div>
-
-                @if($banners->count() > 1)
-                <div class="swiper-pagination !bottom-4 drop-shadow-md z-[10000]"></div>
-                <div class="swiper-button-prev banner-swiper-prev !text-white opacity-100 md:!opacity-0 md:group-hover:!opacity-100 transition-opacity !left-2 md:!left-4 drop-shadow-md mix-blend-difference flex z-[10000]"></div>
-                <div class="swiper-button-next banner-swiper-next !text-white opacity-100 md:!opacity-0 md:group-hover:!opacity-100 transition-opacity !right-2 md:!right-4 drop-shadow-md mix-blend-difference flex z-[10000]"></div>
-                @endif
+                @endforeach
             </div>
             
+            @if($banners->count() > 1)
+                <div class="swiper-pagination !bottom-8 md:!bottom-4"></div>
+                <div class="hidden md:flex swiper-button-prev !text-white !left-4 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="hidden md:flex swiper-button-next !text-white !right-4 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            @endif
         </div>
     </div>
-
-    <script>
-        function initBannerPopup() {
-            // TEST MODE: Check temporariamente desativado para facilitar testes visuais
-            // if (!sessionStorage.getItem('portal_banner_popup_v2')) {
-                setTimeout(() => {
-                    const modal = document.getElementById('banner-popup-modal');
-                    const content = document.getElementById('banner-popup-content');
-                    if (modal && content) {
-                        modal.classList.remove('opacity-0', 'pointer-events-none');
-                        content.classList.remove('scale-95');
-                        content.classList.add('scale-100');
-                        
-                        document.body.style.overflow = 'hidden';
-                    }
-                }, 1500); 
-            // }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initBannerPopup);
-        } else {
-            initBannerPopup();
-        }
-
-        function closeBannerPopup() {
-            const modal = document.getElementById('banner-popup-modal');
-            const content = document.getElementById('banner-popup-content');
-            if (modal && content) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                content.classList.remove('scale-100');
-                content.classList.add('scale-95');
-                
-                setTimeout(() => {
-                    document.body.style.overflow = '';
-                }, 500);
-
-                sessionStorage.setItem('portal_banner_popup_v2', 'true');
-            }
-        }
-    </script>
-    @endif
+</div>
+@endif
+@endpush
 @endsection

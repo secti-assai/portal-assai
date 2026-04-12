@@ -216,7 +216,7 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
             {{-- Parque Ikeda --}}
             <article class="tour-card group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-900 shadow-xl">
-                <img src="{{ asset('img/assai_2.jpg') }}" alt="Parque Ikeda — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <img src="{{ asset('img/assai_2.JPG') }}" alt="Parque Ikeda — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
 
                 <div class="card-cover absolute bottom-0 left-0 right-0 p-6 transition-opacity duration-300">
@@ -245,7 +245,7 @@
 
             {{-- Shoshinji --}}
             <article class="tour-card group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-900 shadow-xl">
-                <img src="{{ asset('img/assai_3.jpg') }}" alt="Templo Budista Shoshinji — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <img src="{{ asset('img/assai_3.JPG') }}" alt="Templo Budista Shoshinji — Assaí" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
 
                 <div class="card-cover absolute bottom-0 left-0 right-0 p-6 transition-opacity duration-300">

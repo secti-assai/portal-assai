@@ -41,7 +41,7 @@
                     </p>
                 </div>
 
-                {{-- Barra de Pesquisa (padrão visual da página de notícias, adaptada) --}}
+                {{-- Barra de Pesquisa --}}
                 <div class="w-full md:w-96 lg:w-[30rem] shrink-0">
                     <form method="GET" action="{{ route('servicos.index') }}">
                         @if($secretariaAtiva)
@@ -173,7 +173,8 @@
         </div>
         @else
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {{-- Alterado para lg:grid-cols-3 para exibir 3 colunas em ecrãs grandes --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             @foreach($servicos as $servico)
             
             @php
@@ -196,27 +197,14 @@
 
             <article class="group bg-white rounded-2xl border border-slate-300/80 ring-1 ring-slate-200/80 p-6 flex flex-col h-full shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 relative">
                 
-                {{-- Tooltip CORRIGIDA - Agora presa ao ícone de ? --}}
-                <div class="absolute right-4 top-4 group/tooltip z-20">
-                    <button type="button" tabindex="-1" aria-hidden="true" class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 border border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-200 cursor-help transition-colors shadow-sm">
-                        <i class="fa-solid fa-circle-question text-[0.95rem] leading-none"></i>
-                    </button>
-                    
-                    {{-- O balão de texto escuro --}}
-                    <div class="absolute bottom-full right-[-8px] mb-2 w-64 bg-slate-900 text-white text-xs font-normal text-left p-3 rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-300 pointer-events-none shadow-xl leading-relaxed">
-                        {{ $servico->descricao ? \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 120) : 'Acesse este serviço para obter mais detalhes e informações úteis ao cidadão.' }}
-                        {{-- Setinha apontando para o '?' --}}
-                        <div class="absolute top-full right-[12px] border-[6px] border-transparent border-t-slate-900"></div>
-                    </div>
-                </div>
-                
-                <div class="flex items-start gap-4 mb-4 pr-6">
+                <div class="flex items-start gap-4 mb-4">
                     <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 ring-1 ring-blue-200 shrink-0 group-hover:scale-110 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300">
                         <i class="{{ $iconeClasse }} text-[1.35rem]"></i>
                     </div>
                     
                     <div class="flex-1 min-w-0 pt-1">
-                        <h3 class="text-lg font-extrabold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors line-clamp-2" style="font-family: 'Montserrat', sans-serif;">
+                        {{-- Removido o line-clamp-2 do título --}}
+                        <h3 class="text-lg font-extrabold text-slate-900 leading-tight mb-2 group-hover:text-blue-700 transition-colors" style="font-family: 'Montserrat', sans-serif;">
                             {{ $servico->titulo }}
                         </h3>
                         @if($servico->secretaria)
@@ -227,8 +215,9 @@
                     </div>
                 </div>
 
-                <p class="text-sm text-slate-700 leading-relaxed line-clamp-3 mb-6 flex-grow">
-                    {{ $servico->descricao ? \Illuminate\Support\Str::limit(strip_tags($servico->descricao), 110) : 'Informações e acesso para este serviço oferecido ao cidadão.' }}
+                {{-- Removido o line-clamp-3 e o Str::limit da descrição --}}
+                <p class="text-sm text-slate-700 leading-relaxed mb-6 flex-grow">
+                    {{ $servico->descricao ? strip_tags($servico->descricao) : 'Informações e acesso para este serviço oferecido ao cidadão.' }}
                 </p>
 
                 <div class="mt-auto border-t border-slate-200 pt-4 flex justify-between items-center">
