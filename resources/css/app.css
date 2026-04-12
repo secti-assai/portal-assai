@@ -55,12 +55,12 @@
 /* Compensa o header fixo com altura real medida em runtime (exceto home/notícias). */
 .content-offset-dynamic-header {
     margin-top: 0 !important;
-    padding-top: 100px !important;
+    padding-top: var(--site-header-height, 130px) !important;
 }
 
 @media (min-width: 768px) {
     .content-offset-dynamic-header {
-        padding-top: 100px !important;
+        padding-top: var(--site-header-height, 160px) !important;
     }
 }
 

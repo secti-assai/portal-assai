@@ -8,7 +8,7 @@ $termoBusca = trim((string) request('search'));
 @endphp
 
 {{-- ===== CABEÇALHO PADRONIZADO ===== --}}
-<section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-8 sm:py-12 shadow-inner">
+<section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 pt-10 pb-8 sm:pt-16 sm:pb-12 shadow-inner">
     {{-- Elementos de fundo subtis --}}
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>

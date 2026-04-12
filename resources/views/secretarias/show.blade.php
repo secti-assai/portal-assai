@@ -6,7 +6,7 @@
 <main class="min-h-screen pb-20 bg-[#edf5ff]">
 
     {{-- ===== HERO HEADER ===== --}}
-    <section class="bg-blue-900 py-12 max-[360px]:py-10 md:py-16">
+    <section class="bg-blue-900 pt-10 pb-8 sm:pt-16 sm:pb-12">
         <div class="container px-4 mx-auto max-w-6xl">
 
             {{-- Breadcrumb --}}
