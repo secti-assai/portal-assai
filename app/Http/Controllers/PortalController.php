@@ -108,9 +108,9 @@ class PortalController extends Controller
         if ($request->filled('q')) {
             $termo = $request->q;
             $query->where(function ($q) use ($termo) {
-                $q->whereRaw('unaccent(titulo) ILIKE unaccent(?)', ["%{$termo}%"])
-                    ->orWhereRaw('unaccent(resumo) ILIKE unaccent(?)', ["%{$termo}%"])
-                    ->orWhereRaw('unaccent(conteudo) ILIKE unaccent(?)', ["%{$termo}%"]);
+                $q->whereRaw('titulo ILIKE ?', ["%{$termo}%"])
+                    ->orWhereRaw('resumo ILIKE ?', ["%{$termo}%"])
+                    ->orWhereRaw('conteudo ILIKE ?', ["%{$termo}%"]);
             });
         }
 
@@ -465,17 +465,13 @@ class PortalController extends Controller
     private function applyInsensitiveSearch($query, array $columns, string $term): void
     {
         $driver = DB::connection()->getDriverName();
-        $like = "%{$term}%";
+        $normalizedTerm = "%" . $this->normalizeSearchTerm($term) . "%";
 
-        $query->where(function ($searchQuery) use ($columns, $driver, $like) {
+        $query->where(function ($searchQuery) use ($columns, $driver, $normalizedTerm) {
             foreach ($columns as $index => $column) {
-                if ($driver === 'pgsql') {
-                    $method = $index === 0 ? 'whereRaw' : 'orWhereRaw';
-                    $searchQuery->{$method}("unaccent({$column}) ILIKE unaccent(?)", [$like]);
-                } else {
-                    $method = $index === 0 ? 'where' : 'orWhere';
-                    $searchQuery->{$method}($column, 'like', $like);
-                }
+                $normalizedColumn = $this->normalizedColumnSql($column);
+                $method = $index === 0 ? 'whereRaw' : 'orWhereRaw';
+                $searchQuery->{$method}("$normalizedColumn LIKE ?", [$normalizedTerm]);
             }
         });
     }
