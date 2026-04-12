@@ -1,3 +1,6 @@
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
 import './bootstrap';
 
 // Importa os scripts de interatividade do Gov.br
@@ -398,29 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    /* ==========================================================================
-       INICIALIZAÇÃO: CARROSSEL DE BANNERS DA PÁGINA INICIAL
-       Desativa navegação por arraste e ativa rotação automática a cada 5s
-       ========================================================================== */
-    var swiperBannersEl = document.querySelector('.swiper-banners');
-    if (swiperBannersEl && typeof Swiper !== 'undefined') {
-        new Swiper('.swiper-banners', {
-            loop: true,
-            allowTouchMove: false,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.banner-swiper-next',
-                prevEl: '.banner-swiper-prev',
-            },
-        });
-    }
+
 
     /* ==========================================================================
        INICIALIZAÇÃO: CARROSSEL DE ALERTAS DO CABEÇALHO

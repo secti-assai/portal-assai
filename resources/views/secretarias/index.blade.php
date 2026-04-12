@@ -8,7 +8,7 @@ $termoBusca = trim((string) request('search'));
 @endphp
 
 {{-- ===== CABEÇALHO PADRONIZADO ===== --}}
-<section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 pt-10 pb-8 sm:pt-16 sm:pb-12 shadow-inner">
+<section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-12 md:py-20 lg:py-24 shadow-inner">
     {{-- Elementos de fundo subtis --}}
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>
@@ -24,10 +24,10 @@ $termoBusca = trim((string) request('search'));
                         ['name' => 'Secretarias'],
                     ]" dark />
 
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-4 tracking-tight drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">
+                <h1 class="text-3xl font-extrabold md:text-5xl font-heading mb-4 text-white drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">
                     Secretarias Municipais
                 </h1>
-                <p class="text-sm sm:text-base text-blue-100 max-w-2xl mt-3 leading-relaxed">
+                <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light">
                     Conheça a equipa que trabalha todos os dias para fazer de Assaí uma cidade cada vez melhor e mais inteligente.
                 </p>
             </div>
@@ -152,11 +152,11 @@ $termoBusca = trim((string) request('search'));
                     @endif
 
                     <div class="min-w-0">
-                        <h2 class="text-lg md:text-xl font-black text-slate-800 leading-tight group-hover:text-blue-700 transition line-clamp-3 break-words" title="{{ $secretaria->nome }}">
+                        <h2 class="text-lg md:text-xl font-black text-slate-800 leading-tight group-hover:text-blue-700 transition break-words whitespace-normal" title="{{ $secretaria->nome }}">
                             {{ $secretaria->nome }}
                         </h2>
                         @if($secretaria->nome_secretario)
-                        <p class="text-sm font-semibold text-blue-600 mt-2 truncate" title="{{ $secretaria->nome_secretario }}">{{ \Illuminate\Support\Str::limit($secretaria->nome_secretario, 70) }}</p>
+                        <p class="text-sm font-semibold text-blue-600 mt-2 break-words whitespace-normal" title="{{ $secretaria->nome_secretario }}">{{ $secretaria->nome_secretario }}</p>
                         @endif
                     </div>
                 </div>

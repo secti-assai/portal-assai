@@ -1,29 +1,9 @@
-/* resources/js/home.js */
 import Swiper from 'swiper/bundle';
 
+// Expõe estritamente a variável global para acesso do script Vanilla no arquivo blade
+window.Swiper = Swiper;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Configuração do Swiper (Hero)
-    const swiperContainer = document.querySelector('.swiper-hero-banners');
-
-    if (swiperContainer) {
-        const slideElements = swiperContainer.querySelectorAll('.swiper-slide');
-        const slideCount = slideElements.length;
-
-        if (slideCount > 0) {
-            new Swiper(swiperContainer, {
-                loop: slideCount > 1,
-                effect: 'fade',
-                fadeEffect: { crossFade: true },
-                autoplay: slideCount > 1 ? { delay: 6000, disableOnInteraction: false } : false,
-                observer: true,
-                observeParents: true,
-                watchSlidesProgress: true,
-                allowTouchMove: false,
-                simulateTouch: false
-            });
-        }
-    }
-
     // =========================================================================
     // LÓGICA DO MENU MOBILE (Pedro Leopoldo Style) E CORREÇÕES DO LARAVEL
     // =========================================================================
@@ -62,7 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 root.classList.toggle('menu-open', isOpen);
                 trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                 drawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-                if (!isOpen) closeAllSubmenus();
+
+                if (isOpen) {
+                    drawer.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+                    drawer.classList.add('opacity-100', 'translate-y-0');
+                    if (window.innerWidth < 768) {
+                        document.body.style.overflow = 'hidden';
+                    }
+                } else {
+                    drawer.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+                    drawer.classList.remove('opacity-100', 'translate-y-0');
+                    document.body.style.overflow = '';
+                    closeAllSubmenus();
+                }
             };
 
             const openMenu = () => setMenuState(true);

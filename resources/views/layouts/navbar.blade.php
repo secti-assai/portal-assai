@@ -24,7 +24,14 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
     data-logo-white="{{ asset('img/logo_branca.png') }}"
     data-logo-black="{{ asset('img/logo_preta.png') }}"></div>
 
-<header class="fixed top-0 left-0 right-0 z-[60] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50 lg:bg-transparent lg:backdrop-blur-none lg:shadow-none lg:text-white lg:border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}" id="site-header">
+<header
+    x-data="{ showNavbar: false }"
+    x-init="window.addEventListener('DOMContentLoaded', () => { setTimeout(() => { showNavbar = true }, 350); });"
+    x-show="showNavbar"
+    x-cloak
+    class="fixed top-0 left-0 right-0 z-[160] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50 lg:bg-transparent lg:backdrop-blur-none lg:shadow-none lg:text-white lg:border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}"
+    id="site-header"
+>
 
     {{-- TOP BAR --}}
     <div class="hidden lg:block bg-blue-900 border-b border-white/10 transition-colors duration-300">
@@ -215,9 +222,10 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
             </a>
         </nav>
 
-    {{-- Dropdown Mobile --}}
-    <aside id="mobile-drawer-nav" class="lg:hidden absolute top-full left-0 right-0 bg-white shadow-[0_10px_22px_rgba(15,23,42,0.12)] border-t border-slate-100 overflow-hidden opacity-0 invisible pointer-events-none transition-all duration-150" aria-hidden="true" aria-label="Menu principal mobile">
-        <nav class="max-h-[72vh] overflow-y-auto px-4 pb-3" aria-label="Links principais">
+    {{-- Drawer Mobile (Dropdown Overlay) --}}
+    <aside id="mobile-drawer-nav" class="lg:hidden absolute top-full left-0 right-0 z-[160] w-full h-[calc(100vh-var(--site-header-height,70px))] md:h-auto md:max-h-[72vh] bg-white shadow-xl border-t border-slate-100 transition-all duration-300 transform -translate-y-2 opacity-0 pointer-events-none overflow-hidden" aria-hidden="true" aria-label="Menu principal mobile">
+        
+        <nav class="h-full overflow-y-auto px-6 pb-20 overscroll-contain" aria-label="Links principais">
             <ul class="list-none m-0 p-0 flex flex-col">
                 <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="{{ route('home') }}">Início</a></li>
 

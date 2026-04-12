@@ -20,10 +20,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     @if(request()->routeIs('home'))
     <link rel="preload" as="image" href="{{ asset('img/logo_branca.png') }}" fetchpriority="high">
@@ -34,6 +33,7 @@
     </style>
     @endif
 
+
     {{-- Bundle base global do portal --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -41,8 +41,6 @@
     @if(request()->routeIs('home'))
     @vite(['resources/css/home.css', 'resources/js/home.js'])
     @endif
-
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
         /* Aplica preferências salvas antes da 1ª pintura — evita flash de conteúdo */
@@ -58,11 +56,12 @@
     </script>
 </head>
 
+
 <body class="{{ request()->routeIs('home')
     ? 'bg-slate-950'
     : (request()->routeIs('pages.sobre') || request()->routeIs('pages.transparencia') || request()->routeIs('pages.turismo') || request()->routeIs('pages.contato') || request()->routeIs('agenda.*') || request()->routeIs('programas.*') || request()->routeIs('secretarias.*') || request()->routeIs('servicos.*')
         ? 'bg-white'
-        : 'bg-gray-50') }} text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
+        : 'bg-gray-50') }} text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden' id='body-portal'>
 
     {{-- Skip links (acessibilidade por teclado) --}}
     <a href="#conteudo-principal" accesskey="1"
@@ -74,18 +73,24 @@
         Ir para o menu [2]
     </a>
 
+
     @include('layouts.navbar')
 
     {{-- Script Inline para cálculo instantâneo da altura do menu (previne o "pulo" no primeiro frame) --}}
     <script>
         (function() {
             var header = document.getElementById('site-header');
+            var wrapper = document.getElementById('main-content-wrapper');
             if (header) {
                 var h = header.offsetHeight;
-                if (h > 0) document.documentElement.style.setProperty('--site-header-height', h + 'px');
+                if (h > 0) {
+                    document.documentElement.style.setProperty('--site-header-height', h + 'px');
+                    if (wrapper) wrapper.style.setProperty('--site-header-height', h + 'px');
+                }
             }
         })();
     </script>
+
 
     {{-- Loader Global para Páginas Internas --}}
     @if(!request()->routeIs('home'))
@@ -97,6 +102,16 @@
                 Carregando portal
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.body.classList.add('navbar-hidden');
+                window.addEventListener('load', function () {
+                    setTimeout(function () {
+                        document.body.classList.remove('navbar-hidden');
+                    }, 350);
+                });
+            });
+        </script>
     </div>
     @endif
 
@@ -147,6 +162,8 @@
             new window.VLibras.Widget('https://vlibras.gov.br/app');
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    @stack('modals')
 </body>
 
 </html>
