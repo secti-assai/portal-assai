@@ -5,9 +5,9 @@
 @section('content')
 
 {{-- ===== HERO ===== --}}
-<section class="relative pt-8 pb-20 overflow-hidden bg-blue-900 md:pt-12 md:pb-28 lg:pt-20 lg:pb-40">
+<section class="relative pt-8 pb-20 overflow-hidden bg-[#064235] md:pt-12 md:pb-28 lg:pt-20 lg:pb-40">
     <div class="absolute inset-0">
-        <svg class="absolute w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="bamboo" width="40" height="40" patternUnits="userSpaceOnUse">
                     <rect x="18" y="0" width="4" height="40" fill="white" opacity="0.5"/>
@@ -16,7 +16,7 @@
             </defs>
             <rect width="100%" height="100%" fill="url(#bamboo)"/>
         </svg>
-        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-blue-950 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#022c22] to-transparent"></div>
     </div>
 
     <div class="container relative z-10 px-4 mx-auto text-center max-w-5xl">
@@ -31,7 +31,7 @@
         <h1 class="text-4xl font-extrabold text-white md:text-6xl lg:text-7xl font-heading tracking-tight mb-6 leading-none">
             Descubra <span class="text-yellow-400">Assaí</span>
         </h1>
-        <p class="max-w-3xl mx-auto text-lg text-blue-100 md:text-xl lg:text-2xl leading-relaxed font-light">
+        <p class="max-w-3xl mx-auto text-lg text-white md:text-xl lg:text-2xl leading-relaxed font-light">
             Uma viagem imersiva pela tradição da imigração japonesa, natureza exuberante e a gastronomia nipônica mais autêntica do Norte do Paraná.
         </p>
         <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10 w-full">
@@ -51,32 +51,47 @@
 <section class="relative z-20 -mt-16">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4 md:gap-5">
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">🏯</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">1º Castelo Japonês</span>
-                <span class="text-xs text-slate-600 mt-0.5">do Brasil</span>
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-emerald-500 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-emerald-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-emerald-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">🏯</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">1º Castelo Japonês</span>
+                    <span class="text-xs text-slate-500 mt-0.5">do Brasil</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">🌸</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">1º Tanabata Matsuri</span>
-                <span class="text-xs text-slate-600 mt-0.5">do Brasil — 1978</span>
+
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-emerald-500 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-emerald-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-emerald-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">🌸</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Tanabata Matsuri</span>
+                    <span class="text-xs text-slate-500 mt-0.5">desde 1978</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">⛩️</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Templo Budista</span>
-                <span class="text-xs text-slate-600 mt-0.5">mais antigo do PR</span>
+
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-emerald-500 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-emerald-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-emerald-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">⛩️</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Templo Budista</span>
+                    <span class="text-xs text-slate-500 mt-0.5">mais antigo do PR</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-lg rounded-2xl border-yellow-600 ring-1 ring-yellow-500/40 col-span-1 sm:col-span-2 md:col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-1">🍜</span>
-                <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Polo Gastronômico</span>
-                <span class="text-xs text-blue-900 mt-0.5">nipônico do PR</span>
+
+            <div class="flex flex-col overflow-hidden bg-yellow-400 border rounded-2xl border-yellow-500 shadow-[0_12px_32px_rgba(234,179,8,0.2)] col-span-1 sm:col-span-2 md:col-span-1 group hover:bg-yellow-300 transition-colors">
+                <div class="h-1.5 bg-emerald-900/10"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-[#064235] font-heading mb-1">🍜</span>
+                    <span class="text-xs font-bold text-[#064235] uppercase tracking-wider">Polo Gastronômico</span>
+                    <span class="text-xs text-[#064235]/80 mt-0.5">nipônico do PR</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 {{-- ===== CASTELO JAPONÊS — DESTAQUE ===== --}}
-<section id="castelo" class="py-16 bg-[#f8fbff] md:py-24 lg:py-32 border-y border-blue-100/70">
+<section id="castelo" class="py-16 bg-white md:py-24 lg:py-32">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="flex flex-col overflow-hidden bg-slate-50 border shadow-2xl rounded-3xl border-slate-300/70 ring-1 ring-slate-200/70 lg:flex-row">
             <div class="lg:w-1/2 relative min-h-[320px] lg:min-h-[540px] bg-slate-200">
@@ -95,7 +110,7 @@
                 <h2 class="mb-5 text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
                     Castelo Japonês<br><span class="text-blue-700">— O Primeiro do Brasil</span>
                 </h2>
-                <div class="space-y-4 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-600">
+                <div class="space-y-4 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-800">
                     <p>Erguido em 2018 para celebrar os <strong>110 anos da imigração japonesa no Brasil</strong>, o Castelo Japonês de Assaí é uma obra única: trata-se do <strong>primeiro castelo de arquitetura japonesa do país</strong>. Com 25 metros de altura distribuídos em 4 pavimentos majestosos, sua silhueta é inspirada no lendário <strong>Castelo de Himeji</strong>, na província de Hyogo — cidade coirmã do Paraná.</p>
                     <p>Posicionado no ponto mais alto de Assaí, oferece uma <strong>vista panorâmica de 360° deslumbrante</strong>. No seu interior, um museu histórico guarda relíquias, fotografias e documentos originais que narram a épica saga dos pioneiros japoneses que desbravaram estas terras em 1932.</p>
                 </div>
@@ -134,8 +149,8 @@
                 <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight !text-white">
                     Polo Gastronômico<br><span class="text-yellow-300">Nipônico do Paraná</span>
                 </h2>
-                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Assaí ostenta com orgulho o título de <strong class="text-white">cidade com a maior proporção de descendentes japoneses do Brasil</strong>. Isso tem um reflexo direto e delicioso na mesa: aqui, a culinária japonesa não é uma tendência — é uma herança de mais de 90 anos.</p>
-                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Restaurantes familiares de receitas guardadas a sete chaves, centros gastronômicos como o <strong class="text-white">Assahí</strong>, yakitorias e doceiras artesanais de wagashi atraem visitantes de toda a região Norte do Paraná em busca dos sabores genuínos do Japão profundo.</p>
+                <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">Assaí ostenta com orgulho o título de <strong class="text-white">cidade com a maior proporção de descendentes japoneses do Brasil</strong>. Isso tem um reflexo direto e delicioso na mesa: aqui, a culinária japonesa não é uma tendência — é uma herança de mais de {{ \Carbon\Carbon::parse('1932-05-01')->diffInYears(now()) }} anos.</p>
+                <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">Restaurantes familiares de receitas guardadas a sete chaves, centros gastronômicos como o <strong class="text-white">Assahí</strong>, yakitorias e doceiras artesanais de wagashi atraem visitantes de toda a região Norte do Paraná em busca dos sabores genuínos do Japão profundo.</p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     @php
@@ -190,7 +205,7 @@
 </section>
 
 {{-- ===== PASSEIOS E TRADIÇÃO ===== --}}
-<section class="py-16 bg-[#eaf3ff] md:py-24 lg:py-28 border-y border-blue-100/70">
+<section class="py-16 bg-white md:py-24 lg:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-emerald-700 font-bold tracking-wider uppercase text-xs border border-emerald-200 bg-emerald-50 px-3 py-1 rounded-full mb-4">Roteiro Cultural</span>
@@ -290,7 +305,7 @@
 </section>
 
 {{-- ===== FESTIVIDADES ===== --}}
-<section class="py-20 bg-[#f8fbff] md:py-28 border-y border-blue-100/70">
+<section class="py-20 bg-white md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-indigo-700 bg-indigo-600 px-3 py-1 rounded-full mb-4">Calendário Cultural</span>

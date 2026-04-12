@@ -266,36 +266,22 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     </ul>
                 </li>
 
-                <li class="pt-4 pb-2 px-2 flex flex-col gap-3 border-b border-slate-100">
-                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 10h6M9 14h6M9 18h6"></path>
-                        </svg>
-                        Diário Oficial
-                    </a>
-
-                    <a href="{{ route('pages.transparencia') }}" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                        Transparência
-                    </a>
-
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-sky-600 text-white rounded-xl hover:bg-sky-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
-                        <i class="fa-solid fa-file-circle-question w-4 h-4 text-center"></i>
-                        E-SIC (Acesso à Informação)
-                    </a>
-
-                    <a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-amber-600 text-white rounded-xl hover:bg-amber-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
-                        <i class="fa-solid fa-scale-balanced w-4 h-4 text-center"></i>
-                        Leis Municipais
-                    </a>
-                    
-                    <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-teal-600 text-white rounded-xl hover:bg-teal-500 transition-colors font-medium text-[15px] shadow-sm border border-transparent">
-                        <i class="fa-solid fa-file-contract w-4 h-4 text-center"></i>
-                        Licitações
-                    </a>
+                {{-- Transparência (Mobile) --}}
+                <li x-data="{ open: false }" class="border-b border-slate-100">
+                    <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-emerald-600 transition-colors">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass-chart text-emerald-600"></i>
+                            <span class="font-bold text-emerald-700">Transparência</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 rounded-b-lg">
+                        <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-book-open w-4 text-center"></i> Diário Oficial</a></li>
+                        <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="{{ route('pages.transparencia') }}"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> Portal da Transparência</a></li>
+                        <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-circle-question w-4 text-center"></i> E-SIC (Acesso)</a></li>
+                        <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Leis Municipais</a></li>
+                        <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-contract w-4 text-center"></i> Licitações</a></li>
+                    </ul>
                 </li>
 
                 <li class="pt-4">

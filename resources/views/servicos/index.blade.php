@@ -9,12 +9,12 @@
     $totalServicos = $servicos->total();
 @endphp
 
-<div id="conteudo-principal" accesskey="1" tabindex="-1" class="content-offset-none min-h-screen pb-20 m-0 p-0">
+<div id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen pb-20 m-0 p-0">
     
     {{-- ==========================================
          HERO SECTION (Cores originais Tailwind)
          ========================================== --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-8 sm:py-12 shadow-inner">
+    <section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 pt-10 pb-8 sm:pt-16 sm:pb-12 shadow-inner">
         {{-- Elementos de Fundo Subtis --}}
         <div class="absolute inset-0 pointer-events-none">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>

@@ -61,7 +61,7 @@
 <body class="{{ request()->routeIs('home')
     ? 'bg-slate-950'
     : (request()->routeIs('pages.sobre') || request()->routeIs('pages.transparencia') || request()->routeIs('pages.turismo') || request()->routeIs('pages.contato') || request()->routeIs('agenda.*') || request()->routeIs('programas.*') || request()->routeIs('secretarias.*') || request()->routeIs('servicos.*')
-        ? 'bg-[#edf5ff]'
+        ? 'bg-white'
         : 'bg-gray-50') }} text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
 
     {{-- Skip links (acessibilidade por teclado) --}}
@@ -76,8 +76,32 @@
 
     @include('layouts.navbar')
 
+    {{-- Script Inline para cálculo instantâneo da altura do menu (previne o "pulo" no primeiro frame) --}}
+    <script>
+        (function() {
+            var header = document.getElementById('site-header');
+            if (header) {
+                var h = header.offsetHeight;
+                if (h > 0) document.documentElement.style.setProperty('--site-header-height', h + 'px');
+            }
+        })();
+    </script>
+
+    {{-- Loader Global para Páginas Internas --}}
+    @if(!request()->routeIs('home'))
+    <div id="internal-page-loader" class="fixed inset-0 z-[120] flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
+        <div class="flex flex-col items-center gap-5 px-6 text-center">
+            <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain animate-pulse">
+            <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
+                <span class="inline-block h-5 w-5 rounded-full border-2 border-white/35 border-t-white animate-spin" aria-hidden="true"></span>
+                Carregando portal
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Wrapper de compensação do header fixo --}}
-    <div class="{{ request()->routeIs('home') || request()->routeIs('noticias.*') ? '' : 'content-offset-dynamic-header' }}">
+    <div id="main-content-wrapper" class="transition-opacity duration-500 {{ request()->routeIs('home') || request()->routeIs('noticias.*') ? '' : 'content-offset-dynamic-header opacity-0' }}">
         @yield('content')
     </div>
 

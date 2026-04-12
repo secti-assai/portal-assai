@@ -613,6 +613,39 @@ document.addEventListener('DOMContentLoaded', function () {
             window.filterResults(initialTab, false);
         }
     }
+
+    /* ==========================================================================
+       LÓGICA DO LOADER: PÁGINAS INTERNAS
+       Revela o conteúdo apenas após a estabilização do layout (evita "pulo" do menu)
+       ========================================================================== */
+    const internalLoader = document.getElementById('internal-page-loader');
+    const mainWrapper = document.getElementById('main-content-wrapper');
+
+    if (internalLoader && mainWrapper) {
+        const revealInternalPage = () => {
+            // Delay tático para garantir que o syncHeaderHeightVar no navbar.js já estabilizou o DOM
+            // Aumentado para 400ms para cobertura total de renderização e scripts
+            setTimeout(() => {
+                internalLoader.classList.add('opacity-0', 'pointer-events-none');
+                mainWrapper.classList.remove('opacity-0');
+                
+                setTimeout(() => {
+                    if (internalLoader.parentNode) {
+                        internalLoader.remove();
+                    }
+                }, 600);
+            }, 400);
+        };
+
+        if (document.readyState === 'complete') {
+            revealInternalPage();
+        } else {
+            window.addEventListener('load', revealInternalPage, { once: true });
+        }
+
+        // Fail-safe de 3s (nunca deixa o utilizador preso em tela de loading)
+        setTimeout(revealInternalPage, 3000);
+    }
 });
 
 /* ==========================================================================

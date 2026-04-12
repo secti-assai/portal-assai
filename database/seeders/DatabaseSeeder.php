@@ -10,6 +10,7 @@ use App\Models\Programa;
 use App\Models\Secretaria;
 use App\Models\Servico;
 use App\Models\User;
+use App\Models\Executivo;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call([SecretariaSeeder::class]);
 
         $this->call([ExecutivosSeeder::class]);
+
+        $this->call([ServicoSeeder::class]);
 
         // Banners do carrossel principal
         Banner::factory(3)->create();

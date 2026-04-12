@@ -32,7 +32,7 @@
         <h1 class="text-4xl font-extrabold text-white md:text-6xl lg:text-7xl font-heading tracking-tight mb-6 leading-none">
             Assaí <span class="text-yellow-400">— PR</span>
         </h1>
-        <p class="max-w-3xl mx-auto text-lg text-blue-50 md:text-xl lg:text-2xl leading-relaxed font-light">
+        <p class="max-w-3xl mx-auto text-lg text-blue-100 md:text-xl lg:text-2xl leading-relaxed font-light">
             Do "Sol Nascente" (朝日) plantado pelos pioneiros japoneses em 1932 ao reconhecimento como uma das <strong class="text-white font-bold">Top 7 Comunidades mais Inteligentes do Mundo</strong>.
         </p>
         <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10 w-full">
@@ -57,25 +57,45 @@
 <section class="relative z-20 -mt-24">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-5">
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">1932</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Fundação</span>
+            {{-- Card Individual --}}
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-blue-400 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-blue-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">1932</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Fundação</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">13.797</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Habitantes (2022)</span>
+
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-blue-400 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-blue-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">13.797</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Habitantes (2022)</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">440 km²</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Área Territorial</span>
+
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-blue-400 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-blue-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">440 km²</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Área Territorial</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-slate-50 border rounded-2xl border-slate-400 ring-1 ring-slate-300/90 shadow-[0_10px_24px_rgba(15,23,42,0.16)] col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1">15%</span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Descendência Japonesa</span>
+
+            <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-blue-400 transition-colors">
+                <div class="h-1.5 bg-slate-200 group-hover:bg-blue-500 transition-colors"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-blue-700 font-heading mb-1 transition-transform group-hover:scale-110 duration-300">15%</span>
+                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Descendência</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-center p-5 text-center bg-yellow-400 border shadow-lg rounded-2xl border-yellow-600 ring-1 ring-yellow-500/40 col-span-2 md:col-span-1">
-                <span class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-1">Top 7</span>
-                <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Smart Communities — ICF</span>
+
+            <div class="flex flex-col overflow-hidden bg-yellow-400 border rounded-2xl border-yellow-500 shadow-[0_12px_32px_rgba(234,179,8,0.2)] col-span-2 md:col-span-1 group hover:bg-yellow-300 transition-colors">
+                <div class="h-1.5 bg-blue-900/10"></div>
+                <div class="flex flex-col items-center justify-center p-5 text-center">
+                    <span class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-1">Top 7</span>
+                    <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Smart Communities</span>
+                </div>
             </div>
         </div>
     </div>
@@ -97,7 +117,7 @@
                 </div>
             </div>
 
-            <div class="space-y-5 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-600 md:pl-6">
+            <div class="space-y-5 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-800 md:pl-6">
                 <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full">Raízes Históricas</span>
                 <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
                     O Nascimento de <span class="text-blue-700">Assailand</span>
@@ -105,13 +125,13 @@
                 <p>Em 1927, o cônsul japonês em São Paulo, Noriyuki Akamatsu, incentivou a emigração para o Paraná após agrônomos confirmarem a fertilidade excepcional das terras da região de Três Barras. Uma gleba de <strong>12 mil alqueires</strong> foi adquirida em 14 de novembro de 1928 pela Companhia Colonizadora Bratac.</p>
                 <p>No dia <strong>1º de maio de 1932</strong>, um grupo liderado por <strong>Miyuki Saito</strong> — acompanhado por Itissuke Nishimura, Utaro Katsuda, Tokujiro Tsutsui e Junzo Nagai — embrenhou-se mata adentro e fundou a nova colônia.</p>
                 <p>A sede, já bastante povoada, recebeu o nome de <strong>"Assailand"</strong>: uma fusão de <em>Asahi</em> (朝日 — "Sol Nascente", em japonês) com a palavra inglesa <em>land</em> (terra), em homenagem aos colonizadores japoneses que ali se estabeleceram.</p>
-                <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100 mt-2">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-700 shrink-0 mt-0.5">
+                <div class="flex items-start gap-4 p-5 bg-blue-700 rounded-xl border border-blue-600 shadow-sm mt-4">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 text-white shrink-0 mt-0.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </span>
-                    <p class="text-sm text-blue-800"><strong>Curiosidade:</strong> Assaí é a cidade com a <strong>maior proporção de descendentes japoneses do Brasil</strong>, cerca de 15% da população com origem nipônica, segundo o Censo 2022 do IBGE.</p>
+                    <p class="text-sm text-white leading-relaxed"><strong>Curiosidade:</strong> Assaí é a cidade com a <strong>maior proporção de descendentes japoneses do Brasil</strong>, cerca de 15% da população com origem nipônica, segundo o Censo 2022 do IBGE.</p>
                 </div>
             </div>
         </div>
@@ -198,7 +218,7 @@
 </section>
 
 {{-- ===== ECONOMIA ===== --}}
-<section class="py-20 bg-[#f8fbff] md:py-28">
+<section class="py-20 bg-white md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-green-700 bg-green-700 px-3 py-1 rounded-full mb-4">A Força do Campo e da Cidade</span>
@@ -241,7 +261,7 @@
 </section>
 
 {{-- ===== LOCALIZAÇÃO E GEOGRAFIA ===== --}}
-<section class="py-20 bg-[#eaf3ff] md:py-28 border-y border-blue-100/70">
+<section class="py-20 bg-white md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full mb-4">Norte Pioneiro do Paraná</span>
@@ -265,9 +285,9 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @php
                         $distancias = [
-                        ['cidade' => 'Londrina', 'km' => '46 km', 'info' => 'Aeroporto Internacional', 'cor' => 'blue'],
+                        ['cidade' => 'Londrina', 'km' => '46 km', 'info' => 'Aeroporto Internacional', 'cor' => 'slate'],
                         ['cidade' => 'S. Jerônimo da Serra', 'km' => '25 km', 'info' => 'Município de origem', 'cor' => 'slate'],
-                        ['cidade' => 'Maringá', 'km' => '127 km', 'info' => 'Hub regional', 'cor' => 'indigo'],
+                        ['cidade' => 'Maringá', 'km' => '127 km', 'info' => 'Hub regional', 'cor' => 'slate'],
                         ['cidade' => 'Curitiba', 'km' => '339 km', 'info' => 'Capital do Paraná', 'cor' => 'slate'],
                         ['cidade' => 'São Paulo', 'km' => '490 km', 'info' => 'Capital Paulista', 'cor' => 'slate'],
                         ['cidade' => 'Porto Alegre', 'km' => '720 km', 'info' => 'Capital Gaúcha', 'cor' => 'slate'],
@@ -371,12 +391,12 @@
     <div class="container relative z-10 px-4 mx-auto max-w-6xl">
         <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
             <div class="space-y-5 text-white">
-                <span class="inline-block text-blue-50 font-bold tracking-wider uppercase text-xs border border-blue-600 bg-blue-800/60 px-3 py-1 rounded-full">Tradição Viva</span>
+                <span class="inline-block text-blue-900 font-bold tracking-wider uppercase text-xs border border-yellow-500 bg-yellow-400 px-3 py-1 rounded-full">Tradição Viva</span>
                 <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight text-white">
                     O Coração <span class="text-yellow-300">Japonês</span> do Paraná
                 </h2>
-                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">A cultura nipônica não está apenas no nome de Assaí — ela pulsa nas ruas arborizadas com <strong>Sakura (cerejeiras)</strong> e Ipês, na arquitetura do imponente <strong>Castelo Japonês (Memorial da Imigração Japonesa)</strong> e no calendário de festividades ao longo do ano.</p>
-                <p class="text-blue-50 text-[15px] md:text-base leading-7 md:leading-relaxed">Em 1978, Assaí realizou o <strong>primeiro festival Tanabata Matsuri do Brasil</strong>. Hoje, o município celebra o Bon Odori, o Tenrankai e a Expoasa, mantendo viva a herança dos pioneiros que cruzaram oceanos para construir um novo lar.</p>
+                <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">A cultura nipônica não está apenas no nome de Assaí — ela pulsa nas ruas arborizadas com <strong>Sakura (cerejeiras)</strong> e Ipês, na arquitetura do imponente <strong>Castelo Japonês (Memorial da Imigração Japonesa)</strong> e no calendário de festividades ao longo do ano.</p>
+                <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">Em 1978, Assaí realizou o <strong>primeiro festival Tanabata Matsuri do Brasil</strong>. Hoje, o município celebra o Bon Odori, o Tenrankai e a Expoasa, mantendo viva a herança dos pioneiros que cruzaram oceanos para construir um novo lar.</p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     @php
@@ -454,7 +474,7 @@
                         <p class="text-xs text-slate-700 font-medium">IDH Municipal — PNUD</p>
                     </div>
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
-                        <div class="text-2xl font-black text-emerald-600 font-heading mb-1">93 anos</div>
+                        <div class="text-2xl font-black text-emerald-600 font-heading mb-1">{{ \Carbon\Carbon::parse('1932-05-01')->diffInYears(now()) }} anos</div>
                         <p class="text-xs text-slate-700 font-medium">De história e resiliência</p>
                     </div>
                     <div class="p-4 bg-slate-100/50 rounded-xl border border-slate-100">
@@ -501,7 +521,7 @@
 </section>
 
 {{-- ===== SÍMBOLOS CÍVICOS ===== --}}
-<section id="simbolos" class="py-20 bg-[#eaf3ff] md:py-28 border-t border-blue-100/70">
+<section id="simbolos" class="py-20 bg-white md:py-28">
     <div class="container px-4 mx-auto max-w-6xl">
         <div class="text-center mb-14">
             <span class="inline-block text-slate-900 font-bold tracking-wider uppercase text-xs border border-yellow-500 bg-yellow-400 px-3 py-1 rounded-full mb-4">Identidade Municipal</span>
@@ -515,19 +535,15 @@
             <div class="space-y-6">
 
                 {{-- Bandeira Municipal --}}
-                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="bg-slate-100/50 border border-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[220px]">
-                        <img src="/img/bandeira.png" alt="Bandeira do município" loading="lazy" decoding="async" class="w-full max-w-xs h-auto rounded shadow-sm group-hover:scale-[1.02] transition" />
-                    </div>
-                    <p class="text-base font-extrabold text-slate-700 font-heading text-center mt-4">Bandeira Municipal</p>
+                <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center">
+                    <img src="/img/bandeira.png" alt="Bandeira do município" loading="lazy" decoding="async" class="w-full max-w-[280px] h-auto rounded-lg shadow-md group-hover:scale-105 transition duration-500" />
+                    <p class="text-base font-extrabold text-slate-700 font-heading mt-6">Bandeira Municipal</p>
                 </div>
 
                 {{-- Brasão de Armas --}}
-                <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group">
-                    <div class="bg-slate-100/50 border border-slate-100 rounded-xl p-4 flex items-center justify-center min-h-[220px]">
-                        <img src="/img/brasao.png" alt="Brasão de Armas de Assaí" loading="lazy" decoding="async" class="w-full max-w-xs h-auto rounded shadow-sm group-hover:scale-[1.02] transition" />
-                    </div>
-                    <p class="text-base font-extrabold text-slate-700 font-heading text-center mt-4">Brasão de Armas</p>
+                <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center">
+                    <img src="/img/brasao.png" alt="Brasão de Armas de Assaí" loading="lazy" decoding="async" class="w-full max-w-[220px] h-auto group-hover:scale-105 transition duration-500" />
+                    <p class="text-base font-extrabold text-slate-700 font-heading mt-6">Brasão de Armas</p>
                 </div>
             </div>
 
@@ -609,7 +625,7 @@
             Tradição e Inovação<br>caminham lado a lado.
         </h2>
         <p class="text-blue-100 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
-            Com 93 anos de história, Assaí segue a saga dos seus fundadores: determinada, resiliente e de olhos voltados para o horizonte. Uma cidade que honra as suas raízes enquanto constrói o futuro.
+            Com {{ \Carbon\Carbon::parse('1932-05-01')->diffInYears(now()) }} anos de história, Assaí segue a saga dos seus fundadores: determinada, resiliente e de olhos voltados para o horizonte. Uma cidade que honra as suas raízes enquanto constrói o futuro.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
             <a href="{{ route('pages.turismo') }}" class="inline-flex items-center gap-2 px-7 py-3 md:py-3.5 font-bold text-blue-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
