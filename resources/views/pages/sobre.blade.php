@@ -2,12 +2,18 @@
 
 @section('title', 'Nossa História e Perfil - Prefeitura Municipal de Assaí')
 
+
 @section('content')
+<style>
+    body, html {
+        overflow-x: hidden !important;
+    }
+</style>
 
 {{-- ===== HERO ===== --}}
-<section class="relative pt-8 pb-20 overflow-hidden bg-blue-900 md:pt-12 md:pb-28 lg:pt-20 lg:pb-40">
+<section class="relative pt-[calc(var(--site-header-height,72px)+1.5rem)] pb-16 sm:pt-[calc(var(--site-header-height,72px)+2.5rem)] sm:pb-20 md:pt-[calc(var(--site-header-height,72px)+3.5rem)] md:pb-24 lg:pt-24 lg:pb-24 overflow-hidden bg-blue-900 w-full max-w-full">
     <div class="absolute inset-0">
-        <svg class="absolute w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
                     <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" stroke-width="1" />
@@ -17,29 +23,41 @@
         </svg>
         <div class="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-blue-950 to-transparent"></div>
     </div>
+    <div class="absolute inset-0">
+        <svg class="absolute w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="bamboo" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <rect x="0" y="0" width="40" height="40" fill="none" stroke="#fff" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#bamboo)"/>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#022c22] to-transparent"></div>
+    </div>
 
-    <div class="container relative z-10 px-4 mx-auto text-center max-w-5xl">
-        <x-breadcrumb :items="[
-            ['name' => 'Início', 'url' => route('home')],
-            ['name' => 'A Cidade'],
-        ]" dark />
-        <span class="inline-flex items-center gap-2 px-5 py-2 mb-8 text-xs font-bold tracking-widest text-blue-900 uppercase bg-yellow-400 rounded-full shadow-md">
+    <div class="container relative z-10 px-4 sm:px-6 md:px-8 mx-auto text-left max-w-5xl w-full overflow-x-hidden">
+        <div class="relative z-20">
+            <x-breadcrumb :items="[
+                ['name' => 'Início', 'url' => route('home')],
+                ['name' => 'A Cidade'],
+            ]" dark />
+        </div>
+        <span class="inline-flex items-center gap-2 px-5 py-2 mb-8 md:mb-10 text-xs font-bold tracking-widest text-blue-900 uppercase bg-yellow-400 rounded-full shadow-md">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
             </svg>
             Conheça a Nossa História
         </span>
-        <h1 class="text-4xl font-extrabold text-white md:text-6xl lg:text-7xl font-heading tracking-tight mb-6 leading-none">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold font-heading mb-5 text-white drop-shadow-sm leading-none" style="font-family: 'Montserrat', sans-serif;">
             Assaí <span class="text-yellow-400">— PR</span>
         </h1>
-        <p class="max-w-3xl mx-auto text-lg text-blue-100 md:text-xl lg:text-2xl leading-relaxed font-light">
+        <p class="max-w-3xl text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 leading-relaxed font-light mb-6">
             Do "Sol Nascente" (朝日) plantado pelos pioneiros japoneses em 1932 ao reconhecimento como uma das <strong class="text-white font-bold">Top 7 Comunidades mais Inteligentes do Mundo</strong>.
         </p>
-        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-10 w-full">
+        <div class="flex flex-col sm:flex-row flex-wrap items-center justify-start gap-3 sm:gap-4 mt-8 md:mt-12 w-full">
             <a href="{{ route('pages.turismo') }}" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 font-bold text-blue-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
                 Turismo & Pontos Turísticos
             </a>
@@ -54,9 +72,9 @@
 </section>
 
 {{-- ===== CARDS DE DADOS ===== --}}
-<section class="relative z-20 -mt-24">
-    <div class="container px-4 mx-auto max-w-6xl">
-        <div class="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-5">
+<section class="relative z-20 md:-mt-16 w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 md:gap-5 w-full">
             {{-- Card Individual --}}
             <div class="flex flex-col overflow-hidden bg-white border rounded-2xl border-slate-300 shadow-[0_12px_32px_rgba(15,23,42,0.12)] col-span-1 group hover:border-blue-400 transition-colors">
                 <div class="h-1.5 bg-slate-200 group-hover:bg-blue-500 transition-colors"></div>
@@ -102,12 +120,12 @@
 </section>
 
 {{-- ===== FUNDAÇÃO ===== --}}
-<section id="historia" class="py-16 bg-white md:py-24 lg:py-32">
-    <div class="container px-4 mx-auto max-w-6xl">
-        <div class="grid items-center grid-cols-1 gap-16 md:grid-cols-2">
+<section id="historia" class="py-12 sm:py-14 md:py-20 lg:py-28 bg-white w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
+        <div class="grid items-center grid-cols-1 gap-10 md:grid-cols-2 w-full">
             <div class="relative group">
-                <div class="overflow-hidden shadow-2xl rounded-3xl bg-slate-200 relative aspect-square">
-                    <img src="{{ asset('img/Assai.jpg') }}" alt="Fundação de Assaí — pioneiros japoneses em 1932" class="object-cover w-full h-full transition duration-700 group-hover:scale-105" loading="lazy" decoding="async">
+                <div class="overflow-hidden shadow-2xl rounded-3xl bg-slate-200 relative aspect-[4/3] sm:aspect-square w-full max-w-full">
+                    <img src="{{ asset('img/Assai.jpg') }}" alt="Fundação de Assaí — pioneiros japoneses em 1932" class="object-cover w-full h-full transition duration-700 group-hover:scale-105 max-w-full" loading="lazy" decoding="async">
                     <div class="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl"></div>
                 </div>
                 <div class="absolute -bottom-5 -right-5 p-5 shadow-2xl bg-blue-900 text-white rounded-2xl md:-bottom-8 md:-right-8 md:p-7">
@@ -117,7 +135,7 @@
                 </div>
             </div>
 
-            <div class="space-y-5 text-[15px] md:text-base leading-7 md:leading-relaxed text-slate-800 md:pl-6">
+            <div class="space-y-5 text-[15px] sm:text-base leading-7 md:leading-relaxed text-slate-800 md:pl-6 mt-8 md:mt-0">
                 <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full">Raízes Históricas</span>
                 <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
                     O Nascimento de <span class="text-blue-700">Assailand</span>
@@ -139,8 +157,8 @@
 </section>
 
 {{-- ===== LINHA DO TEMPO ===== --}}
-<section class="py-16 bg-[#eaf3ff] md:py-24 lg:py-28 border-y border-blue-100/70">
-    <div class="container px-4 mx-auto max-w-5xl">
+<section class="py-12 sm:py-14 md:py-20 lg:py-24 bg-[#eaf3ff] border-y border-blue-100/70 w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-5xl w-full overflow-x-hidden">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full mb-4">Linha do Tempo</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Marcos da Nossa História</h2>
@@ -150,7 +168,7 @@
             {{-- linha vertical --}}
             <div class="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-200 md:left-1/2 md:-translate-x-1/2"></div>
 
-            <div class="space-y-8">
+            <div class="space-y-8 w-full">
                 {{-- Item --}}
                 @php
                 $eventos = [
@@ -166,7 +184,7 @@
 
                 @foreach($eventos as $index => $evento)
                 @php $direita = $index % 2 === 0; @endphp
-                <div class="relative flex items-start gap-6 pl-14 md:pl-0 {{ $direita ? 'md:flex-row' : 'md:flex-row-reverse' }}">
+                <div class="relative flex flex-col md:flex-row items-start gap-6 pl-14 md:pl-0 {{ $direita ? 'md:flex-row' : 'md:flex-row-reverse' }}">
                     {{-- ponto central --}}
                         <div class="absolute left-5 top-1.5 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full border-2 border-white shadow-md
                             {{ $evento['ano'] === 'Hoje' ? 'animate-pulse ring-4 ring-emerald-300/50' : '' }}
@@ -177,7 +195,7 @@
                                ($evento['cor'] === 'indigo' ? 'bg-indigo-500' : 'bg-blue-500'))))}}">
                     </div>
                     {{-- conteúdo --}}
-                    <div class="md:w-5/12 {{ $direita ? 'md:pr-10' : 'md:pl-10' }}">
+                    <div class="w-full md:w-5/12 {{ $direita ? 'md:pr-10' : 'md:pl-10' }}">
                         <div class="relative p-6 md:p-8 bg-white border border-slate-200 shadow-sm rounded-2xl hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden text-left">
                             {{-- Filete de cor superior --}}
                             <div class="absolute top-0 left-0 w-full h-1.5 
@@ -218,15 +236,15 @@
 </section>
 
 {{-- ===== ECONOMIA ===== --}}
-<section class="py-20 bg-white md:py-28">
-    <div class="container px-4 mx-auto max-w-6xl">
+<section class="py-12 sm:py-14 md:py-20 lg:py-28 bg-white w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-green-700 bg-green-700 px-3 py-1 rounded-full mb-4">A Força do Campo e da Cidade</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Uma Economia em Constante Evolução</h2>
             <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">De colônia agrícola de imigrantes a polo industrial do Norte Pioneiro Paranaense.</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
             <div class="group p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 transition bg-white">
                 <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-yellow-100 text-yellow-700 mb-6">
                     <svg class="w-7 h-7 transform group-hover:scale-110 group-hover:rotate-3 transition duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,18 +279,18 @@
 </section>
 
 {{-- ===== LOCALIZAÇÃO E GEOGRAFIA ===== --}}
-<section class="py-20 bg-white md:py-28">
-    <div class="container px-4 mx-auto max-w-6xl">
+<section class="py-12 sm:py-14 md:py-20 lg:py-28 bg-white w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
         <div class="text-center mb-14">
             <span class="inline-block text-white font-bold tracking-wider uppercase text-xs border border-blue-700 bg-blue-700 px-3 py-1 rounded-full mb-4">Norte Pioneiro do Paraná</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Localização Estratégica</h2>
             <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">Assaí está no coração do Norte Pioneiro Paranaense, a poucos quilômetros das principais cidades da região.</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 items-start">
+        <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 items-start w-full">
 
             {{-- Coluna de dados --}}
-            <div class="space-y-8">
+            <div class="space-y-8 w-full">
 
                 {{-- Distâncias --}}
                 <div>
@@ -358,13 +376,13 @@
             </div>
 
             {{-- Mapa --}}
-            <div class="overflow-hidden rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 bg-white">
+            <div class="overflow-hidden rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 bg-white min-h-[260px] w-full max-w-full">
                 <iframe
                     title="Mapa de Assaí"
                     src="https://maps.google.com/maps?q=Assa%C3%AD,+Paran%C3%A1&output=embed"
                     width="100%"
                     height="460"
-                    class="border-0"
+                    class="border-0 w-full max-w-full"
                     allowfullscreen=""
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
@@ -375,7 +393,7 @@
 </section>
 
 {{-- ===== CULTURA JAPONESA ===== --}}
-<section class="py-20 bg-blue-950 md:py-28 relative overflow-hidden">
+<section class="py-12 sm:py-14 md:py-20 lg:py-28 bg-blue-950 relative overflow-hidden w-full max-w-full">
     <div class="absolute inset-0 opacity-[0.04]">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -388,8 +406,8 @@
         </svg>
     </div>
 
-    <div class="container relative z-10 px-4 mx-auto max-w-6xl">
-        <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
+    <div class="container relative z-10 px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
+        <div class="grid items-center grid-cols-1 gap-10 md:grid-cols-2 w-full">
             <div class="space-y-5 text-white">
                 <span class="inline-block text-blue-900 font-bold tracking-wider uppercase text-xs border border-yellow-500 bg-yellow-400 px-3 py-1 rounded-full">Tradição Viva</span>
                 <h2 class="text-3xl font-extrabold font-heading md:text-4xl leading-tight text-white">
@@ -398,7 +416,7 @@
                 <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">A cultura nipônica não está apenas no nome de Assaí — ela pulsa nas ruas arborizadas com <strong>Sakura (cerejeiras)</strong> e Ipês, na arquitetura do imponente <strong>Castelo Japonês (Memorial da Imigração Japonesa)</strong> e no calendário de festividades ao longo do ano.</p>
                 <p class="text-white text-[15px] md:text-base leading-7 md:leading-relaxed">Em 1978, Assaí realizou o <strong>primeiro festival Tanabata Matsuri do Brasil</strong>. Hoje, o município celebra o Bon Odori, o Tenrankai e a Expoasa, mantendo viva a herança dos pioneiros que cruzaram oceanos para construir um novo lar.</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 festas-japao-grid">
                     @php
                     $festas = [
                     ['nome' => 'Tanabata Matsuri', 'data' => 'Out.', 'icon' => '🌟', 'bg' => 'bg-yellow-100', 'text' => 'text-yellow-700'],
@@ -408,7 +426,7 @@
                     ];
                     @endphp
                     @foreach($festas as $festa)
-                    <div class="flex items-center gap-3 p-3 rounded-xl border border-white/20 backdrop-blur-sm {{ $festa['bg'] }}">
+                    <div class="festas-japao-card flex items-center gap-3 p-3 rounded-xl border border-white/20 backdrop-blur-sm {{ $festa['bg'] }}">
                         <span class="text-2xl {{ $festa['text'] }}">{{ $festa['icon'] }}</span>
                         <div>
                             <p class="font-bold text-sm font-heading {{ $festa['text'] }}">{{ $festa['nome'] }}</p>
@@ -426,7 +444,7 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4 mt-8 w-full">
                 <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-blue-800 flex flex-col items-center justify-center p-8 text-center border border-blue-700 transform hover:-translate-y-1 transition">
                     <span class="text-6xl mb-4">🏯</span>
                     <p class="font-extrabold font-heading text-white text-sm leading-tight">Castelo Japonês</p>
@@ -453,9 +471,9 @@
 </section>
 
 {{-- ===== SMART CITY / VALE DO SOL ===== --}}
-<section class="py-20 bg-[#f8fbff] md:py-28">
-    <div class="container px-4 mx-auto max-w-6xl">
-        <div class="grid items-center grid-cols-1 gap-12 md:grid-cols-2">
+<section class="py-12 sm:py-14 md:py-20 lg:py-28 bg-[#f8fbff] w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
+        <div class="grid items-center grid-cols-1 gap-10 md:grid-cols-2 w-full">
             <div class="space-y-5">
                 <span class="inline-block text-emerald-700 font-bold tracking-wider uppercase text-xs border border-emerald-200 bg-emerald-50 px-3 py-1 rounded-full">Inovação & Futuro</span>
                 <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl leading-tight">
@@ -485,7 +503,7 @@
             </div>
 
             <div class="relative">
-                <div class="relative z-10 p-10 bg-blue-900 rounded-3xl shadow-2xl text-white text-center overflow-hidden">
+                <div class="relative z-10 p-6 md:p-10 bg-blue-900 rounded-3xl shadow-2xl text-white text-center overflow-hidden">
                     <div class="absolute inset-0 opacity-5">
                         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                             <defs>
@@ -521,34 +539,34 @@
 </section>
 
 {{-- ===== SÍMBOLOS CÍVICOS ===== --}}
-<section id="simbolos" class="py-20 bg-white md:py-28">
-    <div class="container px-4 mx-auto max-w-6xl">
+<section id="simbolos" class="py-12 sm:py-14 md:py-20 lg:py-28 bg-white w-full max-w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full overflow-x-hidden">
         <div class="text-center mb-14">
             <span class="inline-block text-slate-900 font-bold tracking-wider uppercase text-xs border border-yellow-500 bg-yellow-400 px-3 py-1 rounded-full mb-4">Identidade Municipal</span>
             <h2 class="text-3xl font-extrabold text-slate-800 font-heading md:text-4xl">Símbolos Cívicos</h2>
             <p class="mt-4 max-w-2xl mx-auto text-slate-800 text-base">A bandeira, o brasão e o hino que representam a identidade e os valores do povo assaiense.</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 items-stretch">
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 items-stretch w-full">
 
             {{-- Coluna 1: Bandeira + Brasão --}}
             <div class="space-y-6">
 
                 {{-- Bandeira Municipal --}}
-                <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center">
-                    <img src="/img/bandeira.png" alt="Bandeira do município" loading="lazy" decoding="async" class="w-full max-w-[280px] h-auto rounded-lg shadow-md group-hover:scale-105 transition duration-500" />
+                <div class="p-6 md:p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center w-full">
+                    <img src="/img/bandeira.png" alt="Bandeira do município" loading="lazy" decoding="async" class="w-full max-w-[280px] h-auto rounded-lg shadow-md group-hover:scale-105 transition duration-500 max-w-full" />
                     <p class="text-base font-extrabold text-slate-700 font-heading mt-6">Bandeira Municipal</p>
                 </div>
 
                 {{-- Brasão de Armas --}}
-                <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center">
-                    <img src="/img/brasao.png" alt="Brasão de Armas de Assaí" loading="lazy" decoding="async" class="w-full max-w-[220px] h-auto group-hover:scale-105 transition duration-500" />
+                <div class="p-6 md:p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col items-center justify-center w-full">
+                    <img src="/img/brasao.png" alt="Brasão de Armas de Assaí" loading="lazy" decoding="async" class="w-full max-w-[220px] h-auto group-hover:scale-105 transition duration-500 max-w-full" />
                     <p class="text-base font-extrabold text-slate-700 font-heading mt-6">Brasão de Armas</p>
                 </div>
             </div>
 
             {{-- Coluna 2: Hino --}}
-            <div class="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+            <div class="p-6 md:p-8 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full w-full">
 
                 {{-- Header do card --}}
                 <div class="flex items-center gap-3 mb-5">
@@ -571,7 +589,7 @@
                 </div>
 
                 {{-- Letra do Hino Oficial --}}
-                <div class="flex-1 overflow-y-auto scrollbar-hide pr-2 border-t border-slate-100 pt-4 min-h-[320px]">
+                <div class="flex-1 overflow-y-auto scrollbar-hide pr-2 border-t border-slate-100 pt-4 min-h-[220px] md:min-h-[320px]">
                     <div class="space-y-5 text-sm text-slate-600 leading-loose">
                         <div>
                             <p class="text-xs font-black text-blue-600 uppercase tracking-widest mb-2">Letra: Walerian Wrosz</p>
@@ -608,7 +626,7 @@
 </section>
 
 {{-- ===== CTA FINAL ===== --}}
-<section class="py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 md:py-24 text-white relative overflow-hidden">
+<section class="py-12 sm:py-14 md:py-20 lg:py-28 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white relative overflow-hidden w-full max-w-full">
     <div class="absolute inset-0 opacity-5">
         <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -619,7 +637,7 @@
             <rect width="100%" height="100%" fill="url(#dots)" />
         </svg>
     </div>
-    <div class="container relative z-10 px-4 mx-auto max-w-4xl text-center">
+    <div class="container relative z-10 px-4 sm:px-6 md:px-8 mx-auto max-w-4xl text-center w-full overflow-x-hidden">
         <p class="text-yellow-400 font-bold tracking-widest uppercase text-xs mb-6">Assaí — Norte Pioneiro do Paraná</p>
         <h2 class="text-4xl font-extrabold font-heading md:text-5xl leading-tight mb-6 text-white">
             Tradição e Inovação<br>caminham lado a lado.
@@ -630,8 +648,7 @@
         <div class="flex flex-wrap items-center justify-center gap-4">
             <a href="{{ route('pages.turismo') }}" class="inline-flex items-center gap-2 px-7 py-3 md:py-3.5 font-bold text-blue-900 transition bg-yellow-400 rounded-full hover:bg-yellow-300 hover:-translate-y-0.5 shadow-lg text-sm md:text-base">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
                 Explore o Turismo
             </a>

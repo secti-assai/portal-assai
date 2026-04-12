@@ -24,7 +24,14 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
     data-logo-white="{{ asset('img/logo_branca.png') }}"
     data-logo-black="{{ asset('img/logo_preta.png') }}"></div>
 
-<header class="fixed top-0 left-0 right-0 z-[160] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50 lg:bg-transparent lg:backdrop-blur-none lg:shadow-none lg:text-white lg:border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}" id="site-header">
+<header
+    x-data="{ showNavbar: false }"
+    x-init="window.addEventListener('DOMContentLoaded', () => { setTimeout(() => { showNavbar = true }, 350); });"
+    x-show="showNavbar"
+    x-cloak
+    class="fixed top-0 left-0 right-0 z-[160] w-full transition-all duration-300 font-sans {{ $isHome ? 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50 lg:bg-transparent lg:backdrop-blur-none lg:shadow-none lg:text-white lg:border-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm text-slate-700 border-slate-200/50' }}"
+    id="site-header"
+>
 
     {{-- TOP BAR --}}
     <div class="hidden lg:block bg-blue-900 border-b border-white/10 transition-colors duration-300">

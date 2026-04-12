@@ -1,3 +1,6 @@
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
 import './bootstrap';
 
 // Importa os scripts de interatividade do Gov.br

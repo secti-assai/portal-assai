@@ -6,7 +6,7 @@
 
 <main id="home-main" class="transition-opacity duration-300">
 
-    <div id="hero-mobile-loader" class="fixed inset-0 z-[200] !important flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500 lg:hidden" aria-live="polite">
+    <div id="hero-mobile-loader" class="fixed inset-0 z-[200] flex items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500 lg:hidden" aria-live="polite">
         <div class="flex flex-col items-center gap-5 px-6 text-center">
             <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
             <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[200] !important items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
+    <div id="hero-video-loader" class="hidden lg:flex fixed inset-0 z-[200] items-center justify-center bg-gradient-to-b from-slate-950 via-blue-950 to-slate-900 text-white transition-opacity duration-500" aria-live="polite">
         <div class="flex flex-col items-center gap-5 px-6 text-center">
             <img src="{{ asset('img/logo_branca.png') }}" alt="Prefeitura de Assaí" loading="eager" decoding="sync" fetchpriority="high" class="w-56 max-w-[80vw] h-auto object-contain">
             <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase text-blue-100">
@@ -87,12 +87,11 @@
     $calendarMesProximo = $calendarMonth->copy()->addMonth()->format('Y-m');
     $calendarTituloMes = mb_strtolower($calendarMonth->locale('pt_BR')->translatedFormat('F Y'));
     @endphp
+
     {{-- ==========================================
          HERO MOBILE
          ========================================== --}}
     <div class="lg:hidden pl-mobile-home" id="pl-mobile-home">
-
-
 
         {{-- Hero --}}
         <div class="home-hero-mobile">
@@ -150,11 +149,8 @@
 
     </div>
 
-
-
-
     {{-- HERO DESKTOP --}}
-    <section id="hero-oficial" class="hidden lg:block relative w-full bg-slate-950 py-28 md:py-44">
+    <section id="hero-oficial" class="hidden lg:block relative w-full bg-slate-950 py-40 md:py-56" style="padding-top: var(--site-header-height,130px);">
         <div class="absolute inset-0 z-0 bg-slate-950">
             <video id="hero-video-lazy" class="w-full h-full object-cover object-center opacity-0 transition-opacity duration-1000" muted loop playsinline poster="{{ asset('img/Assai.jpg') }}" preload="none">
                 <source data-src="{{ asset('videos/panorama.mp4') }}" type="video/mp4">
@@ -162,7 +158,7 @@
             <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-950/40 to-slate-900/60"></div>
         </div>
         <div class="relative z-50 container mx-auto max-w-4xl flex flex-col items-center justify-center px-4" x-data="searchAutocomplete()" @click.outside="open = false">
-            <h1 class="mb-6 text-3xl md:text-5xl font-extrabold text-white drop-shadow-md font-heading leading-tight text-center break-words">O QUE VOCÊ <strong>PRECISA?</strong></h1>
+            <h1 class="mt-16 mb-6 text-3xl md:text-5xl font-extrabold text-white drop-shadow-md font-heading leading-tight text-center break-words">O QUE VOCÊ <strong>PRECISA?</strong></h1>
             <form action="{{ route('busca.index') }}" method="GET" 
                   class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" 
                   role="search"
@@ -238,11 +234,6 @@
                 </svg></a>
         </div>
     </section>
-
-
-
-
-
 
     {{-- ==========================================
          MOBILE SECTION
@@ -468,8 +459,6 @@
                     </div>
 
                     <div class="swiper-pagination !bottom-5"></div>
-                    <div class="swiper-button-prev program-swiper-arrow !text-[#0b2f57]"></div>
-                    <div class="swiper-button-next program-swiper-arrow !text-[#0b2f57]"></div>
                 </div>
             </div>
 
@@ -588,6 +577,10 @@
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
     {{-- Logic for Search Autocomplete --}}
     <script>
         function searchAutocomplete() {
@@ -645,127 +638,256 @@
     </script>
 
     {{-- Script para o efeito de Digitação nos placeholders de busca --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchIdeas = [
-            "Emitir Nota Fiscal...",
-            "IPTU...",
-            "Telefones...",
-            "Ouvidoria municipal..."
-        ];
-        
-        const inputs = [
-            document.getElementById('busca-portal-mobile'),
-            document.getElementById('busca-portal-fixo')
-        ];
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchIdeas = [
+                "Emitir Nota Fiscal...",
+                "IPTU...",
+                "Telefones...",
+                "Ouvidoria municipal..."
+            ];
+            
+            const inputs = [
+                document.getElementById('busca-portal-mobile'),
+                document.getElementById('busca-portal-fixo')
+            ];
 
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        
-        const typingSpeed = 100;
-        const erasingSpeed = 50;
-        const delayBetweenPhrases = 2000;
-        const delayBeforeRestart = 500;
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            
+            const typingSpeed = 100;
+            const erasingSpeed = 50;
+            const delayBetweenPhrases = 2000;
+            const delayBeforeRestart = 500;
 
-        function typePlaceholder() {
-            const currentPhrase = searchIdeas[phraseIndex];
+            function typePlaceholder() {
+                const currentPhrase = searchIdeas[phraseIndex];
 
-            inputs.forEach(input => {
-                if (input) {
-                    if (isDeleting) {
-                        input.setAttribute('placeholder', currentPhrase.substring(0, charIndex - 1));
-                    } else {
-                        input.setAttribute('placeholder', currentPhrase.substring(0, charIndex + 1));
+                inputs.forEach(input => {
+                    if (input) {
+                        if (isDeleting) {
+                            input.setAttribute('placeholder', currentPhrase.substring(0, charIndex - 1));
+                        } else {
+                            input.setAttribute('placeholder', currentPhrase.substring(0, charIndex + 1));
+                        }
                     }
+                });
+
+                if (isDeleting) {
+                    charIndex--;
+                } else {
+                    charIndex++;
                 }
-            });
 
-            if (isDeleting) {
-                charIndex--;
-            } else {
-                charIndex++;
+                let loopDelay = isDeleting ? erasingSpeed : typingSpeed;
+
+                if (!isDeleting && charIndex === currentPhrase.length) {
+                    loopDelay = delayBetweenPhrases;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % searchIdeas.length;
+                    loopDelay = delayBeforeRestart;
+                }
+
+                setTimeout(typePlaceholder, loopDelay);
             }
 
-            let loopDelay = isDeleting ? erasingSpeed : typingSpeed;
-
-            if (!isDeleting && charIndex === currentPhrase.length) {
-                loopDelay = delayBetweenPhrases;
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                phraseIndex = (phraseIndex + 1) % searchIdeas.length;
-                loopDelay = delayBeforeRestart;
+            if (inputs[0] || inputs[1]) {
+                setTimeout(typePlaceholder, delayBetweenPhrases);
             }
+        });
+    </script>
 
-            setTimeout(typePlaceholder, loopDelay);
-        }
-
-        if (inputs[0] || inputs[1]) {
-            setTimeout(typePlaceholder, delayBetweenPhrases);
-        }
-    });
-</script>
+</main>
+@endsection
 
 @push('modals')
 @if(isset($banners) && $banners->count() > 0)
-{{-- ==========================================
-     BANNER MODAL (UNIFICADO MOBILE & DESKTOP)
-     ========================================== --}}
-<div id="banner-portal-modal"
-     x-cloak
-     x-data="{ 
-        show: false,
-        init() {
-            setTimeout(() => { 
-                this.show = true;
-                document.body.style.overflow = 'hidden';
-            }, 1500);
-        },
-        close() {
-            this.show = false;
-            document.body.style.overflow = '';
-        }
-     }"
-     {{-- O bind de classe garante que o flex seja aplicado e evita conflitos de display do x-show --}}
-     :class="show ? 'flex' : 'hidden'"
-     class="fixed inset-0 z-[25000] items-center justify-center bg-black/95 backdrop-blur-md p-0 md:p-4"
-     @keydown.escape.window="close()">
+<style>
+    /* CSS Vanilla de Alto Nível de Z-Index para isolamento do Tailwind */
+    #banner-portal-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        background-color: rgba(0, 0, 0, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+    #banner-portal-modal.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .modal-banner-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2147483648;
+    }
+    .modal-banner-close:hover {
+        background: rgba(220, 38, 38, 0.9);
+    }
+    .swiper-modal-vanilla {
+        width: 100vw;
+        height: 85dvh;
+        max-width: 900px;
+        display: block;
+        position: relative;
+    }
+    .swiper-modal-vanilla .swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-modal-vanilla img {
+        max-width: 95vw;
+        max-height: 85dvh;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+    }
     
-    {{-- Contêiner do Modal --}}
-    <div class="relative w-full h-full md:h-auto md:max-w-4xl bg-slate-950 md:rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-center border-none md:border md:border-white/10" @click.away="close()">
+/* === Setas do Swiper Isoladas === */
+    .nav-modal-exclusiva {
+        /* Fundo escuro com 60% de opacidade para garantir visibilidade sobre imagens claras */
+        background-color: rgba(0, 0, 0, 0.6) !important; 
+        background-image: none !important; /* Anula a seta maior proveniente do CSS global */
+        color: rgba(255, 255, 255, 0.9) !important;
         
-        {{-- Botão Fechar (Tamanho dinâmico: grande no mobile, menor no desktop) --}}
-        <button type="button" 
-                class="absolute top-6 right-6 md:top-4 md:right-4 z-[25010] text-white bg-white/20 md:bg-black/40 backdrop-blur-lg hover:bg-red-600 rounded-full w-14 h-14 md:w-10 md:h-10 flex items-center justify-center transition-all border border-white/30 md:border-none shadow-2xl md:shadow-none" 
-                aria-label="Fechar Banner"
-                @click="close()">
-            <i class="fa-solid fa-xmark text-2xl md:text-lg"></i>
-        </button>
+        /* Dimensões forçadas e borda arredondada para criar o círculo */
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 50% !important;
+        
+        /* Centralização absoluta do ícone dentro da bolinha */
+        align-items: center !important;
+        justify-content: center !important;
+        
+        transition: all 0.3s ease;
+        display: none; 
+    }
+    
+    .nav-modal-exclusiva:hover {
+        /* Escurece o fundo e aumenta levemente ao passar o cursor */
+        background-color: rgba(0, 0, 0, 0.9) !important; 
+        color: #ffffff !important;
+        transform: scale(1.05);
+    }
 
-        {{-- Área do Carrossel --}}
-        <div class="swiper swiper-final-desktop w-full h-full md:h-auto relative group flex items-center">
-            <div class="swiper-wrapper">
-                @foreach($banners as $banner)
-                <div class="swiper-slide bg-transparent flex items-center justify-center min-h-[50vh]">
-                    @if($banner->link) <a href="{{ $banner->link }}" target="_blank" class="w-full block"> @endif
-                        <img src="{{ asset('storage/' . $banner->imagem) }}" 
-                             class="mx-auto w-full h-auto max-h-[85vh] object-contain block px-2 md:px-0"
-                             loading="eager"
-                             alt="Banner Informativo">
-                    @if($banner->link) </a> @endif
-                </div>
-                @endforeach
+    /* Oculta nós HTML internos (ex: <svg> ou <i>) caso injetados por JS */
+    .nav-modal-exclusiva > * {
+        display: none !important;
+    }
+
+    /* Define a exibição estrita da seta menor nativa do Swiper */
+    .nav-modal-exclusiva::after {
+        display: block !important;
+        font-family: 'swiper-icons' !important;
+        font-size: 20px !important; /* Dimensão da seta ajustada para o centro da bolinha */
+        font-weight: 900 !important;
+    }
+    
+    @media (min-width: 768px) {
+        .nav-modal-exclusiva {
+            display: flex !important; /* O flex é crucial para o align-items e justify-content funcionarem */
+        }
+    }
+</style>
+
+<div id="banner-portal-modal">
+    <button class="modal-banner-close" onclick="fecharBannerModal()" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    
+    <div class="swiper swiper-modal-vanilla">
+        <div class="swiper-wrapper">
+            @foreach($banners as $banner)
+            <div class="swiper-slide">
+                @if($banner->link) <a href="{{ $banner->link }}" target="_blank" style="display:block; width:100%; height:100%;"> @endif
+                    <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner Modal">
+                @if($banner->link) </a> @endif
             </div>
-            
-            @if($banners->count() > 1)
-                <div class="swiper-pagination !bottom-8 md:!bottom-4"></div>
-                <div class="hidden md:flex swiper-button-prev !text-white !left-4 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="hidden md:flex swiper-button-next !text-white !right-4 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            @endif
+            @endforeach
         </div>
+        @if($banners->count() > 1)
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev nav-modal-exclusiva seta-unica-prev"></div>
+            <div class="swiper-button-next nav-modal-exclusiva seta-unica-next"></div>
+        @endif
     </div>
 </div>
+
+<script>
+    function fecharBannerModal() {
+        var modal = document.getElementById('banner-portal-modal');
+        if (modal) {
+            modal.classList.remove('is-visible');
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var mobileLoader = document.getElementById('hero-mobile-loader');
+        var desktopLoader = document.getElementById('hero-video-loader');
+        var modal = document.getElementById('banner-portal-modal');
+        var swiperInstanciado = false;
+
+        function isLoaderVisible(el) {
+            return el && window.getComputedStyle(el).display !== 'none' && !el.classList.contains('hidden') && el.style.opacity !== '0';
+        }
+
+        function tryInitModal() {
+            if (isLoaderVisible(mobileLoader) || isLoaderVisible(desktopLoader)) {
+                setTimeout(tryInitModal, 500);
+                return;
+            }
+
+            if (modal) {
+                modal.classList.add('is-visible');
+                document.body.style.overflow = 'hidden';
+
+                if (!swiperInstanciado) {
+                    var swiperClass = window.Swiper || (typeof Swiper !== 'undefined' ? Swiper : null);
+                    if (swiperClass) {
+                        new swiperClass('.swiper-modal-vanilla', {
+                            loop: true,
+                            autoplay: { delay: 6000, disableOnInteraction: false },
+                            pagination: { el: '.swiper-pagination', clickable: true },
+                            // Mapeamento exclusivo para não puxar setas de outros componentes
+                            navigation: { 
+                                nextEl: '.seta-unica-next', 
+                                prevEl: '.seta-unica-prev' 
+                            },
+                            observer: true,
+                            observeParents: true,
+                            resizeObserver: true
+                        });
+                        swiperInstanciado = true;
+                    }
+                }
+            }
+        }
+
+        setTimeout(tryInitModal, 1000);
+    });
+</script>
 @endif
 @endpush
-@endsection

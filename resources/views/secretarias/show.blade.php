@@ -3,11 +3,9 @@
 @section('title', $secretaria->nome . ' - Prefeitura de Assaí')
 
 @section('content')
-<main class="min-h-screen pb-20 bg-[#edf5ff]">
-
-    {{-- ===== HERO HEADER ===== --}}
-    <section class="bg-blue-900 pt-10 pb-8 sm:pt-16 sm:pb-12">
-        <div class="container px-4 mx-auto max-w-6xl">
+{{-- ===== HERO HEADER ===== --}}
+<section class="relative py-12 overflow-hidden bg-blue-900 md:py-20 lg:py-24">
+    <div class="container relative z-10 px-4 mx-auto max-w-7xl text-left">
 
             {{-- Breadcrumb --}}
             <nav class="flex items-center gap-1.5 mb-6 text-sm text-blue-300 flex-wrap" aria-label="Breadcrumb">
@@ -18,11 +16,11 @@
                 <span class="font-medium text-white truncate max-w-[180px] sm:max-w-xs">{{ $secretaria->nome }}</span>
             </nav>
 
-            <h1 class="text-3xl max-[360px]:text-2xl md:text-4xl font-black text-white leading-tight break-words">
+            <h1 class="text-3xl font-extrabold md:text-5xl font-heading mb-4 text-white drop-shadow-sm break-words" style="font-family: 'Montserrat', sans-serif;">
                 {{ $secretaria->nome }}
             </h1>
             @if($secretaria->nome_secretario)
-                <p class="mt-2 text-blue-200 text-base font-medium">
+                <p class="text-lg text-blue-200 font-light">
                     Secretário(a): <span class="text-yellow-400 font-bold">{{ $secretaria->nome_secretario }}</span>
                 </p>
             @endif
@@ -32,7 +30,6 @@
 
     {{-- ===== GRID PRINCIPAL ===== --}}
     <div class="container px-4 mx-auto max-w-6xl py-10 max-[360px]:py-7">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {{-- ============================================================ --}}
             {{-- COLUNA PRINCIPAL (esquerda)                                   --}}
@@ -220,5 +217,5 @@
         </div>
     </div>
 
-</main>
+<!-- Fim do conteúdo principal -->
 @endsection

@@ -1,31 +1,9 @@
-/* resources/js/home.js */
 import Swiper from 'swiper/bundle';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Configuração do Swiper (Popup Modal Banners)
-    // Swiper do Modal de Banners (Unificado conforme solicitado)
-    const bannerSwiperContainer = document.querySelector('.swiper-final-desktop');
-    if (bannerSwiperContainer) {
-        new Swiper('.swiper-final-desktop', {
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            // Parâmetros críticos para modais
-            observer: true,
-            observeParents: true,
-        });
-    }
+// Expõe estritamente a variável global para acesso do script Vanilla no arquivo blade
+window.Swiper = Swiper;
 
+document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     // LÓGICA DO MENU MOBILE (Pedro Leopoldo Style) E CORREÇÕES DO LARAVEL
     // =========================================================================

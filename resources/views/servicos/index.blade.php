@@ -9,12 +9,10 @@
     $totalServicos = $servicos->total();
 @endphp
 
-<div id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen pb-20 m-0 p-0">
-    
-    {{-- ==========================================
-         HERO SECTION (Cores originais Tailwind)
-         ========================================== --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 pt-10 pb-8 sm:pt-16 sm:pb-12 shadow-inner">
+{{-- ==========================================
+    HERO SECTION (Cores originais Tailwind)
+    ========================================== --}}
+<section class="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 py-12 md:py-20 lg:py-24 shadow-inner">
         {{-- Elementos de Fundo Subtis --}}
         <div class="absolute inset-0 pointer-events-none">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_60%)]"></div>
@@ -33,10 +31,10 @@
                         ['name' => 'Serviços'],
                     ]" dark />
 
-                    <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-4 tracking-tight drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">
+                    <h1 class="text-3xl font-extrabold md:text-5xl font-heading mb-4 text-white drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">
                         Serviços ao Cidadão
                     </h1>
-                    <p class="text-sm sm:text-base text-blue-100 max-w-2xl mt-3 leading-relaxed">
+                    <p class="text-lg text-blue-100 max-w-2xl leading-relaxed font-light">
                         Consulte os serviços disponíveis da Prefeitura de Assaí, encontre informações rápidas e acesse os canais oficiais de atendimento.
                     </p>
                 </div>
@@ -208,7 +206,7 @@
                             {{ $servico->titulo }}
                         </h3>
                         @if($servico->secretaria)
-                        <span class="inline-block bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded w-fit max-w-full truncate border border-slate-200">
+                        <span class="inline-block bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded w-fit border border-slate-200">
                             {{ $servico->secretaria->nome }}
                         </span>
                         @endif
