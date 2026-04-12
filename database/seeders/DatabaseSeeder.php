@@ -32,8 +32,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call([ServicoSeeder::class]);
 
-        // Banners do carrossel principal
-        Banner::factory(3)->create();
         
         // Programas municipais
         Programa::factory(10)->create();
