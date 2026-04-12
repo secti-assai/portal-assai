@@ -28,7 +28,6 @@ class BannerFactory extends Factory
         return [
             'imagem'         => $filename,
             'exibir_inteira' => false,
-            'link'           => $this->faker->randomElement(['/servicos', '/noticias', null]),
             'ativo'          => true,
             'ordem'          => 0, // se aplicavel
         ];
