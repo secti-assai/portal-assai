@@ -95,9 +95,7 @@
                 <h3 class="mb-4 text-sm font-bold tracking-widest text-slate-100 uppercase font-heading">Institucional</h3>
                 <nav aria-label="Navegação Institucional">
                     <ul class="space-y-3 text-sm font-medium text-slate-400">
-                        <li><a href="{{ route('pages.sobre') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">A Cidade</a></li>
-                        <li><a href="{{ route('pages.sobre') }}#simbolos" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Hino e Símbolos</a></li>
-                        <li><a href="{{ route('pages.turismo') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Turismo e Lazer</a></li>
+            
                         <li><a href="{{ route('secretarias.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Secretarias</a></li>
                         <li><a href="{{ route('contato.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Fale Conosco</a></li>
                     </ul>

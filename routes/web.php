@@ -37,6 +37,7 @@ Route::get('/secretarias/{id}', [PortalController::class, 'secretariaShow'])->na
 // Busca
 Route::get('/pesquisar', [PortalController::class, 'buscaGlobal'])->name('busca.index');
 Route::get('/busca/autocomplete', [PortalController::class, 'autocomplete'])->name('busca.autocomplete');
+Route::get('/busca/avancada', [PortalController::class, 'avancada'])->name('busca.avancada');
 
 Route::get('/api/plantao-hoje', function () {
     $cacheKey = 'portal_plantao_hoje';
@@ -198,7 +199,13 @@ Route::get('/programas', [PortalController::class, 'programas'])->name('programa
 Route::get('/programas/{programa}', [PortalController::class, 'showPrograma'])->name('programas.show');
 
 // Páginas Estáticas
-Route::view('/sobre', 'pages.sobre')->name('pages.sobre');
+Route::prefix('cidade')->name('cidade.')->group(function () {
+    Route::get('/nossa-cidade', [PortalController::class, 'nossaCidade'])->name('nossa-cidade');
+    Route::get('/nossa-cultura', [PortalController::class, 'nossaCultura'])->name('nossa-cultura');
+    Route::get('/demografia', [PortalController::class, 'demografia'])->name('demografia');
+    Route::get('/historias-de-sucessos', [PortalController::class, 'historiasSucesso'])->name('historias-sucesso');
+    Route::get('/qualidade-de-vida', [PortalController::class, 'qualidadeVida'])->name('qualidade-vida');
+});
 Route::view('/turismo', 'pages.turismo')->name('pages.turismo');
 Route::view('/transparencia', 'pages.transparencia')->name('pages.transparencia');
 Route::view('/acessibilidade', 'pages.acessibilidade')->name('pages.acessibilidade');

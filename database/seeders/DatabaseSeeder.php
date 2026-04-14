@@ -25,13 +25,10 @@ class DatabaseSeeder extends Seeder
 
         // Usuário administrador (preservado)
         $this->call([AdminSeeder::class]);
-
         $this->call([SecretariaSeeder::class]);
-
         $this->call([ExecutivosSeeder::class]);
-
         $this->call([ServicoSeeder::class]);
-
+        $this->call([PortalSeeder::class]);
         
         // Programas municipais
         Programa::factory(10)->create();

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('imagem_capa')->nullable();
             $table->date('data_publicacao');
             $table->boolean('ativo')->default(true);
-
+            $table->boolean('destaque')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

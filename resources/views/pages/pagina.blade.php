@@ -27,6 +27,9 @@
     </div>
 
     @php
+    $destaquesSlider = isset($noticias) && $noticias->count() > 0 ? $noticias->take(3) : collect();
+    $recentesSidebar = isset($noticias) && $noticias->count() > 3 ? $noticias->skip(3)->take(3) : (isset($noticias) ? $noticias->take(3) : collect());
+
     $sugestoesBusca = collect($sugestoesIA ?? [
     'Emitir nota fiscal eletronica',
     'Consultar protocolo digital',
@@ -35,16 +38,16 @@
     ])->take(3);
 
     $servicosPlMobile = [
-        ['titulo' => 'Nota Fiscal Pr. / ISS', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
-        ['titulo' => 'Alvará Web', 'icone' => 'fa-building-columns', 'link' => '#'],
-        ['titulo' => 'Holerite Online', 'icone' => 'fa-file-invoice', 'link' => '#'],
-        ['titulo' => 'ITBI', 'icone' => 'fa-house-circle-check', 'link' => '#'],
-        ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
-        ['titulo' => 'Portal da Transparência', 'icone' => 'fa-money-bill-trend-up', 'link' => '#'],
-        ['titulo' => 'Ouvidoria', 'icone' => 'fa-bullhorn', 'link' => '#'],
-        ['titulo' => 'Procon', 'icone' => 'fa-scale-balanced', 'link' => '#'],
-        ['titulo' => 'Diário Oficial', 'icone' => 'fa-book-bookmark', 'link' => '#'],
-        ['titulo' => 'Licitações', 'icone' => 'fa-file-contract', 'link' => '#'],
+    ['titulo' => 'Nota Fiscal Pr. / ISS', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
+    ['titulo' => 'Alvará Web', 'icone' => 'fa-building-columns', 'link' => '#'],
+    ['titulo' => 'Holerite Online', 'icone' => 'fa-file-invoice', 'link' => '#'],
+    ['titulo' => 'ITBI', 'icone' => 'fa-house-circle-check', 'link' => '#'],
+    ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
+    ['titulo' => 'Portal da Transparência', 'icone' => 'fa-money-bill-trend-up', 'link' => '#'],
+    ['titulo' => 'Ouvidoria', 'icone' => 'fa-bullhorn', 'link' => '#'],
+    ['titulo' => 'Procon', 'icone' => 'fa-scale-balanced', 'link' => '#'],
+    ['titulo' => 'Diário Oficial', 'icone' => 'fa-book-bookmark', 'link' => '#'],
+    ['titulo' => 'Licitações', 'icone' => 'fa-file-contract', 'link' => '#'],
     ];
 
     $calendarMesParam = request()->query('mes');
@@ -97,17 +100,9 @@
         <div class="home-hero-mobile">
             <div class="home-hero-content">
                 <h1 class="hero-title">O QUE VOCÊ <strong>PRECISA?</strong></h1>
-                <form action="{{ route('busca.index') }}" method="GET" 
-                      class="home-search-bar relative" 
-                      role="search"
-                      x-data="searchAutocomplete()"
-                      x-on:click.outside="open = false"
-                      @submit="open = false">
-                    <input id="busca-portal-mobile" class="home-search-input-custom" type="search" name="q" placeholder="Emitir Nota fiscal..." required
-                           x-model.debounce.300ms="query"
-                           @focus="if(results.length > 0) open = true"
-                           @keydown.escape="open = false"
-                           autocomplete="off">
+
+                <form action="{{ route('busca.index') }}" method="GET" class="home-search-bar relative" role="search" x-data="searchAutocomplete()" x-on:click.outside="open = false" @submit="open = false">
+                    <input id="busca-portal-mobile" class="home-search-input-custom" type="search" name="q" placeholder="Emitir Nota fiscal..." required x-model.debounce.300ms="query" @focus="if(results.length > 0) open = true" @keydown.escape="open = false" autocomplete="off">
                     <button class="home-search-button-custom" type="submit" aria-label="Pesquisar">
                         <i class="fa-solid fa-magnifying-glass" aria-hidden="true" x-show="!loading"></i>
                         <template x-if="loading">
@@ -115,37 +110,49 @@
                         </template>
                     </button>
 
-                    {{-- Dropdown de Sugestões (Mobile) --}}
-                    <div x-show="open" 
-                         x-transition:enter="transition ease-out duration-200"
-                         x-transition:enter-start="opacity-0 translate-y-1"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         x-cloak
-                         class="search-suggestions-dropdown text-left">
-                        
-                        <template x-for="(items, tipo) in groupedResults" :key="tipo">
-                            <div class="search-category-group">
-                                <div class="search-category-title">
-                                    <i class="fa-solid" :class="getIcon(tipo)"></i>
-                                    <span x-text="tipo"></span>
-                                </div>
-                                <template x-for="item in items" :key="item.url">
-                                    <a :href="item.url" class="search-suggestion-item">
-                                        <span x-text="item.titulo"></span>
-                                    </a>
-                                </template>
-                            </div>
-                        </template>
+                </form>
 
-                        <template x-if="results.length === 0 && query.length >= 2 && !loading">
-                            <div class="p-6 text-center text-slate-500 text-sm italic">
-                                Sem resultados para "<span x-text="query"></span>"
-                            </div>
+                <div class="mt-4 flex justify-center w-full" x-data>
+                    <button type="button"
+                        @click="$dispatch('open-modal-busca-avancada')"
+                        class="inline-flex items-center gap-2 text-[13px] font-bold text-white/90 hover:text-white transition-colors border-b border-dashed border-white/50 hover:border-white focus:outline-none focus:ring-2 focus:ring-yellow-400 p-1">
+                        <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                        Busca Avançada
+                    </button>
+                </div>
+            </div>
+
+            {{-- Dropdown de Sugestões (Mobile) --}}
+            <div x-show="open"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-1"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-cloak
+                class="search-suggestions-dropdown text-left">
+
+                <template x-for="(items, tipo) in groupedResults" :key="tipo">
+                    <div class="search-category-group">
+                        <div class="search-category-title">
+                            <i class="fa-solid" :class="getIcon(tipo)"></i>
+                            <span x-text="tipo"></span>
+                        </div>
+                        <template x-for="item in items" :key="item.url">
+                            <a :href="item.url" class="search-suggestion-item">
+                                <span x-text="item.titulo"></span>
+                            </a>
                         </template>
                     </div>
-                </form>
+                </template>
+
+                <template x-if="results.length === 0 && query.length >= 2 && !loading">
+                    <div class="p-6 text-center text-slate-500 text-sm italic">
+                        Sem resultados para "<span x-text="query"></span>"
+                    </div>
+                </template>
             </div>
+            </form>
         </div>
+    </div>
 
     </div>
 
@@ -159,60 +166,60 @@
         </div>
         <div class="relative z-50 container mx-auto max-w-4xl flex flex-col items-center justify-center px-4" x-data="searchAutocomplete()" @click.outside="open = false">
             <h1 class="mt-16 mb-6 text-3xl md:text-5xl font-extrabold text-white drop-shadow-md font-heading leading-tight text-center break-words">O QUE VOCÊ <strong>PRECISA?</strong></h1>
-            <form action="{{ route('busca.index') }}" method="GET" 
-                  class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" 
-                  role="search"
-                  @submit="open = false">
-                <label for="busca-portal-fixo" class="sr-only">Buscar no portal</label>
-                <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
-                    <template x-if="!loading">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </template>
-                    <template x-if="loading">
-                        <div class="search-loader"></div>
-                    </template>
+            <form action="{{ route('busca.index') }}" method="GET"
+                class="relative flex items-center w-full max-w-2xl bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1"
+                role="search"
+                @submit="open = false">
+
+                <input id="busca-portal-fixo" type="text" name="q" placeholder="Emitir Nota Fiscal..." required
+                    class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
+                    x-model.debounce.300ms="query"
+                    @focus="if(results.length > 0) open = true"
+                    @keydown.escape="open = false"
+                    autocomplete="off">
+
+                <div class="flex items-center gap-1 pr-1 shrink-0">
+                    <div class="w-px h-8 bg-slate-200 mx-2" aria-hidden="true"></div> <button type="button"
+                        @click="$dispatch('open-modal-busca-avancada')"
+                        class="flex items-center justify-center gap-2 px-3 py-2 text-[13px] md:text-sm font-bold text-slate-600 transition-colors rounded-full hover:bg-slate-100 hover:text-[#006eb7] focus:outline-none focus:ring-2 focus:ring-blue-500/50 whitespace-nowrap">
+                        <i class="fa-solid fa-sliders text-base text-[#006eb7]" aria-hidden="true"></i>
+                        <span>Busca Avançada</span>
+                    </button>
                 </div>
-                <input id="busca-portal-fixo" type="text" name="q" placeholder="Emitir Nota Fiscal..." required 
-                       class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
-                       x-model.debounce.300ms="query"
-                       @focus="if(results.length > 0) open = true"
-                       @keydown.escape="open = false"
-                       autocomplete="off">
+
                 <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
                     Buscar
                 </button>
+            </form>
+            {{-- Dropdown de Sugestões --}}
+            <div x-show="open"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-1"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-cloak
+                class="search-suggestions-dropdown text-left">
 
-                {{-- Dropdown de Sugestões --}}
-                <div x-show="open" 
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-cloak
-                     class="search-suggestions-dropdown text-left">
-                    
-                    <template x-for="(items, tipo) in groupedResults" :key="tipo">
-                        <div class="search-category-group">
-                            <div class="search-category-title">
-                                <i class="fa-solid" :class="getIcon(tipo)"></i>
-                                <span x-text="tipo"></span>
-                            </div>
-                            <template x-for="item in items" :key="item.url">
-                                <a :href="item.url" class="search-suggestion-item">
-                                    <span x-text="item.titulo"></span>
-                                </a>
-                            </template>
+                <template x-for="(items, tipo) in groupedResults" :key="tipo">
+                    <div class="search-category-group">
+                        <div class="search-category-title">
+                            <i class="fa-solid" :class="getIcon(tipo)"></i>
+                            <span x-text="tipo"></span>
                         </div>
-                    </template>
+                        <template x-for="item in items" :key="item.url">
+                            <a :href="item.url" class="search-suggestion-item">
+                                <span x-text="item.titulo"></span>
+                            </a>
+                        </template>
+                    </div>
+                </template>
 
-                    {{-- No Results State --}}
-                    <template x-if="results.length === 0 && query.length >= 2 && !loading">
-                        <div class="p-6 text-center text-slate-500 text-sm italic">
-                            Nenhum resultado rápido encontrado para "<span x-text="query"></span>"
-                        </div>
-                    </template>
-                </div>
+                {{-- No Results State --}}
+                <template x-if="results.length === 0 && query.length >= 2 && !loading">
+                    <div class="p-6 text-center text-slate-500 text-sm italic">
+                        Nenhum resultado rápido encontrado para "<span x-text="query"></span>"
+                    </div>
+                </template>
+            </div>
             </form>
             @if($sugestoesBusca->count() > 0)
             <div x-show="!open" x-transition.opacity class="flex flex-wrap items-center justify-center gap-2 mt-3 md:mt-4 max-w-xs sm:max-w-2xl lg:max-w-4xl px-2 sm:px-4 mx-auto">
@@ -238,6 +245,21 @@
     {{-- ==========================================
          MOBILE SECTION
          ========================================== --}}
+    {{-- SEÇÃO: NOSSOS PORTAIS (MOBILE) --}}
+    <section class="lg:hidden bg-white py-8 border-b border-slate-100">
+        <h2 class="section-title font-bold px-4 mb-6">Nossos Portais</h2>
+        <div class="flex flex-nowrap overflow-x-auto gap-4 px-4 pb-4 no-scrollbar">
+            @foreach($portais as $portal)
+            <div class="min-w-[140px] flex-shrink-0">
+                <a href="{{ $portal->url }}" target="_blank" rel="noopener" class="flex flex-col items-center justify-center bg-slate-50 rounded-2xl p-4 border border-slate-100 shadow-sm active:scale-95 transition-transform">
+                    <i class="fa-solid {{ $portal->icone }} text-3xl text-[#006eb7] mb-2"></i>
+                    <h4 class="text-[11px] font-bold text-[#006eb7] text-center leading-tight uppercase tracking-tight">{{ $portal->titulo }}</h4>
+                </a>
+            </div>
+            @endforeach
+        </div>
+    </section>
+
     <section class="lg:hidden pl-mobile-home">
         {{-- Mais Acessados --}}
         <section class="bg-white-section">
@@ -308,91 +330,140 @@
             @endif
         </section>
 
-        {{-- Últimas Notícias --}}
-        <section class="bg-white-section">
-            <h2 class="section-title font-bold">Últimas Notícias</h2>
-            <div class="mobile-news-grid">
-                @if(isset($noticias) && $noticias->count() > 0)
-                @foreach($noticias->take(3) as $noticia)
-                <article class="card-news relative h-[320px] overflow-hidden rounded-2xl group bg-slate-100 shadow-md">
-                    <a href="{{ route('noticias.show', $noticia->slug) }}" class="block w-full h-full outline-none focus-within:ring-4 focus-within:ring-blue-500 focus-within:ring-inset">
-                        <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assai.jpg') }}" alt="" loading="lazy" class="absolute inset-0 object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 pointer-events-none"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-5 bg-white/10 backdrop-blur-lg border-t border-white/30 z-10">
-                            <h2 class="text-sm font-bold leading-snug text-white font-heading drop-shadow-md">{{ ucfirst(Str::lower($noticia->titulo)) }}</h2>
+        {{-- Últimas Notícias (MOBILE) --}}
+        <section class="bg-white py-8 border-b border-slate-100">
+            <div class="flex items-center justify-center mb-6">
+                <div class="h-px bg-[#006eb7]/40 flex-1 max-w-[40px]"></div>
+                <h2 class="text-[12px] font-bold tracking-[0.15em] text-[#006eb7] uppercase px-3 text-center">Notícias em Destaque</h2>
+                <div class="h-px bg-[#006eb7]/40 flex-1 max-w-[40px]"></div>
+            </div>
+
+            @if($destaquesSlider->count() > 0)
+            {{-- Slider Principal Mobile --}}
+            <div class="px-4 mb-8">
+                <div class="swiper swiper-noticias-mobile w-full rounded-lg overflow-hidden shadow-md">
+                    <div class="swiper-wrapper">
+                        @foreach($destaquesSlider as $destaque)
+                        <div class="swiper-slide bg-white">
+                            <a href="{{ route('noticias.show', $destaque->slug) }}" class="block w-full">
+                                <div class="relative h-[220px] w-full bg-slate-100">
+                                    <img src="{{ $destaque->imagem_capa ? asset('storage/' . $destaque->imagem_capa) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover" alt="{{ $destaque->titulo }}" loading="lazy">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                </div>
+                                <div class="p-4 border border-t-0 border-slate-100 rounded-b-lg">
+                                    <h3 class="text-[1.15rem] font-bold text-slate-800 leading-tight mb-2" style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $destaque->titulo }}</h3>
+                                    <div class="text-[11px] text-slate-500 font-medium">
+                                        {{ \Carbon\Carbon::parse($destaque->data_publicacao)->format('d/m/Y') }}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination !bottom-2"></div>
+                </div>
+            </div>
+
+            {{-- Lista Recentes Mobile --}}
+            <div class="px-4">
+                <div class="flex items-center justify-between mb-4 bg-slate-50 p-3 rounded-md border border-slate-100">
+                    <h3 class="text-[1rem] font-bold text-slate-800" style="font-family: 'Rawline', 'Open Sans', sans-serif;">Recentes</h3>
+                    <a href="{{ route('noticias.index') }}" class="text-[12px] font-bold text-[#006eb7] hover:underline px-2 py-1">Todas</a>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    @foreach($recentesSidebar as $recente)
+                    <a href="{{ route('noticias.show', $recente->slug) }}" class="relative h-[110px] w-full block group overflow-hidden rounded-md shadow-sm">
+                        <img src="{{ $recente->imagem_capa ? asset('storage/' . $recente->imagem_capa) : asset('img/Assai.jpg') }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ $recente->titulo }}" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-3">
+                            <h4 class="text-white text-[12px] font-bold leading-snug line-clamp-3" style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $recente->titulo }}</h4>
                         </div>
                     </a>
-                </article>
-                @endforeach
-                @else
-                <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
-                    Nenhuma notícia publicada no momento.
-                </div>
-                @endif
-            </div>
-            <div class="all-btn-wrapper">
-                <a href="{{ route('noticias.index') }}" class="all-btn">
-                    <i class="fa-regular fa-newspaper" aria-hidden="true"></i> Ver Todas Notícias
-                </a>
-            </div>
-        </section>
-
-        {{-- Calendário --}}
-        <section class="bg-gray-section" style="padding-top: 2.5rem;">
-            <h2 class="section-title font-bold">Calendário de Eventos</h2>
-
-            <div class="calendar-wrap">
-                <div class="calendar-head">
-                    <a href="{{ route('home', ['mes' => $calendarMesAnterior]) }}" class="arrow-btn" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></a>
-                    <span class="month-name">{{ $calendarTituloMes }}</span>
-                    <a href="{{ route('home', ['mes' => $calendarMesProximo]) }}" class="arrow-btn" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
-                </div>
-                <div class="calendar-grid">
-                    <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
-                    @foreach($calendarDays as $calendarDay)
-                    @php
-                    $calendarClasses = 'day-number';
-                    if (!$calendarDay['isCurrentMonth']) {
-                    $calendarClasses .= ' muted';
-                    }
-                    if ($calendarDay['isToday']) {
-                    $calendarClasses .= ' today';
-                    }
-                    if ($calendarDay['hasEvent']) {
-                    $calendarClasses .= ' event';
-                    }
-                    @endphp
-                    <span class="{{ $calendarClasses }}">{{ $calendarDay['day'] }}</span>
                     @endforeach
                 </div>
             </div>
-
-            @if(isset($eventos) && $eventos->count() > 0)
-            @foreach($eventos->take(2) as $eventoItem)
-            <div class="event-featured">
-                <div class="date-chip">
-                    <span class="day">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d') }}</span>
-                    <span class="month">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->translatedFormat('M') }}</span>
-                </div>
-                <div>
-                    <h3 class="event-title">{{ $eventoItem->titulo }}</h3>
-                    <p class="event-meta"><i class="fa-solid fa-clock"></i> {{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d \d\e F \à\s H:i') }}</p>
-                    <p class="event-meta"><i class="fa-solid fa-location-dot"></i> {{ $eventoItem->local ?? 'Assaí, PR' }}</p>
-                </div>
+            @else
+            <div class="mx-4 rounded-md border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center text-sm text-slate-500">
+                Nenhuma notícia publicada no momento.
             </div>
-            @endforeach
             @endif
-
-            <div class="all-btn-wrapper">
-                <a href="{{ route('agenda.index') }}" class="all-btn"><i class="fa-regular fa-calendar-days"></i> Ver todos os Eventos</a>
-            </div>
         </section>
+        </div>
+    </section>
+
+    {{-- Calendário --}}
+    <section class="bg-gray-section" style="padding-top: 2.5rem;">
+        <h2 class="section-title font-bold">Calendário de Eventos</h2>
+
+        <div class="calendar-wrap">
+            <div class="calendar-head">
+                <a href="{{ route('home', ['mes' => $calendarMesAnterior]) }}" class="arrow-btn" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></a>
+                <span class="month-name">{{ $calendarTituloMes }}</span>
+                <a href="{{ route('home', ['mes' => $calendarMesProximo]) }}" class="arrow-btn" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="calendar-grid">
+                <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
+                @foreach($calendarDays as $calendarDay)
+                @php
+                $calendarClasses = 'day-number';
+                if (!$calendarDay['isCurrentMonth']) {
+                $calendarClasses .= ' muted';
+                }
+                if ($calendarDay['isToday']) {
+                $calendarClasses .= ' today';
+                }
+                if ($calendarDay['hasEvent']) {
+                $calendarClasses .= ' event';
+                }
+                @endphp
+                <span class="{{ $calendarClasses }}">{{ $calendarDay['day'] }}</span>
+                @endforeach
+            </div>
+        </div>
+
+        @if(isset($eventos) && $eventos->count() > 0)
+        @foreach($eventos->take(2) as $eventoItem)
+        <div class="event-featured">
+            <div class="date-chip">
+                <span class="day">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d') }}</span>
+                <span class="month">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->translatedFormat('M') }}</span>
+            </div>
+            <div>
+                <h3 class="event-title">{{ $eventoItem->titulo }}</h3>
+                <p class="event-meta"><i class="fa-solid fa-clock"></i> {{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d \d\e F \à\s H:i') }}</p>
+                <p class="event-meta"><i class="fa-solid fa-location-dot"></i> {{ $eventoItem->local ?? 'Assaí, PR' }}</p>
+            </div>
+        </div>
+        @endforeach
+        @endif
+
+        <div class="all-btn-wrapper">
+            <a href="{{ route('agenda.index') }}" class="all-btn"><i class="fa-regular fa-calendar-days"></i> Ver todos os Eventos</a>
+        </div>
+    </section>
 
     </section>
 
     {{-- ==========================================
          DESKTOP SECTION
          ========================================== --}}
+    {{-- SEÇÃO: NOSSOS PORTAIS (DESKTOP) --}}
+    <section id="nossos-portais-desktop" class="hidden lg:block py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
+        <div class="container px-4 mx-auto max-w-6xl">
+            <h2 class="text-[1.5rem] font-bold text-[#4a5c6a] text-center mb-8" style="font-family: 'Montserrat', sans-serif;">Nossos Portais</h2>
+
+            <div class="flex flex-row justify-center gap-4">
+                @foreach($portais as $portal)
+                <a href="{{ $portal->url }}" target="_blank" rel="noopener" class="flex-1 max-w-[200px] bg-white rounded-[22px] border border-[#edf2f7] p-4 flex flex-col items-center justify-center text-center shadow-[0_4px_10px_rgba(15,23,42,0.05)] hover:-translate-y-1 transition-transform duration-300 group">
+                    <i class="fa-solid {{ $portal->icone }} text-4xl text-[#006eb7] mb-3"></i>
+                    <h3 class="text-sm font-bold text-[#006eb7] leading-tight">{{ $portal->titulo }}</h3>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     {{-- SERVIÇOS (DESKTOP) --}}
     <section id="servicos-desktop" class="hidden lg:block py-16 bg-white border-b border-[#e2e8f0]" style="scroll-margin-top: calc(var(--site-header-height, 130px) + 16px);">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
@@ -472,44 +543,78 @@
     </section>
 
     {{-- NOTÍCIAS (DESKTOP) --}}
-    <section id="noticias-desktop" class="hidden lg:block py-16 bg-white">
+    <section id="noticias-desktop" class="hidden lg:block py-16 bg-white border-t border-slate-100">
         <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10" style="font-family: 'Montserrat', sans-serif;">Últimas Notícias</h2>
 
-            @if(isset($noticias) && $noticias->count() > 0)
-            <div class="grid grid-cols-3 gap-6">
-                @foreach($noticias->take(3) as $noticia)
-                <article class="relative rounded-[16px] overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.08)] group h-[460px] bg-slate-50">
-                    <a href="{{ route('noticias.show', $noticia->slug) }}" class="block w-full h-full outline-none focus-within:ring-4 focus-within:ring-blue-500 focus-within:ring-inset">
-                        <img src="{{ $noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $noticia->titulo }}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-[#020617]/10 to-transparent pointer-events-none"></div>
-
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-white/10 backdrop-blur-md border-t border-white/30 z-10 flex flex-col justify-end transition-all duration-500">
-                            <h3 class="text-[1.05rem] font-semibold text-white leading-snug drop-shadow-md" style="font-family: 'Montserrat', sans-serif;">{{ ucfirst(Str::lower($noticia->titulo)) }}</h3>
-
-                            <div class="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-in-out mt-2">
-                                <div class="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">
-                                    <p class="pt-2 text-[13px] leading-relaxed text-gray-100 font-sans line-clamp-4 mb-4">
-                                        {{ $noticia->resumo ?? Str::limit(strip_tags($noticia->conteudo), 160) }}
-                                    </p>
-                                    <div class="flex items-center justify-between border-t border-white/20 pt-4">
-                                        <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-widest drop-shadow-sm">Ler mais</span>
-                                        <time class="text-[10px] font-medium text-gray-300">{{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}</time>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </article>
-                @endforeach
+            <div class="flex items-center justify-center mb-10">
+                <div class="h-px bg-[#006eb7]/40 flex-1 max-w-[80px]"></div>
+                <h2 class="text-[14px] font-bold tracking-[0.15em] text-[#006eb7] uppercase px-4 text-center">Notícias em Destaque</h2>
+                <div class="h-px bg-[#006eb7]/40 flex-1 max-w-[80px]"></div>
             </div>
 
-            <div class="mt-10 flex justify-center">
-                <a href="{{ route('noticias.index') }}" class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
-                    <i class="fa-regular fa-newspaper"></i> Ver Todas Notícias
-                </a>
+            @if($destaquesSlider->count() > 0)
+            <div class="grid grid-cols-12 gap-8">
+
+                {{-- Coluna Esquerda: Slider Destaque --}}
+                <div class="col-span-8">
+                    <div class="swiper swiper-noticias-desktop w-full group relative">
+                        <div class="swiper-wrapper">
+                            @foreach($destaquesSlider as $destaque)
+                            <div class="swiper-slide bg-white">
+                                <a href="{{ route('noticias.show', $destaque->slug) }}" class="block focus:outline-none focus:ring-2 focus:ring-[#006eb7] rounded-sm">
+                                    <h3 class="text-[1.85rem] font-bold text-slate-800 mb-3 leading-[1.2]" style="font-family: 'Rawline', 'Open Sans', sans-serif;">
+                                        {{ $destaque->titulo }}
+                                    </h3>
+
+                                    <div class="text-[13px] text-slate-500 mb-4 flex flex-col gap-0.5 font-medium">
+                                        <span>Redação: Secretaria de Comunicação Social</span>
+                                        <span>Data da Publicação: {{ \Carbon\Carbon::parse($destaque->data_publicacao)->format('d/m/Y') }}</span>
+                                    </div>
+
+                                    <div class="relative h-[420px] w-full overflow-hidden bg-slate-100 rounded-sm">
+                                        <img src="{{ $destaque->imagem_capa ? asset('storage/' . $destaque->imagem_capa) : asset('img/Assai.jpg') }}" class="w-full h-full object-cover" alt="{{ $destaque->titulo }}" loading="lazy">
+                                    </div>
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        @if($destaquesSlider->count() > 1)
+                        <div class="swiper-button-prev !left-0 !text-white !bg-black/40 hover:!bg-black/70 !w-10 !h-14 !mt-0 !translate-y-[-50%] transition-colors after:!text-lg top-[65%]"></div>
+                        <div class="swiper-button-next !right-0 !text-white !bg-black/40 hover:!bg-black/70 !w-10 !h-14 !mt-0 !translate-y-[-50%] transition-colors after:!text-lg top-[65%]"></div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Coluna Direita: Recentes --}}
+                <div class="col-span-4 flex flex-col">
+                    <div class="bg-[#f8fafc] border border-slate-100 flex items-center justify-between p-3 px-4 mb-4 rounded-sm">
+                        <h3 class="text-[1.1rem] font-bold text-slate-800" style="font-family: 'Rawline', 'Open Sans', sans-serif;">Recentes</h3>
+                        <a href="{{ route('noticias.index') }}" class="text-[13px] font-semibold text-[#006eb7] hover:underline focus:outline-none focus:ring-2 focus:ring-[#006eb7] px-1">Todas</a>
+                    </div>
+
+                    <div class="flex flex-col gap-4 flex-1">
+                        @foreach($recentesSidebar as $recente)
+                        <a href="{{ route('noticias.show', $recente->slug) }}" class="relative h-[130px] w-full block group overflow-hidden rounded-sm focus:outline-none focus:ring-2 focus:ring-[#006eb7]">
+                            <img src="{{ $recente->imagem_capa ? asset('storage/' . $recente->imagem_capa) : asset('img/Assai.jpg') }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="{{ $recente->titulo }}" loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
+                            <div class="absolute bottom-0 left-0 w-full p-4">
+                                <h4 class="text-white text-[14px] font-bold leading-snug line-clamp-3 drop-shadow-md" style="font-family: 'Rawline', 'Open Sans', sans-serif;">
+                                    {{ $recente->titulo }}
+                                </h4>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
+            @else
+            <div class="rounded-sm border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center text-sm text-slate-500 shadow-sm">
+                Nenhuma notícia publicada no momento.
             </div>
             @endif
+
         </div>
     </section>
 
@@ -646,7 +751,7 @@
                 "Telefones...",
                 "Ouvidoria municipal..."
             ];
-            
+
             const inputs = [
                 document.getElementById('busca-portal-mobile'),
                 document.getElementById('busca-portal-fixo')
@@ -655,7 +760,7 @@
             let phraseIndex = 0;
             let charIndex = 0;
             let isDeleting = false;
-            
+
             const typingSpeed = 100;
             const erasingSpeed = 50;
             const delayBetweenPhrases = 2000;
@@ -704,6 +809,106 @@
 @endsection
 
 @push('modals')
+<div x-data="{ modalAberta: false }"
+    @open-modal-busca-avancada.window="modalAberta = true"
+    @keydown.escape.window="modalAberta = false"
+    x-show="modalAberta"
+    class="fixed inset-0 z-[2147483647] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm"
+    x-cloak
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-busca-avancada-title">
+
+    <div @click.away="modalAberta = false"
+        x-show="modalAberta"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="bg-white w-full max-w-2xl mx-4 rounded shadow-2xl flex flex-col font-sans">
+
+        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h2 id="modal-busca-avancada-title" class="text-[1.15rem] font-bold text-slate-800" style="font-family: 'Rawline', 'Open Sans', sans-serif;">
+                Busca Avançada
+            </h2>
+            <button type="button"
+                @click="modalAberta = false"
+                aria-label="Fechar janela de busca avançada"
+                class="text-slate-400 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 transition-colors">
+                <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        <form action="{{ route('busca.avancada') ?? '#' }}" method="GET" class="p-6 flex flex-col gap-5">
+
+            <div class="flex flex-col gap-1">
+                <label for="adv-keyword" class="sr-only">Digite uma palavra-chave</label>
+                <input type="text"
+                    id="adv-keyword"
+                    name="q"
+                    placeholder="Digite uma palavra-chave"
+                    class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                    autocomplete="off">
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="adv-categoria" class="text-[0.85rem] font-bold text-slate-500">Categoria</label>
+                <select id="adv-categoria" name="categoria" class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-1">
+                    <label for="adv-modalidade" class="text-[0.85rem] font-bold text-slate-500">Modalidade</label>
+                    <select id="adv-modalidade" name="modalidade" class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label for="adv-tag" class="text-[0.85rem] font-bold text-slate-500">Tag</label>
+                    <select id="adv-tag" name="tag" class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="adv-servico" class="text-[0.85rem] font-bold text-slate-500">Serviço</label>
+                <select id="adv-servico" name="servico" class="w-full border border-[#4eb1d8] rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="flex items-center border border-slate-300 rounded px-4 py-3 bg-white mt-1">
+                <label for="adv-novos" class="flex items-center cursor-pointer relative gap-3 w-full">
+                    <input type="checkbox" id="adv-novos" name="somente_novos" class="sr-only peer" value="1">
+                    <div class="w-10 h-5 bg-slate-300 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-[#4eb1d8] transition-colors relative">
+                        <div class="absolute left-[2px] top-[2px] bg-white border border-slate-300 h-4 w-4 rounded-full transition-transform peer-checked:translate-x-5 peer-checked:border-white"></div>
+                    </div>
+                    <span class="text-[0.95rem] font-bold text-slate-500 select-none">Somente serviços novos</span>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+                <button type="button"
+                    @click="modalAberta = false"
+                    class="px-5 py-2 text-sm font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300 transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-5 py-2 text-sm font-bold text-white bg-[#4eb1d8] rounded hover:bg-[#3ca3ca] focus:outline-none focus:ring-2 focus:ring-[#4eb1d8] focus:ring-offset-1 flex items-center gap-2 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endpush
+
+@push('modals')
 @if(isset($banners) && $banners->count() > 0)
 <style>
     /* CSS Vanilla de Alto Nível de Z-Index para isolamento do Tailwind */
@@ -719,10 +924,12 @@
         pointer-events: none;
         transition: opacity 0.4s ease;
     }
+
     #banner-portal-modal.is-visible {
         opacity: 1;
         pointer-events: auto;
     }
+
     .modal-banner-close {
         position: absolute;
         top: 16px;
@@ -740,9 +947,11 @@
         cursor: pointer;
         z-index: 2147483648;
     }
+
     .modal-banner-close:hover {
         background: rgba(220, 38, 38, 0.9);
     }
+
     .swiper-modal-vanilla {
         width: 100vw;
         height: 85dvh;
@@ -750,6 +959,7 @@
         display: block;
         position: relative;
     }
+
     .swiper-modal-vanilla .swiper-slide {
         display: flex;
         align-items: center;
@@ -757,6 +967,7 @@
         width: 100%;
         height: 100%;
     }
+
     .swiper-modal-vanilla img {
         max-width: 95vw;
         max-height: 85dvh;
@@ -764,36 +975,37 @@
         display: block;
         margin: 0 auto;
     }
-    
-/* === Setas do Swiper Isoladas === */
+
+    /* === Setas do Swiper Isoladas === */
     .nav-modal-exclusiva {
         /* Fundo escuro com 60% de opacidade para garantir visibilidade sobre imagens claras */
-        background-color: rgba(0, 0, 0, 0.6) !important; 
-        background-image: none !important; /* Anula a seta maior proveniente do CSS global */
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        background-image: none !important;
+        /* Anula a seta maior proveniente do CSS global */
         color: rgba(255, 255, 255, 0.9) !important;
-        
+
         /* Dimensões forçadas e borda arredondada para criar o círculo */
         width: 48px !important;
         height: 48px !important;
         border-radius: 50% !important;
-        
+
         /* Centralização absoluta do ícone dentro da bolinha */
         align-items: center !important;
         justify-content: center !important;
-        
+
         transition: all 0.3s ease;
-        display: none; 
+        display: none;
     }
-    
+
     .nav-modal-exclusiva:hover {
         /* Escurece o fundo e aumenta levemente ao passar o cursor */
-        background-color: rgba(0, 0, 0, 0.9) !important; 
+        background-color: rgba(0, 0, 0, 0.9) !important;
         color: #ffffff !important;
         transform: scale(1.05);
     }
 
     /* Oculta nós HTML internos (ex: <svg> ou <i>) caso injetados por JS */
-    .nav-modal-exclusiva > * {
+    .nav-modal-exclusiva>* {
         display: none !important;
     }
 
@@ -801,13 +1013,15 @@
     .nav-modal-exclusiva::after {
         display: block !important;
         font-family: 'swiper-icons' !important;
-        font-size: 20px !important; /* Dimensão da seta ajustada para o centro da bolinha */
+        font-size: 20px !important;
+        /* Dimensão da seta ajustada para o centro da bolinha */
         font-weight: 900 !important;
     }
-    
+
     @media (min-width: 768px) {
         .nav-modal-exclusiva {
-            display: flex !important; /* O flex é crucial para o align-items e justify-content funcionarem */
+            display: flex !important;
+            /* O flex é crucial para o align-items e justify-content funcionarem */
         }
     }
 </style>
@@ -816,21 +1030,21 @@
     <button class="modal-banner-close" onclick="fecharBannerModal()" aria-label="Fechar">
         <i class="fa-solid fa-xmark"></i>
     </button>
-    
+
     <div class="swiper swiper-modal-vanilla">
         <div class="swiper-wrapper">
             @foreach($banners as $banner)
             <div class="swiper-slide">
                 @if($banner->link) <a href="{{ $banner->link }}" target="_blank" style="display:block; width:100%; height:100%;"> @endif
                     <img src="{{ asset('storage/' . $banner->imagem) }}" alt="Banner Modal">
-                @if($banner->link) </a> @endif
+                    @if($banner->link) </a> @endif
             </div>
             @endforeach
         </div>
         @if($banners->count() > 1)
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-prev nav-modal-exclusiva seta-unica-prev"></div>
-            <div class="swiper-button-next nav-modal-exclusiva seta-unica-next"></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev nav-modal-exclusiva seta-unica-prev"></div>
+        <div class="swiper-button-next nav-modal-exclusiva seta-unica-next"></div>
         @endif
     </div>
 </div>
@@ -869,12 +1083,18 @@
                     if (swiperClass) {
                         new swiperClass('.swiper-modal-vanilla', {
                             loop: true,
-                            autoplay: { delay: 6000, disableOnInteraction: false },
-                            pagination: { el: '.swiper-pagination', clickable: true },
+                            autoplay: {
+                                delay: 6000,
+                                disableOnInteraction: false
+                            },
+                            pagination: {
+                                el: '.swiper-pagination',
+                                clickable: true
+                            },
                             // Mapeamento exclusivo para não puxar setas de outros componentes
-                            navigation: { 
-                                nextEl: '.seta-unica-next', 
-                                prevEl: '.seta-unica-prev' 
+                            navigation: {
+                                nextEl: '.seta-unica-next',
+                                prevEl: '.seta-unica-prev'
                             },
                             observer: true,
                             observeParents: true,
@@ -888,6 +1108,35 @@
 
         setTimeout(tryInitModal, 1000);
     });
+
+document.addEventListener('DOMContentLoaded', function() {
+    var swiperClass = window.Swiper || (typeof Swiper !== 'undefined' ? Swiper : null);
+    
+    if (swiperClass) {
+        // Inicia o Slider de Notícias do Desktop
+        if (document.querySelector('.swiper-noticias-desktop')) {
+            new swiperClass('.swiper-noticias-desktop', {
+                loop: true,
+                autoplay: { delay: 6000, disableOnInteraction: true },
+                navigation: {
+                    nextEl: '.swiper-noticias-desktop .swiper-button-next',
+                    prevEl: '.swiper-noticias-desktop .swiper-button-prev',
+                },
+                effect: 'fade',
+                fadeEffect: { crossFade: true }
+            });
+        }
+
+        // Inicia o Slider de Notícias do Mobile
+        if (document.querySelector('.swiper-noticias-mobile')) {
+            new swiperClass('.swiper-noticias-mobile', {
+                loop: true,
+                autoplay: { delay: 5000, disableOnInteraction: false },
+                pagination: { el: '.swiper-noticias-mobile .swiper-pagination', clickable: true },
+            });
+        }
+    }
+});
 </script>
 @endif
 @endpush

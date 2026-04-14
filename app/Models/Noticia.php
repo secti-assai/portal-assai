@@ -30,11 +30,13 @@ class Noticia extends Model
         'imagem_capa',
         'data_publicacao',
         'ativo',
+        'destaque',
     ];
 
     protected $casts = [
         'data_publicacao' => 'date',
         'ativo' => 'boolean',
+        'destaque' => 'boolean',
     ];
 
     public function getActivitylogOptions(): LogOptions

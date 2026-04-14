@@ -32,16 +32,32 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $portais = \App\Models\Portal::where('ativo', true)
+            ->orderBy('ordem')
+            ->get();
+
         $alertasAtivos = Alerta::where('ativo', true)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Notícias da home sem cache para refletir publicação imediatamente.
-        $noticias = Noticia::publicadas()
+        // 1. Busca Notícias marcadas como Destaque (Para o Slider)
+        $destaquesSlider = Noticia::publicadas()
+            ->where('destaque', true)
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
+
+        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Para a Sidebar)
+        $recentesSidebar = Noticia::publicadas()
+            ->whereNotIn('id', $destaquesSlider->pluck('id'))
+            ->orderBy('data_publicacao', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
+        // 3. Mescla as coleções para manter a variável $noticias populada na view
+        $noticias = $destaquesSlider->concat($recentesSidebar);
 
         $eventos = Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
@@ -89,7 +105,10 @@ class PortalController extends Controller
             ->take(3)
             ->pluck('titulo');
 
-        return view('pages.pagina', compact('banners', 'alertasAtivos', 'noticias', 'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA'));
+        return view('pages.pagina', compact(
+            'banners', 'alertasAtivos', 'noticias', 'destaquesSlider', 'recentesSidebar',
+            'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA', 'portais'
+        ));
     }
 
     // Página de notícias
@@ -254,7 +273,6 @@ class PortalController extends Controller
 
     public function contato()
     {
-        // Coleta as secretarias que possuem e-mail cadastrado, em ordem alfabética
         $secretarias = Secretaria::whereNotNull('email')
             ->orderBy('nome', 'asc')
             ->get(['nome', 'email']);
@@ -267,7 +285,7 @@ class PortalController extends Controller
         $validated = $request->validate([
             'nome'         => 'required|string|min:2|max:120',
             'email'        => 'required|email|max:120',
-            'destinatario' => 'required|email', // <-- Novo campo validado
+            'destinatario' => 'required|email',
             'assunto'      => 'required|string|min:3|max:200',
             'mensagem'     => 'required|string|min:10|max:4000',
         ], [
@@ -275,8 +293,8 @@ class PortalController extends Controller
             'nome.min'              => 'O nome deve ter pelo menos 2 caracteres.',
             'email.required'        => 'O e-mail é obrigatório.',
             'email.email'           => 'Informe um e-mail válido.',
-            'destinatario.required' => 'Selecione o setor de destino.', // <-- Nova mensagem
-            'destinatario.email'    => 'Setor de destino inválido.',    // <-- Nova mensagem
+            'destinatario.required' => 'Selecione o setor de destino.',
+            'destinatario.email'    => 'Setor de destino inválido.',
             'assunto.required'      => 'O assunto é obrigatório.',
             'assunto.min'           => 'O assunto deve ter pelo menos 3 caracteres.',
             'mensagem.required'     => 'A mensagem é obrigatória.',
@@ -285,7 +303,6 @@ class PortalController extends Controller
         ]);
 
         try {
-            // Substitui a variável estática do config() pelo e-mail selecionado pelo usuário
             Mail::to($validated['destinatario'])->send(new ContatoSiteMail($validated));
         } catch (\Throwable $exception) {
             Log::error('Falha ao enviar formulário de contato do portal.', [
@@ -309,12 +326,11 @@ class PortalController extends Controller
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'destinatario' => 'required|email', // Validação estrita do payload do select
+            'destinatario' => 'required|email',
             'assunto' => 'required|string|max:255',
             'mensagem' => 'required|string|min:10',
         ]);
 
-        // O endereço de e-mail selecionado é utilizado na classe Mail (Mailable)
         $emailDestino = $validated['destinatario'];
 
         try {
@@ -349,7 +365,6 @@ class PortalController extends Controller
             return response()->json([]);
         }
 
-        // Esconde notícias inativas no AutoComplete
         $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
 
@@ -419,7 +434,6 @@ class PortalController extends Controller
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
-            // Esconde notícias inativas na Busca Global
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
 
@@ -474,5 +488,46 @@ class PortalController extends Controller
                 $searchQuery->{$method}("$normalizedColumn LIKE ?", [$normalizedTerm]);
             }
         });
+    }
+
+    public function avancada(Request $request)
+    {
+        $termo = trim($request->input('q', ''));
+        $categoria = $request->input('categoria');
+        $modalidade = $request->input('modalidade');
+        $tag = $request->input('tag');
+        $servico = $request->input('servico');
+        $somenteNovos = $request->has('somente_novos');
+
+        $resultados = collect();
+
+        if (!empty($termo) || $request->anyFilled(['categoria', 'modalidade', 'tag', 'servico'])) {
+
+            $query = Servico::where('ativo', true);
+
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($query, ['titulo', 'descricao'], $termo);
+            }
+
+            if (!empty($categoria)) {
+                $query->where('categoria_id', $categoria);
+            }
+
+            if ($somenteNovos) {
+                $query->where('created_at', '>=', now()->subDays(30));
+            }
+
+            $resultados = $query->paginate(15)->withQueryString();
+        }
+
+        return view('busca.resultados', compact(
+            'resultados',
+            'termo',
+            'categoria',
+            'modalidade',
+            'tag',
+            'servico',
+            'somenteNovos'
+        ));
     }
 }
