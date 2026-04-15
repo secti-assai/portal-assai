@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call([ServicoSeeder::class]);
         $this->call([PortalSeeder::class]);
         $this->call([ProgramaSeeder::class]);
+        $this->call([BannerDestaqueSeeder::class]);
 
         // Serviços associados às secretarias
         Servico::factory(50)->create();

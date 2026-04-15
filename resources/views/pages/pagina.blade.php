@@ -258,28 +258,6 @@
     <div id="conteudo-destaque" class="w-full h-px"></div>
 
     {{-- ==========================================
-        BANNERS FIXOS DESTAQUE
-        ========================================== --}}
-    @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
-    <section class="py-8 lg:py-12 bg-white border-b border-slate-100">
-        <div class="container px-4 mx-auto max-w-6xl font-sans">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                @foreach($bannersDestaque as $banner)
-                <a href="{{ $banner->link ?? '#' }}" {{ $banner->link ? 'target="_blank" rel="noopener"' : '' }}
-                    class="block relative w-full overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group transform hover:-translate-y-1">
-                    <div class="relative w-full pb-[40%] md:pb-[50%] lg:pb-[45%] bg-slate-100">
-                        <img src="{{ asset('storage/' . $banner->imagem) }}" alt="{{ $banner->titulo }}" loading="lazy"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        </div>
-    </section>
-    @endif
-
-
-    {{-- ==========================================
         SEÇÕES MOBILE (Apenas telas pequenas)
         ========================================== --}}
     <div class="lg:hidden pl-mobile-home">
@@ -314,7 +292,7 @@
                             <a href="{{ route('noticias.show', $destaque->slug) }}"
                                 class="flex flex-col h-full bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                                 <div class="w-full aspect-[4/3] relative shrink-0 bg-slate-100">
-                                    <img src="{{ $destaque->imagem_capa ? asset('storage/' . $destaque->imagem_capa) : asset('img/Assai.jpg') }}"
+                                    <img src="{{ $destaque->imagem_capa ? (str_starts_with($destaque->imagem_capa, 'img/') ? asset($destaque->imagem_capa) : asset('storage/' . $destaque->imagem_capa)) : asset('img/Assai.jpg') }}"
                                         class="absolute inset-0 w-full h-full object-cover"
                                         alt="{{ $destaque->titulo }}" loading="lazy">
                                     <div
@@ -348,7 +326,7 @@
                     @foreach($recentesSidebar as $recente)
                     <a href="{{ route('noticias.show', $recente->slug) }}"
                         class="relative h-[200px] w-full block group overflow-hidden rounded-xl shadow-sm border border-slate-100">
-                        <img src="{{ $recente->imagem_capa ? asset('storage/' . $recente->imagem_capa) : asset('img/Assai.jpg') }}"
+                        <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
                             class="absolute inset-0 w-full h-full object-cover" alt="{{ $recente->titulo }}"
                             loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -367,6 +345,23 @@
             </div>
             @endif
         </section>
+
+        {{-- Banners Destaque Mobile --}}
+        @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
+        <section class="bg-white-section border-b border-slate-100 py-6">
+            <div class="px-4 w-full">
+                <div class="flex flex-col gap-4">
+                    @foreach($bannersDestaque as $banner)
+                    <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
+                        class="block relative w-full aspect-[3/1] overflow-hidden">
+                        <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}" alt="{{ $banner->titulo }}" loading="lazy"
+                            class="absolute inset-0 w-full h-full object-cover">
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        @endif
 
         {{-- Serviços Mobile --}}
         <section class="bg-white-section">
@@ -564,7 +559,7 @@
                                             </div>
                                         </div>
                                         <div class="relative w-full flex-1 bg-slate-100 border-t border-slate-100">
-                                            <img src="{{ $destaque->imagem_capa ? asset('storage/' . $destaque->imagem_capa) : asset('img/Assai.jpg') }}"
+                                            <img src="{{ $destaque->imagem_capa ? (str_starts_with($destaque->imagem_capa, 'img/') ? asset($destaque->imagem_capa) : asset('storage/' . $destaque->imagem_capa)) : asset('img/Assai.jpg') }}"
                                                 class="absolute inset-0 w-full h-full object-cover"
                                                 alt="{{ $destaque->titulo }}" loading="lazy">
                                         </div>
@@ -595,7 +590,7 @@
                             @foreach($recentesSidebar as $recente)
                             <a href="{{ route('noticias.show', $recente->slug) }}"
                                 class="relative flex-1 w-full block group overflow-hidden shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-[#006eb7] min-h-[110px]">
-                                <img src="{{ $recente->imagem_capa ? asset('storage/' . $recente->imagem_capa) : asset('img/Assai.jpg') }}"
+                                <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
                                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     alt="{{ $recente->titulo }}" loading="lazy">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10">
@@ -620,8 +615,25 @@
             </div>
         </section>
 
+        {{-- Banners Destaque Desktop --}}
+        @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
+        <section class="pb-16 bg-white border-b border-[#e2e8f0]">
+            <div class="container px-4 mx-auto max-w-5xl font-sans">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                    @foreach($bannersDestaque as $banner)
+                    <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
+                        class="block relative w-full aspect-[3/1] overflow-hidden">
+                        <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}" alt="{{ $banner->titulo }}" loading="lazy"
+                            class="absolute inset-0 w-full h-full object-cover">
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        @endif
+
         {{-- Serviços Desktop --}}
-        <section id="servicos-desktop" class="py-16 bg-white border-b border-[#e2e8f0]">
+        <section id="servicos-desktop" class="py-16 bg-[#f8fafc] border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
                     style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>

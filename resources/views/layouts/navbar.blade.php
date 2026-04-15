@@ -27,6 +27,14 @@ $perfis = [
 $perfilAtual = request()->cookie('portal_perfil', 'todos');
 @endphp
 
+{{-- Remove transição apenas para a propriedade color nos links simples do navbar --}}
+<style>
+    .no-color-transition {
+        transition-property: background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        /* Exclui propositalmente 'color' para ser instantâneo */
+    }
+</style>
+
 <div id="portal-config" class="hidden"
     data-weather-url="{{ route('api.clima.atual') }}"
     data-duty-url="{{ route('api.plantao.hoje') }}"
@@ -47,17 +55,17 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
         <div id="top-bar" class="container mx-auto flex items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans relative z-[60]">
             <div class="flex items-center justify-center flex-wrap gap-3 text-white">
                 
-                <a href="{{ route('pages.acessibilidade') }}" class="font-bold hover:text-yellow-400 transition-colors">Acessibilidade</a>
+                <a href="{{ route('pages.acessibilidade') }}" class="font-bold hover:text-yellow-400 no-color-transition">Acessibilidade</a>
                 <span class="text-white/20">|</span>
                 
-                <button type="button" class="btn-contrast font-bold hover:text-yellow-400 transition-colors flex items-center gap-1.5">
+                <button type="button" class="btn-contrast font-bold hover:text-yellow-400 no-color-transition flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
                     Contraste
                 </button>
-                <button type="button" class="btn-decrease-font hover:text-yellow-400 transition-colors font-bold px-1">A-</button>
-                <button type="button" class="btn-increase-font hover:text-yellow-400 transition-colors font-bold px-1">A+</button>
+                <button type="button" class="btn-decrease-font hover:text-yellow-400 no-color-transition font-bold px-1">A-</button>
+                <button type="button" class="btn-increase-font hover:text-yellow-400 no-color-transition font-bold px-1">A+</button>
                 <span class="text-white/20">|</span>
                 
                 <div x-data="weatherWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
@@ -154,12 +162,14 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
         {{-- Menu Desktop --}}
         <nav class="hidden lg:flex items-center lg:gap-2.5 xl:gap-4 text-sm xl:text-base font-medium transition-colors duration-300">
 
-            <a href="{{ route('home') }}" class="py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('home') ? 'border-b-2 border-yellow-400' : '' }}">
+            {{-- Remoção da classe transition-colors e uso de no-color-transition --}}
+            <a href="{{ route('home') }}" class="py-1 no-color-transition hover:text-yellow-400 {{ request()->routeIs('home') ? 'border-b-2 border-yellow-400' : '' }}">
                 Início
             </a>
 
             <div class="relative group py-2">
-                <button class="flex items-center gap-1 py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('pages.sobre') || request()->routeIs('pages.turismo') ? 'border-b-2 border-yellow-400' : '' }}">
+                {{-- Manter no-color-transition nos elementos pai --}}
+                <button class="flex items-center gap-1 py-1 no-color-transition hover:text-yellow-400 {{ request()->routeIs('pages.sobre') || request()->routeIs('pages.turismo') ? 'border-b-2 border-yellow-400' : '' }}">
                     Cidade
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -176,7 +186,8 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
             </div>
 
             <div class="relative group py-2">
-                <button class="flex items-center gap-1 py-1 transition-colors hover:text-yellow-400 {{ request()->routeIs('secretarias.*') ? 'border-b-2 border-yellow-400' : '' }}">
+                {{-- Manter no-color-transition nos elementos pai --}}
+                <button class="flex items-center gap-1 py-1 no-color-transition hover:text-yellow-400 {{ request()->routeIs('secretarias.*') ? 'border-b-2 border-yellow-400' : '' }}">
                     Governo
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
@@ -193,13 +204,14 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                 </div>
             </div>
 
-            <a href="https://www.govfacilcidadao.com.br/login" class="py-1 transition-colors hover:text-yellow-400">
+            {{-- Remoção da classe transition-colors e uso de no-color-transition --}}
+            <a href="https://www.govfacilcidadao.com.br/login" class="py-1 no-color-transition hover:text-yellow-400">
                 Ouvidoria
             </a>
 
             {{-- Dropdown Transparência & Diário Oficial (Desktop) --}}
             <div class="relative group lg:ml-1 py-2">
-                <a href="{{ route('pages.transparencia') }}" class="flex items-center gap-1.5 px-3 xl:px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 transition-colors font-medium text-xs xl:text-sm shadow border border-transparent focus:outline-none">
+                <a href="{{ route('pages.transparencia') }}" class="flex items-center gap-1.5 px-3 xl:px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-500 no-color-transition font-medium text-xs xl:text-sm shadow border border-transparent focus:outline-none">
                     <svg class="w-3.5 h-3.5 xl:w-4 xl:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
@@ -239,14 +251,15 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                 </div>
             </div>
 
-            <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" class="py-1 transition-colors hover:text-yellow-400">
+            {{-- Remoção da classe transition-colors e uso de no-color-transition --}}
+            <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" class="py-1 no-color-transition hover:text-yellow-400">
                 Acesso a Informação
             </a>
 
             <a href="https://gov.assai.pr.gov.br/cpf-check"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="lg:ml-1 xl:ml-3 px-4 xl:px-5 py-2 rounded-lg flex items-center font-medium text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md transition-all duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900 text-xs xl:text-sm whitespace-nowrap">
+                class="lg:ml-1 xl:ml-3 px-4 xl:px-5 py-2 rounded-lg flex items-center font-medium text-white bg-blue-900 hover:bg-yellow-400 hover:text-blue-950 shadow hover:shadow-md no-color-transition duration-300 group outline-none focus-visible:ring-2 focus-visible:ring-blue-900 text-xs xl:text-sm whitespace-nowrap">
                 Sou Assaiense
                 <svg class="w-4 h-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
