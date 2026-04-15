@@ -12,11 +12,12 @@ class Evento extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['titulo', 'descricao', 'data_inicio', 'data_fim', 'local', 'imagem', 'status'];
+    protected $fillable = ['titulo', 'descricao', 'data_inicio', 'data_fim', 'local', 'imagem', 'perfis_alvo', 'status'];
 
     protected $casts = [
         'data_inicio' => 'datetime',
         'data_fim' => 'datetime',
+        'perfis_alvo' => 'array',
     ];
 
     public function getStatusAttribute($value): string

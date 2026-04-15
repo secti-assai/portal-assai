@@ -12,11 +12,12 @@ class Programa extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['titulo', 'descricao', 'icone', 'link', 'ativo', 'destaque'];
+    protected $fillable = ['titulo', 'descricao', 'icone', 'link', 'ativo', 'perfis_alvo', 'destaque'];
 
     protected $casts = [
         'ativo'    => 'boolean',
         'destaque' => 'boolean',
+        'perfis_alvo' => 'array',
     ];
 
     public function getActivitylogOptions(): LogOptions

@@ -30,6 +30,7 @@ class Noticia extends Model
         'imagem_capa',
         'data_publicacao',
         'ativo',
+        'perfis_alvo',
         'destaque',
     ];
 
@@ -37,6 +38,7 @@ class Noticia extends Model
         'data_publicacao' => 'date',
         'ativo' => 'boolean',
         'destaque' => 'boolean',
+        'perfis_alvo' => 'array',
     ];
 
     public function getActivitylogOptions(): LogOptions

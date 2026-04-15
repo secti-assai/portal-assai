@@ -17,7 +17,8 @@ use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ExecutivoController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BannerDestaqueController;
-use App\Http\Controllers\RedeSocialController; // NOVO IMPORT
+use App\Http\Controllers\RedeSocialController;
+use App\Http\Controllers\PerfilController;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
@@ -26,6 +27,8 @@ Route::get('/', [PortalController::class, 'index'])->name('home');
 Route::redirect('/novo', '/', 301);
 
 Route::view('/em-desenvolvimento', 'pages.em-desenvolvimento')->name('em-desenvolvimento');
+
+Route::post('/perfil/definir', [PerfilController::class, 'definir'])->name('perfil.definir');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');

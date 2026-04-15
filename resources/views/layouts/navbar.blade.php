@@ -3,18 +3,28 @@
 $isHome = request()->routeIs('home');
 
 $navSecretarias = \App\Models\Secretaria::orderBy('nome')->get(['id', 'nome'])->map(function ($sec) {
-$sec->nome_curto = preg_replace('/^Secretaria(?:\s+Municipal)?\s+(?:de|da|do|das|dos)\s+/iu', '', $sec->nome) ?: $sec->nome;
-$nomeMenuBase = trim((string) $sec->nome_curto);
+    $sec->nome_curto = preg_replace('/^Secretaria(?:\s+Municipal)?\s+(?:de|da|do|das|dos)\s+/iu', '', $sec->nome) ?: $sec->nome;
+    $nomeMenuBase = trim((string) $sec->nome_curto);
 
-if (in_array(mb_strtolower($nomeMenuBase), ['chefe de gabinete', 'procuradoria geral'], true)) {
-$sec->nome_menu = $nomeMenuBase;
-} else {
-$sec->nome_menu = 'Secretaria Municipal de ' . $nomeMenuBase;
-}
-return $sec;
+    if (in_array(mb_strtolower($nomeMenuBase), ['chefe de gabinete', 'procuradoria geral'], true)) {
+        $sec->nome_menu = $nomeMenuBase;
+    } else {
+        $sec->nome_menu = 'Secretaria Municipal de ' . $nomeMenuBase;
+    }
+    return $sec;
 });
 
 $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png');
+
+// Dados dos Perfis para Personalização
+$perfis = [
+    'todos' => 'Acesso Geral',
+    'cidadao' => 'Cidadão',
+    'empresario' => 'Empresário',
+    'turista' => 'Turista',
+    'servidor' => 'Servidor Público'
+];
+$perfilAtual = request()->cookie('portal_perfil', 'todos');
 @endphp
 
 <div id="portal-config" class="hidden"
@@ -34,10 +44,12 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
 
     {{-- TOP BAR --}}
     <div class="hidden lg:block bg-blue-900 border-b border-white/10 transition-colors duration-300">
-        <div id="top-bar" class="container mx-auto flex items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans">
+        <div id="top-bar" class="container mx-auto flex items-center justify-center px-4 sm:px-6 py-2.5 text-xs text-white font-sans relative z-[60]">
             <div class="flex items-center justify-center flex-wrap gap-3 text-white">
+                
                 <a href="{{ route('pages.acessibilidade') }}" class="font-bold hover:text-yellow-400 transition-colors">Acessibilidade</a>
                 <span class="text-white/20">|</span>
+                
                 <button type="button" class="btn-contrast font-bold hover:text-yellow-400 transition-colors flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
@@ -47,6 +59,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                 <button type="button" class="btn-decrease-font hover:text-yellow-400 transition-colors font-bold px-1">A-</button>
                 <button type="button" class="btn-increase-font hover:text-yellow-400 transition-colors font-bold px-1">A+</button>
                 <span class="text-white/20">|</span>
+                
                 <div x-data="weatherWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
                     <template x-if="loading">
                         <span class="text-xs font-medium text-white">Clima...</span>
@@ -67,6 +80,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     </template>
                 </div>
                 <span class="text-white/20">|</span>
+                
                 <div x-data="dutyWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
                     <template x-if="loading">
                         <span class="text-xs font-medium text-white">Plantão de hoje...</span>
@@ -85,10 +99,36 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                         </div>
                     </template>
                 </div>
-                <div x-data="dutyWidget()" x-init="init()" class="flex items-center text-white" aria-live="polite">
+
+                <span class="text-white/20">|</span>
+
+                {{-- SELETOR DE PERFIL (DESKTOP) ALTO CONTRASTE --}}
+                <div x-data="{ menuPerfil: false }" class="relative flex items-center">
+                    <span class="mr-2 text-white font-medium drop-shadow-sm">Navegar como:</span>
+                    <button @click="menuPerfil = !menuPerfil" @click.away="menuPerfil = false" type="button" class="flex items-center gap-1.5 font-extrabold text-[#0f172a] hover:text-[#0f172a] bg-yellow-400 hover:bg-yellow-500 px-3 py-1.5 rounded-md border border-yellow-300 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-white">
+                        <i class="fa-solid fa-user-circle text-sm opacity-80"></i>
+                        <span class="tracking-wide">{{ $perfis[$perfilAtual] }}</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" :class="menuPerfil ? 'rotate-180' : ''"></i>
+                    </button>
+
+                    <div x-show="menuPerfil" x-transition x-cloak class="absolute top-full mt-2 right-0 w-52 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden text-slate-700">
+                        <div class="px-4 py-2 bg-slate-50 border-b border-slate-100">
+                            <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Personalizar Portal</p>
+                        </div>
+                        <form action="{{ route('perfil.definir') }}" method="POST" class="flex flex-col">
+                            @csrf
+                            @foreach($perfis as $valor => $rotulo)
+                                <button type="submit" name="perfil" value="{{ $valor }}" class="text-left px-4 py-2.5 text-[13px] hover:bg-slate-50 transition-colors flex items-center justify-between {{ $perfilAtual === $valor ? 'text-blue-700 bg-blue-50/50 font-bold border-l-4 border-blue-600' : 'border-l-4 border-transparent text-slate-600' }}">
+                                    {{ $rotulo }}
+                                    @if($perfilAtual === $valor) <i class="fa-solid fa-check text-blue-600 text-xs"></i> @endif
+                                </button>
+                            @endforeach
+                        </form>
+                    </div>
                 </div>
 
                 <span class="text-white/20">|</span>
+
                 <div class="flex items-center shrink-0">
                     <x-google-translate />
                 </div>
@@ -217,13 +257,44 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
         {{-- Drawer Mobile (Dropdown Overlay) --}}
         <aside id="mobile-drawer-nav" class="lg:hidden absolute top-full left-0 right-0 z-[160] w-full h-[calc(100vh-var(--site-header-height,70px))] md:h-auto md:max-h-[72vh] bg-white shadow-xl border-t border-slate-100 transition-all duration-300 transform -translate-y-2 opacity-0 pointer-events-none overflow-hidden" aria-hidden="true" aria-label="Menu principal mobile">
 
-            <nav class="h-full overflow-y-auto px-6 pb-20 overscroll-contain" aria-label="Links principais">
-                <ul class="list-none m-0 p-0 flex flex-col">
-                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="{{ route('home') }}">Início</a></li>
+            <nav class="h-full overflow-y-auto px-4 pb-20 overscroll-contain" aria-label="Links principais">
+                <ul class="list-none m-0 p-0 flex flex-col pt-3">
+
+                    {{-- SELETOR DE PERFIL (MOBILE - DESTACADO) --}}
+                    <li x-data="{ open: false }" class="border-b border-blue-100 bg-blue-50/80 rounded-xl mb-3 shadow-sm border">
+                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 py-3 px-4 text-left focus:outline-none hover:text-blue-800 transition-colors rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-inner">
+                                    <i class="fa-solid fa-user text-lg"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] uppercase text-blue-600 font-extrabold tracking-wider leading-none mb-1 mt-0.5">Perfil de Navegação</span>
+                                    <span class="font-black text-blue-950 leading-none text-base">{{ $perfis[$perfilAtual] }}</span>
+                                </div>
+                            </div>
+                            <div class="bg-blue-100/50 p-2 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-chevron-down text-blue-600 text-sm transition-transform duration-300" :class="open ? 'rotate-180' : ''"></i>
+                            </div>
+                        </button>
+                        
+                        <div x-show="open" style="display: none;" x-transition class="px-3 pb-3">
+                            <form action="{{ route('perfil.definir') }}" method="POST" class="flex flex-col gap-1.5 pt-1 border-t border-blue-200/50">
+                                @csrf
+                                @foreach($perfis as $valor => $rotulo)
+                                    <button type="submit" name="perfil" value="{{ $valor }}" class="flex items-center justify-between px-4 py-3 rounded-lg text-sm transition-all border {{ $perfilAtual === $valor ? 'text-blue-900 bg-white border-blue-400 font-extrabold shadow-sm ring-2 ring-blue-500/20' : 'text-slate-600 border-transparent bg-transparent hover:bg-white hover:border-slate-200' }}">
+                                        <span>{{ $rotulo }}</span>
+                                        @if($perfilAtual === $valor) <i class="fa-solid fa-circle-check text-blue-600 text-lg"></i> @endif
+                                    </button>
+                                @endforeach
+                            </form>
+                        </div>
+                    </li>
+
+                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="{{ route('home') }}">Início</a></li>
 
                     {{-- A Cidade (Mobile) --}}
                     <li x-data="{ open: false }" class="border-b border-slate-100">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-yellow-500 transition-colors">
+                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 text-left focus:outline-none hover:text-yellow-500 transition-colors">
                             <span>Cidade</span>
                             <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
@@ -239,7 +310,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
 
                     {{-- Secretarias (Mobile) --}}
                     <li x-data="{ open: false }" class="border-b border-slate-100">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-yellow-500 transition-colors">
+                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 text-left focus:outline-none hover:text-yellow-500 transition-colors">
                             <span>Governo</span>
                             <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
@@ -255,11 +326,11 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                         </ul>
                     </li>
 
-                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="https://www.govfacilcidadao.com.br/login">Ouvidoria</a></li>
+                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="https://www.govfacilcidadao.com.br/login">Ouvidoria</a></li>
 
                     {{-- Transparência (Mobile) --}}
                     <li x-data="{ open: false }" class="border-b border-slate-100">
-                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 text-left focus:outline-none hover:text-emerald-600 transition-colors">
+                        <button @click="open = !open" type="button" class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 text-left focus:outline-none hover:text-emerald-600 transition-colors">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-magnifying-glass-chart text-emerald-600"></i>
                                 <span class="font-bold text-emerald-700">Transparência</span>
@@ -274,7 +345,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                         </ul>
                     </li>
 
-                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao">Acesso a Informação</a></li>
+                    <li><a class="flex items-center justify-between w-full text-slate-700 text-[1.08rem] leading-tight font-normal py-4 px-2 border-b border-slate-100 hover:text-yellow-500 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao">Acesso a Informação</a></li>
 
                     <li class="pt-4">
                         <a href="https://gov.assai.pr.gov.br/cpf-check"
@@ -289,12 +360,12 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     </li>
                 </ul>
 
-                <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm flex items-center justify-start gap-3">
+                <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm flex items-center justify-start gap-3 mx-1">
                     <span class="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Idioma</span>
                     <x-google-translate />
                 </div>
 
-                <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm" aria-label="Acessibilidade">
+                <div class="mt-4 mx-1 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm" aria-label="Acessibilidade">
                     <p class="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-500 mb-2">Acessibilidade</p>
                     <div class="flex items-center gap-2">
                         <button type="button" class="btn-contrast inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700">
@@ -305,7 +376,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
                     </div>
                 </div>
 
-                <div class="mt-4 grid grid-cols-1 gap-3">
+                <div class="mt-4 mx-1 grid grid-cols-1 gap-3">
                     <section x-data="weatherWidget()" x-init="init()" class="rounded-2xl border border-slate-200 bg-slate-50/95 p-4 shadow-sm text-slate-700">
                         <div class="flex items-start justify-between gap-3">
                             <div>

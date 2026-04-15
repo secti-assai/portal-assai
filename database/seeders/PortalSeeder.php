@@ -39,7 +39,7 @@ class PortalSeeder extends Seeder
             ],
             [
                 'titulo' => 'Educação',
-                'url'    => '#',
+                'url'    => url('/em-desenvolvimento'),
                 'icone'  => 'fa-graduation-cap',
                 'ativo'  => true,
             ],

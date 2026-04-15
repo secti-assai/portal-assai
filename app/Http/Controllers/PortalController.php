@@ -28,9 +28,26 @@ class PortalController extends Controller
 {
     use NormalizesSearch;
 
-    // Página inicial
-    public function index()
+    /**
+     * Aplica o filtro de perfil às consultas de conteúdo.
+     * Lê o Cookie e utiliza JSON Contains para filtrar.
+     */
+    private function aplicarFiltroPerfil($query, $perfil)
     {
+        if ($perfil !== 'todos') {
+            $query->where(function ($q) use ($perfil) {
+                $q->whereJsonContains('perfis_alvo', $perfil)
+                  ->orWhereNull('perfis_alvo');
+            });
+        }
+        return $query;
+    }
+
+    // Página inicial
+    public function index(Request $request)
+    {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
         $banners = Banner::where('ativo', true)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -42,44 +59,45 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 1. Busca Notícias marcadas como Destaque (Para o Slider)
-        $destaquesSlider = Noticia::publicadas()
+        // 1. Busca Notícias marcadas como Destaque (Filtro Perfil Aplicado)
+        $destaquesQuery = Noticia::publicadas()
             ->where('destaque', true)
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+            ->take(3);
+        $destaquesSlider = $this->aplicarFiltroPerfil($destaquesQuery, $perfil)->get();
 
-        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Para a Sidebar)
-        $recentesSidebar = Noticia::publicadas()
+        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Filtro Perfil Aplicado)
+        $recentesQuery = Noticia::publicadas()
             ->whereNotIn('id', $destaquesSlider->pluck('id'))
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+            ->take(3);
+        $recentesSidebar = $this->aplicarFiltroPerfil($recentesQuery, $perfil)->get();
 
-        // 3. Mescla as coleções para manter a variável $noticias populada na view
+        // 3. Mescla as coleções
         $noticias = $destaquesSlider->concat($recentesSidebar);
 
-        $eventos = Evento::futurosPublicos()
+        // Eventos (Filtro Perfil Aplicado)
+        $eventosQuery = Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
-            ->take(4)
-            ->get();
+            ->take(4);
+        $eventos = $this->aplicarFiltroPerfil($eventosQuery, $perfil)->get();
 
-        $destaques = Programa::where('ativo', true)
+        // Programas Destaque (Filtro Perfil Aplicado)
+        $destaquesProgQuery = Programa::where('ativo', true)
             ->where('destaque', true)
             ->latest()
-            ->take(3)
-            ->get();
+            ->take(3);
+        $destaques = $this->aplicarFiltroPerfil($destaquesProgQuery, $perfil)->get();
 
         $programas = $destaques->count() >= 3
             ? $destaques
             : $destaques->concat(
-                Programa::where('ativo', true)
-                    ->where('destaque', false)
-                    ->latest()
-                    ->take(3 - $destaques->count())
-                    ->get()
+                $this->aplicarFiltroPerfil(
+                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(3 - $destaques->count()), 
+                    $perfil
+                )->get()
             );
 
         $bannersDestaque = BannerDestaque::where('ativo', true)
@@ -87,10 +105,11 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $servicos = Servico::where('ativo', true)
+        // Serviços (Filtro Perfil Aplicado)
+        $servicosQuery = Servico::where('ativo', true)
             ->orderByDesc('acessos')
-            ->take(10)
-            ->get();
+            ->take(10);
+        $servicos = $this->aplicarFiltroPerfil($servicosQuery, $perfil)->get();
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -106,15 +125,16 @@ class PortalController extends Controller
 
         $redesSociais = RedeSocial::orderBy('ordem', 'asc')->get();
 
-        $sugestoesIA = Servico::where('ativo', true)
+        // Sugestões IA (Filtro Perfil Aplicado)
+        $sugestoesQuery = Servico::where('ativo', true)
             ->withCount([
                 'acessosLog as acessos_recentes' => function ($query) {
                     $query->where('created_at', '>=', Carbon::now()->subDays(7));
                 }
             ])
             ->orderByDesc('acessos_recentes')
-            ->take(3)
-            ->pluck('titulo');
+            ->take(3);
+        $sugestoesIA = $this->aplicarFiltroPerfil($sugestoesQuery, $perfil)->pluck('titulo');
 
         return view('pages.pagina', compact(
             'banners',
@@ -129,13 +149,16 @@ class PortalController extends Controller
             'sugestoesIA',
             'portais',
             'bannersDestaque',
-            'redesSociais'
+            'redesSociais',
+            'perfil'
         ));
     }
 
     // Página de notícias
     public function noticias(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
         $categorias = Noticia::publicadas()
             ->whereNotNull('categoria')
             ->distinct()
@@ -145,6 +168,9 @@ class PortalController extends Controller
         $query = Noticia::publicadas()
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc');
+
+        // Aplica o filtro de Perfil
+        $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('q')) {
             $termo = $request->q;
@@ -165,7 +191,9 @@ class PortalController extends Controller
 
     public function agenda(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $mes = $request->get('mes');
+        
         $dataBase = $mes
             ? Carbon::createFromFormat('Y-m', $mes)->startOfMonth()
             : now()->startOfMonth();
@@ -176,9 +204,12 @@ class PortalController extends Controller
         $diasNoMes = $dataBase->daysInMonth;
         $primeiroDiaSemana = $dataBase->dayOfWeek;
 
-        $diasComEvento = Evento::futurosPublicos()
+        // Filtra dias com evento baseado no perfil
+        $diasComEventoQuery = Evento::futurosPublicos()
             ->whereYear('data_inicio', $dataBase->year)
-            ->whereMonth('data_inicio', $dataBase->month)
+            ->whereMonth('data_inicio', $dataBase->month);
+            
+        $diasComEvento = $this->aplicarFiltroPerfil($diasComEventoQuery, $perfil)
             ->get()
             ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
             ->unique()
@@ -199,23 +230,26 @@ class PortalController extends Controller
             return response(view('partials.calendario-widget', $calendarData)->render());
         }
 
-        $eventos = Evento::publico()
-            ->ordenarPorDataMaisProxima()
+        // Filtra eventos da listagem baseado no perfil
+        $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
+        $eventos = $this->aplicarFiltroPerfil($eventosQuery, $perfil)
             ->paginate(4)
             ->withQueryString();
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
     }
 
-    public function eventoShow($id)
+    public function eventoShow(Request $request, $id)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $evento = Evento::findOrFail($id);
 
-        $outrosEventos = Evento::where('id', '!=', $id)
+        $outrosEventosQuery = Evento::where('id', '!=', $id)
             ->publico()
             ->ordenarPorDataMaisProxima()
-            ->take(3)
-            ->get();
+            ->take(3);
+            
+        $outrosEventos = $this->aplicarFiltroPerfil($outrosEventosQuery, $perfil)->get();
 
         return view('agenda.show', compact('evento', 'outrosEventos'));
     }
@@ -244,7 +278,11 @@ class PortalController extends Controller
 
     public function servicos(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $query = Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+
+        // Aplica o filtro de Perfil
+        $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('search')) {
             $termo = $request->string('search')->trim()->toString();
@@ -364,11 +402,16 @@ class PortalController extends Controller
         }
     }
 
-    public function programas()
+    public function programas(Request $request)
     {
-        $programas = \App\Models\Programa::where('ativo', true)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+        $perfil = $request->cookie('portal_perfil', 'todos');
+        
+        $query = \App\Models\Programa::where('ativo', true)
+            ->orderBy('created_at', 'desc');
+
+        $this->aplicarFiltroPerfil($query, $perfil);
+
+        $programas = $query->paginate(12);
 
         return view('programas.index', compact('programas'));
     }
@@ -381,14 +424,17 @@ class PortalController extends Controller
 
     public function autocomplete(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->get('q', ''));
 
         if (strlen($termo) < 2) {
             return response()->json([]);
         }
 
+        // Notícias
         $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+        $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
 
         $noticias = $noticiasQuery
             ->select('id', 'titulo', 'slug')
@@ -401,8 +447,10 @@ class PortalController extends Controller
                 'tipo' => 'Notícia',
             ]);
 
+        // Serviços
         $servicosQuery = Servico::where('ativo', true);
         $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
 
         $servicos = $servicosQuery
             ->select('id', 'titulo')
@@ -414,8 +462,10 @@ class PortalController extends Controller
                 'tipo' => 'Serviço',
             ]);
 
+        // Programas
         $programasQuery = Programa::where('ativo', true);
         $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+        $this->aplicarFiltroPerfil($programasQuery, $perfil);
 
         $programas = $programasQuery
             ->select('id', 'titulo')
@@ -427,6 +477,7 @@ class PortalController extends Controller
                 'tipo' => 'Programa',
             ]);
 
+        // Secretarias (Geralmente não filtrado por perfil, mas mantido a busca base)
         $secretariasQuery = Secretaria::query();
         $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
 
@@ -447,6 +498,7 @@ class PortalController extends Controller
 
     public function buscaGlobal(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->input('q', ''));
 
         $noticias = collect();
@@ -456,9 +508,11 @@ class PortalController extends Controller
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
+            
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
-
+            $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
+            
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
@@ -468,6 +522,7 @@ class PortalController extends Controller
 
             $servicosQuery = Servico::where('ativo', true);
             $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
 
             $servicos = $servicosQuery
                 ->take(9)
@@ -475,6 +530,7 @@ class PortalController extends Controller
 
             $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
             $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
 
             $eventos = $eventosQuery
                 ->take(8)
@@ -482,6 +538,7 @@ class PortalController extends Controller
 
             $programasQuery = Programa::where('ativo', true);
             $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            $this->aplicarFiltroPerfil($programasQuery, $perfil);
 
             $programas = $programasQuery
                 ->take(9)
@@ -514,6 +571,7 @@ class PortalController extends Controller
 
     public function avancada(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->input('q', ''));
         $categoria = $request->input('categoria');
         $modalidade = $request->input('modalidade');
@@ -526,6 +584,9 @@ class PortalController extends Controller
         if (!empty($termo) || $request->anyFilled(['categoria', 'modalidade', 'tag', 'servico'])) {
 
             $query = Servico::where('ativo', true);
+            
+            // Aplica filtro de Perfil
+            $this->aplicarFiltroPerfil($query, $perfil);
 
             if (!empty($termo)) {
                 $this->applyInsensitiveSearch($query, ['titulo', 'descricao'], $termo);
