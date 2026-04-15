@@ -85,6 +85,11 @@
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800">Oculta/Inativa</span>
                                 @endif
                                 
+                                {{-- NOVO: Indicador de Destaque --}}
+                                @if($noticia->destaque)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">Em Destaque</span>
+                                @endif
+                                
                                 @if($noticia->categoria)
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">{{ $noticia->categoria }}</span>
                                 @endif

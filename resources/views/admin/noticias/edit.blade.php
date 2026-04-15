@@ -90,7 +90,15 @@
                     </label>
                 </div>
 
-                {{-- Categoria Opcional --}}
+                {{-- Toggle de Destaque inteligente baseado no banco --}}
+                <div class="mb-2">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="destaque" value="1" class="sr-only peer" {{ $noticia->destaque ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                        <span class="ml-3 text-sm font-bold text-slate-700">Exibir no Slider de Destaque</span>
+                    </label>
+                </div>
+
                 <x-admin.select
                     name="categoria"
                     label="Categoria"

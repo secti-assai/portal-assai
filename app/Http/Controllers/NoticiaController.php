@@ -60,11 +60,13 @@ class NoticiaController extends Controller
     {
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'nullable|string', // Atualizado para nullable
+            'categoria' => 'nullable|string',
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
             'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'ativo' => 'nullable|boolean',
+            'destaque' => 'nullable|boolean',
         ]);
 
         $caminhoImagem = null;
@@ -80,7 +82,8 @@ class NoticiaController extends Controller
             'conteudo' => $request->conteudo,
             'imagem_capa' => $caminhoImagem,
             'data_publicacao' => $request->data_publicacao,
-            'ativo' => $request->has('ativo'), // Guarda o status do toggle
+            'ativo' => $request->has('ativo'),
+            'destaque' => $request->has('destaque'), // Captura o booleano do novo toggle
         ]);
 
         return redirect()->route('admin.noticias.index')->with('sucesso', 'Notícia cadastrada com sucesso!');
@@ -89,7 +92,6 @@ class NoticiaController extends Controller
     // 4. MOSTRAR A NOTÍCIA PÚBLICA (Site)
     public function show($slug)
     {
-        // Garante que só carrega no portal público se estiver 'ativa'
         $noticia = Noticia::where('slug', $slug)->where('ativo', true)->firstOrFail();
         return view('noticias.show', compact('noticia'));
     }
@@ -108,11 +110,13 @@ class NoticiaController extends Controller
 
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'nullable|string', // Atualizado para nullable
+            'categoria' => 'nullable|string',
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
             'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'ativo' => 'nullable|boolean',
+            'destaque' => 'nullable|boolean',
         ]);
 
         $noticia->titulo = $request->titulo;
@@ -121,7 +125,8 @@ class NoticiaController extends Controller
         $noticia->resumo = $request->resumo;
         $noticia->conteudo = $request->conteudo;
         $noticia->data_publicacao = $request->data_publicacao;
-        $noticia->ativo = $request->has('ativo'); // Atualiza o status do toggle
+        $noticia->ativo = $request->has('ativo');
+        $noticia->destaque = $request->has('destaque'); // Atualiza o status do destaque
 
         if ($request->hasFile('imagem_capa')) {
             if ($noticia->imagem_capa) {
