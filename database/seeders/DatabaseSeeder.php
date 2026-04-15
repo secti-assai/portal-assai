@@ -29,9 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call([ExecutivosSeeder::class]);
         $this->call([ServicoSeeder::class]);
         $this->call([PortalSeeder::class]);
-        
-        // Programas municipais
-        Programa::factory(10)->create();
+        $this->call([ProgramaSeeder::class]);
 
         // Serviços associados às secretarias
         Servico::factory(50)->create();

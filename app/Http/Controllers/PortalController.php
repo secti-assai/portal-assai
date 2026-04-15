@@ -12,6 +12,8 @@ use App\Models\Banner;
 use App\Models\Secretaria;
 use App\Models\ServicoAcesso;
 use App\Models\BannerDestaque;
+use App\Models\RedeSocial;
+use App\Models\Portal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -33,7 +35,7 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $portais = \App\Models\Portal::where('ativo', true)
+        $portais = Portal::where('ativo', true)
             ->get();
 
         $alertasAtivos = Alerta::where('ativo', true)
@@ -102,6 +104,8 @@ class PortalController extends Controller
             return [];
         });
 
+        $redesSociais = RedeSocial::orderBy('ordem', 'asc')->get();
+
         $sugestoesIA = Servico::where('ativo', true)
             ->withCount([
                 'acessosLog as acessos_recentes' => function ($query) {
@@ -124,7 +128,8 @@ class PortalController extends Controller
             'inscricoesAbertas',
             'sugestoesIA',
             'portais',
-            'bannersDestaque'
+            'bannersDestaque',
+            'redesSociais'
         ));
     }
 

@@ -15,31 +15,31 @@ class PortalSeeder extends Seeder
         $portais = [
             [
                 'titulo' => 'Conecta Assaí',
-                'url'    => 'https://conecta.assai.pr.gov.br', // Substitua pela URL real se for diferente
+                'url'    => 'https://conecta.assai.pr.gov.br',
                 'icone'  => 'fa-circle-nodes',
                 'ativo'  => true,
             ],
             [
                 'titulo' => 'Sala do Empreendedor',
-                'url'    => '#', // Substitua pela URL correta
+                'url'    => 'https://sde.assai.pr.gov.br/sala',
                 'icone'  => 'fa-briefcase',
                 'ativo'  => true,
             ],
             [
                 'titulo' => 'Turismo',
-                'url'    => 'http://127.0.0.1:8000/turismo', // Substitua pela URL correta
+                'url'    => url('/turismo'),
                 'icone'  => 'fa-map-location-dot',
                 'ativo'  => true,
             ],
             [
                 'titulo' => 'Invista em Assaí',
-                'url'    => '#', // Substitua pela URL correta
+                'url'    => url('/em-desenvolvimento'),
                 'icone'  => 'fa-chart-line',
                 'ativo'  => true,
             ],
             [
                 'titulo' => 'Educação',
-                'url'    => '#', // Substitua pela URL correta
+                'url'    => '#',
                 'icone'  => 'fa-graduation-cap',
                 'ativo'  => true,
             ],

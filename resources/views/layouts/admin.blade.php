@@ -116,6 +116,16 @@
             </a>
             @endcan
 
+            @can('gerir banners')
+            <a href="{{ route('admin.redes-sociais.index') }}"
+                class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Redes Sociais
+            </a>
+            @endcan
+
             @hasanyrole('admin')
             <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Governança</div>
 

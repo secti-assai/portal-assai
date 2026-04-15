@@ -17,12 +17,15 @@ use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ExecutivoController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BannerDestaqueController;
+use App\Http\Controllers\RedeSocialController; // NOVO IMPORT
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
 Route::get('/', [PortalController::class, 'index'])->name('home');
 
 Route::redirect('/novo', '/', 301);
+
+Route::view('/em-desenvolvimento', 'pages.em-desenvolvimento')->name('em-desenvolvimento');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
@@ -210,6 +213,10 @@ Route::prefix('cidade')->name('cidade.')->group(function () {
 Route::view('/turismo', 'pages.turismo')->name('pages.turismo');
 Route::view('/transparencia', 'pages.transparencia')->name('pages.transparencia');
 Route::view('/acessibilidade', 'pages.acessibilidade')->name('pages.acessibilidade');
+Route::view('/faq', 'pages.faq')->name('pages.faq');
+Route::view('/lgpd', 'pages.lgpd')->name('pages.lgpd');
+Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
+Route::view('/termos-de-uso', 'pages.termos')->name('pages.termos');
 
 // ================= ROTAS DE LOGIN =================
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -279,7 +286,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])->name('admin.banners.toggle-status');
         Route::patch('banners/{id}/toggle', [BannerController::class, 'toggleAtivo'])->name('admin.banners.toggle');
 
-        // NOVO: Rotas de Banners de Destaque (Página Inicial)
+        // Rotas de Banners de Destaque (Página Inicial)
         Route::resource('banner-destaques', BannerDestaqueController::class)->except(['show'])->names([
             'index'   => 'admin.banner-destaques.index',
             'create'  => 'admin.banner-destaques.create',
@@ -288,6 +295,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             'update'  => 'admin.banner-destaques.update',
             'destroy' => 'admin.banner-destaques.destroy',
         ]);
+        // NOVO: Módulo de Redes Sociais
+        Route::get('redes-sociais', [RedeSocialController::class, 'index'])->name('admin.redes-sociais.index');
+        Route::put('redes-sociais', [RedeSocialController::class, 'updateAll'])->name('admin.redes-sociais.updateAll');
     });
 
     Route::middleware(['permission:gerir eventos'])->group(function () {
