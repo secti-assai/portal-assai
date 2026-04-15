@@ -1075,13 +1075,15 @@ html.contrast-mode .pl-mobile-home .home-search-bar .wp-block-search__button {
         font-size: 16px !important;
     }
 }
+
 /* MODAL DE BANNERS - UNIFICADO DEFINITIVO */
 #banner-portal-modal {
     z-index: 25000 !important;
 }
 
-/* Paginação e Navegação */
-.swiper-button-next, .swiper-button-prev {
+/* Paginação e Navegação DO MODAL APENAS */
+#banner-portal-modal .swiper-button-next, 
+#banner-portal-modal .swiper-button-prev {
     width: 48px !important;
     height: 48px !important;
     background: rgba(0,0,0,0.4) !important;
@@ -1092,11 +1094,13 @@ html.contrast-mode .pl-mobile-home .home-search-bar .wp-block-search__button {
     transition: all 0.2s ease;
 }
 
-.swiper-button-next:hover, .swiper-button-prev:hover {
+#banner-portal-modal .swiper-button-next:hover, 
+#banner-portal-modal .swiper-button-prev:hover {
     background: rgba(0,0,0,0.6) !important;
 }
 
-.swiper-button-next::after, .swiper-button-prev::after {
+#banner-portal-modal .swiper-button-next::after, 
+#banner-portal-modal .swiper-button-prev::after {
     font-size: 18px !important;
     font-weight: bold;
 }

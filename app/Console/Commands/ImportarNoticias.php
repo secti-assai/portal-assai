@@ -16,6 +16,8 @@ class ImportarNoticias extends Command
 
     public function handle()
     {
+    {
+        ini_set('memory_limit', '512M');
         $caminhoArquivo = base_path('noticias_assai_completo.json');
         if (!file_exists($caminhoArquivo)) {
             $this->error("JSON não encontrado.");
@@ -87,4 +89,5 @@ class ImportarNoticias extends Command
         $bar->finish();
         $this->info("\n🎉 Importação limpa concluída!");
     }
+}
 }

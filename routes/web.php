@@ -16,6 +16,7 @@ use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ExecutivoController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BannerDestaqueController;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
@@ -266,7 +267,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     });
 
     Route::middleware(['permission:gerir banners'])->group(function () {
-        // Rotas de Banners
+        // Rotas de Banners (Modais)
         Route::resource('banners', BannerController::class)->except(['show'])->names([
             'index'   => 'admin.banners.index',
             'create'  => 'admin.banners.create',
@@ -277,6 +278,16 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ]);
         Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])->name('admin.banners.toggle-status');
         Route::patch('banners/{id}/toggle', [BannerController::class, 'toggleAtivo'])->name('admin.banners.toggle');
+
+        // NOVO: Rotas de Banners de Destaque (Página Inicial)
+        Route::resource('banner-destaques', BannerDestaqueController::class)->except(['show'])->names([
+            'index'   => 'admin.banner-destaques.index',
+            'create'  => 'admin.banner-destaques.create',
+            'store'   => 'admin.banner-destaques.store',
+            'edit'    => 'admin.banner-destaques.edit',
+            'update'  => 'admin.banner-destaques.update',
+            'destroy' => 'admin.banner-destaques.destroy',
+        ]);
     });
 
     Route::middleware(['permission:gerir eventos'])->group(function () {

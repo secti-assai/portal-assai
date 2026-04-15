@@ -11,6 +11,7 @@ use App\Models\Alerta;
 use App\Models\Banner;
 use App\Models\Secretaria;
 use App\Models\ServicoAcesso;
+use App\Models\BannerDestaque;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -33,7 +34,6 @@ class PortalController extends Controller
             ->get();
 
         $portais = \App\Models\Portal::where('ativo', true)
-            ->orderBy('ordem')
             ->get();
 
         $alertasAtivos = Alerta::where('ativo', true)
@@ -80,6 +80,11 @@ class PortalController extends Controller
                     ->get()
             );
 
+        $bannersDestaque = BannerDestaque::where('ativo', true)
+            ->orderBy('ordem', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $servicos = Servico::where('ativo', true)
             ->orderByDesc('acessos')
             ->take(10)
@@ -98,16 +103,28 @@ class PortalController extends Controller
         });
 
         $sugestoesIA = Servico::where('ativo', true)
-            ->withCount(['acessosLog as acessos_recentes' => function ($query) {
-                $query->where('created_at', '>=', Carbon::now()->subDays(7));
-            }])
+            ->withCount([
+                'acessosLog as acessos_recentes' => function ($query) {
+                    $query->where('created_at', '>=', Carbon::now()->subDays(7));
+                }
+            ])
             ->orderByDesc('acessos_recentes')
             ->take(3)
             ->pluck('titulo');
 
         return view('pages.pagina', compact(
-            'banners', 'alertasAtivos', 'noticias', 'destaquesSlider', 'recentesSidebar',
-            'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA', 'portais'
+            'banners',
+            'alertasAtivos',
+            'noticias',
+            'destaquesSlider',
+            'recentesSidebar',
+            'eventos',
+            'programas',
+            'servicos',
+            'inscricoesAbertas',
+            'sugestoesIA',
+            'portais',
+            'bannersDestaque'
         ));
     }
 
@@ -143,15 +160,15 @@ class PortalController extends Controller
 
     public function agenda(Request $request)
     {
-        $mes      = $request->get('mes');
+        $mes = $request->get('mes');
         $dataBase = $mes
             ? Carbon::createFromFormat('Y-m', $mes)->startOfMonth()
             : now()->startOfMonth();
 
-        $mesAnterior       = $dataBase->copy()->subMonth()->format('Y-m');
-        $mesProximo        = $dataBase->copy()->addMonth()->format('Y-m');
-        $tituloMes         = $dataBase->translatedFormat('F Y');
-        $diasNoMes         = $dataBase->daysInMonth;
+        $mesAnterior = $dataBase->copy()->subMonth()->format('Y-m');
+        $mesProximo = $dataBase->copy()->addMonth()->format('Y-m');
+        $tituloMes = $dataBase->translatedFormat('F Y');
+        $diasNoMes = $dataBase->daysInMonth;
         $primeiroDiaSemana = $dataBase->dayOfWeek;
 
         $diasComEvento = Evento::futurosPublicos()
@@ -238,7 +255,7 @@ class PortalController extends Controller
             $query->where('secretaria_id', $request->secretaria);
         }
 
-        $servicos    = $query->paginate(21)->withQueryString();
+        $servicos = $query->paginate(21)->withQueryString();
         $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
 
         return view('servicos.index', compact('servicos', 'secretarias'));
@@ -283,34 +300,34 @@ class PortalController extends Controller
     public function enviarContato(Request $request)
     {
         $validated = $request->validate([
-            'nome'         => 'required|string|min:2|max:120',
-            'email'        => 'required|email|max:120',
+            'nome' => 'required|string|min:2|max:120',
+            'email' => 'required|email|max:120',
             'destinatario' => 'required|email',
-            'assunto'      => 'required|string|min:3|max:200',
-            'mensagem'     => 'required|string|min:10|max:4000',
+            'assunto' => 'required|string|min:3|max:200',
+            'mensagem' => 'required|string|min:10|max:4000',
         ], [
-            'nome.required'         => 'O nome é obrigatório.',
-            'nome.min'              => 'O nome deve ter pelo menos 2 caracteres.',
-            'email.required'        => 'O e-mail é obrigatório.',
-            'email.email'           => 'Informe um e-mail válido.',
+            'nome.required' => 'O nome é obrigatório.',
+            'nome.min' => 'O nome deve ter pelo menos 2 caracteres.',
+            'email.required' => 'O e-mail é obrigatório.',
+            'email.email' => 'Informe um e-mail válido.',
             'destinatario.required' => 'Selecione o setor de destino.',
-            'destinatario.email'    => 'Setor de destino inválido.',
-            'assunto.required'      => 'O assunto é obrigatório.',
-            'assunto.min'           => 'O assunto deve ter pelo menos 3 caracteres.',
-            'mensagem.required'     => 'A mensagem é obrigatória.',
-            'mensagem.min'          => 'A mensagem deve ter pelo menos 10 caracteres.',
-            'mensagem.max'          => 'A mensagem pode ter no máximo 4000 caracteres.',
+            'destinatario.email' => 'Setor de destino inválido.',
+            'assunto.required' => 'O assunto é obrigatório.',
+            'assunto.min' => 'O assunto deve ter pelo menos 3 caracteres.',
+            'mensagem.required' => 'A mensagem é obrigatória.',
+            'mensagem.min' => 'A mensagem deve ter pelo menos 10 caracteres.',
+            'mensagem.max' => 'A mensagem pode ter no máximo 4000 caracteres.',
         ]);
 
         try {
             Mail::to($validated['destinatario'])->send(new ContatoSiteMail($validated));
         } catch (\Throwable $exception) {
             Log::error('Falha ao enviar formulário de contato do portal.', [
-                'erro'         => $exception->getMessage(),
-                'nome'         => $validated['nome'] ?? null,
-                'email'        => $validated['email'] ?? null,
+                'erro' => $exception->getMessage(),
+                'nome' => $validated['nome'] ?? null,
+                'email' => $validated['email'] ?? null,
                 'destinatario' => $validated['destinatario'] ?? null,
-                'assunto'      => $validated['assunto'] ?? null,
+                'assunto' => $validated['assunto'] ?? null,
             ]);
 
             return back()
@@ -375,8 +392,8 @@ class PortalController extends Controller
             ->get()
             ->map(fn($n) => [
                 'titulo' => $n->titulo,
-                'url'    => route('noticias.show', $n->slug),
-                'tipo'   => 'Notícia',
+                'url' => route('noticias.show', $n->slug),
+                'tipo' => 'Notícia',
             ]);
 
         $servicosQuery = Servico::where('ativo', true);
@@ -388,8 +405,8 @@ class PortalController extends Controller
             ->get()
             ->map(fn($s) => [
                 'titulo' => $s->titulo,
-                'url'    => route('servicos.acessar', $s->id),
-                'tipo'   => 'Serviço',
+                'url' => route('servicos.acessar', $s->id),
+                'tipo' => 'Serviço',
             ]);
 
         $programasQuery = Programa::where('ativo', true);
@@ -401,8 +418,8 @@ class PortalController extends Controller
             ->get()
             ->map(fn($p) => [
                 'titulo' => $p->titulo,
-                'url'    => route('programas.show', $p->id),
-                'tipo'   => 'Programa',
+                'url' => route('programas.show', $p->id),
+                'tipo' => 'Programa',
             ]);
 
         $secretariasQuery = Secretaria::query();
@@ -414,8 +431,8 @@ class PortalController extends Controller
             ->get()
             ->map(fn($sec) => [
                 'titulo' => $sec->nome,
-                'url'    => route('secretarias.show', $sec->id),
-                'tipo'   => 'Secretaria',
+                'url' => route('secretarias.show', $sec->id),
+                'tipo' => 'Secretaria',
             ]);
 
         $resultados = $noticias->concat($servicos)->concat($programas)->concat($secretarias)->values();
@@ -427,10 +444,10 @@ class PortalController extends Controller
     {
         $termo = trim($request->input('q', ''));
 
-        $noticias    = collect();
-        $servicos    = collect();
-        $eventos     = collect();
-        $programas   = collect();
+        $noticias = collect();
+        $servicos = collect();
+        $eventos = collect();
+        $programas = collect();
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
