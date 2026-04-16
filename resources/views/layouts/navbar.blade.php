@@ -181,7 +181,6 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     <a href="{{ route('cidade.demografia') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Demografia</a>
                     <a href="{{ route('cidade.historias-sucesso') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Histórias de Sucessos</a>
                     <a href="{{ route('cidade.qualidade-vida') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Qualidade de Vida</a>
-                    <a href="{{ route('pages.turismo') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Turismo</a>
                 </div>
             </div>
 
@@ -317,7 +316,6 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.demografia') }}">Demografia</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.historias-sucesso') }}">Histórias de Sucessos</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.qualidade-vida') }}">Qualidade de Vida</a></li>
-                            <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('pages.turismo') }}">Turismo</a></li>
                         </ul>
                     </li>
 

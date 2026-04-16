@@ -35,4 +35,7 @@ return [
         'to_address' => env('CONTACT_FORM_TO_ADDRESS', 'contato@assai.pr.gov.br'),
     ],
 
+    'conecta' => [
+        'url' => env('CONECTA_API_URL', 'https://conecta.assai.pr.gov.br'),
+    ],
 ];

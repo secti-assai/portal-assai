@@ -27,7 +27,7 @@ class PortalSeeder extends Seeder
             ],
             [
                 'titulo' => 'Turismo',
-                'url'    => url('/turismo'),
+                'url'    => url('/em-desenvolvimento'),
                 'icone'  => 'fa-map-location-dot',
                 'ativo'  => true,
             ],
@@ -41,6 +41,12 @@ class PortalSeeder extends Seeder
                 'titulo' => 'Educação',
                 'url'    => url('/em-desenvolvimento'),
                 'icone'  => 'fa-graduation-cap',
+                'ativo'  => true,
+            ],
+            [
+                'titulo' => 'Portal da Transparência',
+                'url'    => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==',
+                'icone'  => 'fa-magnifying-glass',
                 'ativo'  => true,
             ],
         ];

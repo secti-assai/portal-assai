@@ -269,10 +269,11 @@
                 @foreach($portais as $portal)
                 <div class="small-card group relative">
                     <a href="{{ $portal->url }}" target="_blank" rel="noopener"
-                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3">
+                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3 rounded-2xl border transition-all duration-300
+                        {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
                         @php $iconePortal = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconePortal }} service-icon" aria-hidden="true"></i>
-                        <h4 class="small-card-title">{{ $portal->titulo }}</h4>
+                        <i class="fa-solid fa-{{ $iconePortal }} text-6xl {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2" aria-hidden="true"></i>
+                        <h3 class="text-lg font-medium{{ Str::of($portal->titulo)->lower()->contains('transpar') ? ' text-white' : ' text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
                     </a>
                 </div>
                 @endforeach
@@ -353,9 +354,14 @@
                 <div class="flex flex-col gap-4">
                     @foreach($bannersDestaque as $banner)
                     <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
-                        class="block relative w-full aspect-[3/1] overflow-hidden">
-                        <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}" alt="{{ $banner->titulo }}" loading="lazy"
-                            class="absolute inset-0 w-full h-full object-cover">
+                        class="block">
+                        <div class="w-full aspect-[5/1] max-h-32 min-h-24 flex items-center justify-center bg-white border border-slate-200 overflow-hidden">
+                            <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}"
+                                alt="{{ $banner->titulo }}"
+                                class="w-full h-full object-fill"
+                                loading="lazy"
+                                decoding="async">
+                        </div>
                     </a>
                     @endforeach
                 </div>
@@ -411,13 +417,12 @@
                             <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
                                 {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
                                 class="block w-full h-full">
-
-                                {{-- Tag img corrigida --}}
-                                <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
-                                    alt="{{ $programa->titulo }}"
-                                    loading="lazy"
-                                    class="absolute inset-0 object-cover w-full h-full">
-
+                                <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-white">
+                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
+                                        alt="{{ $programa->titulo }}"
+                                        loading="lazy"
+                                        class="w-full h-full object-cover mx-auto">
+                                </div>
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none">
                                 </div>
@@ -450,19 +455,16 @@
 
         {{-- Calendário Mobile --}}
         <section class="bg-gray-section" style="padding-top: 2.5rem;">
+
             <h2 class="section-title font-bold">Calendário de Eventos</h2>
-            <div class="calendar-wrap">
+            <div class="calendar-wrap" id="calendar-ajax-wrap" data-mes="{{ $calendarMonth->format('Y-m') }}">
                 <div class="calendar-head">
-                    <a href="{{ route('home', ['mes' => $calendarMesAnterior]) }}" class="arrow-btn"
-                        aria-label="Mês anterior"><i class="fa-solid fa-chevron-left"></i></a>
-                    <span class="month-name">{{ $calendarTituloMes }}</span>
-                    <a href="{{ route('home', ['mes' => $calendarMesProximo]) }}" class="arrow-btn"
-                        aria-label="Próximo mês"><i class="fa-solid fa-chevron-right"></i></a>
+                    <button type="button" class="arrow-btn" id="calendar-prev-btn" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                    <span class="month-name" id="calendar-month-name">{{ $calendarTituloMes }}</span>
+                    <button type="button" class="arrow-btn" id="calendar-next-btn" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
-                <div class="calendar-grid">
-                    <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span
-                        class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span
-                        class="day-name">S</span>
+                <div class="calendar-grid" id="calendar-days-grid">
+                    <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
                     @foreach($calendarDays as $calendarDay)
                     @php
                     $calendarClasses = 'day-number';
@@ -516,13 +518,14 @@
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
                     style="font-family: 'Montserrat', sans-serif;">Nossos Portais</h2>
-                <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     @foreach($portais as $portal)
                     <a href="{{ $portal->url }}" target="_blank" rel="noopener"
-                        class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
+                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group
+                        {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
                         @php $iconePortal = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconePortal }} text-6xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug">{{ $portal->titulo }}</h3>
+                        <i class="fa-solid fa-{{ $iconePortal }} text-6xl {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2"></i>
+                        <h3 class="text-lg font-medium {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
                     </a>
                     @endforeach
                 </div>
@@ -622,9 +625,14 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     @foreach($bannersDestaque as $banner)
                     <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
-                        class="block relative w-full aspect-[3/1] overflow-hidden">
-                        <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}" alt="{{ $banner->titulo }}" loading="lazy"
-                            class="absolute inset-0 w-full h-full object-cover">
+                        class="block">
+                        <div class="w-full aspect-[5/1] max-h-40 min-h-36 flex items-center justify-center bg-white border border-slate-200 overflow-hidden">
+                            <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}"
+                                alt="{{ $banner->titulo }}"
+                                class="w-full h-full object-fill"
+                                loading="lazy"
+                                decoding="async">
+                        </div>
                     </a>
                     @endforeach
                 </div>
@@ -673,8 +681,38 @@
                     style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
                 @if(isset($programas) && $programas->count() > 0)
                 <div
-                    class="relative h-[520px] w-full rounded-[22px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
-                    <div class="swiper swiper-fique-ligado h-[520px] w-full">
+                    class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
+
+                    {{-- Setas fora do .swiper para evitar clipping --}}
+                    <style>
+                        .program-swiper-arrow-desktop::after {
+                            display: none !important;
+                            content: '' !important;
+                        }
+                    </style>
+                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-desktop
+                        absolute top-1/2 -translate-y-1/2 left-4 lg:left-6 z-30
+                        w-12 h-12 rounded-full flex items-center justify-center
+                        bg-[#006eb7] text-white shadow-lg cursor-pointer
+                        hover:bg-[#00396b] hover:text-yellow-300 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]"
+                        style="pointer-events:auto;"
+                        tabindex="0" role="button" aria-label="Anterior">
+                        <span class="sr-only">Anterior</span>
+                        <i class="fa-solid fa-chevron-left text-2xl !text-white" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-desktop
+                        absolute top-1/2 -translate-y-1/2 right-4 lg:right-6 z-30
+                        w-12 h-12 rounded-full flex items-center justify-center
+                        bg-[#006eb7] text-white shadow-lg cursor-pointer
+                        hover:bg-[#00396b] hover:text-yellow-300 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]"
+                        style="pointer-events:auto;"
+                        tabindex="0" role="button" aria-label="Próximo">
+                        <span class="sr-only">Próximo</span>
+                        <i class="fa-solid fa-chevron-right text-2xl !text-white" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
                         <div class="swiper-wrapper">
                             @foreach($programas as $programa)
                             <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
@@ -684,7 +722,6 @@
                                     {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
                                     class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
 
-                                    {{-- Tag img corrigida --}}
                                     <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
                                         alt="{{ $programa->titulo }}"
                                         loading="lazy"
@@ -721,16 +758,18 @@
                 <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
                     style="font-family: 'Montserrat', sans-serif;">Calendário de Eventos</h2>
                 <div class="grid grid-cols-12 gap-8 items-start">
-                    <div class="col-span-5 bg-white rounded-2xl p-8 shadow-[0_4px_10px_rgba(0,0,0,0.04)]">
+                    <div class="col-span-5 bg-white rounded-2xl p-8 shadow-[0_4px_10px_rgba(0,0,0,0.04)]" id="calendar-desktop-wrap" data-mes="{{ $calendarMonth->format('Y-m') }}">
                         <div class="flex items-center justify-between mb-6 text-[#11181d]">
-                            <a href="{{ route('home', ['mes' => $calendarMesAnterior]) }}"
-                                class="w-10 h-10 rounded-full border border-[#e2e8f0] flex items-center justify-center text-[#334155] hover:bg-slate-50 transition"><i
-                                    class="fa-solid fa-chevron-left"></i></a>
-                            <span class="text-[1.2rem] font-bold"
+                            <button type="button" id="calendar-desktop-prev"
+                                class="w-10 h-10 rounded-full border border-[#e2e8f0] flex items-center justify-center text-[#334155] hover:bg-slate-50 transition" aria-label="Mês anterior">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <span id="calendar-desktop-month" class="text-[1.2rem] font-bold"
                                 style="font-family: 'Montserrat', sans-serif;">{{ $calendarTituloMes }}</span>
-                            <a href="{{ route('home', ['mes' => $calendarMesProximo]) }}"
-                                class="w-10 h-10 rounded-full border border-[#e2e8f0] flex items-center justify-center text-[#334155] hover:bg-slate-50 transition"><i
-                                    class="fa-solid fa-chevron-right"></i></a>
+                            <button type="button" id="calendar-desktop-next"
+                                class="w-10 h-10 rounded-full border border-[#e2e8f0] flex items-center justify-center text-[#334155] hover:bg-slate-50 transition" aria-label="Próximo mês">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
                         </div>
                         <div class="grid grid-cols-7 text-center gap-2 mb-2">
                             <span class="text-[#94a3b8] font-bold text-[0.85rem] pb-2">D</span>
@@ -741,7 +780,7 @@
                             <span class="text-[#94a3b8] font-bold text-[0.85rem] pb-2">S</span>
                             <span class="text-[#94a3b8] font-bold text-[0.85rem] pb-2">S</span>
                         </div>
-                        <div class="grid grid-cols-7 text-center gap-2">
+                        <div class="grid grid-cols-7 text-center gap-2" id="calendar-desktop-days">
                             @foreach($calendarDays as $calendarDay)
                             @php
                             $classes = 'w-10 h-10 flex items-center justify-center mx-auto rounded-full text-base font-medium ';

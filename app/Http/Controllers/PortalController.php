@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Support\Concerns\NormalizesSearch;
 use App\Models\Executivo;
+use App\Services\ConectaApiService;
 
 class PortalController extends Controller
 {
@@ -276,32 +277,36 @@ class PortalController extends Controller
         return view('secretarias.index', compact('secretarias', 'prefeito', 'vicePrefeito'));
     }
 
-    public function servicos(Request $request)
+    public function servicos(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
-        $query = Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
 
-        // Aplica o filtro de Perfil
+        // 1. Processamento da Query Local (Portal)
+        $query = \App\Models\Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+
         $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('search')) {
             $termo = $request->string('search')->trim()->toString();
             $query->where(function ($q) use ($termo) {
                 $busca = '%' . $this->normalizeSearchTerm($termo) . '%';
-
                 $q->whereRaw($this->normalizedColumnSql('titulo') . ' LIKE ?', [$busca])
                     ->orWhereRaw($this->normalizedColumnSql('link') . ' LIKE ?', [$busca]);
             });
         }
 
-        if ($request->filled('secretaria')) {
-            $query->where('secretaria_id', $request->secretaria);
-        }
-
         $servicos = $query->paginate(21)->withQueryString();
-        $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
 
-        return view('servicos.index', compact('servicos', 'secretarias'));
+        // 2. Processamento da API Externa (Conecta)
+        $payloadConecta = $conectaApi->getServicos($perfil);
+        $servicosConecta = $payloadConecta['data'] ?? [];
+
+        // 3. Retorno
+        return view('servicos.index', compact(
+            'servicos',
+            'servicosConecta',
+            'perfil'
+        ));
     }
 
     public function acessarServico($id)
@@ -640,6 +645,4 @@ class PortalController extends Controller
     {
         return view('pages.cidade.qualidade-vida');
     }
-
-
 }
