@@ -37,7 +37,7 @@ class PortalController extends Controller
         if ($perfil !== 'todos') {
             $query->where(function ($q) use ($perfil) {
                 $q->whereJsonContains('perfis_alvo', $perfil)
-                  ->orWhereNull('perfis_alvo');
+                    ->orWhereNull('perfis_alvo');
             });
         }
         return $query;
@@ -95,7 +95,7 @@ class PortalController extends Controller
             ? $destaques
             : $destaques->concat(
                 $this->aplicarFiltroPerfil(
-                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(3 - $destaques->count()), 
+                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(3 - $destaques->count()),
                     $perfil
                 )->get()
             );
@@ -193,7 +193,7 @@ class PortalController extends Controller
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
         $mes = $request->get('mes');
-        
+
         $dataBase = $mes
             ? Carbon::createFromFormat('Y-m', $mes)->startOfMonth()
             : now()->startOfMonth();
@@ -208,7 +208,7 @@ class PortalController extends Controller
         $diasComEventoQuery = Evento::futurosPublicos()
             ->whereYear('data_inicio', $dataBase->year)
             ->whereMonth('data_inicio', $dataBase->month);
-            
+
         $diasComEvento = $this->aplicarFiltroPerfil($diasComEventoQuery, $perfil)
             ->get()
             ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
@@ -248,7 +248,7 @@ class PortalController extends Controller
             ->publico()
             ->ordenarPorDataMaisProxima()
             ->take(3);
-            
+
         $outrosEventos = $this->aplicarFiltroPerfil($outrosEventosQuery, $perfil)->get();
 
         return view('agenda.show', compact('evento', 'outrosEventos'));
@@ -405,7 +405,7 @@ class PortalController extends Controller
     public function programas(Request $request)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
-        
+
         $query = \App\Models\Programa::where('ativo', true)
             ->orderBy('created_at', 'desc');
 
@@ -508,11 +508,11 @@ class PortalController extends Controller
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
-            
+
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
             $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
-            
+
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
@@ -584,7 +584,7 @@ class PortalController extends Controller
         if (!empty($termo) || $request->anyFilled(['categoria', 'modalidade', 'tag', 'servico'])) {
 
             $query = Servico::where('ativo', true);
-            
+
             // Aplica filtro de Perfil
             $this->aplicarFiltroPerfil($query, $perfil);
 
@@ -613,4 +613,33 @@ class PortalController extends Controller
             'somenteNovos'
         ));
     }
+    /**
+     * Exibe a página "Nossa Cidade".
+     */
+    public function nossaCidade()
+    {
+        return view('pages.cidade.nossa-cidade');
+    }
+
+    public function historiasSucesso()
+    {
+        return view('pages.cidade.historias-sucesso');
+    }
+
+    public function demografia()
+    {
+        return view('pages.cidade.demografia');
+    }
+
+    public function nossaCultura()
+    {
+        return view('pages.cidade.nossa-cultura');
+    }
+
+    public function qualidadeVida()
+    {
+        return view('pages.cidade.qualidade-vida');
+    }
+
+
 }

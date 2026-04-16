@@ -18,7 +18,7 @@ $navLogoSrc = $isHome ? asset('img/logo_branca.png') : asset('img/logo_preta.png
 
 // Dados dos Perfis para Personalização
 $perfis = [
-    'todos' => 'Acesso Geral',
+    'todos' => 'Geral',
     'cidadao' => 'Cidadão',
     'empresario' => 'Empresário',
     'turista' => 'Turista',
