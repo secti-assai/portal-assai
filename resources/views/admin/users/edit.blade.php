@@ -121,17 +121,19 @@
             @endphp
                 @php
                     $permissionLabels = [
-                        'gerir banners' => 'Gerenciar Banners',
-                        'gerir servicos' => 'Gerenciar Serviços',
-                        'gerir programas' => 'Gerenciar Programas',
-                        'gerir noticias' => 'Gerenciar Notícias',
-                        'gerir eventos' => 'Gerenciar Eventos',
-                        'gerir secretarias' => 'Gerenciar Secretarias',
-                        'gerir usuarios' => 'Gerenciar Usuários',
+                        'gerir banners'    => 'Gerenciar Banners',
+                        'gerir servicos'   => 'Gerenciar Servicos',
+                        'gerir programas'  => 'Gerenciar Programas',
+                        'gerir noticias'   => 'Gerenciar Noticias',
+                        'gerir eventos'    => 'Gerenciar Eventos',
+                        'gerir secretarias'=> 'Gerenciar Secretarias',
+                        'gerir usuarios'   => 'Gerenciar Usuarios',
                     ];
+                    // Exclui 'gerir alertas' da exibicao
+                    $permissoesFiltradas = $permissions->filter(fn($p) => $p->name !== 'gerir alertas');
                 @endphp
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-                    @foreach($permissions as $permission)
+                    @foreach($permissoesFiltradas as $permission)
                         @php
                             $isChecked = in_array($permission->name, $selectedPermissionNames);
                             $label = $permissionLabels[$permission->name] ?? ucfirst($permission->name);

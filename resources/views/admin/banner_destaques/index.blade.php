@@ -29,7 +29,7 @@
                 @foreach($banners as $banner)
                 <tr class="hover:bg-slate-50">
                     <td class="p-4">
-                        <img src="{{ asset('storage/' . $banner->imagem) }}" class="w-24 h-12 object-cover rounded border border-slate-200">
+                        <img src="{{ asset($banner->imagem) }}" class="w-24 h-12 object-cover rounded border border-slate-200">
                     </td>
                     <td class="p-4 font-bold text-slate-800 truncate">
                         {{ $banner->titulo }}<br>

@@ -191,6 +191,70 @@ Route::get('/api/clima-atual', function () {
     }
 })->name('api.clima.atual');
 
+// ── API Calendário Mobile ─────────────────────────────────────────────────────
+// Retorna os dias do mês para re-renderização via AJAX.
+Route::get('/api/calendario', static function () {
+    $mesParam = request()->query('mes');
+
+    try {
+        $month = (is_string($mesParam) && preg_match('/^\d{4}-\d{2}$/', $mesParam) === 1)
+            ? \Carbon\Carbon::createFromFormat('Y-m', $mesParam)->startOfMonth()
+            : \Carbon\Carbon::now()->startOfMonth();
+    } catch (\Throwable) {
+        $month = \Carbon\Carbon::now()->startOfMonth();
+    }
+
+    $start = $month->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
+    $end   = $month->copy()->endOfMonth()->endOfWeek(\Carbon\Carbon::SATURDAY);
+
+    $eventDates = \App\Models\Evento::query()
+        ->whereNotNull('data_inicio')
+        ->whereBetween('data_inicio', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+        ->get()
+        ->map(fn($e) => \Carbon\Carbon::parse($e->data_inicio)->toDateString())
+        ->unique()
+        ->values()
+        ->all();
+
+    $dias   = [];
+    $cursor = $start->copy();
+    while ($cursor->lte($end)) {
+        $dias[] = [
+            'day'            => (int) $cursor->format('j'),
+            'isCurrentMonth' => $cursor->month === $month->month,
+            'isToday'        => $cursor->isToday(),
+            'hasEvent'       => in_array($cursor->toDateString(), $eventDates, true),
+        ];
+        $cursor->addDay();
+    }
+
+    return response()->json([
+        'mes'      => $month->format('Y-m'),
+        'tituloMes' => mb_strtolower($month->locale('pt_BR')->translatedFormat('F Y')),
+        'dias'     => $dias,
+    ]);
+})->name('api.calendario');
+
+// Navega para o mês anterior ou próximo e retorna o novo mês no formato Y-m.
+Route::get('/api/calendario-prev-next', static function () {
+    $mesParam = request()->query('mes');
+    $dir      = request()->query('dir', 'next');
+
+    try {
+        $month = (is_string($mesParam) && preg_match('/^\d{4}-\d{2}$/', $mesParam) === 1)
+            ? \Carbon\Carbon::createFromFormat('Y-m', $mesParam)->startOfMonth()
+            : \Carbon\Carbon::now()->startOfMonth();
+    } catch (\Throwable) {
+        $month = \Carbon\Carbon::now()->startOfMonth();
+    }
+
+    $result = $dir === 'prev'
+        ? $month->subMonth()->format('Y-m')
+        : $month->addMonth()->format('Y-m');
+
+    return response()->json(['mes' => $result]);
+})->name('api.calendario.nav');
+
 // Serviços ao Cidadão
 Route::get('/servicos', [PortalController::class, 'servicos'])->name('servicos.index');
 

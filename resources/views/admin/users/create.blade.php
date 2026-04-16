@@ -115,16 +115,18 @@
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
                 @php
                     $permissionLabels = [
-                        'gerir banners' => 'Gerenciar Banners',
-                        'gerir servicos' => 'Gerenciar Serviços',
-                        'gerir programas' => 'Gerenciar Programas',
-                        'gerir noticias' => 'Gerenciar Notícias',
-                        'gerir eventos' => 'Gerenciar Eventos',
-                        'gerir secretarias' => 'Gerenciar Secretarias',
-                        'gerir usuarios' => 'Gerenciar Usuários',
+                        'gerir banners'    => 'Gerenciar Banners',
+                        'gerir servicos'   => 'Gerenciar Servicos',
+                        'gerir programas'  => 'Gerenciar Programas',
+                        'gerir noticias'   => 'Gerenciar Noticias',
+                        'gerir eventos'    => 'Gerenciar Eventos',
+                        'gerir secretarias'=> 'Gerenciar Secretarias',
+                        'gerir usuarios'   => 'Gerenciar Usuarios',
                     ];
+                    // Exclui 'gerir alertas' da exibicao
+                    $permissoesFiltradas = $permissions->filter(fn($p) => $p->name !== 'gerir alertas');
                 @endphp
-                @foreach($permissions as $permission)
+                @foreach($permissoesFiltradas as $permission)
                     <label class="flex items-center gap-3 p-3 transition border rounded-lg cursor-pointer border-slate-200 bg-slate-50 hover:bg-slate-100 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300">
                         <input
                             type="checkbox"

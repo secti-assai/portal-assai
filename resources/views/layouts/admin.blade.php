@@ -53,7 +53,7 @@
 
             @can('gerir banners')
                 <a href="{{ route('admin.banners.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.index') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -65,7 +65,7 @@
 
             @can('gerir noticias')
                 <a href="{{ route('admin.noticias.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('noticias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.noticias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2">
@@ -76,8 +76,8 @@
             @endcan
 
             @can('gerir banners')
-                <a href="{{ route('admin.redes-sociais.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                <a href="{{ route('admin.banner-destaques.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banner-destaques.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -147,10 +147,10 @@
 
             @can('gerir banners')
                 <a href="{{ route('admin.redes-sociais.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.banners.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.redes-sociais.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
                         </path>
                     </svg>
                     Redes Sociais
@@ -185,8 +185,33 @@
 
         </nav>
 
-        <div class="p-4 text-xs font-medium text-center border-t border-blue-800/50 text-blue-300 shrink-0">
-            Prefeitura de Assaí<br>&copy; {{ date('Y') }}
+        <div class="p-4 border-t border-blue-800/50 shrink-0">
+            <div class="flex flex-col items-center gap-2 text-center">
+                {{-- Badge de role do usuário logado --}}
+                @php
+                    $sidebarPapeis = Auth::user()->getRoleNames();
+                    $sidebarPapel  = $sidebarPapeis->first() ?? null;
+                    $roleStyle = match($sidebarPapel) {
+                        'admin'       => 'bg-yellow-400/20 text-yellow-300 border-yellow-500/30',
+                        'editor'      => 'bg-purple-400/20 text-purple-300 border-purple-500/30',
+                        'comunicacao' => 'bg-emerald-400/20 text-emerald-300 border-emerald-500/30',
+                        default       => 'bg-blue-400/20 text-blue-300 border-blue-500/30',
+                    };
+                    $roleIcon = match($sidebarPapel) {
+                        'admin'       => 'fa-shield-halved',
+                        'editor'      => 'fa-pen-to-square',
+                        'comunicacao' => 'fa-bullhorn',
+                        default       => 'fa-user',
+                    };
+                @endphp
+                @if($sidebarPapel)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide {{ $roleStyle }}">
+                    <i class="fa-solid {{ $roleIcon }} text-[10px]"></i>
+                    {{ $sidebarPapel }}
+                </span>
+                @endif
+                <span class="text-xs text-blue-400">Prefeitura de Assaí &copy; {{ date('Y') }}</span>
+            </div>
         </div>
     </aside>
 
