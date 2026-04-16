@@ -267,15 +267,13 @@
             <h2 class="section-title font-bold mb-6">Nossos Portais</h2>
             <div class="small-cards-grid">
                 @foreach($portais as $portal)
-                <div class="small-card group relative">
                     <a href="{{ $portal->url }}" target="_blank" rel="noopener"
                         class="flex flex-col items-center justify-center w-full h-full px-1 py-3 rounded-2xl border transition-all duration-300
                         {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
                         @php $iconePortal = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'file-lines'; @endphp
                         <i class="fa-solid fa-{{ $iconePortal }} text-6xl {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2" aria-hidden="true"></i>
-                        <h3 class="text-lg font-medium{{ Str::of($portal->titulo)->lower()->contains('transpar') ? ' text-white' : ' text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
+                        <h3 class="text-lg font-medium w-full flex items-center justify-center text-center{{ Str::of($portal->titulo)->lower()->contains('transpar') ? ' text-white' : ' text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
                     </a>
-                </div>
                 @endforeach
             </div>
         </section>
@@ -680,66 +678,30 @@
                 <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
                     style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
                 @if(isset($programas) && $programas->count() > 0)
-                <div
-                    class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
-
-                    {{-- Setas fora do .swiper para evitar clipping --}}
-                    <style>
-                        .program-swiper-arrow-desktop::after {
-                            display: none !important;
-                            content: '' !important;
-                        }
-                    </style>
-                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-desktop
-                        absolute top-1/2 -translate-y-1/2 left-4 lg:left-6 z-30
-                        w-12 h-12 rounded-full flex items-center justify-center
-                        bg-[#006eb7] text-white shadow-lg cursor-pointer
-                        hover:bg-[#00396b] hover:text-yellow-300 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]"
-                        style="pointer-events:auto;"
-                        tabindex="0" role="button" aria-label="Anterior">
-                        <span class="sr-only">Anterior</span>
-                        <i class="fa-solid fa-chevron-left text-2xl !text-white" aria-hidden="true"></i>
-                    </div>
-
-                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-desktop
-                        absolute top-1/2 -translate-y-1/2 right-4 lg:right-6 z-30
-                        w-12 h-12 rounded-full flex items-center justify-center
-                        bg-[#006eb7] text-white shadow-lg cursor-pointer
-                        hover:bg-[#00396b] hover:text-yellow-300 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]"
-                        style="pointer-events:auto;"
-                        tabindex="0" role="button" aria-label="Próximo">
-                        <span class="sr-only">Próximo</span>
-                        <i class="fa-solid fa-chevron-right text-2xl !text-white" aria-hidden="true"></i>
-                    </div>
-
+                <div class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
                     <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
                         <div class="swiper-wrapper">
                             @foreach($programas as $programa)
                             <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
-
                                 {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
                                 <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
                                     {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
                                     class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
-
                                     <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
                                         alt="{{ $programa->titulo }}"
                                         loading="lazy"
                                         class="absolute inset-0 object-cover w-full h-full">
-
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none">
-                                    </div>
-                                    <div
-                                        class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10">
-                                        <h3 class="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg max-w-4xl mx-auto text-center"
-                                            style="font-family: 'Montserrat', sans-serif;">{{ $programa->titulo }}</h3>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none"></div>
+                                    <div class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10">
+                                        <h3 class="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg max-w-4xl mx-auto text-center" style="font-family: 'Montserrat', sans-serif;">{{ $programa->titulo }}</h3>
                                     </div>
                                 </a>
                             </div>
                             @endforeach
                         </div>
                         <div class="swiper-pagination !bottom-5"></div>
+                        <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]" style="position: absolute !important; left: 1rem !important; right: auto !important; top: 50% !important; margin-top: 0 !important; transform: translateY(-50%) !important; z-index: 40 !important;"></div>
+                        <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]" style="position: absolute !important; right: 1rem !important; left: auto !important; top: 50% !important; margin-top: 0 !important; transform: translateY(-50%) !important; z-index: 40 !important;"></div>
                     </div>
                 </div>
                 <div class="mt-10 flex justify-center w-full">
@@ -1052,86 +1014,114 @@ MODAIS (Busca Avançada e Banners Pop-up)
         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="bg-white w-full max-w-2xl mx-4 rounded shadow-2xl flex flex-col font-sans">
+        class="bg-white w-full max-w-2xl mx-4 rounded-xl shadow-2xl flex flex-col font-sans overflow-hidden">
 
-        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-            <h2 id="modal-busca-avancada-title" class="text-[1.15rem] font-bold text-slate-800"
-                style="font-family: 'Rawline', 'Open Sans', sans-serif;">
-                Busca Avançada
-            </h2>
+        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-[#006eb7] to-[#0087dc]">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                    <i class="fa-solid fa-sliders text-white text-sm" aria-hidden="true"></i>
+                </div>
+                <h2 id="modal-busca-avancada-title" class="text-[1.05rem] font-bold text-white"
+                    style="font-family: 'Montserrat', sans-serif;">
+                    Busca Avançada
+                </h2>
+            </div>
             <button type="button" @click="modalAberta = false" aria-label="Fechar janela de busca avançada"
-                class="text-slate-400 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 transition-colors">
+                class="text-white/70 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-1.5 transition-colors">
                 <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
             </button>
         </header>
 
-        <form action="{{ route('busca.avancada') ?? '#' }}" method="GET" class="p-6 flex flex-col gap-5">
-            <div class="flex flex-col gap-1">
-                <label for="adv-keyword" class="sr-only">Digite uma palavra-chave</label>
-                <input type="text" id="adv-keyword" name="q" placeholder="Digite uma palavra-chave"
-                    class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
-                    autocomplete="off">
-            </div>
+        <form action="{{ route('busca.index') }}" method="GET" class="p-6 flex flex-col gap-5">
 
-            <div class="flex flex-col gap-1">
-                <label for="adv-categoria" class="text-[0.85rem] font-bold text-slate-500">Categoria</label>
-                <select id="adv-categoria" name="categoria"
-                    class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
-                    <option value="">Todos</option>
-                </select>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="flex flex-col gap-1">
-                    <label for="adv-modalidade" class="text-[0.85rem] font-bold text-slate-500">Modalidade</label>
-                    <select id="adv-modalidade" name="modalidade"
-                        class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
-                        <option value="">Todos</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label for="adv-tag" class="text-[0.85rem] font-bold text-slate-500">Tag</label>
-                    <select id="adv-tag" name="tag"
-                        class="w-full border border-slate-300 rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-500 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
-                        <option value="">Todos</option>
-                    </select>
+            {{-- Campo de busca --}}
+            <div class="flex flex-col gap-1.5">
+                <label for="adv-keyword" class="text-[0.82rem] font-bold text-slate-500 uppercase tracking-wide">Palavra-chave</label>
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                    <input type="text" id="adv-keyword" name="q" placeholder="Ex: IPTU, saúde, concurso público..."
+                        class="w-full border border-slate-300 rounded-lg pl-10 pr-4 py-3 text-sm text-slate-700 bg-white focus:border-[#006eb7] focus:ring-2 focus:ring-[#006eb7]/20 outline-none transition-all"
+                        autocomplete="off">
                 </div>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="adv-servico" class="text-[0.85rem] font-bold text-slate-500">Serviço</label>
-                <select id="adv-servico" name="servico"
-                    class="w-full border border-[#4eb1d8] rounded px-4 py-2.5 text-sm text-slate-700 bg-white focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7rem_auto] bg-no-repeat bg-[position:right_1rem_center]">
-                    <option value="">Todos</option>
-                </select>
+            {{-- Tipo de conteúdo --}}
+            <div class="flex flex-col gap-2">
+                <span class="text-[0.82rem] font-bold text-slate-500 uppercase tracking-wide">O que você quer encontrar?</span>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    @php
+                        $tipos = [
+                            ['value' => '',            'icon' => 'fa-border-all',      'label' => 'Tudo'],
+                            ['value' => 'noticias',    'icon' => 'fa-newspaper',       'label' => 'Notícias'],
+                            ['value' => 'servicos',    'icon' => 'fa-file-lines',      'label' => 'Serviços'],
+                            ['value' => 'eventos',     'icon' => 'fa-calendar-days',   'label' => 'Eventos'],
+                            ['value' => 'programas',   'icon' => 'fa-star',            'label' => 'Programas'],
+                            ['value' => 'secretarias', 'icon' => 'fa-building-columns','label' => 'Secretarias'],
+                        ];
+                    @endphp
+                    @foreach($tipos as $tipo)
+                    <label class="flex flex-col items-center gap-1.5 cursor-pointer border-2 border-slate-200 rounded-xl px-2 py-3 text-xs font-bold text-slate-500 hover:border-[#006eb7] hover:text-[#006eb7] hover:bg-blue-50 transition-all text-center has-[:checked]:border-[#006eb7] has-[:checked]:text-[#006eb7] has-[:checked]:bg-blue-50">
+                        <input type="radio" name="tipo" value="{{ $tipo['value'] }}" class="sr-only" {{ $tipo['value'] === '' ? 'checked' : '' }}>
+                        <i class="fa-solid {{ $tipo['icon'] }} text-xl" aria-hidden="true"></i>
+                        {{ $tipo['label'] }}
+                    </label>
+                    @endforeach
+                </div>
             </div>
 
-            <div class="flex items-center border border-slate-300 rounded px-4 py-3 bg-white mt-1">
-                <label for="adv-novos" class="flex items-center cursor-pointer relative gap-3 w-full">
+            {{-- Categoria de notícias --}}
+            @php
+                $categoriasNoticias = \App\Models\Noticia::publicadas()
+                    ->whereNotNull('categoria')
+                    ->distinct()
+                    ->orderBy('categoria')
+                    ->pluck('categoria');
+            @endphp
+            @if($categoriasNoticias->count() > 0)
+            <div class="flex flex-col gap-1.5">
+                <label for="adv-categoria" class="text-[0.82rem] font-bold text-slate-500 uppercase tracking-wide">
+                    <i class="fa-solid fa-tag mr-1 text-[#006eb7]" aria-hidden="true"></i>
+                    Categoria da notícia
+                </label>
+                    class="w-full border border-slate-300 rounded-lg px-4 py-3 text-sm text-slate-700 bg-white focus:border-[#006eb7] focus:ring-2 focus:ring-[#006eb7]/20 outline-none appearance-none transition-all"
+                    style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22292.4%22 height%3D%22292.4%22%3E%3Cpath fill%3D%22%23475569%22 d%3D%22M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.8 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
+                    <option value="">Todas as categorias</option>
+                    @foreach($categoriasNoticias as $cat)
+                    <option value="{{ $cat }}">{{ $cat }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+
+            {{-- Apenas conteúdo recente --}}
+            <div class="flex items-center border border-slate-200 rounded-xl px-4 py-3.5 bg-slate-50 hover:border-[#006eb7]/40 transition-colors">
+                <label for="adv-novos" class="flex items-center cursor-pointer gap-4 w-full">
                     <input type="checkbox" id="adv-novos" name="somente_novos" class="sr-only peer" value="1">
-                    <div
-                        class="w-10 h-5 bg-slate-300 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:bg-[#4eb1d8] transition-colors relative">
-                        <div
-                            class="absolute left-[2px] top-[2px] bg-white border border-slate-300 h-4 w-4 rounded-full transition-transform peer-checked:translate-x-5 peer-checked:border-white">
-                        </div>
+                    <div class="w-11 h-6 bg-slate-300 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#006eb7]/40 peer-checked:bg-[#006eb7] transition-colors relative flex-shrink-0 cursor-pointer">
+                        <div class="absolute left-[3px] top-[3px] bg-white h-[18px] w-[18px] rounded-full transition-all peer-checked:translate-x-5 shadow-sm"></div>
                     </div>
-                    <span class="text-[0.95rem] font-bold text-slate-500 select-none">Somente serviços novos</span>
+                    <div>
+                        <span class="text-[0.92rem] font-bold text-slate-700 block leading-tight">Apenas conteúdo recente</span>
+                        <span class="text-[0.75rem] text-slate-400">Publicado nos últimos 30 dias</span>
+                    </div>
                 </label>
             </div>
 
-            <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+            {{-- Ações --}}
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                 <button type="button" @click="modalAberta = false"
-                    class="px-5 py-2 text-sm font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300 transition-colors">
+                    class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300 transition-colors">
                     Cancelar
                 </button>
                 <button type="submit"
-                    class="px-5 py-2 text-sm font-bold text-white bg-[#4eb1d8] rounded hover:bg-[#3ca3ca] focus:outline-none focus:ring-2 focus:ring-[#4eb1d8] focus:ring-offset-1 flex items-center gap-2 transition-colors">
-                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Buscar
+                    class="px-6 py-2.5 text-sm font-bold text-white bg-[#006eb7] rounded-lg hover:bg-[#005ea2] focus:outline-none focus:ring-2 focus:ring-[#006eb7] focus:ring-offset-1 flex items-center gap-2 transition-colors shadow-md hover:shadow-lg">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Pesquisar
                 </button>
             </div>
         </form>
     </div>
 </div>
+
 
 @if(isset($banners) && $banners->count() > 0)
 <style>
