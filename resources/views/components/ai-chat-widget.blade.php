@@ -14,7 +14,7 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
          @click="closeSidebar()"
-         class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 sm:hidden"
+         class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998] sm:hidden"
          aria-hidden="true"></div>
 
     {{-- Botão Flutuante (quando fechado) --}}
@@ -28,7 +28,7 @@
             @click="openSidebar()"
             :aria-expanded="isOpen"
             aria-label="Abrir assistente de IA"
-            class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center text-white z-[99] group">
+            class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center text-white z-[9999] group">
         <div class="absolute inset-0 rounded-full bg-purple-500 opacity-0 group-hover:opacity-20 animate-pulse"></div>
         <i class="fa-solid fa-sparkles text-xl relative z-10"></i>
     </button>
@@ -41,7 +41,7 @@
            x-transition:leave="transition ease-in duration-200"
            x-transition:leave-start="translate-x-0 opacity-100"
            x-transition:leave-end="sm:translate-x-full opacity-0"
-           class="fixed right-0 top-0 w-full sm:w-96 h-screen sm:h-full bg-white shadow-2xl flex flex-col z-[100] sm:border-l sm:border-gray-200"
+           class="fixed right-0 top-0 w-full sm:w-96 h-[100dvh] bg-white shadow-2xl flex flex-col z-[9999] sm:border-l sm:border-gray-200"
            role="dialog"
            aria-modal="true"
            aria-labelledby="ai-chat-title">
