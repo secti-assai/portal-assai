@@ -14,21 +14,25 @@ html.contrast-mode .festas-japao-card .bg-green-100 {
     border-color: transparent !important;
     box-shadow: none !important;
 }
+
 html.contrast-mode .festas-japao-card,
 html.contrast-mode .festas-japao-card * {
     border-width: 0 !important;
     border-style: none !important;
     border-color: transparent !important;
 }
+
 html.contrast-mode .festas-japao-card .text-blue-700,
 html.contrast-mode .festas-japao-card .text-yellow-700,
 html.contrast-mode .festas-japao-card .text-pink-700,
 html.contrast-mode .festas-japao-card .text-green-700 {
     color: #ffe600 !important;
 }
+
 html.contrast-mode .festas-japao-card .text-slate-900 {
     color: #fff !important;
 }
+
 /* ====== AJUSTE DE ALTO CONTRASTE PARA COMPONENTES CUSTOMIZADOS DA PÁGINA SOBRE ====== */
 html.contrast-mode .sobre-card,
 html.contrast-mode .sobre-card *,
@@ -48,33 +52,41 @@ html.contrast-mode .sobre-card .bg-yellow-600 {
     border-color: #fff !important;
     box-shadow: 0 0 0 2px #ffe600 !important;
 }
+
 html.contrast-mode .sobre-card,
 html.contrast-mode .sobre-card * {
     border-width: 2px !important;
     border-style: solid !important;
     border-color: #fff !important;
 }
+
 html.contrast-mode .sobre-card .sobre-card-icon {
     color: #ffe600 !important;
     fill: #ffe600 !important;
 }
+
 html.contrast-mode .sobre-card .sobre-card-title,
 html.contrast-mode .sobre-card .sobre-card-desc {
     color: #fff !important;
 }
+
 html.contrast-mode .sobre-card .sobre-card-title {
     font-weight: bold !important;
 }
+
 html.contrast-mode .sobre-card .sobre-card-border,
 html.contrast-mode .sobre-card .sobre-card-border * {
     border-color: #ffe600 !important;
     border-width: 3px !important;
 }
+
 html.contrast-mode .sobre-card .sobre-card-border {
     box-shadow: 0 0 0 3px #ffe600 !important;
 }
+
 /* Força exibição das setas padrão do Swiper no desktop */
 @media (min-width: 1024px) {
+
     .swiper-final-desktop .swiper-button-prev,
     .swiper-final-desktop .swiper-button-next {
         display: flex !important;
@@ -92,11 +104,13 @@ html.contrast-mode .sobre-card .sobre-card-border {
         transition: background 0.2s, color 0.2s;
         z-index: 10;
     }
+
     .swiper-final-desktop .swiper-button-prev:after,
     .swiper-final-desktop .swiper-button-next:after {
         font-size: 1.25rem !important;
         font-weight: 900;
     }
+
     .swiper-final-desktop .swiper-button-prev:hover,
     .swiper-final-desktop .swiper-button-next:hover {
         background: #e2e8f0 !important;
@@ -104,7 +118,9 @@ html.contrast-mode .sobre-card .sobre-card-border {
         opacity: 1;
     }
 }
+
 @media (min-width: 1024px) {
+
     .swiper-fique-ligado .swiper-button-prev,
     .swiper-fique-ligado .swiper-button-next {
         width: 36px !important;
@@ -120,11 +136,13 @@ html.contrast-mode .sobre-card .sobre-card-border {
         right: 12px !important;
         margin-top: -18px !important;
     }
+
     .swiper-fique-ligado .swiper-button-prev:after,
     .swiper-fique-ligado .swiper-button-next:after {
         font-size: 1.25rem !important;
         font-weight: 900;
     }
+
     .swiper-fique-ligado .swiper-button-prev:hover,
     .swiper-fique-ligado .swiper-button-next:hover {
         background: #e2e8f0 !important;
@@ -132,70 +150,87 @@ html.contrast-mode .sobre-card .sobre-card-border {
         opacity: 1;
     }
 }
+
 @media (max-width: 1023px) {
-    .content-offset-dynamic-header > :first-child {
+    .content-offset-dynamic-header> :first-child {
         padding-top: 2rem !important;
         margin-top: 0 !important;
     }
 }
+
 body.navbar-hidden #site-header {
     display: none !important;
 }
+
 @media (max-width: 767px) {
+
     body.servicos #conteudo-principal,
-    body.servicos #conteudo-principal > *,
-    body.servicos #conteudo-principal > * > * {
+    body.servicos #conteudo-principal>*,
+    body.servicos #conteudo-principal>*>* {
         margin: 0 !important;
         padding: 0 !important;
     }
 }
+
 @media (max-width: 767px) {
     body.servicos #conteudo-principal {
         padding-bottom: 0 !important;
     }
 }
+
 @media (max-width: 767px) {
-    body.servicos #conteudo-principal > section,
-    body.servicos #conteudo-principal > .relative,
-    body.servicos #conteudo-principal > .bg-\[\#1e65ff\] {
+
+    body.servicos #conteudo-principal>section,
+    body.servicos #conteudo-principal>.relative,
+    body.servicos #conteudo-principal>.bg-\[\#1e65ff\] {
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
+
     body.servicos #conteudo-principal {
         padding-top: 0 !important;
         margin-top: 0 !important;
     }
 }
+
 @media (max-width: 767px) {
+
     body.servicos .breadcrumb,
     body.servicos nav[aria-label="breadcrumb"] {
         margin: 0 !important;
         padding: 0 !important;
     }
-    body.servicos main > *:first-child {
+
+    body.servicos main>*:first-child {
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
+
     body.servicos .container,
     body.servicos .container-fluid {
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
 }
+
 @media (max-width: 767px) {
+
     body.servicos .breadcrumb,
     body.servicos nav[aria-label="breadcrumb"] {
         margin-top: 0 !important;
         margin-bottom: 0 !important;
     }
 }
+
 @media (max-width: 767px) {
+
     .breadcrumb,
     nav[aria-label="breadcrumb"] {
         margin-top: 0.5rem !important;
         margin-bottom: 0.75rem !important;
     }
 }
+
 @media (max-width: 1023px) {
     #site-header {
         padding-top: 0 !important;
@@ -204,14 +239,16 @@ body.navbar-hidden #site-header {
         margin-bottom: 0 !important;
         min-height: 0 !important;
         height: auto !important;
-        box-shadow: 0 1px 2px rgba(15,23,42,0.08) !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
     }
+
     main#conteudo-principal,
     .content-offset-dynamic-header {
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
 }
+
 /* ========================================================================== 
    MIGRADO DE public/css/style.css
    ========================================================================== */
@@ -232,7 +269,9 @@ body.navbar-hidden #site-header {
         @apply font-sans text-slate-800 bg-slate-50 antialiased;
     }
 
-    [x-cloak] { display: none !important; }
+    [x-cloak] {
+        display: none !important;
+    }
 
     h1,
     h2,
@@ -286,16 +325,16 @@ body.navbar-hidden #site-header {
         padding-top: 0 !important;
     }
 
-    .content-offset-dynamic-header > :first-child {
+    .content-offset-dynamic-header> :first-child {
         margin-top: 0 !important;
         padding-top: calc(var(--site-header-height, 100px) + 2rem) !important;
     }
 
-    .content-offset-dynamic-header > .content-offset-none {
+    .content-offset-dynamic-header>.content-offset-none {
         padding-top: 0 !important;
     }
 
-    .content-offset-dynamic-header > .content-offset-none > :first-child {
+    .content-offset-dynamic-header>.content-offset-none> :first-child {
         margin-top: 0 !important;
         padding-top: var(--site-header-height, 100px) !important;
     }
@@ -670,6 +709,7 @@ html.contrast-mode body svg {
     background: transparent !important;
     color: #ffe600 !important;
 }
+
 html.contrast-mode .portal-card,
 html.contrast-mode .rounded-2xl,
 html.contrast-mode .shadow-md,
@@ -687,7 +727,8 @@ html.contrast-mode .shadow-lg {
 /* 1. Ancoragem do Nó Raiz */
 html body div[vw] {
     position: fixed !important;
-    top: 25vh !important;       /* Ajustado exatamente para 25% da altura da tela */
+    top: 25vh !important;
+    /* Ajustado exatamente para 25% da altura da tela */
     bottom: auto !important;
     right: 0 !important;
     left: auto !important;
@@ -710,7 +751,8 @@ html body div[vw] .vw-plugin-wrapper {
     html body div[vw] {
         transform: scale(0.85) !important;
         transform-origin: right top !important;
-        top: 25vh !important; /* Mantém os 25% em tablets */
+        top: 25vh !important;
+        /* Mantém os 25% em tablets */
     }
 }
 
@@ -718,7 +760,8 @@ html body div[vw] .vw-plugin-wrapper {
     html body div[vw] {
         transform: scale(0.75) !important;
         transform-origin: right top !important;
-        top: 20vh !important; /* Ligeiramente mais alto no celular para não bloquear muito a leitura */
+        top: 20vh !important;
+        /* Ligeiramente mais alto no celular para não bloquear muito a leitura */
     }
 }
 
@@ -748,5 +791,26 @@ html body div[vw] .vw-plugin-wrapper {
 
     .portal-card {
         @apply bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300;
+    }
+}
+
+/* Bloqueio da barra superior nativa e popup hover do Google Translate */
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt {
+    display: none !important;
+}
+
+body {
+    top: 0px !important;
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }

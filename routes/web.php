@@ -16,12 +16,19 @@ use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ExecutivoController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BannerDestaqueController;
+use App\Http\Controllers\RedeSocialController;
+use App\Http\Controllers\PerfilController;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
 Route::get('/', [PortalController::class, 'index'])->name('home');
 
 Route::redirect('/novo', '/', 301);
+
+Route::view('/em-desenvolvimento', 'pages.em-desenvolvimento')->name('em-desenvolvimento');
+
+Route::post('/perfil/definir', [PerfilController::class, 'definir'])->name('perfil.definir');
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
@@ -37,6 +44,7 @@ Route::get('/secretarias/{id}', [PortalController::class, 'secretariaShow'])->na
 // Busca
 Route::get('/pesquisar', [PortalController::class, 'buscaGlobal'])->name('busca.index');
 Route::get('/busca/autocomplete', [PortalController::class, 'autocomplete'])->name('busca.autocomplete');
+Route::get('/busca/avancada', [PortalController::class, 'avancada'])->name('busca.avancada');
 
 Route::get('/api/plantao-hoje', function () {
     $cacheKey = 'portal_plantao_hoje';
@@ -183,6 +191,70 @@ Route::get('/api/clima-atual', function () {
     }
 })->name('api.clima.atual');
 
+// ── API Calendário Mobile ─────────────────────────────────────────────────────
+// Retorna os dias do mês para re-renderização via AJAX.
+Route::get('/api/calendario', static function () {
+    $mesParam = request()->query('mes');
+
+    try {
+        $month = (is_string($mesParam) && preg_match('/^\d{4}-\d{2}$/', $mesParam) === 1)
+            ? \Carbon\Carbon::createFromFormat('Y-m', $mesParam)->startOfMonth()
+            : \Carbon\Carbon::now()->startOfMonth();
+    } catch (\Throwable) {
+        $month = \Carbon\Carbon::now()->startOfMonth();
+    }
+
+    $start = $month->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
+    $end   = $month->copy()->endOfMonth()->endOfWeek(\Carbon\Carbon::SATURDAY);
+
+    $eventDates = \App\Models\Evento::query()
+        ->whereNotNull('data_inicio')
+        ->whereBetween('data_inicio', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+        ->get()
+        ->map(fn($e) => \Carbon\Carbon::parse($e->data_inicio)->toDateString())
+        ->unique()
+        ->values()
+        ->all();
+
+    $dias   = [];
+    $cursor = $start->copy();
+    while ($cursor->lte($end)) {
+        $dias[] = [
+            'day'            => (int) $cursor->format('j'),
+            'isCurrentMonth' => $cursor->month === $month->month,
+            'isToday'        => $cursor->isToday(),
+            'hasEvent'       => in_array($cursor->toDateString(), $eventDates, true),
+        ];
+        $cursor->addDay();
+    }
+
+    return response()->json([
+        'mes'      => $month->format('Y-m'),
+        'tituloMes' => mb_strtolower($month->locale('pt_BR')->translatedFormat('F Y')),
+        'dias'     => $dias,
+    ]);
+})->name('api.calendario');
+
+// Navega para o mês anterior ou próximo e retorna o novo mês no formato Y-m.
+Route::get('/api/calendario-prev-next', static function () {
+    $mesParam = request()->query('mes');
+    $dir      = request()->query('dir', 'next');
+
+    try {
+        $month = (is_string($mesParam) && preg_match('/^\d{4}-\d{2}$/', $mesParam) === 1)
+            ? \Carbon\Carbon::createFromFormat('Y-m', $mesParam)->startOfMonth()
+            : \Carbon\Carbon::now()->startOfMonth();
+    } catch (\Throwable) {
+        $month = \Carbon\Carbon::now()->startOfMonth();
+    }
+
+    $result = $dir === 'prev'
+        ? $month->subMonth()->format('Y-m')
+        : $month->addMonth()->format('Y-m');
+
+    return response()->json(['mes' => $result]);
+})->name('api.calendario.nav');
+
 // Serviços ao Cidadão
 Route::get('/servicos', [PortalController::class, 'servicos'])->name('servicos.index');
 
@@ -198,10 +270,20 @@ Route::get('/programas', [PortalController::class, 'programas'])->name('programa
 Route::get('/programas/{programa}', [PortalController::class, 'showPrograma'])->name('programas.show');
 
 // Páginas Estáticas
-Route::view('/sobre', 'pages.sobre')->name('pages.sobre');
+Route::prefix('cidade')->name('cidade.')->group(function () {
+    Route::get('/nossa-cidade', [PortalController::class, 'nossaCidade'])->name('nossa-cidade');
+    Route::get('/nossa-cultura', [PortalController::class, 'nossaCultura'])->name('nossa-cultura');
+    Route::get('/demografia', [PortalController::class, 'demografia'])->name('demografia');
+    Route::get('/historias-de-sucessos', [PortalController::class, 'historiasSucesso'])->name('historias-sucesso');
+    Route::get('/qualidade-de-vida', [PortalController::class, 'qualidadeVida'])->name('qualidade-vida');
+});
 Route::view('/turismo', 'pages.turismo')->name('pages.turismo');
 Route::view('/transparencia', 'pages.transparencia')->name('pages.transparencia');
 Route::view('/acessibilidade', 'pages.acessibilidade')->name('pages.acessibilidade');
+Route::view('/faq', 'pages.faq')->name('pages.faq');
+Route::view('/lgpd', 'pages.lgpd')->name('pages.lgpd');
+Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
+Route::view('/termos-de-uso', 'pages.termos')->name('pages.termos');
 
 // ================= ROTAS DE LOGIN =================
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -259,7 +341,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     });
 
     Route::middleware(['permission:gerir banners'])->group(function () {
-        // Rotas de Banners
+        // Rotas de Banners (Modais)
         Route::resource('banners', BannerController::class)->except(['show'])->names([
             'index'   => 'admin.banners.index',
             'create'  => 'admin.banners.create',
@@ -270,6 +352,19 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ]);
         Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])->name('admin.banners.toggle-status');
         Route::patch('banners/{id}/toggle', [BannerController::class, 'toggleAtivo'])->name('admin.banners.toggle');
+
+        // Rotas de Banners de Destaque (Página Inicial)
+        Route::resource('banner-destaques', BannerDestaqueController::class)->except(['show'])->names([
+            'index'   => 'admin.banner-destaques.index',
+            'create'  => 'admin.banner-destaques.create',
+            'store'   => 'admin.banner-destaques.store',
+            'edit'    => 'admin.banner-destaques.edit',
+            'update'  => 'admin.banner-destaques.update',
+            'destroy' => 'admin.banner-destaques.destroy',
+        ]);
+        // NOVO: Módulo de Redes Sociais
+        Route::get('redes-sociais', [RedeSocialController::class, 'index'])->name('admin.redes-sociais.index');
+        Route::put('redes-sociais', [RedeSocialController::class, 'updateAll'])->name('admin.redes-sociais.updateAll');
     });
 
     Route::middleware(['permission:gerir eventos'])->group(function () {

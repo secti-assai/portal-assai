@@ -26,17 +26,17 @@ class SecretariaSeeder extends Seeder
 
         $secretarias = [
             [
-                'nome' => 'Chefe de Gabinete',
+                'nome' => 'Gabinete do Prefeito',
                 'email' => 'gabinete@assai.pr.gov.br',
                 'nome_secretario' => 'Paulo Roberto Moreira', 
             ],
             [
-                'nome' => 'Procuradoria Geral',
+                'nome' => 'Procuradoria Geral do Município',
                 'email' => 'juridico@assai.pr.gov.br',
                 'nome_secretario' => 'Whashington Rafael Proença da Fonseca',
             ],
             [
-                'nome' => 'Secretaria de Administração e Recursos Humanos',
+                'nome' => 'Secretaria de Administração e RH',
                 'email' => 'adm@assai.pr.gov.br',
                 'nome_secretario' => 'Cláudio Roberto Prudêncio', 
             ],
@@ -53,7 +53,7 @@ class SecretariaSeeder extends Seeder
                 'telefone' => '(43) 3262-1223',
             ],
             [
-                'nome' => 'Secretaria de Ciência Tecnologia e Inovação',
+                'nome' => 'Secretaria de Ciência, Tecnologia e Inovação',
                 'email' => 'secti@assai.pr.gov.br',
                 'nome_secretario' => 'Igor Lima Freire Oliveira', 
                 'telefone' => '(43) 3262-0516',
@@ -65,7 +65,7 @@ class SecretariaSeeder extends Seeder
                 'telefone' => '(43) 3262-3232'
             ],
             [
-                'nome' => 'Secretaria de Desenvolvimento Local',
+                'nome' => 'Secretaria de Engenharias e Planejamento Urbano',
                 'email' => 'desenvolvimento@assai.pr.gov.br',
                 'nome_secretario' => 'Flavio Valini',
             ],
@@ -74,6 +74,12 @@ class SecretariaSeeder extends Seeder
                 'email' => 'educacao@assai.pr.gov.br',
                 'nome_secretario' => 'Josiane Apª Santana Cheffer', 
                 'telefone' => '(43) 3262-8451'
+            ],
+            [
+                'nome' => 'Secretaria de Saúde',
+                'email' => 'saude@assai.pr.gov.br',
+                'nome_secretario' => 'Dylan Custódio ', 
+                'telefone' => '(43) 3262-8405'
             ],
             [
                 'nome' => 'Secretaria de Esporte e Lazer',
@@ -87,25 +93,25 @@ class SecretariaSeeder extends Seeder
                 'nome_secretario' => 'Nilse Shinohata Menegazzo', 
             ],
             [
-                'nome' => 'Secretaria de Obras e Serviços',
+                'nome' => 'Secretaria de Obras e Serviços Públicos',
                 'email' => 'obras@assai.pr.gov.br',
                 'nome_secretario' => 'Orlando Menegazzo Filho', 
                 'telefone' => '(43) 3262-0089'
             ],
             [
-                'nome' => 'Secretaria de Saúde',
-                'email' => 'saude@assai.pr.gov.br',
-                'nome_secretario' => 'Dylan Custódio ', 
-                'telefone' => '(43) 3262-8405'
-            ],
-            [
-                'nome' => 'Secretaria de Trabalho, Emprego e Geração de Renda',
+                'nome' => 'Secretaria de Trabalho e Renda',
                 'email' => 'trabalho@assai.pr.gov.br',
                 'nome_secretario' => 'Orlando Júnior', 
                 'telefone' => '(43) 3262-4958'
             ],
             [
-                'nome' => 'Secretaria Municipal de Segurança Alimentar e Nutrição',
+                'nome' => 'Secretaria de Suprimentos',
+                'email' => 'suprimentos@assai.pr.gov.br',
+                'nome_secretario' => '', 
+                'telefone' => '(43) 3262-1313'
+            ],
+            [
+                'nome' => 'Secretaria de Segurança Alimentar e Nutrição',
                 'email' => 'ouvidoria@assai.pr.gov.br',
                 'nome_secretario' => 'Margareth Ferreira',
                 'telefone' => '(43) 3262-4349'

@@ -11,6 +11,9 @@ use App\Models\Alerta;
 use App\Models\Banner;
 use App\Models\Secretaria;
 use App\Models\ServicoAcesso;
+use App\Models\BannerDestaque;
+use App\Models\RedeSocial;
+use App\Models\Portal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -20,54 +23,94 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Support\Concerns\NormalizesSearch;
 use App\Models\Executivo;
+use App\Services\ConectaApiService;
 
 class PortalController extends Controller
 {
     use NormalizesSearch;
 
-    // Página inicial
-    public function index()
+    /**
+     * Aplica o filtro de perfil às consultas de conteúdo.
+     * Lê o Cookie e utiliza JSON Contains para filtrar.
+     */
+    private function aplicarFiltroPerfil($query, $perfil)
     {
+        if ($perfil !== 'todos') {
+            $query->where(function ($q) use ($perfil) {
+                $q->whereJsonContains('perfis_alvo', $perfil)
+                    ->orWhereNull('perfis_alvo');
+            });
+        }
+        return $query;
+    }
+
+    // Página inicial
+    public function index(Request $request)
+    {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
         $banners = Banner::where('ativo', true)
             ->orderBy('created_at', 'desc')
+            ->get();
+
+        $portais = Portal::where('ativo', true)
             ->get();
 
         $alertasAtivos = Alerta::where('ativo', true)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Notícias da home sem cache para refletir publicação imediatamente.
-        $noticias = Noticia::publicadas()
+        // 1. Busca Notícias marcadas como Destaque (Filtro Perfil Aplicado)
+        $destaquesQuery = Noticia::publicadas()
+            ->where('destaque', true)
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+            ->take(3);
+        $destaquesSlider = $this->aplicarFiltroPerfil($destaquesQuery, $perfil)->get();
 
-        $eventos = Evento::futurosPublicos()
+        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Filtro Perfil Aplicado)
+        $recentesQuery = Noticia::publicadas()
+            ->whereNotIn('id', $destaquesSlider->pluck('id'))
+            ->orderBy('data_publicacao', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(3);
+        $recentesSidebar = $this->aplicarFiltroPerfil($recentesQuery, $perfil)->get();
+
+        // 3. Mescla as coleções
+        $noticias = $destaquesSlider->concat($recentesSidebar);
+
+        // Eventos (Filtro Perfil Aplicado)
+        $eventosQuery = Evento::futurosPublicos()
             ->ordenarPorDataMaisProxima()
-            ->take(4)
-            ->get();
+            ->take(4);
+        $eventos = $this->aplicarFiltroPerfil($eventosQuery, $perfil)->get();
 
-        $destaques = Programa::where('ativo', true)
+        // Programas Destaque (Filtro Perfil Aplicado)
+        $destaquesProgQuery = Programa::where('ativo', true)
             ->where('destaque', true)
             ->latest()
-            ->take(3)
-            ->get();
+            ->take(3);
+        $destaques = $this->aplicarFiltroPerfil($destaquesProgQuery, $perfil)->get();
 
         $programas = $destaques->count() >= 3
             ? $destaques
             : $destaques->concat(
-                Programa::where('ativo', true)
-                    ->where('destaque', false)
-                    ->latest()
-                    ->take(3 - $destaques->count())
-                    ->get()
+                $this->aplicarFiltroPerfil(
+                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(3 - $destaques->count()),
+                    $perfil
+                )->get()
             );
 
-        $servicos = Servico::where('ativo', true)
-            ->orderByDesc('acessos')
-            ->take(10)
+        $bannersDestaque = BannerDestaque::where('ativo', true)
+            ->orderBy('ordem', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
+
+        // Serviços (Filtro Perfil Aplicado)
+        $servicosQuery = Servico::where('ativo', true)
+            ->orderByDesc('acessos')
+            ->take(10);
+        $servicos = $this->aplicarFiltroPerfil($servicosQuery, $perfil)->get();
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -81,20 +124,42 @@ class PortalController extends Controller
             return [];
         });
 
-        $sugestoesIA = Servico::where('ativo', true)
-            ->withCount(['acessosLog as acessos_recentes' => function ($query) {
-                $query->where('created_at', '>=', Carbon::now()->subDays(7));
-            }])
-            ->orderByDesc('acessos_recentes')
-            ->take(3)
-            ->pluck('titulo');
+        $redesSociais = RedeSocial::orderBy('ordem', 'asc')->get();
 
-        return view('pages.pagina', compact('banners', 'alertasAtivos', 'noticias', 'eventos', 'programas', 'servicos', 'inscricoesAbertas', 'sugestoesIA'));
+        // Sugestões IA (Filtro Perfil Aplicado)
+        $sugestoesQuery = Servico::where('ativo', true)
+            ->withCount([
+                'acessosLog as acessos_recentes' => function ($query) {
+                    $query->where('created_at', '>=', Carbon::now()->subDays(7));
+                }
+            ])
+            ->orderByDesc('acessos_recentes')
+            ->take(3);
+        $sugestoesIA = $this->aplicarFiltroPerfil($sugestoesQuery, $perfil)->pluck('titulo');
+
+        return view('pages.pagina', compact(
+            'banners',
+            'alertasAtivos',
+            'noticias',
+            'destaquesSlider',
+            'recentesSidebar',
+            'eventos',
+            'programas',
+            'servicos',
+            'inscricoesAbertas',
+            'sugestoesIA',
+            'portais',
+            'bannersDestaque',
+            'redesSociais',
+            'perfil'
+        ));
     }
 
     // Página de notícias
     public function noticias(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
         $categorias = Noticia::publicadas()
             ->whereNotNull('categoria')
             ->distinct()
@@ -104,6 +169,9 @@ class PortalController extends Controller
         $query = Noticia::publicadas()
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc');
+
+        // Aplica o filtro de Perfil
+        $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('q')) {
             $termo = $request->q;
@@ -124,20 +192,25 @@ class PortalController extends Controller
 
     public function agenda(Request $request)
     {
-        $mes      = $request->get('mes');
+        $perfil = $request->cookie('portal_perfil', 'todos');
+        $mes = $request->get('mes');
+
         $dataBase = $mes
             ? Carbon::createFromFormat('Y-m', $mes)->startOfMonth()
             : now()->startOfMonth();
 
-        $mesAnterior       = $dataBase->copy()->subMonth()->format('Y-m');
-        $mesProximo        = $dataBase->copy()->addMonth()->format('Y-m');
-        $tituloMes         = $dataBase->translatedFormat('F Y');
-        $diasNoMes         = $dataBase->daysInMonth;
+        $mesAnterior = $dataBase->copy()->subMonth()->format('Y-m');
+        $mesProximo = $dataBase->copy()->addMonth()->format('Y-m');
+        $tituloMes = $dataBase->translatedFormat('F Y');
+        $diasNoMes = $dataBase->daysInMonth;
         $primeiroDiaSemana = $dataBase->dayOfWeek;
 
-        $diasComEvento = Evento::futurosPublicos()
+        // Filtra dias com evento baseado no perfil
+        $diasComEventoQuery = Evento::futurosPublicos()
             ->whereYear('data_inicio', $dataBase->year)
-            ->whereMonth('data_inicio', $dataBase->month)
+            ->whereMonth('data_inicio', $dataBase->month);
+
+        $diasComEvento = $this->aplicarFiltroPerfil($diasComEventoQuery, $perfil)
             ->get()
             ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
             ->unique()
@@ -158,23 +231,26 @@ class PortalController extends Controller
             return response(view('partials.calendario-widget', $calendarData)->render());
         }
 
-        $eventos = Evento::publico()
-            ->ordenarPorDataMaisProxima()
+        // Filtra eventos da listagem baseado no perfil
+        $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
+        $eventos = $this->aplicarFiltroPerfil($eventosQuery, $perfil)
             ->paginate(4)
             ->withQueryString();
 
         return view('agenda.index', array_merge($calendarData, compact('eventos')));
     }
 
-    public function eventoShow($id)
+    public function eventoShow(Request $request, $id)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $evento = Evento::findOrFail($id);
 
-        $outrosEventos = Evento::where('id', '!=', $id)
+        $outrosEventosQuery = Evento::where('id', '!=', $id)
             ->publico()
             ->ordenarPorDataMaisProxima()
-            ->take(3)
-            ->get();
+            ->take(3);
+
+        $outrosEventos = $this->aplicarFiltroPerfil($outrosEventosQuery, $perfil)->get();
 
         return view('agenda.show', compact('evento', 'outrosEventos'));
     }
@@ -201,28 +277,36 @@ class PortalController extends Controller
         return view('secretarias.index', compact('secretarias', 'prefeito', 'vicePrefeito'));
     }
 
-    public function servicos(Request $request)
+    public function servicos(Request $request, ConectaApiService $conectaApi)
     {
-        $query = Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
+        // 1. Processamento da Query Local (Portal)
+        $query = \App\Models\Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+
+        $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('search')) {
             $termo = $request->string('search')->trim()->toString();
             $query->where(function ($q) use ($termo) {
                 $busca = '%' . $this->normalizeSearchTerm($termo) . '%';
-
                 $q->whereRaw($this->normalizedColumnSql('titulo') . ' LIKE ?', [$busca])
                     ->orWhereRaw($this->normalizedColumnSql('link') . ' LIKE ?', [$busca]);
             });
         }
 
-        if ($request->filled('secretaria')) {
-            $query->where('secretaria_id', $request->secretaria);
-        }
+        $servicos = $query->paginate(21)->withQueryString();
 
-        $servicos    = $query->paginate(21)->withQueryString();
-        $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
+        // 2. Processamento da API Externa (Conecta)
+        $payloadConecta = $conectaApi->getServicos($perfil);
+        $servicosConecta = $payloadConecta['data'] ?? [];
 
-        return view('servicos.index', compact('servicos', 'secretarias'));
+        // 3. Retorno
+        return view('servicos.index', compact(
+            'servicos',
+            'servicosConecta',
+            'perfil'
+        ));
     }
 
     public function acessarServico($id)
@@ -254,7 +338,6 @@ class PortalController extends Controller
 
     public function contato()
     {
-        // Coleta as secretarias que possuem e-mail cadastrado, em ordem alfabética
         $secretarias = Secretaria::whereNotNull('email')
             ->orderBy('nome', 'asc')
             ->get(['nome', 'email']);
@@ -265,35 +348,34 @@ class PortalController extends Controller
     public function enviarContato(Request $request)
     {
         $validated = $request->validate([
-            'nome'         => 'required|string|min:2|max:120',
-            'email'        => 'required|email|max:120',
-            'destinatario' => 'required|email', // <-- Novo campo validado
-            'assunto'      => 'required|string|min:3|max:200',
-            'mensagem'     => 'required|string|min:10|max:4000',
+            'nome' => 'required|string|min:2|max:120',
+            'email' => 'required|email|max:120',
+            'destinatario' => 'required|email',
+            'assunto' => 'required|string|min:3|max:200',
+            'mensagem' => 'required|string|min:10|max:4000',
         ], [
-            'nome.required'         => 'O nome é obrigatório.',
-            'nome.min'              => 'O nome deve ter pelo menos 2 caracteres.',
-            'email.required'        => 'O e-mail é obrigatório.',
-            'email.email'           => 'Informe um e-mail válido.',
-            'destinatario.required' => 'Selecione o setor de destino.', // <-- Nova mensagem
-            'destinatario.email'    => 'Setor de destino inválido.',    // <-- Nova mensagem
-            'assunto.required'      => 'O assunto é obrigatório.',
-            'assunto.min'           => 'O assunto deve ter pelo menos 3 caracteres.',
-            'mensagem.required'     => 'A mensagem é obrigatória.',
-            'mensagem.min'          => 'A mensagem deve ter pelo menos 10 caracteres.',
-            'mensagem.max'          => 'A mensagem pode ter no máximo 4000 caracteres.',
+            'nome.required' => 'O nome é obrigatório.',
+            'nome.min' => 'O nome deve ter pelo menos 2 caracteres.',
+            'email.required' => 'O e-mail é obrigatório.',
+            'email.email' => 'Informe um e-mail válido.',
+            'destinatario.required' => 'Selecione o setor de destino.',
+            'destinatario.email' => 'Setor de destino inválido.',
+            'assunto.required' => 'O assunto é obrigatório.',
+            'assunto.min' => 'O assunto deve ter pelo menos 3 caracteres.',
+            'mensagem.required' => 'A mensagem é obrigatória.',
+            'mensagem.min' => 'A mensagem deve ter pelo menos 10 caracteres.',
+            'mensagem.max' => 'A mensagem pode ter no máximo 4000 caracteres.',
         ]);
 
         try {
-            // Substitui a variável estática do config() pelo e-mail selecionado pelo usuário
             Mail::to($validated['destinatario'])->send(new ContatoSiteMail($validated));
         } catch (\Throwable $exception) {
             Log::error('Falha ao enviar formulário de contato do portal.', [
-                'erro'         => $exception->getMessage(),
-                'nome'         => $validated['nome'] ?? null,
-                'email'        => $validated['email'] ?? null,
+                'erro' => $exception->getMessage(),
+                'nome' => $validated['nome'] ?? null,
+                'email' => $validated['email'] ?? null,
                 'destinatario' => $validated['destinatario'] ?? null,
-                'assunto'      => $validated['assunto'] ?? null,
+                'assunto' => $validated['assunto'] ?? null,
             ]);
 
             return back()
@@ -309,12 +391,11 @@ class PortalController extends Controller
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'destinatario' => 'required|email', // Validação estrita do payload do select
+            'destinatario' => 'required|email',
             'assunto' => 'required|string|max:255',
             'mensagem' => 'required|string|min:10',
         ]);
 
-        // O endereço de e-mail selecionado é utilizado na classe Mail (Mailable)
         $emailDestino = $validated['destinatario'];
 
         try {
@@ -326,11 +407,16 @@ class PortalController extends Controller
         }
     }
 
-    public function programas()
+    public function programas(Request $request)
     {
-        $programas = \App\Models\Programa::where('ativo', true)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+        $perfil = $request->cookie('portal_perfil', 'todos');
+
+        $query = \App\Models\Programa::where('ativo', true)
+            ->orderBy('created_at', 'desc');
+
+        $this->aplicarFiltroPerfil($query, $perfil);
+
+        $programas = $query->paginate(12);
 
         return view('programas.index', compact('programas'));
     }
@@ -343,15 +429,17 @@ class PortalController extends Controller
 
     public function autocomplete(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->get('q', ''));
 
         if (strlen($termo) < 2) {
             return response()->json([]);
         }
 
-        // Esconde notícias inativas no AutoComplete
+        // Notícias
         $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+        $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
 
         $noticias = $noticiasQuery
             ->select('id', 'titulo', 'slug')
@@ -360,12 +448,14 @@ class PortalController extends Controller
             ->get()
             ->map(fn($n) => [
                 'titulo' => $n->titulo,
-                'url'    => route('noticias.show', $n->slug),
-                'tipo'   => 'Notícia',
+                'url' => route('noticias.show', $n->slug),
+                'tipo' => 'Notícia',
             ]);
 
+        // Serviços
         $servicosQuery = Servico::where('ativo', true);
         $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
 
         $servicos = $servicosQuery
             ->select('id', 'titulo')
@@ -373,12 +463,14 @@ class PortalController extends Controller
             ->get()
             ->map(fn($s) => [
                 'titulo' => $s->titulo,
-                'url'    => route('servicos.acessar', $s->id),
-                'tipo'   => 'Serviço',
+                'url' => route('servicos.acessar', $s->id),
+                'tipo' => 'Serviço',
             ]);
 
+        // Programas
         $programasQuery = Programa::where('ativo', true);
         $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+        $this->aplicarFiltroPerfil($programasQuery, $perfil);
 
         $programas = $programasQuery
             ->select('id', 'titulo')
@@ -386,10 +478,11 @@ class PortalController extends Controller
             ->get()
             ->map(fn($p) => [
                 'titulo' => $p->titulo,
-                'url'    => route('programas.show', $p->id),
-                'tipo'   => 'Programa',
+                'url' => route('programas.show', $p->id),
+                'tipo' => 'Programa',
             ]);
 
+        // Secretarias (Geralmente não filtrado por perfil, mas mantido a busca base)
         $secretariasQuery = Secretaria::query();
         $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
 
@@ -399,8 +492,8 @@ class PortalController extends Controller
             ->get()
             ->map(fn($sec) => [
                 'titulo' => $sec->nome,
-                'url'    => route('secretarias.show', $sec->id),
-                'tipo'   => 'Secretaria',
+                'url' => route('secretarias.show', $sec->id),
+                'tipo' => 'Secretaria',
             ]);
 
         $resultados = $noticias->concat($servicos)->concat($programas)->concat($secretarias)->values();
@@ -410,18 +503,20 @@ class PortalController extends Controller
 
     public function buscaGlobal(Request $request)
     {
+        $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->input('q', ''));
 
-        $noticias    = collect();
-        $servicos    = collect();
-        $eventos     = collect();
-        $programas   = collect();
+        $noticias = collect();
+        $servicos = collect();
+        $eventos = collect();
+        $programas = collect();
         $secretarias = collect();
 
         if (strlen($termo) >= 2) {
-            // Esconde notícias inativas na Busca Global
+
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+            $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
 
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
@@ -432,6 +527,7 @@ class PortalController extends Controller
 
             $servicosQuery = Servico::where('ativo', true);
             $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
 
             $servicos = $servicosQuery
                 ->take(9)
@@ -439,6 +535,7 @@ class PortalController extends Controller
 
             $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
             $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
 
             $eventos = $eventosQuery
                 ->take(8)
@@ -446,6 +543,7 @@ class PortalController extends Controller
 
             $programasQuery = Programa::where('ativo', true);
             $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            $this->aplicarFiltroPerfil($programasQuery, $perfil);
 
             $programas = $programasQuery
                 ->take(9)
@@ -474,5 +572,77 @@ class PortalController extends Controller
                 $searchQuery->{$method}("$normalizedColumn LIKE ?", [$normalizedTerm]);
             }
         });
+    }
+
+    public function avancada(Request $request)
+    {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+        $termo = trim($request->input('q', ''));
+        $categoria = $request->input('categoria');
+        $modalidade = $request->input('modalidade');
+        $tag = $request->input('tag');
+        $servico = $request->input('servico');
+        $somenteNovos = $request->has('somente_novos');
+
+        $resultados = collect();
+
+        if (!empty($termo) || $request->anyFilled(['categoria', 'modalidade', 'tag', 'servico'])) {
+
+            $query = Servico::where('ativo', true);
+
+            // Aplica filtro de Perfil
+            $this->aplicarFiltroPerfil($query, $perfil);
+
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($query, ['titulo', 'descricao'], $termo);
+            }
+
+            if (!empty($categoria)) {
+                $query->where('categoria_id', $categoria);
+            }
+
+            if ($somenteNovos) {
+                $query->where('created_at', '>=', now()->subDays(30));
+            }
+
+            $resultados = $query->paginate(15)->withQueryString();
+        }
+
+        return view('busca.resultados', compact(
+            'resultados',
+            'termo',
+            'categoria',
+            'modalidade',
+            'tag',
+            'servico',
+            'somenteNovos'
+        ));
+    }
+    /**
+     * Exibe a página "Nossa Cidade".
+     */
+    public function nossaCidade()
+    {
+        return view('pages.cidade.nossa-cidade');
+    }
+
+    public function historiasSucesso()
+    {
+        return view('pages.cidade.historias-sucesso');
+    }
+
+    public function demografia()
+    {
+        return view('pages.cidade.demografia');
+    }
+
+    public function nossaCultura()
+    {
+        return view('pages.cidade.nossa-cultura');
+    }
+
+    public function qualidadeVida()
+    {
+        return view('pages.cidade.qualidade-vida');
     }
 }

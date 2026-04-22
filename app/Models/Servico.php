@@ -20,9 +20,12 @@ class Servico extends Model
         'link',
         'icone',
         'ativo',
+        'perfis_alvo',
         'acessos'
     ];
 
+    protected $casts = ['perfis_alvo' => 'array',];
+    
     public function secretaria(): BelongsTo
     {
         return $this->belongsTo(Secretaria::class);

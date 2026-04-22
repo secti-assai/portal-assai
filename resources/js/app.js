@@ -695,3 +695,12 @@ window.carregarCalendario = function(url) {
         }
     }, { passive: true });
 }());
+
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        let translateSelect = document.querySelector('.goog-te-combo');
+        if (translateSelect) {
+            translateSelect.setAttribute('aria-label', 'Selecione o idioma');
+        }
+    }, 1500); // Delay necessário para garantir a renderização assíncrona do iframe do Google
+});

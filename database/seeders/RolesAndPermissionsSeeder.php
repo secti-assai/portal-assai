@@ -15,23 +15,40 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Permissões de Comunicação
+        // ── Permissões de Comunicação ─────────────────────────────────────────
         Permission::firstOrCreate(['name' => 'gerir noticias']);
         Permission::firstOrCreate(['name' => 'gerir eventos']);
         Permission::firstOrCreate(['name' => 'gerir banners']);
-        Permission::firstOrCreate(['name' => 'gerir alertas']);
 
-        // Permissões de Gestão
+        // ── Permissões de Gestão ──────────────────────────────────────────────
         Permission::firstOrCreate(['name' => 'gerir programas']);
         Permission::firstOrCreate(['name' => 'gerir servicos']);
         Permission::firstOrCreate(['name' => 'gerir secretarias']);
 
-        // Permissão de Governança (acesso exclusivo do admin)
+        // ── Permissão de Governança (acesso exclusivo do admin) ───────────────
         Permission::firstOrCreate(['name' => 'gerir usuarios']);
 
-        // Único papel fixo do sistema
-        $roleAdmin = Role::firstOrCreate(['name' => 'admin']);
+        // ── Papéis do sistema ─────────────────────────────────────────────────
+        //
+        // admin       → bypass global via Gate::before().
+        //               A permissão 'gerir usuarios' é explícita para que
+        //               Gate::authorize() e @can funcionem corretamente.
+        //
+        // editor      → acesso completo ao conteúdo editorial do portal.
+        //               Permissões configuradas pelo admin via painel de usuários.
+        //               Role pré-criada para atribuição rápida.
+        //
+        // comunicacao → acesso restrito à área de comunicação (notícias + eventos).
+        //               Ideal para assessorias de imprensa / comunicação social.
+        //               Permissões configuradas pelo admin via painel de usuários.
 
+        $roleAdmin     = Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'editor']);
+        Role::firstOrCreate(['name' => 'comunicacao']);
+
+        // Limpa permissões de todas as roles não-admin para evitar acúmulo
+        // acidental em re-execuções do seeder. O admin gerencia as permissões
+        // de editor/comunicacao individualmente via UserController.
         Role::query()
             ->where('name', '!=', 'admin')
             ->get()
@@ -39,8 +56,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 $role->syncPermissions([]);
             });
 
-        // O admin tem bypass global (Gate::before em AppServiceProvider) — a permissão explícita
-        // existe para que o Gate::authorize() e @can funcionem sem depender do bypass.
         $roleAdmin->syncPermissions(['gerir usuarios']);
     }
 }

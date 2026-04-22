@@ -72,9 +72,9 @@
         : 'bg-gray-50') }} text-gray-800 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden' id='body-portal'>
 
     {{-- Skip links (acessibilidade por teclado) --}}
-    <a href="#conteudo-principal" accesskey="1"
-        class="sr-only focus:not-sr-only focus:fixed focus:z-[200] focus:top-0 focus:left-0 focus:px-4 focus:py-2 focus:bg-yellow-500 focus:text-blue-900 focus:font-bold focus:text-sm">
-        Ir para o conteúdo [1]
+    <a href=" #conteudo-principal" accesskey="1"
+    class="sr-only focus:not-sr-only focus:fixed focus:z-[200] focus:top-0 focus:left-0 focus:px-4 focus:py-2 focus:bg-yellow-500 focus:text-blue-900 focus:font-bold focus:text-sm">
+    Ir para o conteúdo [1]
     </a>
     <a href="#menu-principal" accesskey="2"
         class="sr-only focus:not-sr-only focus:fixed focus:z-[200] focus:top-0 focus:left-24 focus:px-4 focus:py-2 focus:bg-yellow-500 focus:text-blue-900 focus:font-bold focus:text-sm">
@@ -111,10 +111,10 @@
             </div>
         </div>
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 document.body.classList.add('navbar-hidden');
-                window.addEventListener('load', function () {
-                    setTimeout(function () {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
                         document.body.classList.remove('navbar-hidden');
                     }, 350);
                 });
@@ -156,6 +156,34 @@
             </div>
         </div>
     </div>
+
+    <div id="google_translate_element" style="display: none !important;"></div>
+
+    <script type="text/javascript">
+        // Inicialização da API
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'pt-BR',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        // Função Proxy: Aciona a tradução a partir dos botões customizados
+        function syncGoogleTranslate(lang) {
+            let googleSelect = document.querySelector('.goog-te-combo');
+            if (googleSelect) {
+                googleSelect.value = lang;
+                // Dispara o evento de mudança nativo para forçar a API a processar a tradução
+                googleSelect.dispatchEvent(new Event('change'));
+            }
+
+            // Sincroniza todos os selects customizados da página para refletirem o mesmo idioma
+            document.querySelectorAll('.custom-translate-proxy').forEach(select => {
+                select.value = lang;
+            });
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
     {{-- Widget VLibras --}}
     <div vw class="enabled">
