@@ -24,6 +24,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+
     @if(request()->routeIs('home'))
     <link rel="preload" as="image" href="{{ asset('img/logo_branca.png') }}" fetchpriority="high">
     <style>
@@ -32,7 +42,6 @@
         }
     </style>
     @endif
-
 
     {{-- Bundle base global do portal --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -43,7 +52,6 @@
     @endif
 
     <script>
-        /* Aplica preferências salvas antes da 1ª pintura — evita flash de conteúdo */
         (function() {
             try {
                 var s = localStorage.getItem('a11y_fontSize');
@@ -157,12 +165,17 @@
         </div>
     </div>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    {{-- Widget Chat IA --}}
+    <x-ai-chat-widget />
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             new window.VLibras.Widget('https://vlibras.gov.br/app');
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
     @stack('modals')
 </body>
 
