@@ -28,6 +28,16 @@ class DatabaseSeeder extends Seeder
         $this->call([SecretariaSeeder::class]);
         $this->call([ExecutivosSeeder::class]);
         $this->call([ServicoSeeder::class]);
+
+        // Intenções para Busca Inteligente
+        $this->call([IntencoesSeeder::class]);
+
+        // API Keys para acesso à API IA
+        $this->call([ApiKeysSeeder::class]);
+
+        
+        // Programas municipais
+        Programa::factory(10)->create();
         $this->call([PortalSeeder::class]);
         $this->call([ProgramaSeeder::class]);
         $this->call([BannerDestaqueSeeder::class]);
