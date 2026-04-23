@@ -1,0 +1,16 @@
+{
+    "plugins": {
+        "obsidian-git": {
+            "id": "obsidian-git",
+            "name": "Obsidian Git"
+        },
+        "dataview": {
+            "id": "dataview",
+            "name": "Dataview"
+        },
+        "templater-obsidian": {
+            "id": "templater-obsidian",
+            "name": "Templater"
+        }
+    }
+}

@@ -70,18 +70,25 @@ class TextNormalizer
             'e', 'ou', 'mas',
             'em', 'para', 'com', 'por', 'sem',
             'que', 'qual', 'quais',
-            'é', 'são', 'era', 'eram',
+            'e', 'sao', 'era', 'eram',
             'ser', 'estar', 'ter', 'ir',
             'este', 'esse', 'aquele',
-            'eu', 'tu', 'ele', 'nós', 'vós', 'eles',
+            'eu', 'tu', 'ele', 'nos', 'vos', 'eles',
             'meu', 'teu', 'seu', 'nosso', 'vosso',
-            'não', 'sim', 'talvez',
-            'aqui', 'aí', 'ali',
+            'nao', 'sim', 'talvez',
+            'aqui', 'ai', 'ali',
             'me', 'te', 'lhe', 'nos', 'vos',
             'mi', 'ti', 'si',
+            // Termos genéricos de conversação que não devem acionar intenção
+            'como', 'posso', 'ajudar', 'preciso', 'quero', 'faco', 'fazer', 'hoje',
         ];
 
-        return array_filter($tokens, fn($token) => !in_array($token, $stopwords));
+        $stopwordsLookup = array_flip($stopwords);
+
+        return array_values(array_filter($tokens, static function ($token) use ($stopwordsLookup) {
+            $tokenNormalizado = self::normalize((string) $token);
+            return $tokenNormalizado !== '' && !isset($stopwordsLookup[$tokenNormalizado]);
+        }));
     }
 
     /**

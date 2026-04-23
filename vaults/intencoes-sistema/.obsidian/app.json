@@ -1,0 +1,11 @@
+{
+  "basePath": "/",
+  "disabled": false,
+  "legacyEditor": false,
+  "livePreview": true,
+  "strictLineBreaks": false,
+  "attachmentFolderPath": "Attachments",
+  "newLinkFormat": "shortest",
+  "newFileLocation": "current",
+  "newFileFolderPath": "Intenções"
+}

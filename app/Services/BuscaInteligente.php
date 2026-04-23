@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class BuscaInteligente
 {
     private const CONFIANCA_MINIMA = 30; // 30%
-    private const RESPOSTA_PADRAO = 'Desculpe, não consegui entender sua pergunta. Tente usar palavras-chave como "serviço", "horário", "contato" ou "agendamento".';
+    private const RESPOSTA_PADRAO = 'Desculpe, não compreendi sua pergunta. Poderia reformular? Estou aqui para ajudar com informações sobre serviços municipais, documentos e procedimentos.';
     private const LIMIAR_FUZZY = 0.75; // 75% de similaridade
 
     /**
@@ -92,6 +92,44 @@ class BuscaInteligente
             'confianca' => $confianca,
             'intencao_id' => $melhorIntencaoId,
         ];
+    }
+
+    /**
+     * Verifica se a mensagem tem pelo menos um token existente no vault indexado.
+     */
+    public static function temCorrespondenciaNoVault(string $mensagem): bool
+    {
+        if (empty(trim($mensagem))) {
+            return false;
+        }
+
+        $mensagemNormalizada = TextNormalizer::normalize($mensagem);
+        $tokens = TextNormalizer::tokenize($mensagemNormalizada);
+        $tokens = TextNormalizer::removeStopwords($tokens);
+
+        if (empty($tokens)) {
+            return false;
+        }
+
+        $indice = IntencaoCache::getIndice();
+        if (empty($indice)) {
+            IntencaoIndexer::build();
+            $indice = IntencaoCache::getIndice();
+        }
+
+        $contextTokens = IntencaoCache::getContextTokens();
+
+        foreach ($tokens as $token) {
+            if (isset($indice[$token])) {
+                return true;
+            }
+
+            if (!empty($contextTokens) && isset($contextTokens[$token])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

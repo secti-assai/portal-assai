@@ -278,7 +278,15 @@ function aiChatWidget() {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorData.message || errorMessage;
+                    } catch (parseError) {
+                        console.warn('[Chat IA] Nao foi possivel ler corpo de erro da API', parseError);
+                    }
+
+                    throw new Error(errorMessage);
                 }
 
                 const data = await response.json();
@@ -294,14 +302,14 @@ function aiChatWidget() {
                     });
                     console.log('[Chat IA] Mensagem do bot adicionada');
                 } else {
-                    throw new Error('Resposta inválida da API');
+                    throw new Error(data.error || data.message || 'Resposta invalida da API');
                 }
             } catch (error) {
                 console.error('[Chat IA] Erro ao enviar mensagem:', error);
                 this.messages.push({
                     id: Date.now() + 1,
                     role: 'bot',
-                    content: '❌ Desculpe, houve um erro ao processar sua mensagem. Tente novamente.',
+                    content: `❌ ${error.message || 'Erro ao processar sua mensagem.'}`,
                     created_at: new Date(),
                 });
             } finally {
