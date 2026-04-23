@@ -57,6 +57,11 @@ class AiChatController extends Controller
                 'data' => $result,
                 'message_count' => $conversation->messages()->count(),
             ]);
+        } catch (\DomainException $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
