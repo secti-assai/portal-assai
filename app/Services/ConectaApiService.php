@@ -21,14 +21,28 @@ class ConectaApiService
 
         return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($perfil, $perPage) {
             try {
-                $response = Http::timeout(5)
-                    ->retry(2, 100)
-                    ->get("{$this->baseUrl}/api/v1/integracao/portal/servicos", [
-                        'perfil'   => $perfil,
-                        'per_page' => $perPage
-                    ]);
+                $apiKey = config('services.conecta.key');
 
-                return $response->successful() ? $response->json() : ['data' => []];
+                $request = Http::timeout(5)->retry(2, 100);
+
+                if (!empty($apiKey)) {
+                    $request = $request->withHeaders(['X-API-Key' => $apiKey]);
+                }
+
+                $response = $request->get("{$this->baseUrl}/api/v1/integracao/portal/servicos", [
+                    'perfil'   => $perfil,
+                    'per_page' => $perPage,
+                ]);
+
+                if (!$response->successful()) {
+                    Log::warning('Conecta API retornou erro.', [
+                        'status' => $response->status(),
+                        'body'   => $response->body(),
+                    ]);
+                    return ['data' => []];
+                }
+
+                return $response->json();
             } catch (\Exception $e) {
                 Log::error('Erro de I/O na API Conecta: ' . $e->getMessage());
                 return ['data' => []];
