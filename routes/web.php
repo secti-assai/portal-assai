@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BannerDestaqueController;
 use App\Http\Controllers\RedeSocialController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\VagaController;
+use App\Http\Controllers\Admin\VagaAdminController;
 
 // ================= ROTAS PÚBLICAS (O SITE) =================
 
@@ -285,6 +287,11 @@ Route::view('/lgpd', 'pages.lgpd')->name('pages.lgpd');
 Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
 Route::view('/termos-de-uso', 'pages.termos')->name('pages.termos');
 
+// Substituir as rotas Route::view estáticas pelas dinâmicas
+Route::get('/oportunidades', [VagaController::class, 'formais'])->name('oportunidades');
+Route::get('/trabalhos-informais', [VagaController::class, 'informais'])->name('trabalhos-informais');
+
+
 // ================= ROTAS DE LOGIN =================
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
@@ -310,6 +317,18 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             'edit'    => 'admin.users.edit',
             'update'  => 'admin.users.update',
             'destroy' => 'admin.users.destroy',
+        ]);
+    });
+
+    // Módulo de Gestão de Oportunidades (Formal e Informal)
+    Route::middleware(['permission:gerenciar vagas'])->group(function () {
+        Route::resource('vagas', VagaAdminController::class)->names([
+            'index'   => 'admin.vagas.index',
+            'create'  => 'admin.vagas.create',
+            'store'   => 'admin.vagas.store',
+            'edit'    => 'admin.vagas.edit',
+            'update'  => 'admin.vagas.update',
+            'destroy' => 'admin.vagas.destroy',
         ]);
     });
 

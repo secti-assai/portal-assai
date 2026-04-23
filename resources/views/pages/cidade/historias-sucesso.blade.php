@@ -29,13 +29,13 @@
         
         <div class="mt-8 md:mt-10 max-w-3xl">
             <span class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-bold tracking-widest text-blue-900 uppercase bg-yellow-400 rounded-full shadow-sm">
-                A Força do Nosso Povo
+                A Força do Nosso Povo e da Inovação
             </span>
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold font-heading mb-6 text-white drop-shadow-md leading-tight" style="font-family: 'Montserrat', sans-serif;">
-                Economia e <span class="text-yellow-400">Desenvolvimento</span>
+                Economia, Tecnologia e <span class="text-yellow-400">Desenvolvimento</span>
             </h1>
             <p class="text-lg sm:text-xl md:text-2xl text-blue-50 leading-relaxed font-light mb-6">
-                Da gloriosa Era do Ouro Branco ao nosso moderno e vibrante Polo Industrial. Conheça a evolução económica de Assaí.
+                Da Era do Ouro Branco ao reconhecimento como uma das comunidades mais inteligentes do mundo. Conheça a evolução de Assaí.
             </p>
         </div>
     </div>
@@ -46,8 +46,8 @@
     <div class="container px-4 sm:px-6 mx-auto max-w-6xl w-full">
         
         <div class="text-center mb-16">
-            <span class="inline-block text-[#006eb7] font-extrabold tracking-widest uppercase text-[11px] border border-blue-200 bg-blue-50 px-4 py-1.5 rounded-full mb-4">
-                A Força do Campo e da Cidade
+            <span class="inline-block text-slate-700 font-extrabold tracking-widest uppercase text-[11px] border border-slate-200 bg-slate-100 px-4 py-1.5 rounded-full mb-4">
+                Matriz Histórica
             </span>
             <h2 class="text-3xl font-black text-slate-800 font-heading md:text-4xl" style="font-family: 'Montserrat', sans-serif;">
                 Uma Economia em Constante Evolução
@@ -59,7 +59,7 @@
             {{-- Card 1: Algodão --}}
             <div class="p-8 md:p-10 rounded-[2rem] bg-slate-50 border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300 group flex flex-col h-full">
                 <div class="w-16 h-16 bg-white text-slate-700 rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm border border-slate-100 group-hover:bg-[#006eb7] group-hover:text-white group-hover:border-[#006eb7] transition-colors">
-                    <i class="fa-solid fa-cloud-meatball"></i> {{-- Representação figurativa do algodão --}}
+                    <i class="fa-solid fa-cloud-meatball"></i>
                 </div>
                 <h3 class="text-xl font-extrabold text-slate-800 mb-4 font-heading">Era do Ouro Branco</h3>
                 <p class="text-[15px] text-slate-600 leading-relaxed mt-auto">
@@ -93,11 +93,110 @@
     </div>
 </section>
 
-{{-- ===== INDICADORES ECONÔMICOS (PAINEL DE DESTAQUE) ===== --}}
+{{-- ===== ECOSSISTEMA DE INOVAÇÃO VALE DO SOL (NOVO) ===== --}}
 <section class="py-16 md:py-24 bg-slate-50 w-full overflow-x-hidden border-t border-slate-200">
     <div class="container px-4 sm:px-6 mx-auto max-w-6xl w-full">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+            
+            <div class="w-full lg:w-1/2">
+                <span class="inline-block text-indigo-700 font-extrabold tracking-widest uppercase text-[11px] border border-indigo-200 bg-indigo-50 px-4 py-1.5 rounded-full mb-4">
+                    Ecossistema Inteligente
+                </span>
+                <h2 class="text-3xl font-black text-slate-800 font-heading md:text-4xl mb-6" style="font-family: 'Montserrat', sans-serif;">
+                    Agência de Inovação Vale do Sol
+                </h2>
+                <p class="text-slate-600 text-base md:text-lg leading-relaxed font-medium mb-8">
+                    Assaí estruturou um dos ambientes promotores de inovação mais eficientes do Sul do país. Credenciado pelo Sistema Estadual de Parques Tecnológicos do Paraná (Separtec), o <strong>Vale do Sol</strong> opera a partir do modelo de tripla hélice (Setor Público, Iniciativa Privada e Universidades).
+                </p>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 mt-1">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">Passaporte do Estudante</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Qualificação de jovens talentos acima de 16 anos, integrando currículo escolar ao mercado de trabalho tecnológico local.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 mt-1">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">Fomento a Startups</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Incubação e desenvolvimento de soluções focadas no agronegócio, engenharia elétrica, mecânica e automação.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 mt-1">
+                            <i class="fa-solid fa-city"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">Cidade-Laboratório</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Infraestrutura municipal aberta para testagem de novas tecnologias apoiadas por multinacionais e academia.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="w-full lg:w-1/2">
+                <div class="relative rounded-[2.5rem] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)] border-4 border-white">
+                    <div class="absolute inset-0 bg-[#006eb7] opacity-20 mix-blend-multiply z-10"></div>
+                    <img src="{{ asset('img/valesol.webp') }}" alt="Ecossistema de Inovação Vale do Sol" class="w-full h-auto object-cover aspect-square md:aspect-video lg:aspect-square transform hover:scale-105 transition-transform duration-700">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{{-- ===== RECONHECIMENTO INTERNACIONAL SMART CITY (NOVO) ===== --}}
+<section class="py-16 md:py-24 bg-[#006eb7] text-white w-full overflow-x-hidden relative">
+    <div class="absolute inset-0 pointer-events-none opacity-20">
+        <svg class="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid-icf" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="1.5" fill="white" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-icf)" />
+        </svg>
+    </div>
+
+    <div class="container relative z-10 px-4 sm:px-6 mx-auto max-w-6xl w-full text-center">
+        <span class="inline-block text-white font-extrabold tracking-widest uppercase text-[11px] border border-blue-300 bg-blue-800 px-4 py-1.5 rounded-full mb-6 shadow-sm">
+            Intelligent Community Forum (ICF)
+        </span>
+        <h2 class="text-3xl font-black font-heading md:text-5xl mb-12 drop-shadow-md" style="font-family: 'Montserrat', sans-serif;">
+            A 1ª Comunidade Inteligente Certificada da América Latina
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-blue-900/50 backdrop-blur-sm border border-blue-400/30 rounded-3xl p-8 hover:bg-blue-800/60 transition duration-300">
+                <i class="fa-solid fa-trophy text-4xl text-yellow-400 mb-4 drop-shadow"></i>
+                <h3 class="text-2xl font-black mb-2" style="font-family: 'Montserrat', sans-serif;">Top 7</h3>
+                <p class="text-blue-100 text-sm leading-relaxed">Eleita consecutivamente (2024 e 2025) entre as sete comunidades mais inteligentes do mundo.</p>
+            </div>
+            <div class="bg-blue-900/50 backdrop-blur-sm border border-blue-400/30 rounded-3xl p-8 hover:bg-blue-800/60 transition duration-300">
+                <i class="fa-solid fa-certificate text-4xl text-emerald-400 mb-4 drop-shadow"></i>
+                <h3 class="text-2xl font-black mb-2" style="font-family: 'Montserrat', sans-serif;">Full Certification</h3>
+                <p class="text-blue-100 text-sm leading-relaxed">Em 2026, tornou-se a única cidade sul-americana a receber a certificação internacional completa pelo Fórum Global.</p>
+            </div>
+            <div class="bg-blue-900/50 backdrop-blur-sm border border-blue-400/30 rounded-3xl p-8 hover:bg-blue-800/60 transition duration-300">
+                <i class="fa-solid fa-network-wired text-4xl text-white mb-4 drop-shadow"></i>
+                <h3 class="text-2xl font-black mb-2" style="font-family: 'Montserrat', sans-serif;">Governança</h3>
+                <p class="text-blue-100 text-sm leading-relaxed">Gestão ancorada em Inteligência Artificial para análise comportamental, inclusão digital e otimização de serviços (Conecta Assaí).</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ===== INDICADORES ECONÔMICOS (PAINEL DE DESTAQUE) ===== --}}
+<section class="py-16 md:py-24 bg-white w-full overflow-x-hidden">
+    <div class="container px-4 sm:px-6 mx-auto max-w-6xl w-full">
         
-        <div class="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-200 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+        <div class="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-slate-200 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
             
             {{-- Lado Esquerdo: PIB e Texto --}}
             <div class="w-full lg:w-1/2">
@@ -117,22 +216,22 @@
             {{-- Lado Direito: Cards Pequenos --}}
             <div class="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-5">
                 
-                {{-- Stat 1 --}}
-                <div class="p-8 bg-emerald-50 rounded-3xl border border-emerald-100 text-center flex flex-col items-center justify-center group hover:bg-emerald-600 transition-colors duration-300 shadow-sm">
-                    <div class="w-12 h-12 bg-white text-emerald-600 rounded-full flex items-center justify-center text-xl mb-4 shadow-sm group-hover:text-emerald-700">
+                {{-- Stat 1: Sucesso (Emerald) --}}
+                <div class="p-8 bg-white rounded-3xl border border-emerald-100 text-center flex flex-col items-center justify-center group hover:bg-emerald-600 transition-colors duration-300 shadow-sm">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-xl mb-4 shadow-sm group-hover:bg-white group-hover:text-emerald-600 transition-colors">
                         <i class="fa-solid fa-users-gear"></i>
                     </div>
-                    <span class="block text-4xl font-black text-emerald-700 mb-2 group-hover:text-white" style="font-family: 'Montserrat', sans-serif;">3.317</span>
-                    <span class="text-[13px] font-extrabold uppercase tracking-wide text-emerald-900 group-hover:text-emerald-50">Pessoal Ocupado (Formal)</span>
+                    <span class="block text-4xl font-black text-slate-800 mb-2 group-hover:text-white transition-colors" style="font-family: 'Montserrat', sans-serif;">3.317</span>
+                    <span class="text-[13px] font-extrabold uppercase tracking-wide text-emerald-600 group-hover:text-emerald-50 transition-colors">Pessoal Ocupado (Formal)</span>
                 </div>
 
-                {{-- Stat 2 --}}
-                <div class="p-8 bg-blue-50 rounded-3xl border border-blue-100 text-center flex flex-col items-center justify-center group hover:bg-[#006eb7] transition-colors duration-300 shadow-sm">
-                    <div class="w-12 h-12 bg-white text-[#006eb7] rounded-full flex items-center justify-center text-xl mb-4 shadow-sm group-hover:text-[#006eb7]">
+                {{-- Stat 2: Inteligência (Indigo) --}}
+                <div class="p-8 bg-white rounded-3xl border border-indigo-100 text-center flex flex-col items-center justify-center group hover:bg-indigo-600 transition-colors duration-300 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xl mb-4 shadow-sm group-hover:bg-white group-hover:text-indigo-600 transition-colors">
                         <i class="fa-solid fa-hospital"></i>
                     </div>
-                    <span class="block text-4xl font-black text-[#006eb7] mb-2 group-hover:text-white" style="font-family: 'Montserrat', sans-serif;">6+</span>
-                    <span class="text-[13px] font-extrabold uppercase tracking-wide text-blue-900 group-hover:text-blue-50">Estabelecimentos SUS</span>
+                    <span class="block text-4xl font-black text-slate-800 mb-2 group-hover:text-white transition-colors" style="font-family: 'Montserrat', sans-serif;">6+</span>
+                    <span class="text-[13px] font-extrabold uppercase tracking-wide text-indigo-600 group-hover:text-indigo-50 transition-colors">Estabelecimentos SUS</span>
                 </div>
 
             </div>
