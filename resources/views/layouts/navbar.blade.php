@@ -180,7 +180,9 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     <a href="{{ route('cidade.nossa-cultura') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Nossa Cultura</a>
                     <a href="{{ route('cidade.demografia') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Demografia</a>
                     <a href="{{ route('cidade.historias-sucesso') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Histórias de Sucessos</a>
-                    <a href="{{ route('cidade.qualidade-vida') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Qualidade de Vida</a>
+                    <a href="{{ route('cidade.qualidade-vida') }}" class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Qualidade de Vida</a>
+                    <a href="{{ route('oportunidades') }}" class="block px-4 py-3 text-[13px] font-bold hover:bg-yellow-50 hover:text-yellow-700 border-b border-yellow-100">Oportunidades de Trabalho</a>
+                    <a href="{{ route('trabalhos-informais') }}" class="block px-4 py-3 text-[13px] font-bold hover:bg-amber-50 hover:text-amber-700">Trabalhos Informais</a>
                 </div>
             </div>
 
@@ -316,6 +318,8 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.demografia') }}">Demografia</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.historias-sucesso') }}">Histórias de Sucessos</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.qualidade-vida') }}">Qualidade de Vida</a></li>
+                            <li><a class="block text-yellow-700 font-bold text-sm py-2.5 pl-3 border-l-2 border-yellow-500 hover:border-yellow-700 hover:text-yellow-700 transition-colors" href="{{ route('oportunidades') }}">Oportunidades de Trabalho</a></li>
+                            <li><a class="block text-amber-700 font-bold text-sm py-2.5 pl-3 border-l-2 border-amber-500 hover:border-amber-700 hover:text-amber-700 transition-colors" href="{{ route('trabalhos-informais') }}">Trabalhos Informais</a></li>
                         </ul>
                     </li>
 
