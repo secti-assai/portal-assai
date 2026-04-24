@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', function () {
             observer: true,
             observeParents: true,
             watchOverflow: true,
-            allowTouchMove: false,
-            simulateTouch: false,
+            allowTouchMove: true,
+            simulateTouch: true,
             pagination: {
                 el: el.querySelector('.swiper-pagination'),
-                clickable: false,
+                clickable: true,
             },
             navigation: {
                 nextEl: el.querySelector('.swiper-button-next'),

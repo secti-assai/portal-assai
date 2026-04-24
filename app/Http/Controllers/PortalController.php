@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use App\Support\Concerns\NormalizesSearch;
 use App\Models\Executivo;
 use App\Services\ConectaApiService;
+use App\Services\BuscaInteligente;
 
 class PortalController extends Controller
 {
@@ -481,13 +482,70 @@ class PortalController extends Controller
             return response()->json([]);
         }
 
-        // Notícias
+        $termoNormalizado = mb_strtolower($this->normalizeSearchTerm($termo));
+
+        // 1. Serviços (Prioridade Máxima)
+        $servicosQuery = Servico::where('ativo', true);
+        $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
+
+        $servicos = $servicosQuery
+            ->select('id', 'titulo')
+            ->limit(4)
+            ->get()
+            ->map(fn($s) => [
+                'titulo' => $s->titulo,
+                'url' => route('servicos.acessar', $s->id),
+                'tipo' => 'Serviço',
+            ]);
+
+        // 2. Páginas do Portal
+        $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
+            return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
+                   collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
+        })->take(3)->map(fn($p) => [
+            'titulo' => $p['titulo'],
+            'url' => $p['url'],
+            'tipo' => 'Portal',
+        ]);
+
+        // 3. Programas
+        $programasQuery = Programa::where('ativo', true);
+        $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+        $this->aplicarFiltroPerfil($programasQuery, $perfil);
+
+        $programas = $programasQuery
+            ->select('id', 'titulo')
+            ->limit(2)
+            ->get()
+            ->map(fn($p) => [
+                'titulo' => $p->titulo,
+                'url' => route('programas.show', $p->id),
+                'tipo' => 'Programa',
+            ]);
+
+        // 4. Secretarias
+        $secretariasQuery = Secretaria::query();
+        $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+
+        $secretarias = $secretariasQuery
+            ->select('id', 'nome')
+            ->limit(2)
+            ->get()
+            ->map(fn($sec) => [
+                'titulo' => $sec->nome,
+                'url' => route('secretarias.show', $sec->id),
+                'tipo' => 'Secretaria',
+            ]);
+
+        // 5. Notícias (Prioridade Mínima)
         $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
         $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
 
         $noticias = $noticiasQuery
             ->select('id', 'titulo', 'slug')
+            ->whereDate('data_publicacao', '<=', today())
             ->latest('data_publicacao')
             ->limit(3)
             ->get()
@@ -497,51 +555,13 @@ class PortalController extends Controller
                 'tipo' => 'Notícia',
             ]);
 
-        // Serviços
-        $servicosQuery = Servico::where('ativo', true);
-        $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
-        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
-
-        $servicos = $servicosQuery
-            ->select('id', 'titulo')
-            ->limit(3)
-            ->get()
-            ->map(fn($s) => [
-                'titulo' => $s->titulo,
-                'url' => route('servicos.acessar', $s->id),
-                'tipo' => 'Serviço',
-            ]);
-
-        // Programas
-        $programasQuery = Programa::where('ativo', true);
-        $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
-        $this->aplicarFiltroPerfil($programasQuery, $perfil);
-
-        $programas = $programasQuery
-            ->select('id', 'titulo')
-            ->limit(3)
-            ->get()
-            ->map(fn($p) => [
-                'titulo' => $p->titulo,
-                'url' => route('programas.show', $p->id),
-                'tipo' => 'Programa',
-            ]);
-
-        // Secretarias (Geralmente não filtrado por perfil, mas mantido a busca base)
-        $secretariasQuery = Secretaria::query();
-        $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
-
-        $secretarias = $secretariasQuery
-            ->select('id', 'nome')
-            ->limit(3)
-            ->get()
-            ->map(fn($sec) => [
-                'titulo' => $sec->nome,
-                'url' => route('secretarias.show', $sec->id),
-                'tipo' => 'Secretaria',
-            ]);
-
-        $resultados = $noticias->concat($servicos)->concat($programas)->concat($secretarias)->values();
+        // Merge seguindo a nova prioridade
+        $resultados = collect($servicos)
+            ->concat($paginas)
+            ->concat($programas)
+            ->concat($secretarias)
+            ->concat($noticias)
+            ->values();
 
         return response()->json($resultados);
     }
@@ -556,53 +576,138 @@ class PortalController extends Controller
         $eventos = collect();
         $programas = collect();
         $secretarias = collect();
+        $paginas = collect();
+        $respostaInteligente = null;
 
         if (strlen($termo) >= 2) {
+            // 1. Resposta Inteligente (IA)
+            $resultadoIA = BuscaInteligente::buscar($termo);
+            if ($resultadoIA['confianca'] >= 60) {
+                $respostaInteligente = $resultadoIA;
+            }
 
+            // 2. Páginas Estáticas do Portal
+            $termoNormalizado = mb_strtolower($this->normalizeSearchTerm($termo));
+            $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
+                return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
+                       str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['descricao'])), $termoNormalizado) ||
+                       collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
+            })->take(6);
+
+            // 3. Serviços (Prioridade Máxima)
+            $servicosQuery = Servico::where('ativo', true);
+            $this->applyInsensitiveSearch($servicosQuery, ['titulo', 'descricao'], $termo);
+            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
+            $servicos = $servicosQuery->take(9)->get();
+
+            // 4. Eventos
+            $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
+            $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
+            $eventos = $eventosQuery->take(8)->get();
+
+            // 5. Programas
+            $programasQuery = Programa::where('ativo', true);
+            $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            $this->aplicarFiltroPerfil($programasQuery, $perfil);
+            $programas = $programasQuery->take(9)->get();
+
+            // 6. Secretarias
+            $secretariasQuery = Secretaria::query();
+            $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+            $secretarias = $secretariasQuery->take(6)->get();
+
+            // 7. Notícias (Prioridade Mínima)
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
             $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
-
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->take(12)
                 ->get();
-
-            $servicosQuery = Servico::where('ativo', true);
-            $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
-            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
-
-            $servicos = $servicosQuery
-                ->take(9)
-                ->get();
-
-            $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
-            $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
-            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
-
-            $eventos = $eventosQuery
-                ->take(8)
-                ->get();
-
-            $programasQuery = Programa::where('ativo', true);
-            $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
-            $this->aplicarFiltroPerfil($programasQuery, $perfil);
-
-            $programas = $programasQuery
-                ->take(9)
-                ->get();
-
-            $secretariasQuery = Secretaria::query();
-            $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
-
-            $secretarias = $secretariasQuery
-                ->take(6)
-                ->get();
         }
 
-        return view('pages.busca', compact('termo', 'noticias', 'servicos', 'eventos', 'programas', 'secretarias'));
+        return view('pages.busca', compact(
+            'termo', 
+            'noticias', 
+            'servicos', 
+            'eventos', 
+            'programas', 
+            'secretarias', 
+            'paginas', 
+            'respostaInteligente'
+        ));
+    }
+
+    /**
+     * Retorna uma coleção de páginas estáticas e institucionais do portal.
+     */
+    private function getPaginasEstaticas()
+    {
+        return collect([
+            [
+                'titulo' => 'Nossa Cidade',
+                'url' => route('cidade.nossa-cidade'),
+                'descricao' => 'Conheça a história e informações gerais sobre Assaí.',
+                'keywords' => ['historia', 'sobre', 'cidade', 'fundação']
+            ],
+            [
+                'titulo' => 'Turismo',
+                'url' => route('pages.turismo'),
+                'descricao' => 'Pontos turísticos e atrações de Assaí.',
+                'keywords' => ['turismo', 'visita', 'lazer', 'atrativos']
+            ],
+            [
+                'titulo' => 'Transparência',
+                'url' => route('pages.transparencia'),
+                'descricao' => 'Portal da Transparência, contas públicas e gastos municipais.',
+                'keywords' => ['contas', 'gastos', 'portal da transparência', 'licitações']
+            ],
+            [
+                'titulo' => 'Contato',
+                'url' => route('contato.index'),
+                'descricao' => 'Fale com a prefeitura e suas secretarias.',
+                'keywords' => ['telefone', 'email', 'fale conosco', 'endereço']
+            ],
+            [
+                'titulo' => 'Agenda de Eventos',
+                'url' => route('agenda.index'),
+                'descricao' => 'Confira o calendário de eventos e compromissos do município.',
+                'keywords' => ['calendario', 'agenda', 'eventos', 'datas']
+            ],
+            [
+                'titulo' => 'Secretarias',
+                'url' => route('secretarias.index'),
+                'descricao' => 'Lista de todas as secretarias municipais e seus gestores.',
+                'keywords' => ['secretarios', 'gestão', 'departamentos']
+            ],
+            [
+                'titulo' => 'Acessibilidade',
+                'url' => route('pages.acessibilidade'),
+                'descricao' => 'Informações sobre os recursos de acessibilidade do portal.',
+                'keywords' => ['acessível', 'libras', 'contraste']
+            ],
+            [
+                'titulo' => 'FAQ - Perguntas Frequentes',
+                'url' => route('pages.faq'),
+                'descricao' => 'Respostas para as dúvidas mais comuns dos cidadãos.',
+                'keywords' => ['ajuda', 'duvidas', 'perguntas', 'como fazer']
+            ],
+            [
+                'titulo' => 'Oportunidades de Emprego',
+                'url' => route('oportunidades'),
+                'descricao' => 'Vagas de emprego formais disponíveis no município.',
+                'keywords' => ['trabalho', 'vagas', 'emprego', 'agencia do trabalhador']
+            ],
+            [
+                'titulo' => 'Saúde Assaí',
+                'url' => 'https://saude.assai.pr.gov.br',
+                'descricao' => 'Portal dedicado aos serviços de saúde do município.',
+                'keywords' => ['medico', 'hospital', 'ubs', 'vacina', 'agendamento']
+            ]
+        ]);
     }
 
     private function applyInsensitiveSearch($query, array $columns, string $term): void

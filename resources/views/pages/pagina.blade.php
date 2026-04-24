@@ -97,13 +97,14 @@
     $calendarMesAnterior = $calendarMonth->copy()->subMonth()->format('Y-m');
     $calendarMesProximo = $calendarMonth->copy()->addMonth()->format('Y-m');
     $calendarTituloMes = mb_strtolower($calendarMonth->locale('pt_BR')->translatedFormat('F Y'));
+
     @endphp
 
 
     {{-- ==========================================
         HERO MOBILE
         ========================================== --}}
-    <section class="lg:hidden pl-mobile-home" id="pl-mobile-home">
+    <section class="relative lg:hidden pl-mobile-home" id="pl-mobile-home">
         <div class="home-hero-mobile">
             <div class="home-hero-content">
                 <h1 class="hero-title">O QUE VOCÊ <strong>PRECISA?</strong></h1>
@@ -153,6 +154,7 @@
                         Busca Avançada
                     </button>
                 </div>
+
             </div>
         </div>
     </section>
@@ -167,7 +169,7 @@
             <video id="hero-video-lazy"
                 class="w-full h-full object-cover object-center opacity-0 transition-opacity duration-1000" muted loop
                 playsinline poster="{{ asset('img/Assai.jpg') }}" preload="none">
-                <source data-src="{{ asset('videos/panorama.mp4') }}" type="video/mp4">
+                <source data-src="{{ asset('videos/video-portal.mp4') }}" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-950/40 to-slate-900/60"></div>
         </div>
@@ -240,6 +242,7 @@
                 @endforeach
             </div>
             @endif
+
         </div>
 
         <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center">
@@ -293,8 +296,8 @@
                     {{-- Posto --}}
                     <template x-if="posto">
                         <div class="flex items-center gap-1.5 text-slate-700">
-                            <i class="fa-solid fa-house-medical text-blue-600 text-xs shrink-0"></i>
-                            <span class="font-semibold text-blue-800" x-text="formatDutyText(posto, 'Posto')"></span>
+                            <i class="fa-solid fa-gas-pump text-blue-600 text-xs shrink-0"></i>
+                            <span class="font-semibold text-blue-800" x-text="formatDutyText(posto, 'Posto de combustível')"></span>
                         </div>
                     </template>
 
@@ -321,6 +324,41 @@
         SEÇÕES MOBILE (Apenas telas pequenas)
         ========================================== --}}
     <div class="lg:hidden pl-mobile-home">
+
+        {{-- Programas Mobile --}}
+        <section class="bg-gray-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
+            <h2 class="section-title mb-6 font-bold">Fique Ligado</h2>
+            @if(isset($programas) && $programas->count() > 0)
+            <div class="px-4 w-full">
+                <div
+                    class="swiper swiper-fique-ligado h-[360px] w-full rounded-[16px] shadow-md overflow-hidden relative">
+                    <div class="swiper-wrapper">
+                        @foreach($programas as $programa)
+                        <div class="swiper-slide relative h-[360px] bg-slate-100">
+
+                            {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
+                            <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
+                                {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
+                                class="block w-full h-full">
+                                <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-white">
+                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
+                                        alt="{{ $programa->titulo }}"
+                                        loading="lazy"
+                                        class="w-full h-full object-cover mx-auto">
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination !bottom-3"></div>
+                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
+                    </div>
+                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
+                    </div>
+                </div>
+            </div>
+            @endif
+        </section>
 
         {{-- Nossos Portais Mobile --}}
         <section class="bg-white-section border-b border-slate-100">
@@ -460,56 +498,6 @@
             </div>
         </section>
 
-        {{-- Programas Mobile --}}
-        <section class="bg-gray-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
-            <h2 class="section-title mb-6 font-bold">Fique ligado</h2>
-            @if(isset($programas) && $programas->count() > 0)
-            <div class="px-4 w-full">
-                <div
-                    class="swiper swiper-fique-ligado h-[360px] w-full rounded-[16px] shadow-md overflow-hidden relative">
-                    <div class="swiper-wrapper">
-                        @foreach($programas as $programa)
-                        <div class="swiper-slide relative h-[360px] bg-slate-100">
-
-                            {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
-                            <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
-                                {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
-                                class="block w-full h-full">
-                                <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-white">
-                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
-                                        alt="{{ $programa->titulo }}"
-                                        loading="lazy"
-                                        class="w-full h-full object-cover mx-auto">
-                                </div>
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none">
-                                </div>
-                                <div
-                                    class="absolute bottom-0 left-0 w-full p-4 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10 flex flex-col justify-end">
-                                    <h3 class="text-xl font-bold text-white leading-snug drop-shadow-lg text-center"
-                                        style="font-family: 'Montserrat', sans-serif;">
-                                        {{ Str::limit($programa->titulo, 70) }}
-                                    </h3>
-                                </div>
-                            </a>
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="swiper-pagination !bottom-3"></div>
-                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
-                    </div>
-                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 flex justify-center w-full pb-4">
-                <a href="{{ route('programas.index') }}"
-                    class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-sm font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
-                    <i class="fa-solid fa-bullhorn"></i> Ver Todos Programas
-                </a>
-            </div>
-            @endif
-        </section>
 
         {{-- Calendário Mobile --}}
         <section class="bg-gray-section" style="padding-top: 2.5rem;">
@@ -570,6 +558,38 @@
         SEÇÕES DESKTOP (Apenas telas grandes)
         ========================================== --}}
     <div class="hidden lg:block">
+
+        {{-- Programas Desktop --}}
+        <section id="programas-desktop" class="pb-16 pt-10 bg-[#eef1f5]">
+            <div class="container px-4 mx-auto max-w-6xl font-sans">
+                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
+                    style="font-family: 'Montserrat', sans-serif;">Fique Ligado</h2>
+                @if(isset($programas) && $programas->count() > 0)
+                <div class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
+                    <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
+                        <div class="swiper-wrapper">
+                            @foreach($programas as $programa)
+                            <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
+                                {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
+                                <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
+                                    {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
+                                    class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
+                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
+                                        alt="{{ $programa->titulo }}"
+                                        loading="lazy"
+                                        class="absolute inset-0 object-cover w-full h-full">
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="swiper-pagination !bottom-5"></div>
+                        <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
+                        <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </section>
 
         {{-- Nossos Portais Desktop --}}
         <section id="nossos-portais-desktop" class="py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
@@ -732,47 +752,6 @@
             </div>
         </section>
 
-        {{-- Programas Desktop --}}
-        <section id="programas-desktop" class="pb-16 pt-10 bg-[#eef1f5]">
-            <div class="container px-4 mx-auto max-w-6xl font-sans">
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Fique ligado</h2>
-                @if(isset($programas) && $programas->count() > 0)
-                <div class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
-                    <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
-                        <div class="swiper-wrapper">
-                            @foreach($programas as $programa)
-                            <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
-                                {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
-                                <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
-                                    {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
-                                    class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
-                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
-                                        alt="{{ $programa->titulo }}"
-                                        loading="lazy"
-                                        class="absolute inset-0 object-cover w-full h-full">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/30 to-transparent pointer-events-none"></div>
-                                    <div class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-white/10 backdrop-blur-sm border-t border-white/20 z-10">
-                                        <h3 class="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg max-w-4xl mx-auto text-center" style="font-family: 'Montserrat', sans-serif;">{{ $programa->titulo }}</h3>
-                                    </div>
-                                </a>
-                            </div>
-                            @endforeach
-                        </div>
-                        <div class="swiper-pagination !bottom-5"></div>
-                        <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]" style="position: absolute !important; left: 1rem !important; right: auto !important; top: 50% !important; margin-top: 0 !important; transform: translateY(-50%) !important; z-index: 40 !important;"></div>
-                        <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]" style="position: absolute !important; right: 1rem !important; left: auto !important; top: 50% !important; margin-top: 0 !important; transform: translateY(-50%) !important; z-index: 40 !important;"></div>
-                    </div>
-                </div>
-                <div class="mt-10 flex justify-center w-full">
-                    <a href="{{ route('programas.index') }}"
-                        class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
-                        <i class="fa-solid fa-bullhorn"></i> Ver Todos Programas
-                    </a>
-                </div>
-                @endif
-            </div>
-        </section>
 
         {{-- Agenda Desktop --}}
         <section id="agenda-desktop" class="py-16 bg-[#eef1f5]">

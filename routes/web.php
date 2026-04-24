@@ -116,8 +116,52 @@ Route::get('/api/plantao-hoje', function () {
             return null;
         };
 
+        $pickFuelDuty = static function () use ($todayEvents): ?array {
+            $fuelKeywords = ['combust', 'gasolina', 'etanol', 'diesel', 'auto posto', 'posto de combustivel'];
+            $healthKeywords = ['saude', 'ubs', 'unidade basica', 'hospital', 'clinica', 'vacina'];
+
+            foreach ($todayEvents as $event) {
+                if (($event['type'] ?? '') !== 'Posto') {
+                    continue;
+                }
+
+                $haystack = mb_strtolower(trim((string) (($event['title'] ?? '') . ' ' . ($event['address'] ?? '') . ' ' . ($event['type'] ?? ''))));
+
+                $hasHealthHint = false;
+                foreach ($healthKeywords as $keyword) {
+                    if ($keyword !== '' && str_contains($haystack, $keyword)) {
+                        $hasHealthHint = true;
+                        break;
+                    }
+                }
+
+                if ($hasHealthHint) {
+                    continue;
+                }
+
+                $hasFuelHint = false;
+                foreach ($fuelKeywords as $keyword) {
+                    if ($keyword !== '' && str_contains($haystack, $keyword)) {
+                        $hasFuelHint = true;
+                        break;
+                    }
+                }
+
+                if ($hasFuelHint || trim((string) ($event['type'] ?? '')) === 'Posto') {
+                    return [
+                        'title' => $event['title'] ?? null,
+                        'address' => $event['address'] ?? null,
+                        'contact' => $event['contact'] ?? null,
+                        'type' => 'Posto de combustivel',
+                    ];
+                }
+            }
+
+            return null;
+        };
+
         $farmacia = $pickDuty('Farmácia');
-        $posto = $pickDuty('Posto');
+        $posto = $pickFuelDuty();
 
         $payload = [
             'hasDuty' => ($farmacia !== null || $posto !== null),
