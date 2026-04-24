@@ -40,19 +40,17 @@
             class="bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-500 outline-none transition-all"
         />
 
-        <x-admin.select
-            name="perfil"
-            label="Perfil Vinculado"
-            :value="$categoria->perfil"
-            required="true"
+        <x-admin.checkbox-group
+            name="perfis"
+            label="Perfis Vinculados"
+            :selected="$categoria->perfis ?? []"
             :options="[
-                '' => 'Selecione um Perfil',
                 'Cidadão' => 'Cidadão',
                 'Turista' => 'Turista',
                 'Empresário' => 'Empresário',
                 'Servidor Público' => 'Servidor Público'
             ]"
-            class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
+            :columns="2"
         />
 
         <div class="pt-2">

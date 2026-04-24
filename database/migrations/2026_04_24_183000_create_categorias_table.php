@@ -14,15 +14,21 @@ return new class extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('nome')->unique();
-            $table->string('perfil'); // Cidadão, Turista, Empresário, Servidor Público
+            $table->json('perfis')->nullable(); // Suporta múltiplos perfis: ['Cidadão', 'Empresário']
             $table->boolean('ativo')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        // Adiciona a foreign key em noticias
-        Schema::table('noticias', function (Blueprint $table) {
-            $table->foreignId('categoria_id')->nullable()->constrained('categorias')->nullOnDelete();
+        // Cria a tabela pivô para relação Many-to-Many entre Notícias e Categorias
+        Schema::create('categoria_noticia', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('noticia_id')->constrained('noticias')->cascadeOnDelete();
+            $table->foreignId('categoria_id')->constrained('categorias')->cascadeOnDelete();
+            $table->timestamps();
+            
+            // Impede a mesma categoria duas vezes na mesma notícia
+            $table->unique(['noticia_id', 'categoria_id']);
         });
 
         // Adiciona a foreign key em servicos
@@ -62,7 +68,7 @@ return new class extends Migration
         foreach ($categorias as $categoria) {
             \Illuminate\Support\Facades\DB::table('categorias')->insertOrIgnore([
                 'nome' => $categoria['nome'],
-                'perfil' => $categoria['perfil'],
+                'perfis' => json_encode([$categoria['perfil']]),
                 'ativo' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -90,11 +96,7 @@ return new class extends Migration
             $table->dropColumn('categoria_id');
         });
 
-        Schema::table('noticias', function (Blueprint $table) {
-            $table->dropForeign(['categoria_id']);
-            $table->dropColumn('categoria_id');
-        });
-
+        Schema::dropIfExists('categoria_noticia');
         Schema::dropIfExists('categorias');
     }
 };
