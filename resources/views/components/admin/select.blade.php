@@ -13,8 +13,17 @@
         @if($placeholder)
             <option value="">{{ $placeholder }}</option>
         @endif
+        @php
+            $oldValue = old(str_replace('[]', '', $name), $value);
+            $isSelected = function($optVal) use ($oldValue, $attributes) {
+                if ($attributes->has('multiple')) {
+                    return in_array($optVal, (array) $oldValue);
+                }
+                return $oldValue == $optVal;
+            };
+        @endphp
         @foreach($options as $optionValue => $optionLabel)
-            <option value="{{ $optionValue }}" @selected(old($name, $value) == $optionValue)>{{ $optionLabel }}</option>
+            <option value="{{ $optionValue }}" @selected($isSelected($optionValue))>{{ $optionLabel }}</option>
         @endforeach
     </select>
     @error($name)

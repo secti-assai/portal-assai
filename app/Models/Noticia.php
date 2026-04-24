@@ -24,8 +24,6 @@ class Noticia extends Model
     protected $fillable = [
         'titulo',
         'slug',
-        'categoria',
-        'categoria_id',
         'resumo',
         'conteudo',
         'imagem_capa',
@@ -35,9 +33,9 @@ class Noticia extends Model
         'destaque',
     ];
 
-    public function categoriaRel()
+    public function categorias()
     {
-        return $this->belongsTo(Categoria::class, 'categoria_id');
+        return $this->belongsToMany(Categoria::class, 'categoria_noticia');
     }
 
     protected $casts = [

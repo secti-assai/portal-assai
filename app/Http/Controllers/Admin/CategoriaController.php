@@ -17,7 +17,8 @@ class CategoriaController extends Controller
             })
             ->when($request->filled('perfil'), function ($query) use ($request) {
                 $perfil = $request->string('perfil')->trim()->toString();
-                $query->where('perfil', $perfil);
+                // Utilizando whereJsonContains pois perfis é um array JSON
+                $query->whereJsonContains('perfis', $perfil);
             })
             ->orderBy('nome', 'asc')
             ->paginate(15)
@@ -35,13 +36,14 @@ class CategoriaController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255|unique:categorias,nome',
-            'perfil' => 'required|string|in:Cidadão,Turista,Empresário,Servidor Público',
+            'perfis' => 'required|array',
+            'perfis.*' => 'string|in:Cidadão,Turista,Empresário,Servidor Público',
             'ativo' => 'nullable|boolean',
         ]);
 
         Categoria::create([
             'nome' => $request->nome,
-            'perfil' => $request->perfil,
+            'perfis' => $request->perfis,
             'ativo' => $request->has('ativo'),
         ]);
 
@@ -57,13 +59,14 @@ class CategoriaController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255|unique:categorias,nome,' . $categoria->id,
-            'perfil' => 'required|string|in:Cidadão,Turista,Empresário,Servidor Público',
+            'perfis' => 'required|array',
+            'perfis.*' => 'string|in:Cidadão,Turista,Empresário,Servidor Público',
             'ativo' => 'nullable|boolean',
         ]);
 
         $categoria->update([
             'nome' => $request->nome,
-            'perfil' => $request->perfil,
+            'perfis' => $request->perfis,
             'ativo' => $request->has('ativo'),
         ]);
 

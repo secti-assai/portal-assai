@@ -13,17 +13,18 @@ class Categoria extends Model
 
     protected $fillable = [
         'nome',
-        'perfil',
+        'perfis',
         'ativo'
     ];
 
     protected $casts = [
-        'ativo' => 'boolean'
+        'ativo' => 'boolean',
+        'perfis' => 'array'
     ];
 
     public function noticias()
     {
-        return $this->hasMany(Noticia::class);
+        return $this->belongsToMany(Noticia::class, 'categoria_noticia');
     }
 
     public function servicos()

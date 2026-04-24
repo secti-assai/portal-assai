@@ -89,14 +89,12 @@
                     </label>
                 </div>
 
-                <x-admin.select
-                    name="categoria"
-                    label="Categoria"
+                <x-admin.multi-select
+                    name="categorias"
+                    label="Categorias / Temas"
                     :options="$categorias"
-                    placeholder="Geral (Todos os perfis)"
-                    :value="$noticia->categoria"
-                    required="false"
-                    class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
+                    :selected="$noticiaCategoriasIds"
+                    placeholder="Busque ou selecione temas..."
                 />
 
                 <x-admin.input
