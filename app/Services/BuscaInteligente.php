@@ -11,73 +11,82 @@ use Illuminate\Support\Facades\Log;
 
 class BuscaInteligente
 {
-    private const CONFIANCA_MINIMA = 30; // 30%
+    private const CONFIANCA_MINIMA = 30;
+    private const LIMIAR_FUZZY = 0.75;
+
     private const RESPOSTA_PADRAO = 'Desculpe, não compreendi sua pergunta. Poderia reformular? Estou aqui para ajudar com informações sobre serviços municipais, documentos e procedimentos.';
-    private const LIMIAR_FUZZY = 0.75; // 75% de similaridade
 
     /**
-     * Realizar busca inteligente na base de intenções
-     * 
-     * @return array ['resposta' => string, 'confianca' => int (0-100), 'intencao_id' => ?string]
+     * Verifica se a mensagem possui correspondência no índice local.
+     * Chamado estaticamente pelo AiChatService.
      */
+    public static function temCorrespondenciaNoVault(string $mensagem): bool
+    {
+        $resultado = self::buscar($mensagem);
+        return ($resultado['confianca'] ?? 0) >= self::CONFIANCA_MINIMA;
+    }
+
     public static function buscar(string $mensagem): array
     {
         if (empty(trim($mensagem))) {
-            return [
-                'resposta' => self::RESPOSTA_PADRAO,
-                'confianca' => 0,
-                'intencao_id' => null,
-            ];
+            return self::respostaPadrao();
         }
 
-        // Normalizar e processar entrada
+        // ===== VERIFICAÇÃO DIRETA DE SAUDAÇÕES (ANTES DA TOKENIZAÇÃO) =====
+        $saudacao = self::verificarSaudacaoDireta($mensagem);
+        if ($saudacao !== null) {
+            return $saudacao;
+        }
+
         $mensagemNormalizada = TextNormalizer::normalize($mensagem);
-        $tokens = TextNormalizer::tokenize($mensagemNormalizada);
-        $tokens = TextNormalizer::removeStopwords($tokens);
+        $tokens = TextNormalizer::removeStopwords(
+            TextNormalizer::tokenize($mensagemNormalizada)
+        );
 
         if (empty($tokens)) {
-            return [
-                'resposta' => self::RESPOSTA_PADRAO,
-                'confianca' => 0,
-                'intencao_id' => null,
-            ];
+            return self::respostaPadrao();
         }
 
-        // Obter índice de intenções
         $indice = IntencaoCache::getIndice();
-        if (empty($indice)) {
-            // Se índice vazio, tentar reconstruir
+
+        if (!is_array($indice) || empty($indice)) {
             IntencaoIndexer::build();
             $indice = IntencaoCache::getIndice();
+
+            if (!is_array($indice) || empty($indice)) {
+                return self::logNaoRespondida($mensagem, null, 0);
+            }
         }
 
-        // Calcular scores de relevância
-        $resultados = self::calcularScores($tokens, $indice);
+        $tokensValidos = array_filter($tokens, fn($t) => isset($indice[$t]));
 
-        // Encontrar melhor resultado
-        if (empty($resultados)) {
+        if (empty($tokensValidos)) {
             return self::logNaoRespondida($mensagem, null, 0);
         }
 
-        // Ordenar por score descendente
-        arsort($resultados);
-        $melhorResultado = reset($resultados);
-        $melhorIntencaoId = key($resultados);
+        $proporcaoValida = count($tokensValidos) / count($tokens);
+        $dados = self::calcularScores($tokens, $indice, $proporcaoValida);
 
-        // Normalizar confiança para 0-100
-        $confianca = min(100, max(0, (int) $melhorResultado));
+        if (empty($dados['scores'])) {
+            return self::logNaoRespondida($mensagem, null, 0);
+        }
 
-        if ($confianca < self::CONFIANCA_MINIMA) {
+        arsort($dados['scores']);
+
+        $melhorIntencaoId = key($dados['scores']);
+        $confianca = (int) min(100, $dados['scores'][$melhorIntencaoId]);
+        $matches = $dados['matches'][$melhorIntencaoId] ?? 0;
+
+        if ($matches === 0 || $confianca < self::CONFIANCA_MINIMA) {
             return self::logNaoRespondida($mensagem, $melhorIntencaoId, $confianca);
         }
 
-        // Buscar intenção completa
         $intencao = Intencao::where('intencao_id', $melhorIntencaoId)->first();
+
         if (!$intencao) {
             return self::logNaoRespondida($mensagem, $melhorIntencaoId, $confianca);
         }
 
-        // Registrar acesso aos tokens (para aprendizado)
         IntencaoCache::incrementarAcessosTokens($tokens);
         $intencao->incrementarUso();
 
@@ -95,248 +104,111 @@ class BuscaInteligente
     }
 
     /**
-     * Verifica se a mensagem tem pelo menos um token existente no vault indexado.
+     * Verifica se a mensagem é uma saudação simples (antes de tokenizar).
+     * Retorna a resposta da intenção 'saudacao' com confiança 100, ou null.
      */
-    public static function temCorrespondenciaNoVault(string $mensagem): bool
+    private static function verificarSaudacaoDireta(string $mensagem): ?array
     {
-        if (empty(trim($mensagem))) {
-            return false;
-        }
+        $mensagem = trim(mb_strtolower($mensagem));
+        $saudacoes = [
+            'bom dia',
+            'boa tarde',
+            'boa noite',
+            'oi',
+            'olá',
+            'ola',
+            'e aí',
+            'e ai',
+            'opa',
+            'como vai',
+        ];
 
-        $mensagemNormalizada = TextNormalizer::normalize($mensagem);
-        $tokens = TextNormalizer::tokenize($mensagemNormalizada);
-        $tokens = TextNormalizer::removeStopwords($tokens);
-
-        if (empty($tokens)) {
-            return false;
-        }
-
-        $indice = IntencaoCache::getIndice();
-        if (empty($indice)) {
-            IntencaoIndexer::build();
-            $indice = IntencaoCache::getIndice();
-        }
-
-        $contextTokens = IntencaoCache::getContextTokens();
-
-        foreach ($tokens as $token) {
-            if (isset($indice[$token])) {
-                return true;
+        foreach ($saudacoes as $saudacao) {
+            if ($mensagem === $saudacao || str_starts_with($mensagem, $saudacao)) {
+                $intencao = Intencao::where('intencao_id', 'saudacao')->first();
+                if ($intencao) {
+                    $intencao->incrementarUso();
+                    Log::info('Saudação detectada diretamente', ['mensagem' => $mensagem]);
+                    return [
+                        'resposta' => $intencao->resposta,
+                        'confianca' => 100,
+                        'intencao_id' => 'saudacao',
+                    ];
+                }
+                break;
             }
-
-            if (!empty($contextTokens) && isset($contextTokens[$token])) {
-                return true;
-            }
         }
 
-        return false;
+        return null;
     }
 
-    /**
-     * Calcular scores de relevância para todas as intenções
-     * Implementa algoritmo sofisticado com múltiplas heurísticas:
-     * - Especificidade de tokens (tokens raros são mais específicos)
-     * - Triggers vs contexto (triggers têm peso 1.5x)
-     * - Fuzzy matching para typos
-     * - Boost para múltiplos matches
-     * 
-     * @return array [intencao_id => score]
-     */
-    private static function calcularScores(array $tokens, array $indice): array
+    private static function calcularScores(array $tokens, array $indice, float $proporcaoValida): array
     {
         $resultados = [];
-        $contagemMatches = [];
-        $maiorEspecificidade = [];
+        $matches = [];
 
-        // Calcular especificidade: tokens raros são mais específicos
-        // Frequência dos tokens no índice determina especificidade
-        $frequenciaTokens = [];
-        foreach ($indice as $token => $scores) {
-            foreach ($scores as $intencaoId => $score) {
-                $frequenciaTokens[$token] = ($frequenciaTokens[$token] ?? 0) + 1;
-            }
-        }
-
-        // Processar cada token da query
         foreach ($tokens as $token) {
-            $encontrado = false;
-
-            // Buscar match exato no índice
             if (isset($indice[$token])) {
-                $encontrado = true;
-                $frequencia = $frequenciaTokens[$token] ?? 1;
-
-                // Calcular especificidade (tokens menos frequentes são mais específicos)
-                // Tiers de especificidade baseados em frequência
-                if ($frequencia > 8) {
-                    $especificidade = 0.1; // Muito comum, pouco específico
-                } elseif ($frequencia > 5) {
-                    $especificidade = 0.2;
-                } elseif ($frequencia > 3) {
-                    $especificidade = 0.4;
-                } elseif ($frequencia > 1) {
-                    $especificidade = 0.7; // Raro, muito específico
-                } else {
-                    $especificidade = 1.0; // Único, máxima especificidade
-                }
-
-                // Aplicar scores das triggers para esta intenção
                 foreach ($indice[$token] as $intencaoId => $score) {
-                    if (!isset($resultados[$intencaoId])) {
-                        $resultados[$intencaoId] = 0;
-                    }
-
-                    // Score com especificidade: tokens mais raros (específicos) valem mais
-                    $scoreComEspecificidade = $score * (1.0 + $especificidade); // 1.0-2.0 range
-                    $resultados[$intencaoId] += $scoreComEspecificidade;
-
-                    // Rastrear especificidade máxima por intenção
-                    if (!isset($maiorEspecificidade[$intencaoId])) {
-                        $maiorEspecificidade[$intencaoId] = 0;
-                    }
-                    $maiorEspecificidade[$intencaoId] = max($maiorEspecificidade[$intencaoId], $especificidade);
-
-                    // Contar quantos matches essa intenção tem
-                    if (!isset($contagemMatches[$intencaoId])) {
-                        $contagemMatches[$intencaoId] = 0;
-                    }
-                    $contagemMatches[$intencaoId]++;
+                    $resultados[$intencaoId] = ($resultados[$intencaoId] ?? 0) + ($score * 1.5);
+                    $matches[$intencaoId] = ($matches[$intencaoId] ?? 0) + 1;
                 }
-            } else {
-                // Tentar fuzzy matching para typos
-                $similares = self::encontrarTokensSimilares($token, $indice);
-                if (!empty($similares)) {
-                    $encontrado = true;
-                    foreach ($similares as $tokenSimilar => $scores) {
-                        foreach ($scores as $intencaoId => $score) {
-                            if (!isset($resultados[$intencaoId])) {
-                                $resultados[$intencaoId] = 0;
-                            }
-
-                            // Penalizar levemente por ser fuzzy match
-                            $resultados[$intencaoId] += ($score * 0.8); // 20% de desconto
-
-                            if (!isset($contagemMatches[$intencaoId])) {
-                                $contagemMatches[$intencaoId] = 0;
-                            }
-                            $contagemMatches[$intencaoId]++;
-                        }
-                    }
-                }
-            }
-
-            // Se token não foi encontrado, tentar no contexto
-            if (!$encontrado) {
-                $contextTokens = IntencaoCache::getContextTokens();
-                if (!empty($contextTokens) && isset($contextTokens[$token])) {
-                    foreach ($contextTokens[$token] as $intencaoId => $scoreContexto) {
-                        if (!isset($resultados[$intencaoId])) {
-                            $resultados[$intencaoId] = 0;
-                        }
-
-                        if (!isset($maiorEspecificidade[$intencaoId])) {
-                            $maiorEspecificidade[$intencaoId] = 0;
-                        }
-
-                        // Score contexto com especificidade reduzida
-                        $resultados[$intencaoId] += ($scoreContexto * 0.3 * $maiorEspecificidade[$intencaoId]);
-                    }
-                }
-            }
-        }
-
-        // Boost para múltiplos matches ESPECÍFICOS (não genéricos)
-        foreach ($contagemMatches as $intencaoId => $matches) {
-            if ($matches > 1) {
-                $boostMultiplo = 1.0 + (($matches - 1) * 0.3); // 1 match=1x, 2=1.3x, 3=1.6x
-                if (isset($resultados[$intencaoId])) {
-                    $resultados[$intencaoId] *= $boostMultiplo;
-                }
-            }
-        }
-
-        // Mega-boost para intenções que tiveram match com termo MUITO específico
-        foreach ($maiorEspecificidade as $intencaoId => $especificidade) {
-            if (!isset($resultados[$intencaoId])) {
                 continue;
             }
 
-            if ($especificidade >= 1.0) {
-                // Encontrou um termo único para essa intenção
-                $resultados[$intencaoId] *= 2.0; // Dobra o score
-            } elseif ($especificidade >= 0.8) {
-                // Encontrou um termo raro para essa intenção
-                $resultados[$intencaoId] *= 1.5;
+            foreach (self::encontrarTokensSimilares($token, $indice) as $scores) {
+                foreach ($scores as $intencaoId => $score) {
+                    $resultados[$intencaoId] = ($resultados[$intencaoId] ?? 0) + ($score * 0.7);
+                    $matches[$intencaoId] = ($matches[$intencaoId] ?? 0) + 1;
+                }
+            }
+
+            $contexto = IntencaoCache::getContextTokens();
+            if (isset($contexto[$token])) {
+                foreach ($contexto[$token] as $intencaoId => $score) {
+                    $resultados[$intencaoId] = ($resultados[$intencaoId] ?? 0) + ($score * 0.3);
+                }
             }
         }
 
-        return $resultados;
-    }
+        foreach ($matches as $intencaoId => $m) {
+            if ($m > 1 && isset($resultados[$intencaoId])) {
+                $resultados[$intencaoId] *= (1 + ($m * 0.2));
+            }
+        }
 
-    /**
-     * Registrar query que não foi respondida com confiança suficiente
-     * Útil para análise e melhoria do sistema
-     */
-    private static function logNaoRespondida(
-        string $mensagem,
-        ?string $melhorIntencaoId,
-        float $confianca
-    ): array {
-        QueryNaoRespondida::create([
-            'query' => $mensagem,
-            'melhor_intencao_id' => $melhorIntencaoId,
-            'confianca' => $confianca,
-            'debug_info' => [
-                'timestamp' => now()->toDateTimeString(),
-            ],
-        ]);
-
-        Log::warning('Query não respondida', [
-            'query' => $mensagem,
-            'melhor_intencao_id' => $melhorIntencaoId,
-            'confianca' => $confianca,
-        ]);
+        foreach ($resultados as &$score) {
+            $score *= $proporcaoValida;
+        }
 
         return [
-            'resposta' => self::RESPOSTA_PADRAO,
-            'confianca' => 0,
-            'intencao_id' => null,
+            'scores' => $resultados,
+            'matches' => $matches
         ];
     }
 
-    /**
-     * Encontrar tokens similares no índice usando fuzzy matching
-     * Usa Levenshtein distance para encontrar aproximações
-     * 
-     * @param string $token Token procurado
-     * @param array $indice Índice disponível
-     * @param float $limiarSimilaridade Limiar de 0-1 (padrão 0.75 = 75% similar)
-     * @return array Tokens encontrados com seus scores
-     */
-    private static function encontrarTokensSimilares(string $token, array $indice, float $limiarSimilaridade = 0.75): array
+    private static function encontrarTokensSimilares(string $token, array $indice): array
     {
         $similares = [];
         $tamanhoToken = strlen($token);
+        $limiar = $tamanhoToken < 4 ? 0.95 : self::LIMIAR_FUZZY;
 
-        // Se o token é muito pequeno, requer 100% de similaridade
-        if ($tamanhoToken < 4) {
-            $limiarSimilaridade = 0.95;
-        }
+        foreach ($indice as $tokenIndice => $scores) {
+            if (!is_string($tokenIndice)) {
+                continue;
+            }
 
-        foreach (array_keys($indice) as $tokenIndice) {
-            // Calcular distância de Levenshtein normalizada (0-1, onde 1 = idêntico)
+            $tamanhoIndice = strlen($tokenIndice);
+            $tamanhoMax = max($tamanhoToken, $tamanhoIndice);
+            if ($tamanhoMax === 0) continue;
+
             $distancia = levenshtein($token, $tokenIndice);
-            $tamanhoMax = max($tamanhoToken, strlen($tokenIndice));
             $similaridade = 1.0 - ($distancia / $tamanhoMax);
 
-            if ($similaridade >= $limiarSimilaridade) {
-                // Penalizar levemente por não ser exato
-                $pesoFuzzy = $similaridade; // 0.75-1.0 range
-                $similares[$tokenIndice] = $indice[$tokenIndice];
-
-                // Aplicar penalidade ao score fuzzy
+            if ($similaridade >= $limiar) {
+                $similares[$tokenIndice] = $scores;
                 foreach ($similares[$tokenIndice] as &$score) {
-                    $score *= $pesoFuzzy;
+                    $score *= $similaridade;
                 }
                 unset($score);
             }
@@ -345,29 +217,30 @@ class BuscaInteligente
         return $similares;
     }
 
-    /**
-     * Obter estatísticas de tokens mais acessados
-     * Útil para análise de padrões de busca
-     */
-    public static function obterTokensMaisAcessados(int $limite = 50): array
+    private static function logNaoRespondida(string $mensagem, ?string $intencaoId, float $confianca): array
     {
-        return IntencaoCache::getTokensMaisAcessados($limite);
+        QueryNaoRespondida::create([
+            'query' => $mensagem,
+            'melhor_intencao_id' => $intencaoId,
+            'confianca' => $confianca,
+            'debug_info' => ['timestamp' => now()->toDateTimeString()],
+        ]);
+
+        Log::warning('Query não respondida', [
+            'query' => $mensagem,
+            'melhor_intencao_id' => $intencaoId,
+            'confianca' => $confianca,
+        ]);
+
+        return self::respostaPadrao();
     }
 
-    /**
-     * Obter estatísticas de um token específico
-     */
-    public static function obterEstatisticasToken(string $token): array
+    private static function respostaPadrao(): array
     {
-        $tokenNormalizado = TextNormalizer::normalize($token);
-        return IntencaoCache::getEstatisticasToken($tokenNormalizado);
-    }
-
-    /**
-     * Limpar estatísticas de tokens
-     */
-    public static function limparEstatisticas(): void
-    {
-        IntencaoCache::limparEstatisticasTokens();
+        return [
+            'resposta' => self::RESPOSTA_PADRAO,
+            'confianca' => 0,
+            'intencao_id' => null,
+        ];
     }
 }
