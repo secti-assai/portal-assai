@@ -83,11 +83,12 @@ class PortalController extends Controller
         )->take(3)->get();
 
         // 3. Categorias para o Select (Temas)
-        $categoriasNoticias = Noticia::publicadas()
-            ->whereNotNull('categoria')
-            ->distinct()
-            ->orderBy('categoria')
-            ->pluck('categoria');
+        $categoriasNoticias = \App\Models\Categoria::where('ativo', true)
+            ->whereHas('noticias', function($q) {
+                $q->where('ativo', true)->whereDate('data_publicacao', '<=', today());
+            })
+            ->orderBy('nome')
+            ->get();
 
         // Notícias - Coleção geral (fallback ou uso mobile)
         $noticias = collect([$destaqueNoticia])->filter()->concat($recentesSidebar);
@@ -194,16 +195,29 @@ class PortalController extends Controller
     public function ajaxNoticias(Request $request)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
-        $categoria = $request->get('categoria');
+        $categoriaId = $request->get('categoria');
         $excludeIds = $request->get('exclude', []);
 
         $query = Noticia::publicadas()
-            ->where('categoria', $categoria)
+            ->with('categorias')
+            ->whereHas('categorias', function($q) use ($categoriaId) {
+                if (is_numeric($categoriaId)) {
+                    $q->where('categorias.id', $categoriaId);
+                } else {
+                    $q->where('categorias.nome', $categoriaId);
+                }
+            })
             ->whereNotIn('id', $excludeIds)
             ->latest('data_publicacao')
             ->take(3);
 
         $noticias = $this->aplicarFiltroPerfil($query, $perfil)->get();
+
+        // Mapeia para que o JS receba o nome da categoria
+        $noticias->map(function($n) {
+            $n->categoria_nome = $n->categorias->first()?->nome ?? 'Notícia';
+            return $n;
+        });
 
         return response()->json($noticias);
     }
@@ -247,6 +261,24 @@ class PortalController extends Controller
                     $q->where('categorias.nome', $catValue);
                 }
             });
+        }
+
+        if ($request->filled('periodo')) {
+            $periodo = $request->periodo;
+            switch ($periodo) {
+                case '7d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(7));
+                    break;
+                case '30d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(30));
+                    break;
+                case '90d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(90));
+                    break;
+                case 'ano':
+                    $query->whereYear('data_publicacao', now()->year);
+                    break;
+            }
         }
 
         $noticias = $query->paginate(12)->withQueryString();

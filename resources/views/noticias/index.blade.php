@@ -63,66 +63,82 @@
                     de Assaí.</p>
             </div>
 
-            {{-- Barra de Busca --}}
-            <form action="{{ route('noticias.index') }}" method="GET" class="mb-10 max-w-4xl mx-auto md:mx-0"
+            {{-- Barra de Filtros Unificada --}}
+            <form action="{{ route('noticias.index') }}" method="GET" class="mb-12" id="filters-form"
                 @submit.prevent="navigate($event.target.action + '?' + new URLSearchParams(new FormData($event.target)).toString())">
-
-                {{-- CORREÇÃO 1: Usar request()->query() para forçar a leitura diretamente da URL --}}
-                @if(request()->query('categoria'))
-                    <input type="hidden" name="categoria" value="{{ request()->query('categoria') }}">
-                @endif
-
-                <div class="relative flex items-center w-full bg-white rounded-full border border-slate-400 hover:border-slate-500 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300 p-1 h-[54px] sm:h-[60px] md:h-16"
-                    role="search">
-                    <div class="flex items-center justify-center pl-3 sm:pl-4 md:pl-5 pr-1 sm:pr-2 text-slate-400 shrink-0">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                
+                <div id="filters-container" class="flex flex-col lg:flex-row gap-4 bg-gray-50 p-4 md:p-6 rounded-3xl border border-gray-200 shadow-sm">
+                    
+                    {{-- Busca por Texto --}}
+                    <div class="flex-1">
+                        <label for="q" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Palavra-chave</label>
+                        <div class="relative flex items-center bg-white rounded-2xl border border-gray-300 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300 h-14 px-4">
+                            <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input type="text" id="q" name="q" value="{{ request()->query('q') }}"
+                                placeholder="O que você procura?"
+                                class="flex-1 min-w-0 px-3 py-2 text-sm md:text-base text-gray-700 bg-transparent border-none outline-none focus:ring-0 placeholder:text-gray-400">
+                        </div>
                     </div>
 
-                    <input type="text" name="q" value="{{ request()->query('q') }}"
-                        placeholder="Busque por título, tema ou palavra-chave..."
-                        class="flex-1 min-w-0 px-1 sm:px-2 py-2 text-sm md:text-base text-slate-700 bg-transparent border-none outline-none focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 placeholder:italic w-full truncate"
-                        aria-label="Buscar notícias">
+                    {{-- Seleção de Categoria --}}
+                    <div class="w-full lg:w-64">
+                        <label for="categoria" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Categoria</label>
+                        <div class="relative">
+                            <select name="categoria" id="categoria" 
+                                @change="$event.target.form.dispatchEvent(new Event('submit'))"
+                                class="w-full h-14 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-2xl appearance-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer text-gray-700 font-medium">
+                                <option value="">Todas as Categorias</option>
+                                @foreach($categorias as $cat)
+                                    <option value="{{ $cat->id }}" {{ request('categoria') == $cat->id ? 'selected' : '' }}>
+                                        {{ $cat->nome }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
-                    <button type="submit"
-                        class="h-full px-4 sm:px-6 md:px-8 font-bold text-xs sm:text-sm md:text-base text-blue-950 transition-all duration-200 bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 active:scale-95 rounded-full shrink-0 font-heading select-none touch-manipulation">
-                        Buscar
-                    </button>
+                    {{-- Filtro por Período --}}
+                    <div class="w-full lg:w-60">
+                        <label for="periodo" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Período</label>
+                        <div class="relative">
+                            <select name="periodo" id="periodo" 
+                                @change="$event.target.form.dispatchEvent(new Event('submit'))"
+                                class="w-full h-14 pl-4 pr-10 text-sm bg-white border border-gray-300 rounded-2xl appearance-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all cursor-pointer text-gray-700 font-medium">
+                                <option value="" {{ !request('periodo') ? 'selected' : '' }}>Qualquer data</option>
+                                <option value="7d" {{ request('periodo') == '7d' ? 'selected' : '' }}>Últimos 7 dias</option>
+                                <option value="30d" {{ request('periodo') == '30d' ? 'selected' : '' }}>Últimos 30 dias</option>
+                                <option value="90d" {{ request('periodo') == '90d' ? 'selected' : '' }}>Últimos 90 dias</option>
+                                <option value="ano" {{ request('periodo') == 'ano' ? 'selected' : '' }}>Este ano</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Botão Buscar (Principalmente para mobile/acessibilidade) --}}
+                    <div class="flex items-end">
+                        <button type="submit"
+                            class="h-14 w-full lg:w-auto px-8 bg-yellow-400 hover:bg-yellow-500 active:scale-95 text-blue-950 font-black rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <span class="lg:hidden">Buscar</span>
+                        </button>
+                    </div>
                 </div>
             </form>
 
-            {{-- Filtros por Categoria --}}
-            <div class="mb-12" id="filters-container"
-                @click.prevent="if($event.target.closest('a')) navigate($event.target.closest('a').href)">
 
-                {{-- CORREÇÃO 2: Variáveis isoladas e limpas --}}
-                @php
-                    $catAtual = request()->query('categoria');
-                    $buscaAtual = request()->query('q');
-                @endphp
-
-                <div class="flex items-center gap-2 overflow-x-auto flex-nowrap pb-2 pr-2 scrollbar-hide">
-                    <a href="{{ route('noticias.index', array_filter(['q' => $buscaAtual])) }}"
-                        class="shrink-0 px-5 py-2 text-xs font-bold rounded-full transition-all whitespace-nowrap border
-                       {{ empty($catAtual) ? 'bg-blue-800 text-white border-blue-800 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-700' }}">
-                        Todas
-                    </a>
-
-                    @foreach($categorias as $cat)
-                        @php
-                            // CORREÇÃO 3: Validação estrita comparando como Strings para evitar falsos positivos
-                            $isActive = !empty($catAtual) && (strval($catAtual) === strval($cat->id) || strval($catAtual) === strval($cat->nome));
-                        @endphp
-                        <a href="{{ route('noticias.index', array_filter(['categoria' => $cat->id, 'q' => $buscaAtual])) }}"
-                            class="shrink-0 px-5 py-2 text-xs font-bold rounded-full transition-all whitespace-nowrap border
-                           {{ $isActive ? 'bg-blue-800 text-white border-blue-800 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-700' }}">
-                            {{ $cat->nome }}
-                        </a>
-                    @endforeach
-                </div>
-            </div>
 
             {{-- Grid de Notícias --}}
             <div id="news-grid-container">

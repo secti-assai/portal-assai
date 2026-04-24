@@ -693,7 +693,7 @@
                             <select id="select-tema-noticias" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-bold appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer shadow-sm">
                                 <option value="">Selecione um Tema</option>
                                 @foreach($categoriasNoticias as $cat)
-                                    <option value="{{ $cat }}">{{ $cat }}</option>
+                                    <option value="{{ $cat->id }}">{{ $cat->nome }}</option>
                                 @endforeach
                             </select>
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-blue-600">
@@ -767,7 +767,7 @@
                                                     <img src="${imgUrl}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${noticia.titulo}">
                                                 </a>
                                                 <div class="p-6 flex-1 flex flex-col">
-                                                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">${noticia.categoria}</span>
+                                                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">${noticia.categoria_nome}</span>
                                                     <h4 class="text-lg font-bold text-slate-800 leading-snug mb-4 group-hover:text-blue-700 transition-colors line-clamp-3">${noticia.titulo}</h4>
                                                     <div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400 font-bold uppercase tracking-wide">
                                                         <span>${formattedDate}</span>
