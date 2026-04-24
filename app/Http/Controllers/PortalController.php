@@ -61,24 +61,36 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 1. Busca Notícias marcadas como Destaque (Filtro Perfil Aplicado)
-        $destaquesQuery = Noticia::publicadas()
-            ->where('destaque', true)
-            ->orderBy('data_publicacao', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(3);
-        $destaquesSlider = $this->aplicarFiltroPerfil($destaquesQuery, $perfil)->get();
+        // 1. Notícia Destaque (Filtro Perfil Aplicado)
+        $destaqueNoticia = $this->aplicarFiltroPerfil(
+            Noticia::publicadas()->where('destaque', true)->latest('data_publicacao'),
+            $perfil
+        )->first();
 
-        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Filtro Perfil Aplicado)
-        $recentesQuery = Noticia::publicadas()
-            ->whereNotIn('id', $destaquesSlider->pluck('id'))
-            ->orderBy('data_publicacao', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(3);
-        $recentesSidebar = $this->aplicarFiltroPerfil($recentesQuery, $perfil)->get();
+        if (!$destaqueNoticia) {
+            $destaqueNoticia = $this->aplicarFiltroPerfil(
+                Noticia::publicadas()->latest('data_publicacao'),
+                $perfil
+            )->first();
+        }
 
-        // 3. Mescla as coleções
-        $noticias = $destaquesSlider->concat($recentesSidebar);
+        // 2. Notícias Recentes (Excluindo o destaque)
+        $recentesSidebar = $this->aplicarFiltroPerfil(
+            Noticia::publicadas()
+                ->when($destaqueNoticia, fn($q) => $q->where('id', '!=', $destaqueNoticia->id))
+                ->latest('data_publicacao'),
+            $perfil
+        )->take(3)->get();
+
+        // 3. Categorias para o Select (Temas)
+        $categoriasNoticias = Noticia::publicadas()
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->orderBy('categoria')
+            ->pluck('categoria');
+
+        // Notícias - Coleção geral (fallback ou uso mobile)
+        $noticias = collect([$destaqueNoticia])->filter()->concat($recentesSidebar);
 
         // Eventos (Filtro Perfil Aplicado)
         $eventosQuery = Evento::futurosPublicos()
@@ -160,8 +172,9 @@ class PortalController extends Controller
             'banners',
             'alertasAtivos',
             'noticias',
-            'destaquesSlider',
+            'destaqueNoticia',
             'recentesSidebar',
+            'categoriasNoticias',
             'eventos',
             'programas',
             'servicos',
@@ -173,6 +186,26 @@ class PortalController extends Controller
             'redesSociais',
             'perfil'
         ));
+    }
+
+    /**
+     * Busca notícias por tema (AJAX) para a Home.
+     */
+    public function ajaxNoticias(Request $request)
+    {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+        $categoria = $request->get('categoria');
+        $excludeIds = $request->get('exclude', []);
+
+        $query = Noticia::publicadas()
+            ->where('categoria', $categoria)
+            ->whereNotIn('id', $excludeIds)
+            ->latest('data_publicacao')
+            ->take(3);
+
+        $noticias = $this->aplicarFiltroPerfil($query, $perfil)->get();
+
+        return response()->json($noticias);
     }
 
     // Página de notícias
@@ -206,7 +239,22 @@ class PortalController extends Controller
             $query->where('categoria', $request->categoria);
         }
 
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_publicacao', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_publicacao', '<=', $request->data_fim);
+        }
+
         $noticias = $query->paginate(15)->withQueryString();
+        
+        $categorias = Noticia::publicadas()
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->orderBy('categoria')
+            ->pluck('categoria');
+
         return view('noticias.index', compact('noticias', 'categorias'));
     }
 
@@ -604,6 +652,14 @@ class PortalController extends Controller
             $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
             $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
             $this->aplicarFiltroPerfil($eventosQuery, $perfil);
+            
+            if ($request->filled('data_inicio')) {
+                $eventosQuery->whereDate('data_inicio', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $eventosQuery->whereDate('data_inicio', '<=', $request->data_fim);
+            }
+
             $eventos = $eventosQuery->take(8)->get();
 
             // 5. Programas
@@ -621,6 +677,17 @@ class PortalController extends Controller
             $noticiasQuery = Noticia::where('ativo', true);
             $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
             $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
+
+            if ($request->filled('categoria')) {
+                $noticiasQuery->where('categoria', $request->categoria);
+            }
+            if ($request->filled('data_inicio')) {
+                $noticiasQuery->whereDate('data_publicacao', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $noticiasQuery->whereDate('data_publicacao', '<=', $request->data_fim);
+            }
+
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
                 ->orderBy('data_publicacao', 'desc')
@@ -628,6 +695,12 @@ class PortalController extends Controller
                 ->take(12)
                 ->get();
         }
+
+        $categorias = Noticia::publicadas()
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->orderBy('categoria')
+            ->pluck('categoria');
 
         return view('pages.busca', compact(
             'termo', 
@@ -637,7 +710,8 @@ class PortalController extends Controller
             'programas', 
             'secretarias', 
             'paginas', 
-            'respostaInteligente'
+            'respostaInteligente',
+            'categorias'
         ));
     }
 

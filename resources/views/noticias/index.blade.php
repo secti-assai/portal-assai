@@ -21,37 +21,61 @@
             <p class="mt-4 text-sm md:text-base text-gray-500">Acompanhe as ações, projetos e informativos da Prefeitura de Assaí.</p>
         </div>
 
-        {{-- Barra de Busca (Estilo Pílula Contornada - Ultra Responsiva) --}}
-        <form action="{{ route('noticias.index') }}" method="GET" class="mb-10 max-w-4xl mx-auto md:mx-0">
-            @if(request('categoria'))
-            <input type="hidden" name="categoria" value="{{ request('categoria') }}">
-            @endif
+        {{-- Barra de Busca --}}
+        <div class="mb-10 max-w-4xl mx-auto md:mx-0" x-data="{ advanced: {{ (request('data_inicio') || request('data_fim')) ? 'true' : 'false' }} }">
+            <form action="{{ route('noticias.index') }}" method="GET" class="bg-white rounded-[32px] border border-slate-300 shadow-sm transition-all focus-within:shadow-md p-2">
+                @if(request('categoria'))
+                    <input type="hidden" name="categoria" value="{{ request('categoria') }}">
+                @endif
 
-            {{-- Container --}}
-            <div class="relative flex items-center w-full bg-white rounded-full border border-slate-400 hover:border-slate-500 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300 p-1 h-[54px] sm:h-[60px] md:h-16" role="search">
+                <div class="flex items-center w-full h-12 md:h-14">
+                    {{-- Ícone de Lupa --}}
+                    <div class="flex items-center justify-center pl-4 pr-2 text-slate-400 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
 
-                {{-- Ícone de Lupa (Reduzido no mobile para poupar espaço) --}}
-                <div class="flex items-center justify-center pl-3 sm:pl-4 md:pl-5 pr-1 sm:pr-2 text-slate-400 shrink-0">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                    {{-- Input --}}
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ request('q') }}"
+                        placeholder="Busque por título, tema ou palavra-chave..."
+                        class="flex-1 min-w-0 px-2 text-sm md:text-base text-slate-700 bg-transparent border-none focus:ring-0 placeholder:text-slate-400 font-sans">
+
+                    {{-- Botão Filtros --}}
+                    <button type="button" @click="advanced = !advanced" 
+                        class="hidden sm:flex items-center gap-2 px-4 h-full text-slate-500 hover:text-blue-700 transition-colors"
+                        :class="advanced ? 'text-blue-700 font-bold' : ''">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        <span class="text-xs uppercase tracking-wider">Período</span>
+                    </button>
+
+                    {{-- Botão de Buscar --}}
+                    <button type="submit" class="h-full px-6 md:px-8 font-bold text-sm text-blue-950 transition-all bg-yellow-400 hover:bg-yellow-500 rounded-full shrink-0 font-heading">
+                        Buscar
+                    </button>
                 </div>
 
-                {{-- Input (Com a classe 'truncate' para proteger o layout em telas curtas) --}}
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ request('q') }}"
-                    placeholder="Busque por título, tema ou palavra-chave..."
-                    class="flex-1 min-w-0 px-1 sm:px-2 py-2 text-sm md:text-base text-slate-700 bg-transparent border-none outline-none focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 placeholder:italic w-full truncate"
-                    aria-label="Buscar notícias">
-
-                {{-- Botão de Buscar (Escalonamento inteligente e Feedback Tátil) --}}
-                <button type="submit" class="h-full px-4 sm:px-6 md:px-8 font-bold text-xs sm:text-sm md:text-base text-blue-950 transition-all duration-200 bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 active:scale-95 rounded-full shrink-0 font-heading select-none touch-manipulation">
-                    Buscar
-                </button>
-            </div>
-        </form>
+                {{-- Painel Avançado --}}
+                <div x-show="advanced" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="mt-2 pt-4 border-t border-slate-100 flex flex-wrap gap-4 px-4 pb-2" x-cloak>
+                    <div class="flex items-center gap-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Início:</label>
+                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Fim:</label>
+                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    @if(request('data_inicio') || request('data_fim'))
+                    <a href="{{ route('noticias.index', request()->except(['data_inicio', 'data_fim'])) }}" class="text-[10px] font-bold text-red-500 uppercase hover:underline ml-auto self-center">Limpar Período</a>
+                    @endif
+                </div>
+            </form>
+        </div>
 
         {{-- Filtros por Categoria --}}
         <div class="mb-12">
