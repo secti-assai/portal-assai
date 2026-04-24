@@ -63,9 +63,21 @@
                 </a>
             @endcan
 
+            @canany(['gerir noticias', 'gerir servicos', 'gerir programas', 'gerir eventos'])
+                <a href="{{ route('admin.categorias.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.categorias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                        </path>
+                    </svg>
+                    Categorias / Temas
+                </a>
+            @endcanany
+
             @can('gerir noticias')
                 <a href="{{ route('admin.noticias.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.noticias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.noticias.index') || request()->routeIs('admin.noticias.create') || request()->routeIs('admin.noticias.edit') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2">
@@ -242,6 +254,10 @@
                         class="absolute left-0 mt-2 z-30 w-56 p-2 bg-white border border-slate-200 rounded-xl shadow-xl">
                         <a href="{{ route('admin.dashboard') }}"
                             class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Dashboard</a>
+                        @canany(['gerir noticias', 'gerir servicos', 'gerir programas', 'gerir eventos'])
+                            <a href="{{ route('admin.categorias.index') }}"
+                                class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Categorias / Temas</a>
+                        @endcanany
                         @can('gerir noticias')
                             <a href="{{ route('admin.noticias.index') }}"
                                 class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-slate-50">Notícias</a>

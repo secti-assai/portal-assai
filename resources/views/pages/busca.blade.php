@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-[#edf5ff] pb-20 font-sans">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-[#edf5ff] pb-20 font-sans pt-6">
 
     {{-- =================
          HERO SECTION (Busca - Padrão Gov.br)

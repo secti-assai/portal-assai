@@ -30,7 +30,8 @@ class ProgramaController extends Controller
 
     public function create()
     {
-        return view('admin.programas.create');
+        $categorias = \App\Models\Categoria::where('ativo', true)->orderBy('nome')->pluck('nome', 'id')->toArray();
+        return view('admin.programas.create', compact('categorias'));
     }
 
     public function store(Request $request)
@@ -40,11 +41,19 @@ class ProgramaController extends Controller
             'descricao' => 'required',
             'icone' => 'nullable|image|max:2048', // Aceita imagens de até 2MB
             'link' => 'nullable|url',
+            'categoria_id' => 'nullable|exists:categorias,id',
         ]);
 
         $dados = $request->all();
         $dados['ativo'] = $request->has('ativo');
         $dados['destaque'] = $request->has('destaque');
+
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        }
 
         if ($dados['destaque']) {
             $totalDestaques = Programa::where('destaque', true)->count();
@@ -67,7 +76,12 @@ class ProgramaController extends Controller
     public function edit($id)
     {
         $programa = Programa::findOrFail($id);
-        return view('admin.programas.edit', compact('programa'));
+        $categorias = \App\Models\Categoria::where('ativo', true)
+            ->orWhere('id', $programa->categoria_id)
+            ->orderBy('nome')
+            ->pluck('nome', 'id')
+            ->toArray();
+        return view('admin.programas.edit', compact('programa', 'categorias'));
     }
 
     public function update(Request $request, $id)
@@ -79,11 +93,21 @@ class ProgramaController extends Controller
             'descricao' => 'required',
             'icone' => 'nullable|image|max:2048',
             'link' => 'nullable|url',
+            'categoria_id' => 'nullable|exists:categorias,id',
         ]);
 
         $dados = $request->all();
         $dados['ativo'] = $request->has('ativo');
         $dados['destaque'] = $request->has('destaque');
+
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        } else {
+            $dados['perfis_alvo'] = null;
+        }
 
         if ($dados['destaque'] && !$programa->destaque) {
             $totalDestaques = Programa::where('destaque', true)->count();

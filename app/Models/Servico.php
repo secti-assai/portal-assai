@@ -19,6 +19,7 @@ class Servico extends Model
         'descricao',
         'link',
         'icone',
+        'categoria_id',
         'ativo',
         'perfis_alvo',
         'acessos'
@@ -29,6 +30,11 @@ class Servico extends Model
     public function secretaria(): BelongsTo
     {
         return $this->belongsTo(Secretaria::class);
+    }
+
+    public function categoriaRel()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
     }
 
     public function acessosLog()

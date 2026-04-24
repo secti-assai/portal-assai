@@ -25,6 +25,7 @@ class Noticia extends Model
         'titulo',
         'slug',
         'categoria',
+        'categoria_id',
         'resumo',
         'conteudo',
         'imagem_capa',
@@ -33,6 +34,11 @@ class Noticia extends Model
         'perfis_alvo',
         'destaque',
     ];
+
+    public function categoriaRel()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
 
     protected $casts = [
         'data_publicacao' => 'date',
