@@ -24,7 +24,6 @@ class Noticia extends Model
     protected $fillable = [
         'titulo',
         'slug',
-        'categoria',
         'resumo',
         'conteudo',
         'imagem_capa',
@@ -33,6 +32,11 @@ class Noticia extends Model
         'perfis_alvo',
         'destaque',
     ];
+
+    public function categorias()
+    {
+        return $this->belongsToMany(Categoria::class, 'categoria_noticia');
+    }
 
     protected $casts = [
         'data_publicacao' => 'date',

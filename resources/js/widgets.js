@@ -111,6 +111,7 @@ const registerWidgets = () => {
         farmacia: null,
         posto: null,
         message: '',
+        previewMode: false,
         rotationItems: [],
         activeDutyIndex: 0,
         rotationTimer: null,
@@ -128,7 +129,7 @@ const registerWidgets = () => {
             const address = this.formatAddress(item.address || '');
             const phone = String(item.contact || '').trim();
             let output = name + ': ' + (address || 'Endereco indisponivel');
-            if (phone) output += ' (' + phone + ')';
+            if (phone) output += ' - ' + phone;
             return output;
         },
 
@@ -143,7 +144,7 @@ const registerWidgets = () => {
             if (this.posto) {
                 this.rotationItems.push({
                     kind: 'posto',
-                    text: this.formatDutyText(this.posto, 'Posto')
+                    text: this.formatDutyText(this.posto, 'Posto de combustivel')
                 });
             }
             this.activeDutyIndex = 0;
@@ -167,10 +168,37 @@ const registerWidgets = () => {
 
         get dutySummary() {
             if (!this.rotationItems.length) return '';
+            if (this.previewMode) {
+                return this.rotationItems.map((item) => item.text).join(' | ');
+            }
             return this.rotationItems[this.activeDutyIndex]?.text || '';
         },
 
         async init() {
+            this.previewMode = (new URLSearchParams(window.location.search).get('preview_plantao') === '1');
+
+            if (this.previewMode) {
+                this.loading = false;
+                this.error = false;
+                this.message = '';
+                this.farmacia = {
+                    title: 'Farmacia Central',
+                    address: 'Rua Brasil, 123',
+                    contact: '(43) 99999-1111',
+                    type: 'Farmacia'
+                };
+                this.posto = {
+                    title: 'Auto Posto Assai',
+                    address: 'Av. Rio de Janeiro, 456',
+                    contact: '(43) 99999-2222',
+                    type: 'Posto de combustivel'
+                };
+                this.hasDuty = true;
+                this.buildRotationItems();
+                this.stopRotation();
+                return;
+            }
+
             try {
                 const dutyUrl = resolvePortalEndpoint('dutyUrl', '/api/plantao-hoje');
 

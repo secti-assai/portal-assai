@@ -15,16 +15,20 @@
 }
 
 .program-swiper-arrow {
-    width: 52px !important;
-    height: 52px !important;
-    border-radius: 9999px !important;
-    background: #93c5fd !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    color: #006eb7 !important;
     border: 0 !important;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.24) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     --swiper-navigation-size: 18px;
     top: 50% !important;
-    transform: translateY(-50%);
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    transform: translateY(-50%) !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -67,9 +71,14 @@
 }
 
 /* Remove paginação (bolinhas) do Swiper em banners e programas */
-.swiper-banners .swiper-pagination,
-.swiper-fique-ligado .swiper-pagination {
+.swiper-banners .swiper-pagination {
     display: none !important;
+}
+
+.swiper-fique-ligado .swiper-pagination {
+    display: flex !important;
+    justify-content: center;
+    bottom: 10px !important;
 }
 
 .banner-nav-btn {

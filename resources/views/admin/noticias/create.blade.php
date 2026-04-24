@@ -1,17 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-@php
-    $categorias = [
-        'Geral' => 'Geral',
-        'Saúde' => 'Saúde',
-        'Educação' => 'Educação',
-        'Obras e Infraestrutura' => 'Obras e Infraestrutura',
-        'Cultura e Turismo' => 'Cultura e Turismo',
-        'Esportes' => 'Esportes',
-        'Tecnologia e Inovação' => 'Tecnologia e Inovação',
-    ];
-@endphp
+
 
 <div class="flex flex-col gap-6 max-w-6xl mx-auto">
 
@@ -98,12 +88,11 @@
                     </label>
                 </div>
 
-                <x-admin.select
-                    name="categoria"
-                    label="Categoria"
-                    :options="['' => 'Nenhuma'] + $categorias"
-                    required="false"
-                    class="bg-slate-50 border-slate-200 focus:bg-white outline-none"
+                <x-admin.multi-select
+                    name="categorias"
+                    label="Categorias / Temas"
+                    :options="$categorias"
+                    placeholder="Busque ou selecione temas..."
                 />
 
                 <x-admin.input

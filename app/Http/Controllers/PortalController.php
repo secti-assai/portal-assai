@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use App\Support\Concerns\NormalizesSearch;
 use App\Models\Executivo;
 use App\Services\ConectaApiService;
+use App\Services\BuscaInteligente;
 
 class PortalController extends Controller
 {
@@ -60,24 +61,37 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 1. Busca Notícias marcadas como Destaque (Filtro Perfil Aplicado)
-        $destaquesQuery = Noticia::publicadas()
-            ->where('destaque', true)
-            ->orderBy('data_publicacao', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(3);
-        $destaquesSlider = $this->aplicarFiltroPerfil($destaquesQuery, $perfil)->get();
+        // 1. Notícia Destaque (Filtro Perfil Aplicado)
+        $destaqueNoticia = $this->aplicarFiltroPerfil(
+            Noticia::publicadas()->where('destaque', true)->latest('data_publicacao'),
+            $perfil
+        )->first();
 
-        // 2. Busca Notícias Recentes ignorando as que já estão no Destaque (Filtro Perfil Aplicado)
-        $recentesQuery = Noticia::publicadas()
-            ->whereNotIn('id', $destaquesSlider->pluck('id'))
-            ->orderBy('data_publicacao', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(3);
-        $recentesSidebar = $this->aplicarFiltroPerfil($recentesQuery, $perfil)->get();
+        if (!$destaqueNoticia) {
+            $destaqueNoticia = $this->aplicarFiltroPerfil(
+                Noticia::publicadas()->latest('data_publicacao'),
+                $perfil
+            )->first();
+        }
 
-        // 3. Mescla as coleções
-        $noticias = $destaquesSlider->concat($recentesSidebar);
+        // 2. Notícias Recentes (Excluindo o destaque)
+        $recentesSidebar = $this->aplicarFiltroPerfil(
+            Noticia::publicadas()
+                ->when($destaqueNoticia, fn($q) => $q->where('id', '!=', $destaqueNoticia->id))
+                ->latest('data_publicacao'),
+            $perfil
+        )->take(3)->get();
+
+        // 3. Categorias para o Select (Temas)
+        $categoriasNoticias = \App\Models\Categoria::where('ativo', true)
+            ->whereHas('noticias', function($q) {
+                $q->where('ativo', true)->whereDate('data_publicacao', '<=', today());
+            })
+            ->orderBy('nome')
+            ->get();
+
+        // Notícias - Coleção geral (fallback ou uso mobile)
+        $noticias = collect([$destaqueNoticia])->filter()->concat($recentesSidebar);
 
         // Eventos (Filtro Perfil Aplicado)
         $eventosQuery = Evento::futurosPublicos()
@@ -159,8 +173,9 @@ class PortalController extends Controller
             'banners',
             'alertasAtivos',
             'noticias',
-            'destaquesSlider',
+            'destaqueNoticia',
             'recentesSidebar',
+            'categoriasNoticias',
             'eventos',
             'programas',
             'servicos',
@@ -174,22 +189,58 @@ class PortalController extends Controller
         ));
     }
 
+    /**
+     * Busca notícias por tema (AJAX) para a Home.
+     */
+    public function ajaxNoticias(Request $request)
+    {
+        $perfil = $request->cookie('portal_perfil', 'todos');
+        $categoriaId = $request->get('categoria');
+        $excludeIds = $request->get('exclude', []);
+
+        $query = Noticia::publicadas()
+            ->with('categorias')
+            ->whereHas('categorias', function($q) use ($categoriaId) {
+                if (is_numeric($categoriaId)) {
+                    $q->where('categorias.id', $categoriaId);
+                } else {
+                    $q->where('categorias.nome', $categoriaId);
+                }
+            })
+            ->whereNotIn('id', $excludeIds)
+            ->latest('data_publicacao')
+            ->take(3);
+
+        $noticias = $this->aplicarFiltroPerfil($query, $perfil)->get();
+
+        // Mapeia para que o JS receba o nome da categoria
+        $noticias->map(function($n) {
+            $n->categoria_nome = $n->categorias->first()?->nome ?? 'Notícia';
+            return $n;
+        });
+
+        return response()->json($noticias);
+    }
+
     // Página de notícias
     public function noticias(Request $request)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
 
-        $categorias = Noticia::publicadas()
-            ->whereNotNull('categoria')
-            ->distinct()
-            ->orderBy('categoria')
-            ->pluck('categoria');
+        // Buscar apenas categorias ativas que possuem notícias publicadas
+        $categorias = \App\Models\Categoria::where('ativo', true)
+            ->whereHas('noticias', function($q) {
+                $q->where('ativo', true)->whereDate('data_publicacao', '<=', today());
+            })
+            ->orderBy('nome')
+            ->get();
 
         $query = Noticia::publicadas()
+            ->with('categorias')
             ->orderBy('data_publicacao', 'desc')
             ->orderBy('created_at', 'desc');
 
-        // Aplica o filtro de Perfil
+        // Aplica o filtro de Perfil (usando perfis_alvo herdado das categorias)
         $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('q')) {
@@ -202,10 +253,35 @@ class PortalController extends Controller
         }
 
         if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
+            $catValue = $request->categoria;
+            $query->whereHas('categorias', function($q) use ($catValue) {
+                if (is_numeric($catValue)) {
+                    $q->where('categorias.id', $catValue);
+                } else {
+                    $q->where('categorias.nome', $catValue);
+                }
+            });
         }
 
-        $noticias = $query->paginate(15)->withQueryString();
+        if ($request->filled('periodo')) {
+            $periodo = $request->periodo;
+            switch ($periodo) {
+                case '7d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(7));
+                    break;
+                case '30d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(30));
+                    break;
+                case '90d':
+                    $query->whereDate('data_publicacao', '>=', now()->subDays(90));
+                    break;
+                case 'ano':
+                    $query->whereYear('data_publicacao', now()->year);
+                    break;
+            }
+        }
+
+        $noticias = $query->paginate(12)->withQueryString();
         return view('noticias.index', compact('noticias', 'categorias'));
     }
 
@@ -472,7 +548,7 @@ class PortalController extends Controller
         return view('programas.show', compact('programa'));
     }
 
-    public function autocomplete(Request $request)
+    public function autocomplete(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->get('q', ''));
@@ -481,13 +557,83 @@ class PortalController extends Controller
             return response()->json([]);
         }
 
-        // Notícias
+        $termoNormalizado = mb_strtolower($this->normalizeSearchTerm($termo));
+
+        // 1. Serviços (Prioridade Máxima)
+        $servicosQuery = Servico::where('ativo', true);
+        $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
+        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
+
+        $localServicos = $servicosQuery
+            ->select('id', 'titulo')
+            ->limit(4)
+            ->get()
+            ->map(fn($s) => [
+                'titulo' => $s->titulo,
+                'url' => route('servicos.acessar', $s->id),
+                'tipo' => 'Serviço',
+            ]);
+
+        $conectaBase = collect($conectaApi->getTodosServicos($perfil));
+        $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado) {
+            return str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado);
+        })->take(4)->map(function($s) {
+            return [
+                'titulo' => $s['titulo'] ?? '',
+                'url' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                'tipo' => 'Serviço',
+            ];
+        });
+
+        $servicos = $conectaServicos->concat($localServicos)->take(4);
+
+        // 2. Páginas do Portal
+        $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
+            return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
+                   collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
+        })->take(3)->map(fn($p) => [
+            'titulo' => $p['titulo'],
+            'url' => $p['url'],
+            'tipo' => 'Portal',
+        ]);
+
+        // 3. Programas
+        $programasQuery = Programa::where('ativo', true);
+        $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+        $this->aplicarFiltroPerfil($programasQuery, $perfil);
+
+        $programas = $programasQuery
+            ->select('id', 'titulo')
+            ->limit(2)
+            ->get()
+            ->map(fn($p) => [
+                'titulo' => $p->titulo,
+                'url' => route('programas.show', $p->id),
+                'tipo' => 'Programa',
+            ]);
+
+        // 4. Secretarias
+        $secretariasQuery = Secretaria::query();
+        $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+
+        $secretarias = $secretariasQuery
+            ->select('id', 'nome')
+            ->limit(2)
+            ->get()
+            ->map(fn($sec) => [
+                'titulo' => $sec->nome,
+                'url' => route('secretarias.show', $sec->id),
+                'tipo' => 'Secretaria',
+            ]);
+
+        // 5. Notícias (Prioridade Mínima)
         $noticiasQuery = Noticia::where('ativo', true);
         $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
         $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
 
         $noticias = $noticiasQuery
             ->select('id', 'titulo', 'slug')
+            ->whereDate('data_publicacao', '<=', today())
             ->latest('data_publicacao')
             ->limit(3)
             ->get()
@@ -497,71 +643,166 @@ class PortalController extends Controller
                 'tipo' => 'Notícia',
             ]);
 
-        // Serviços
-        $servicosQuery = Servico::where('ativo', true);
-        $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
-        $this->aplicarFiltroPerfil($servicosQuery, $perfil);
-
-        $servicos = $servicosQuery
-            ->select('id', 'titulo')
-            ->limit(3)
-            ->get()
-            ->map(fn($s) => [
-                'titulo' => $s->titulo,
-                'url' => route('servicos.acessar', $s->id),
-                'tipo' => 'Serviço',
-            ]);
-
-        // Programas
-        $programasQuery = Programa::where('ativo', true);
-        $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
-        $this->aplicarFiltroPerfil($programasQuery, $perfil);
-
-        $programas = $programasQuery
-            ->select('id', 'titulo')
-            ->limit(3)
-            ->get()
-            ->map(fn($p) => [
-                'titulo' => $p->titulo,
-                'url' => route('programas.show', $p->id),
-                'tipo' => 'Programa',
-            ]);
-
-        // Secretarias (Geralmente não filtrado por perfil, mas mantido a busca base)
-        $secretariasQuery = Secretaria::query();
-        $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
-
-        $secretarias = $secretariasQuery
-            ->select('id', 'nome')
-            ->limit(3)
-            ->get()
-            ->map(fn($sec) => [
-                'titulo' => $sec->nome,
-                'url' => route('secretarias.show', $sec->id),
-                'tipo' => 'Secretaria',
-            ]);
-
-        $resultados = $noticias->concat($servicos)->concat($programas)->concat($secretarias)->values();
+        // Merge seguindo a nova prioridade
+        $resultados = collect($servicos)
+            ->concat($paginas)
+            ->concat($programas)
+            ->concat($secretarias)
+            ->concat($noticias)
+            ->values();
 
         return response()->json($resultados);
     }
 
-    public function buscaGlobal(Request $request)
+    public function buscaGlobal(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->input('q', ''));
+        $categoriaId = $request->input('categoria');
+        $somenteNovos = $request->has('somente_novos');
 
         $noticias = collect();
         $servicos = collect();
         $eventos = collect();
         $programas = collect();
         $secretarias = collect();
+        $paginas = collect();
+        $respostaInteligente = null;
 
-        if (strlen($termo) >= 2) {
+        $temFiltroAvancado = !empty($categoriaId) || $somenteNovos;
 
+        if (strlen($termo) >= 2 || $temFiltroAvancado) {
+            // 1. Resposta Inteligente (IA) - Apenas se tiver termo
+            if (strlen($termo) >= 2) {
+                $resultadoIA = BuscaInteligente::buscar($termo);
+                if ($resultadoIA['confianca'] >= 60) {
+                    $respostaInteligente = $resultadoIA;
+                }
+            }
+
+            // 2. Páginas Estáticas do Portal - Apenas se tiver termo e não tiver filtro avançado
+            $termoNormalizado = mb_strtolower($this->normalizeSearchTerm($termo));
+            if (!$temFiltroAvancado && strlen($termo) >= 2) {
+                $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
+                    return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
+                           str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['descricao'])), $termoNormalizado) ||
+                           collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
+                })->take(6);
+            }
+
+            // 3. Serviços (Prioridade Máxima)
+            $servicosQuery = Servico::where('ativo', true);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($servicosQuery, ['titulo', 'descricao'], $termo);
+            }
+            if ($categoriaId) {
+                $servicosQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $servicosQuery->where('created_at', '>=', now()->subDays(30));
+            }
+            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
+            
+            $localServicos = $servicosQuery->take(9)->get()->map(function($s) {
+                $s->url_acesso = route('servicos.acessar', $s->id);
+                $s->link = route('servicos.acessar', $s->id);
+                $s->is_conecta = false;
+                return $s;
+            });
+
+            $conectaBase = collect($conectaApi->getTodosServicos($perfil));
+            $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado, $categoriaId) {
+                $passaTermo = empty($termoNormalizado) || str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado) ||
+                       str_contains(mb_strtolower($this->normalizeSearchTerm($s['descricao'] ?? '')), $termoNormalizado);
+                
+                $passaCategoria = true;
+                if (!empty($categoriaId)) {
+                    $passaCategoria = ($s['categoria_id'] ?? null) == $categoriaId;
+                }
+
+                return $passaTermo && $passaCategoria;
+            })->map(function($s) {
+                return (object) [
+                    'titulo' => $s['titulo'] ?? '',
+                    'descricao' => $s['descricao'] ?? '',
+                    'categoria_id' => $s['categoria_id'] ?? null,
+                    'categoria' => $s['categoria'] ?? null,
+                    'icone' => $s['icone'] ?? null,
+                    'url_acesso' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'link' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'is_conecta' => true,
+                ];
+            });
+
+            $servicos = $conectaServicos->concat($localServicos)->take(9);
+
+            // 4. Eventos
+            $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            }
+            if ($categoriaId) {
+                $eventosQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $eventosQuery->where('created_at', '>=', now()->subDays(30));
+            }
+            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
+            
+            if ($request->filled('data_inicio')) {
+                $eventosQuery->whereDate('data_inicio', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $eventosQuery->whereDate('data_inicio', '<=', $request->data_fim);
+            }
+
+            $eventos = $eventosQuery->take(8)->get();
+
+            // 5. Programas
+            $programasQuery = Programa::where('ativo', true);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            }
+            if ($categoriaId) {
+                $programasQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $programasQuery->where('created_at', '>=', now()->subDays(30));
+            }
+            $this->aplicarFiltroPerfil($programasQuery, $perfil);
+            $programas = $programasQuery->take(9)->get();
+
+            // 6. Secretarias
+            $secretariasQuery = Secretaria::query();
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+            }
+            $secretarias = $secretariasQuery->take(6)->get();
+
+            // 7. Notícias (Prioridade Mínima)
             $noticiasQuery = Noticia::where('ativo', true);
-            $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+            }
+            if ($categoriaId) {
+                $noticiasQuery->whereHas('categorias', function($q) use ($categoriaId) {
+                    $q->where('categorias.id', $categoriaId);
+                });
+            }
+            if ($somenteNovos) {
+                $noticiasQuery->whereDate('data_publicacao', '>=', now()->subDays(30));
+            }
             $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
+
+            if ($request->filled('categoria')) {
+                $noticiasQuery->where('categoria', $request->categoria);
+            }
+            if ($request->filled('data_inicio')) {
+                $noticiasQuery->whereDate('data_publicacao', '>=', $request->data_inicio);
+            }
+            if ($request->filled('data_fim')) {
+                $noticiasQuery->whereDate('data_publicacao', '<=', $request->data_fim);
+            }
 
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())
@@ -569,40 +810,94 @@ class PortalController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->take(12)
                 ->get();
-
-            $servicosQuery = Servico::where('ativo', true);
-            $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
-            $this->aplicarFiltroPerfil($servicosQuery, $perfil);
-
-            $servicos = $servicosQuery
-                ->take(9)
-                ->get();
-
-            $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
-            $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
-            $this->aplicarFiltroPerfil($eventosQuery, $perfil);
-
-            $eventos = $eventosQuery
-                ->take(8)
-                ->get();
-
-            $programasQuery = Programa::where('ativo', true);
-            $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
-            $this->aplicarFiltroPerfil($programasQuery, $perfil);
-
-            $programas = $programasQuery
-                ->take(9)
-                ->get();
-
-            $secretariasQuery = Secretaria::query();
-            $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
-
-            $secretarias = $secretariasQuery
-                ->take(6)
-                ->get();
         }
 
-        return view('pages.busca', compact('termo', 'noticias', 'servicos', 'eventos', 'programas', 'secretarias'));
+        $categorias = Noticia::publicadas()
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->orderBy('categoria')
+            ->pluck('categoria');
+
+        return view('pages.busca', compact(
+            'termo', 
+            'noticias', 
+            'servicos', 
+            'eventos', 
+            'programas', 
+            'secretarias', 
+            'paginas', 
+            'respostaInteligente',
+            'categorias'
+        ));
+    }
+
+    /**
+     * Retorna uma coleção de páginas estáticas e institucionais do portal.
+     */
+    private function getPaginasEstaticas()
+    {
+        return collect([
+            [
+                'titulo' => 'Nossa Cidade',
+                'url' => route('cidade.nossa-cidade'),
+                'descricao' => 'Conheça a história e informações gerais sobre Assaí.',
+                'keywords' => ['historia', 'sobre', 'cidade', 'fundação']
+            ],
+            [
+                'titulo' => 'Turismo',
+                'url' => route('pages.turismo'),
+                'descricao' => 'Pontos turísticos e atrações de Assaí.',
+                'keywords' => ['turismo', 'visita', 'lazer', 'atrativos']
+            ],
+            [
+                'titulo' => 'Transparência',
+                'url' => route('pages.transparencia'),
+                'descricao' => 'Portal da Transparência, contas públicas e gastos municipais.',
+                'keywords' => ['contas', 'gastos', 'portal da transparência', 'licitações']
+            ],
+            [
+                'titulo' => 'Contato',
+                'url' => route('contato.index'),
+                'descricao' => 'Fale com a prefeitura e suas secretarias.',
+                'keywords' => ['telefone', 'email', 'fale conosco', 'endereço']
+            ],
+            [
+                'titulo' => 'Agenda de Eventos',
+                'url' => route('agenda.index'),
+                'descricao' => 'Confira o calendário de eventos e compromissos do município.',
+                'keywords' => ['calendario', 'agenda', 'eventos', 'datas']
+            ],
+            [
+                'titulo' => 'Secretarias',
+                'url' => route('secretarias.index'),
+                'descricao' => 'Lista de todas as secretarias municipais e seus gestores.',
+                'keywords' => ['secretarios', 'gestão', 'departamentos']
+            ],
+            [
+                'titulo' => 'Acessibilidade',
+                'url' => route('pages.acessibilidade'),
+                'descricao' => 'Informações sobre os recursos de acessibilidade do portal.',
+                'keywords' => ['acessível', 'libras', 'contraste']
+            ],
+            [
+                'titulo' => 'FAQ - Perguntas Frequentes',
+                'url' => route('pages.faq'),
+                'descricao' => 'Respostas para as dúvidas mais comuns dos cidadãos.',
+                'keywords' => ['ajuda', 'duvidas', 'perguntas', 'como fazer']
+            ],
+            [
+                'titulo' => 'Oportunidades de Emprego',
+                'url' => route('oportunidades'),
+                'descricao' => 'Vagas de emprego formais disponíveis no município.',
+                'keywords' => ['trabalho', 'vagas', 'emprego', 'agencia do trabalhador']
+            ],
+            [
+                'titulo' => 'Saúde Assaí',
+                'url' => 'https://saude.assai.pr.gov.br',
+                'descricao' => 'Portal dedicado aos serviços de saúde do município.',
+                'keywords' => ['medico', 'hospital', 'ubs', 'vacina', 'agendamento']
+            ]
+        ]);
     }
 
     private function applyInsensitiveSearch($query, array $columns, string $term): void

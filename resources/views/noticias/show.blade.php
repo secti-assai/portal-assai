@@ -47,7 +47,7 @@
                 </h1>
 
                 @if($noticia->resumo)
-                <p class="text-lg max-[360px]:text-base text-gray-600 font-medium leading-relaxed border-l-4 border-yellow-400 pl-4 md:pl-6 text-left">
+                <p class="text-lg max-[360px]:text-base text-gray-600 font-medium italic leading-relaxed border-l-4 border-yellow-400 pl-4 md:pl-6 text-left">
                     {{ $noticia->resumo }}
                 </p>
                 @endif
@@ -75,6 +75,12 @@
                     </svg>
                     Facebook
                 </a>
+
+                <button onclick="copyToClipboard('{{ url()->current() }}', 'Link copiado! Compartilhe no seu Instagram!')"
+                    class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] rounded-full hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-sm">
+                    <i class="fa-brands fa-instagram text-base"></i>
+                    Instagram
+                </button>
 
                 <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{ this.textContent='✓ Link copiado!'; setTimeout(()=>{ this.innerHTML='<svg class=\'w-4 h-4\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\'></path></svg> Copiar'; },2000) })"
                     class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition cursor-pointer border border-gray-200">
@@ -132,6 +138,53 @@
                     </svg>
                 </a>
             </div>
+
+            {{-- Widget Feedback --}}
+            <div class="mt-20 p-8 bg-slate-50 rounded-3xl border border-slate-100 text-center" x-data="{ feedbackSent: false }">
+                <div x-show="!feedbackSent">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Esta página foi útil?</h3>
+                    <p class="text-sm text-slate-500 mb-6">Sua opinião é importante para melhorarmos nosso portal.</p>
+                    <div class="flex items-center justify-center gap-4">
+                        <button @click="feedbackSent = true" class="flex items-center gap-2 px-6 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-700 hover:border-blue-500 hover:text-blue-600 transition shadow-sm">
+                            <i class="fa-regular fa-thumbs-up text-blue-500"></i> Sim
+                        </button>
+                        <button @click="feedbackSent = true" class="flex items-center gap-2 px-6 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-700 hover:border-red-500 hover:text-red-600 transition shadow-sm">
+                            <i class="fa-regular fa-thumbs-down text-red-500"></i> Não
+                        </button>
+                    </div>
+                </div>
+                <div x-show="feedbackSent" x-cloak class="animate-bounce">
+                    <i class="fa-solid fa-circle-check text-green-500 text-3xl mb-3"></i>
+                    <h3 class="text-lg font-bold text-slate-800">Obrigado pelo seu feedback!</h3>
+                </div>
+            </div>
+
+            {{-- Notícias Relacionadas --}}
+            @if(isset($relacionadas) && $relacionadas->count() > 0)
+            <div class="mt-24">
+                <div class="flex items-center gap-3 mb-10">
+                    <div class="w-2 h-8 bg-blue-900 rounded-full"></div>
+                    <h2 class="text-2xl font-black text-blue-900 uppercase tracking-tight" style="font-family: 'Montserrat', sans-serif;">Notícias Relacionadas</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    @foreach($relacionadas as $rel)
+                    <article class="flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition-all group">
+                        <a href="{{ route('noticias.show', $rel->slug) }}" class="block h-40 overflow-hidden">
+                            <img src="{{ $rel->imagem_capa ? asset('storage/' . $rel->imagem_capa) : asset('img/Assai.jpg') }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                 alt="{{ $rel->titulo }}">
+                        </a>
+                        <div class="p-5 flex-1 flex flex-col">
+                            <h4 class="text-base font-bold text-slate-800 leading-snug mb-4 group-hover:text-blue-700 transition-colors line-clamp-3">{{ $rel->titulo }}</h4>
+                            <div class="mt-auto text-[10px] text-slate-400 font-bold uppercase tracking-wide">
+                                {{ \Carbon\Carbon::parse($rel->data_publicacao)->format('d/m/Y') }}
+                            </div>
+                        </div>
+                    </article>
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
         </article>
     </div>

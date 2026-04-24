@@ -34,6 +34,7 @@ Route::post('/perfil/definir', [PerfilController::class, 'definir'])->name('perf
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
+Route::get('/api/noticias-tema', [PortalController::class, 'ajaxNoticias'])->name('api.noticias.tema');
 
 // Agenda
 Route::get('/agenda', [PortalController::class, 'agenda'])->name('agenda.index');
@@ -116,8 +117,52 @@ Route::get('/api/plantao-hoje', function () {
             return null;
         };
 
+        $pickFuelDuty = static function () use ($todayEvents): ?array {
+            $fuelKeywords = ['combust', 'gasolina', 'etanol', 'diesel', 'auto posto', 'posto de combustivel'];
+            $healthKeywords = ['saude', 'ubs', 'unidade basica', 'hospital', 'clinica', 'vacina'];
+
+            foreach ($todayEvents as $event) {
+                if (($event['type'] ?? '') !== 'Posto') {
+                    continue;
+                }
+
+                $haystack = mb_strtolower(trim((string) (($event['title'] ?? '') . ' ' . ($event['address'] ?? '') . ' ' . ($event['type'] ?? ''))));
+
+                $hasHealthHint = false;
+                foreach ($healthKeywords as $keyword) {
+                    if ($keyword !== '' && str_contains($haystack, $keyword)) {
+                        $hasHealthHint = true;
+                        break;
+                    }
+                }
+
+                if ($hasHealthHint) {
+                    continue;
+                }
+
+                $hasFuelHint = false;
+                foreach ($fuelKeywords as $keyword) {
+                    if ($keyword !== '' && str_contains($haystack, $keyword)) {
+                        $hasFuelHint = true;
+                        break;
+                    }
+                }
+
+                if ($hasFuelHint || trim((string) ($event['type'] ?? '')) === 'Posto') {
+                    return [
+                        'title' => $event['title'] ?? null,
+                        'address' => $event['address'] ?? null,
+                        'contact' => $event['contact'] ?? null,
+                        'type' => 'Posto de combustivel',
+                    ];
+                }
+            }
+
+            return null;
+        };
+
         $farmacia = $pickDuty('Farmácia');
-        $posto = $pickDuty('Posto');
+        $posto = $pickFuelDuty();
 
         $payload = [
             'hasDuty' => ($farmacia !== null || $posto !== null),
@@ -357,6 +402,18 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/noticias/{id}/editar', [NoticiaController::class, 'edit'])->name('admin.noticias.edit');
         Route::put('/noticias/{id}', [NoticiaController::class, 'update'])->name('admin.noticias.update');
         Route::delete('/noticias/{id}', [NoticiaController::class, 'destroy'])->name('admin.noticias.destroy');
+    });
+
+    // Categorias (Temas) Genéricos
+    Route::middleware(['permission:gerir noticias|gerir servicos|gerir programas|gerir eventos'])->group(function () {
+        Route::resource('categorias', \App\Http\Controllers\Admin\CategoriaController::class)->except(['show'])->names([
+            'index'   => 'admin.categorias.index',
+            'create'  => 'admin.categorias.create',
+            'store'   => 'admin.categorias.store',
+            'edit'    => 'admin.categorias.edit',
+            'update'  => 'admin.categorias.update',
+            'destroy' => 'admin.categorias.destroy',
+        ]);
     });
 
     Route::middleware(['permission:gerir banners'])->group(function () {

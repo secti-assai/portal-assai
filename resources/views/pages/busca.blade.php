@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-[#edf5ff] pb-20 font-sans">
+<main id="conteudo-principal" accesskey="1" tabindex="-1" class="min-h-screen bg-[#edf5ff] pb-20 font-sans pt-6">
 
     {{-- =================
          HERO SECTION (Busca - Padrão Gov.br)
@@ -45,29 +45,66 @@
                 </div>
 
                 {{-- Barra de Busca --}}
-                <div class="w-full mt-8 sm:mt-10 md:mt-12">
-                    <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative flex items-center w-full bg-white/95 focus-within:bg-white backdrop-blur-md shadow-2xl rounded-full border border-white/60 transition-all duration-300 p-1" role="search" aria-label="Buscar informações no portal">
-                    <label for="campo-busca-portal" class="sr-only">Pesquisar no portal</label>
+                <div class="w-full mt-8 sm:mt-10 md:mt-12" x-data="{ advanced: {{ (request('data_inicio') || request('data_fim') || request('categoria')) ? 'true' : 'false' }} }">
+                    <form action="{{ route('busca.index') }}" method="GET" onsubmit="return this.q.value.trim() !== ''" class="relative bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl border border-white/60 transition-all duration-300 p-2" role="search">
+                        <div class="flex items-center w-full">
+                            <label for="campo-busca-portal" class="sr-only">Pesquisar no portal</label>
+                            <div class="flex items-center justify-center pl-4 pr-2 text-slate-400 hidden md:flex">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                            <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="O que você procura?" required
+                                class="flex-1 px-3 py-3 text-sm text-gray-800 bg-transparent border-none md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400"
+                                autofocus>
+                            
+                            <div class="flex items-center gap-2 pr-2">
+                                <button type="button" @click="advanced = !advanced" 
+                                    class="p-2.5 text-blue-900/60 hover:text-blue-900 hover:bg-blue-50 rounded-full transition-colors flex items-center gap-2"
+                                    :class="advanced ? 'bg-blue-50 text-blue-900' : ''"
+                                    title="Filtros Avançados">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                                    </svg>
+                                    <span class="hidden md:inline text-xs font-bold uppercase tracking-wider">Filtros</span>
+                                </button>
+                                <button type="submit" class="px-6 py-2.5 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full hover:bg-yellow-500 shadow-md font-heading">
+                                    Buscar
+                                </button>
+                            </div>
+                        </div>
 
-                    <div class="flex items-center justify-center pl-4 md:pl-5 pr-2 text-slate-400 shrink-0 hidden md:flex" aria-hidden="true">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-
-                    <input id="campo-busca-portal" type="text" name="q" value="{{ $termo }}" placeholder="O que você procura?" required
-                        class="flex-1 min-w-0 px-3 py-2.5 text-sm text-gray-800 bg-transparent border-none md:px-2 md:py-4 md:text-base focus:ring-0 focus:outline-none font-sans placeholder:text-slate-400 w-full"
-                        autofocus>
-
-                    <button type="submit" class="m-1.5 px-3.5 max-[360px]:px-3 py-2.5 max-[360px]:py-2 font-bold text-sm text-blue-900 transition-all bg-yellow-400 rounded-full shrink-0 md:px-6 md:py-3 hover:bg-yellow-500 hover:shadow-lg font-heading">
-                        Buscar
-                    </button>
-                </form>
-            </div>
+                        {{-- Painel de Filtros Avançados --}}
+                        <div x-show="advanced" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="mt-4 p-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4" x-cloak>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Data Início</label>
+                                <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" 
+                                    class="w-full px-4 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Data Fim</label>
+                                <input type="date" name="data_fim" value="{{ request('data_fim') }}" 
+                                    class="w-full px-4 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Tema / Categoria</label>
+                                <select name="categoria" class="w-full px-4 py-2 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+                                    <option value="">Todos os Temas</option>
+                                    @foreach($categorias as $cat)
+                                        <option value="{{ $cat }}" {{ request('categoria') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
 
+    {{-- =================
+         SISTEMA DE RESULTADOS E ABAS
+         ================= --}}
     {{-- =================
          SISTEMA DE RESULTADOS E ABAS
          ================= --}}
@@ -76,15 +113,16 @@
         {{-- Filtros de conteúdo (mobile-first) --}}
         <div class="mb-10 sm:mb-12">
             @php
-            $totalResults = $noticias->count() + $servicos->count() + $eventos->count() + $programas->count() + $secretarias->count();
+            $totalResults = $noticias->count() + $servicos->count() + $eventos->count() + $programas->count() + $secretarias->count() + $paginas->count();
             $tabBaseClass = 'tab-btn group flex w-full items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-bold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFCD00] focus-visible:ring-offset-1 sm:w-auto sm:min-w-[155px] sm:justify-center sm:rounded-full sm:px-5 sm:py-2.5';
             $availableTabs = [
                 'all' => $totalResults > 0,
-                'noticias' => $noticias->isNotEmpty(),
                 'servicos' => $servicos->isNotEmpty(),
+                'paginas' => $paginas->isNotEmpty(),
                 'eventos' => $eventos->isNotEmpty(),
                 'programas' => $programas->isNotEmpty(),
                 'secretarias' => $secretarias->isNotEmpty(),
+                'noticias' => $noticias->isNotEmpty(),
             ];
             $requestedTab = strtolower((string) request('tipo', 'all'));
             $activeTab = (array_key_exists($requestedTab, $availableTabs) && $availableTabs[$requestedTab]) ? $requestedTab : 'all';
@@ -124,22 +162,22 @@
                         </button>
                     </li>
 
-                    @if($noticias->isNotEmpty())
-                    <li>
-                        <button id="tab-noticias" type="button" role="tab" onclick="filterResults('noticias', true)" data-target="noticias" aria-selected="{{ $activeTab === 'noticias' ? 'true' : 'false' }}" aria-controls="sec-noticias"
-                            class="{{ $tabBaseClass }} {{ $activeTab === 'noticias' ? 'is-active' : '' }}">
-                            Notícias
-                            <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $noticias->count() }}</span>
-                        </button>
-                    </li>
-                    @endif
-
                     @if($servicos->isNotEmpty())
                     <li>
                         <button id="tab-servicos" type="button" role="tab" onclick="filterResults('servicos', true)" data-target="servicos" aria-selected="{{ $activeTab === 'servicos' ? 'true' : 'false' }}" aria-controls="sec-servicos"
                             class="{{ $tabBaseClass }} {{ $activeTab === 'servicos' ? 'is-active' : '' }}">
                             Serviços
                             <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $servicos->count() }}</span>
+                        </button>
+                    </li>
+                    @endif
+
+                    @if($paginas->isNotEmpty())
+                    <li>
+                        <button id="tab-paginas" type="button" role="tab" onclick="filterResults('paginas', true)" data-target="paginas" aria-selected="{{ $activeTab === 'paginas' ? 'true' : 'false' }}" aria-controls="sec-paginas"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'paginas' ? 'is-active' : '' }}">
+                            Portal
+                            <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $paginas->count() }}</span>
                         </button>
                     </li>
                     @endif
@@ -173,6 +211,16 @@
                         </button>
                     </li>
                     @endif
+
+                    @if($noticias->isNotEmpty())
+                    <li>
+                        <button id="tab-noticias" type="button" role="tab" onclick="filterResults('noticias', true)" data-target="noticias" aria-selected="{{ $activeTab === 'noticias' ? 'true' : 'false' }}" aria-controls="sec-noticias"
+                            class="{{ $tabBaseClass }} {{ $activeTab === 'noticias' ? 'is-active' : '' }}">
+                            Notícias
+                            <span class="tab-count inline-flex min-w-7 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-black transition-colors">{{ $noticias->count() }}</span>
+                        </button>
+                    </li>
+                    @endif
                 </ul>
             </nav>
         </div>
@@ -188,7 +236,7 @@
             <h3 class="text-2xl font-black text-slate-800 font-heading mb-2">Busca Insuficiente</h3>
             <p class="text-slate-600">Por favor, digite ao menos <strong class="text-slate-800">2 caracteres</strong> para realizar a varredura no portal.</p>
     </div>
-    @elseif($totalResults === 0)
+    @elseif($totalResults === 0 && !isset($respostaInteligente))
     <div class="text-center py-24 bg-white rounded-3xl shadow-sm border border-slate-200 px-4">
         <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-100">
             <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,56 +244,62 @@
             </svg>
         </div>
         <h3 class="text-2xl md:text-3xl font-black text-blue-900 font-heading mb-3">Nenhum resultado encontrado</h3>
-        <p class="text-slate-600 max-w-md mx-auto mb-8">Não encontramos informações para <strong class="text-slate-800">"{{ $termo }}"</strong>. Tente utilizar termos mais genéricos ou verifique a ortografia.</p>
-        <a href="{{ route('home') }}" class="inline-flex items-center px-8 py-3.5 font-bold text-sm text-white uppercase tracking-wider bg-[#071D41] rounded-full hover:bg-blue-800 hover:-translate-y-0.5 transition-all focus:ring-2 focus:ring-offset-2 focus:ring-[#FFCD00]">
-            Voltar à Página Inicial
-        </a>
+        <p class="text-slate-600 max-w-md mx-auto mb-8">
+            Não encontramos informações para <strong class="text-slate-800">"{{ $termo }}"</strong>.
+            @if(request('data_inicio') || request('data_fim') || request('categoria'))
+                <br>Tente <span class="text-blue-600 font-bold">limpar os filtros</span> para ampliar sua busca.
+            @else
+                <br>Tente utilizar termos mais genéricos ou verifique a ortografia.
+            @endif
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            @if(request('data_inicio') || request('data_fim') || request('categoria'))
+                <a href="{{ route('busca.index', ['q' => $termo]) }}" class="inline-flex items-center px-8 py-3.5 font-bold text-sm text-blue-900 uppercase tracking-wider bg-yellow-400 rounded-full hover:bg-yellow-500 hover:-translate-y-0.5 transition-all">
+                    Limpar Filtros
+                </a>
+            @endif
+            <a href="{{ route('home') }}" class="inline-flex items-center px-8 py-3.5 font-bold text-sm text-white uppercase tracking-wider bg-[#071D41] rounded-full hover:bg-blue-800 hover:-translate-y-0.5 transition-all focus:ring-2 focus:ring-offset-2 focus:ring-[#FFCD00]">
+                Voltar à Página Inicial
+            </a>
+        </div>
     </div>
     @else
 
-    {{-- 1. Resultados: Notícias --}}
-    @if($noticias->isNotEmpty())
-    <section id="sec-noticias" role="tabpanel" aria-labelledby="tab-noticias" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'noticias' ? 'hidden' : '' }}">
-        <div class="flex items-center gap-3 mb-8">
-            <div class="w-2 h-8 bg-blue-600 rounded-sm"></div>
-            <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Notícias</h2>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            @foreach($noticias as $noticia)
-            <article class="relative bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col sm:flex-row gap-5 group outline-none focus-within:ring-4 focus-within:ring-[#FFCD00]">
-                <a href="{{ route('noticias.show', $noticia->slug) }}" class="absolute inset-0 z-10 rounded-2xl outline-none" aria-label="Ler notícia: {{ $noticia->titulo }}"></a>
-
-                <div class="w-full h-48 sm:w-32 sm:h-32 shrink-0 rounded-xl overflow-hidden bg-slate-100 relative">
-                    @if($noticia->imagem_capa)
-                    <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" class="w-full h-full object-cover group-hover:scale-105 transition transform duration-700" alt="" loading="lazy">
-                    @else
-                    <div class="w-full h-full flex items-center justify-center text-slate-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                    </div>
-                    @endif
+    {{-- 0. RESPOSTA INTELIGENTE (IA) --}}
+    @if(isset($respostaInteligente))
+    <section id="sec-ia" class="result-section mb-14 {{ $activeTab !== 'all' ? 'hidden' : '' }}">
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border-2 border-blue-200 p-6 md:p-8 shadow-lg relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg class="w-24 h-24 text-blue-900" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        Resposta Inteligente
+                    </span>
+                    <span class="text-xs font-bold text-blue-400">Beta</span>
                 </div>
-
-                <div class="flex flex-col justify-center flex-1 min-w-0">
-                    <span class="text-[10px] sm:text-xs font-bold text-blue-700 uppercase tracking-widest mb-2">{{ $noticia->categoria }}</span>
-                    <h3 class="text-base sm:text-lg font-bold text-slate-800 group-hover:text-[#071D41] transition-colors leading-snug line-clamp-2 font-heading mb-2">
-                        {{ $noticia->titulo }}
-                    </h3>
-                    <time class="text-xs text-slate-500 font-medium mt-auto flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        {{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}
-                    </time>
+                <div class="prose prose-blue max-w-none">
+                    <p class="text-lg md:text-xl font-medium text-slate-800 leading-relaxed">
+                        {!! $respostaInteligente['resposta'] !!}
+                    </p>
                 </div>
-            </article>
-            @endforeach
+                <div class="mt-6 pt-6 border-t border-blue-100 flex items-center justify-between">
+                    <p class="text-[11px] text-blue-500 font-bold uppercase tracking-wider">Esta resposta foi gerada automaticamente para ajudar você mais rápido.</p>
+                </div>
+            </div>
         </div>
     </section>
     @endif
 
-    {{-- 2. Resultados: Serviços --}}
+    {{-- 1. Resultados: Serviços (PRIORIDADE 1) --}}
     @if($servicos->isNotEmpty())
     <section id="sec-servicos" role="tabpanel" aria-labelledby="tab-servicos" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'servicos' ? 'hidden' : '' }}">
         <div class="flex items-center gap-3 mb-8">
@@ -268,6 +322,29 @@
                         </svg>
                     </span>
                 </div>
+            </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- 2. Resultados: Páginas do Portal (PRIORIDADE 2) --}}
+    @if($paginas->isNotEmpty())
+    <section id="sec-paginas" role="tabpanel" aria-labelledby="tab-paginas" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'paginas' ? 'hidden' : '' }}">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-2 h-8 bg-indigo-600 rounded-sm"></div>
+            <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Onde Encontrar</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach($paginas as $pagina)
+            <a href="{{ $pagina['url'] }}" class="flex flex-col p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-indigo-400 hover:shadow-md transition-all group outline-none focus-visible:ring-4 focus-visible:ring-indigo-300">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-bold text-slate-800 group-hover:text-indigo-700 transition-colors font-heading">{{ $pagina['titulo'] }}</h3>
+                    <svg class="w-5 h-5 text-slate-300 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed">{{ $pagina['descricao'] }}</p>
             </a>
             @endforeach
         </div>
@@ -380,6 +457,48 @@
     </section>
     @endif
 
+    {{-- 6. Resultados: Notícias (PRIORIDADE BAIXA) --}}
+    @if($noticias->isNotEmpty())
+    <section id="sec-noticias" role="tabpanel" aria-labelledby="tab-noticias" class="result-section mb-14 {{ $activeTab !== 'all' && $activeTab !== 'noticias' ? 'hidden' : '' }}">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-2 h-8 bg-blue-600 rounded-sm"></div>
+            <h2 class="text-2xl font-black text-[#071D41] font-heading uppercase tracking-tight">Notícias</h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            @foreach($noticias as $noticia)
+            <article class="relative bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col sm:flex-row gap-5 group outline-none focus-within:ring-4 focus-within:ring-[#FFCD00]">
+                <a href="{{ route('noticias.show', $noticia->slug) }}" class="absolute inset-0 z-10 rounded-2xl outline-none" aria-label="Ler notícia: {{ $noticia->titulo }}"></a>
+
+                <div class="w-full h-48 sm:w-32 sm:h-32 shrink-0 rounded-xl overflow-hidden bg-slate-100 relative">
+                    @if($noticia->imagem_capa)
+                    <img src="{{ asset('storage/' . $noticia->imagem_capa) }}" class="w-full h-full object-cover group-hover:scale-105 transition transform duration-700" alt="" loading="lazy">
+                    @else
+                    <div class="w-full h-full flex items-center justify-center text-slate-300">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        </svg>
+                    </div>
+                    @endif
+                </div>
+
+                <div class="flex flex-col justify-center flex-1 min-w-0">
+                    <span class="text-[10px] sm:text-xs font-bold text-blue-700 uppercase tracking-widest mb-2">{{ $noticia->categoria }}</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 group-hover:text-[#071D41] transition-colors leading-snug line-clamp-2 font-heading mb-2">
+                        {{ $noticia->titulo }}
+                    </h3>
+                    <time class="text-xs text-slate-500 font-medium mt-auto flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        {{ \Carbon\Carbon::parse($noticia->data_publicacao)->format('d/m/Y') }}
+                    </time>
+                </div>
+            </article>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     @endif
     </div>
 
@@ -404,10 +523,12 @@
             // Mostra/Esconde as seções
             document.querySelectorAll('.result-section').forEach(section => {
                 if (resolvedCategory === 'all') {
+                    // Na aba "Tudo", mostramos tudo inclusive IA se houver
                     section.classList.remove('hidden');
                     section.style.opacity = '1';
                     section.style.transition = 'opacity 0.2s ease';
                 } else {
+                    // Nas abas específicas, escondemos a IA (sec-ia)
                     if (section.id === 'sec-' + resolvedCategory) {
                         section.classList.remove('hidden');
                         section.style.opacity = '0';

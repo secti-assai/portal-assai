@@ -12,14 +12,10 @@ class NoticiaController extends Controller
     // 1. LISTAR TODAS (Para a tabela)
     public function index(Request $request)
     {
-        $categorias = Noticia::query()
-            ->whereNotNull('categoria')
-            ->distinct()
-            ->orderBy('categoria')
-            ->pluck('categoria', 'categoria')
-            ->toArray();
+        $categorias = \App\Models\Categoria::orderBy('nome')->pluck('nome', 'id')->toArray();
 
         $noticias = Noticia::query()
+            ->with('categorias')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->string('search')->trim()->toString();
                 $query->where(function ($subQuery) use ($search) {
@@ -38,8 +34,12 @@ class NoticiaController extends Controller
                 }
             })
             ->when($request->filled('categoria'), function ($query) use ($request) {
-                $categoria = $request->string('categoria')->trim()->toString();
-                $query->where('categoria', $categoria);
+                $categoria_id = $request->integer('categoria');
+                if ($categoria_id > 0) {
+                    $query->whereHas('categorias', function($q) use ($categoria_id) {
+                        $q->where('categorias.id', $categoria_id);
+                    });
+                }
             })
             ->orderByDesc('data_publicacao')
             ->orderByDesc('created_at')
@@ -52,7 +52,8 @@ class NoticiaController extends Controller
     // 2. FORMULÁRIO DE CRIAR
     public function create()
     {
-        return view('admin.noticias.create');
+        $categorias = \App\Models\Categoria::where('ativo', true)->orderBy('nome')->pluck('nome', 'id')->toArray();
+        return view('admin.noticias.create', compact('categorias'));
     }
 
     // 3. SALVAR NO BANCO
@@ -60,7 +61,8 @@ class NoticiaController extends Controller
     {
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'nullable|string',
+            'categorias' => 'nullable|array',
+            'categorias.*' => 'integer|exists:categorias,id',
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
@@ -74,17 +76,33 @@ class NoticiaController extends Controller
             $caminhoImagem = $request->file('imagem_capa')->store('noticias', 'public');
         }
 
-        Noticia::create([
+        $noticia = Noticia::create([
             'titulo' => $request->titulo,
             'slug' => Str::slug($request->titulo) . '-' . time(), 
-            'categoria' => $request->categoria,
             'resumo' => $request->resumo,
             'conteudo' => $request->conteudo,
             'imagem_capa' => $caminhoImagem,
             'data_publicacao' => $request->data_publicacao,
             'ativo' => $request->has('ativo'),
-            'destaque' => $request->has('destaque'), // Captura o booleano do novo toggle
+            'destaque' => $request->has('destaque'),
+            'perfis_alvo' => null, // Será preenchido abaixo
         ]);
+
+        // Sincroniza as categorias e herda os perfis
+        $perfisAlvo = [];
+        if ($request->filled('categorias')) {
+            $noticia->categorias()->sync($request->categorias);
+            
+            $categoriasModels = \App\Models\Categoria::whereIn('id', $request->categorias)->get();
+            foreach ($categoriasModels as $cat) {
+                if (is_array($cat->perfis)) {
+                    $perfisAlvo = array_merge($perfisAlvo, $cat->perfis);
+                }
+            }
+        }
+        
+        $perfisAlvo = array_values(array_unique($perfisAlvo));
+        $noticia->update(['perfis_alvo' => empty($perfisAlvo) ? null : $perfisAlvo]);
 
         return redirect()->route('admin.noticias.index')->with('sucesso', 'Notícia cadastrada com sucesso!');
     }
@@ -93,14 +111,30 @@ class NoticiaController extends Controller
     public function show($slug)
     {
         $noticia = Noticia::where('slug', $slug)->where('ativo', true)->firstOrFail();
-        return view('noticias.show', compact('noticia'));
+        
+        $relacionadas = Noticia::publicadas()
+            ->where('categoria', $noticia->categoria)
+            ->where('id', '!=', $noticia->id)
+            ->latest('data_publicacao')
+            ->take(3)
+            ->get();
+
+        return view('noticias.show', compact('noticia', 'relacionadas'));
     }
 
     // 5. FORMULÁRIO DE EDITAR
     public function edit($id)
     {
         $noticia = Noticia::findOrFail($id);
-        return view('admin.noticias.edit', compact('noticia'));
+        $noticiaCategoriasIds = $noticia->categorias->pluck('id')->toArray();
+
+        $categorias = \App\Models\Categoria::where('ativo', true)
+            ->orWhereIn('id', $noticiaCategoriasIds)
+            ->orderBy('nome')
+            ->pluck('nome', 'id')
+            ->toArray();
+            
+        return view('admin.noticias.edit', compact('noticia', 'categorias', 'noticiaCategoriasIds'));
     }
 
     // 6. ATUALIZAR DADOS DA EDIÇÃO
@@ -110,7 +144,8 @@ class NoticiaController extends Controller
 
         $request->validate([
             'titulo' => 'required|max:255',
-            'categoria' => 'nullable|string',
+            'categorias' => 'nullable|array',
+            'categorias.*' => 'integer|exists:categorias,id',
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
@@ -121,12 +156,11 @@ class NoticiaController extends Controller
 
         $noticia->titulo = $request->titulo;
         $noticia->slug = Str::slug($request->titulo) . '-' . time();
-        $noticia->categoria = $request->categoria;
         $noticia->resumo = $request->resumo;
         $noticia->conteudo = $request->conteudo;
         $noticia->data_publicacao = $request->data_publicacao;
         $noticia->ativo = $request->has('ativo');
-        $noticia->destaque = $request->has('destaque'); // Atualiza o status do destaque
+        $noticia->destaque = $request->has('destaque');
 
         if ($request->hasFile('imagem_capa')) {
             if ($noticia->imagem_capa) {
@@ -136,6 +170,24 @@ class NoticiaController extends Controller
         }
 
         $noticia->save();
+
+        // Sincroniza as categorias e herda os perfis
+        $perfisAlvo = [];
+        if ($request->filled('categorias')) {
+            $noticia->categorias()->sync($request->categorias);
+            
+            $categoriasModels = \App\Models\Categoria::whereIn('id', $request->categorias)->get();
+            foreach ($categoriasModels as $cat) {
+                if (is_array($cat->perfis)) {
+                    $perfisAlvo = array_merge($perfisAlvo, $cat->perfis);
+                }
+            }
+        } else {
+            $noticia->categorias()->sync([]);
+        }
+        
+        $perfisAlvo = array_values(array_unique($perfisAlvo));
+        $noticia->update(['perfis_alvo' => empty($perfisAlvo) ? null : $perfisAlvo]);
 
         return redirect()->route('admin.noticias.index')->with('sucesso', 'Notícia atualizada com sucesso!');
     }

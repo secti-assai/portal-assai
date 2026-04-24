@@ -56,6 +56,15 @@
                     class="px-4 py-2.5 bg-slate-50 border-slate-200 rounded-lg focus:bg-white focus:border-blue-500 outline-none transition-all"
                 />
 
+                <x-admin.select
+                    name="categoria_id"
+                    label="Tema / Categoria (Opcional)"
+                    :options="$categorias"
+                    :value="$evento->categoria_id"
+                    placeholder="Geral (Todos os perfis)"
+                    class="bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-500 outline-none transition-all"
+                />
+
                 <x-admin.rich-editor
                     name="descricao"
                     label="Descrição Detalhada"

@@ -53,12 +53,22 @@
                     <p class="mt-1 text-xs text-slate-400">O cidadão será redirecionado diretamente para esta URL ao clicar no cartão.</p>
                 </div>
 
-                <div class="md:col-span-2">
+                <div class="md:col-span-1">
                     <label class="block mb-1.5 text-sm font-bold text-slate-700">Órgão / Secretaria Vinculada <span class="text-xs font-normal text-slate-400">(Opcional)</span></label>
                     <select name="secretaria_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none transition-all">
                         <option value="">Serviço Geral (Sem vínculo específico)</option>
                         @foreach($secretarias as $sec)
                             <option value="{{ $sec->id }}" {{ old('secretaria_id', $servico->secretaria_id) == $sec->id ? 'selected' : '' }}>{{ $sec->nome }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="md:col-span-1">
+                    <label class="block mb-1.5 text-sm font-bold text-slate-700">Tema / Categoria <span class="text-xs font-normal text-slate-400">(Opcional)</span></label>
+                    <select name="categoria_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                        <option value="">Geral (Todos os perfis)</option>
+                        @foreach($categorias as $id => $nome)
+                            <option value="{{ $id }}" {{ old('categoria_id', $servico->categoria_id) == $id ? 'selected' : '' }}>{{ $nome }}</option>
                         @endforeach
                     </select>
                 </div>
