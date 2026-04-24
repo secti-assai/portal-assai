@@ -111,7 +111,15 @@ class NoticiaController extends Controller
     public function show($slug)
     {
         $noticia = Noticia::where('slug', $slug)->where('ativo', true)->firstOrFail();
-        return view('noticias.show', compact('noticia'));
+        
+        $relacionadas = Noticia::publicadas()
+            ->where('categoria', $noticia->categoria)
+            ->where('id', '!=', $noticia->id)
+            ->latest('data_publicacao')
+            ->take(3)
+            ->get();
+
+        return view('noticias.show', compact('noticia', 'relacionadas'));
     }
 
     // 5. FORMULÁRIO DE EDITAR

@@ -202,6 +202,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             new window.VLibras.Widget('https://vlibras.gov.br/app');
         });
+
+        function copyToClipboard(text, message = 'Link copiado!') {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(message);
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
     </script>
 
     @stack('modals')
