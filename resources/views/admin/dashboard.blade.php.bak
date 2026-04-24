@@ -1,8 +1,8 @@
-Ôªø@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('content')
 
-{{-- ===== HEADER COM IDENTIDADE DO USU√ÅRIO ===== --}}
+{{-- ===== HEADER COM IDENTIDADE DO USU¡RIO ===== --}}
 <div class="mb-8 rounded-2xl border border-[#e2e8f0] overflow-hidden shadow-md">
     <div class="bg-gradient-to-r from-[#0b2f57] via-[#006eb7] to-[#0b2f57] p-6 sm:p-8">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -13,7 +13,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
-                        Ol√°, {{ Auth::user()->name }}
+                        Ol·, {{ Auth::user()->name }}
                     </h1>
                     <p class="mt-0.5 text-blue-100 text-sm font-medium">
                         Painel de Controle &mdash;
@@ -54,10 +54,10 @@
         </div>
     </div>
 
-    {{-- Barra de permiss√µes ativas --}}
+    {{-- Barra de permissıes ativas --}}
     @if($minhasPerms->count() > 0)
     <div class="bg-[#f8fafc] border-t border-[#e2e8f0] px-6 py-3 flex flex-wrap items-center gap-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">Permiss√µes:</span>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">Permissıes:</span>
         @foreach($minhasPerms->take(8) as $perm)
         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#e3f0fc] text-[#006eb7] text-xs font-semibold">
             <i class="fa-solid fa-key text-[10px]"></i>
@@ -74,19 +74,19 @@
 {{-- ===== KPIs (6 cards) ===== --}}
 <div class="grid grid-cols-2 gap-4 mb-8 lg:grid-cols-3 xl:grid-cols-6">
 
-    {{-- KPI Not√≠cias --}}
+    {{-- KPI NotÌcias --}}
     <div class="bg-white border border-[#e2e8f0] shadow-sm rounded-2xl p-5 flex flex-col gap-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         <div class="flex items-center justify-between">
             <div class="p-2.5 rounded-xl bg-[#e3f0fc]">
                 <i class="fa-solid fa-newspaper text-[#006eb7] text-lg"></i>
             </div>
-            <a href="{{ route('admin.noticias.index') }}" class="text-[10px] font-bold text-slate-400 hover:text-[#006eb7] transition-colors" title="Ver not√≠cias">
+            <a href="{{ route('admin.noticias.index') }}" class="text-[10px] font-bold text-slate-400 hover:text-[#006eb7] transition-colors" title="Ver notÌcias">
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
         <div>
             <p class="text-3xl font-black text-[#22223b] leading-none">{{ $totalNoticias }}</p>
-            <p class="text-xs font-bold text-[#4a5c6a] uppercase tracking-wide mt-1">Not√≠cias</p>
+            <p class="text-xs font-bold text-[#4a5c6a] uppercase tracking-wide mt-1">NotÌcias</p>
         </div>
     </div>
 
@@ -106,19 +106,19 @@
         </div>
     </div>
 
-    {{-- KPI Servi√ßos --}}
+    {{-- KPI ServiÁos --}}
     <div class="bg-white border border-[#e2e8f0] shadow-sm rounded-2xl p-5 flex flex-col gap-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
         <div class="flex items-center justify-between">
             <div class="p-2.5 rounded-xl bg-[#e6f4f1]">
                 <i class="fa-solid fa-bolt text-[#22c55e] text-lg"></i>
             </div>
-            <a href="{{ route('admin.servicos.index') }}" class="text-[10px] font-bold text-slate-400 hover:text-[#22c55e] transition-colors" title="Ver servi√ßos">
+            <a href="{{ route('admin.servicos.index') }}" class="text-[10px] font-bold text-slate-400 hover:text-[#22c55e] transition-colors" title="Ver serviÁos">
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
         <div>
             <p class="text-3xl font-black text-[#22223b] leading-none">{{ $totalServicos }}</p>
-            <p class="text-xs font-bold text-[#4a5c6a] uppercase tracking-wide mt-1">Servi√ßos ativos</p>
+            <p class="text-xs font-bold text-[#4a5c6a] uppercase tracking-wide mt-1">ServiÁos ativos</p>
         </div>
     </div>
 
@@ -176,18 +176,18 @@
 
 </div>
 
-{{-- ===== ACESSO R√ÅPIDO ===== --}}
+{{-- ===== ACESSO R¡PIDO ===== --}}
 <div class="bg-white shadow-sm rounded-xl border border-slate-200 p-6 mb-8">
     <h2 class="mb-4 text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
         <i class="fa-solid fa-rocket text-[#006eb7]"></i>
-        Criar conte√∫do rapidamente
+        Criar conte˙do rapidamente
     </h2>
     <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:flex xl:flex-wrap">
 
         @can('gerir noticias')
         <a href="{{ route('admin.noticias.create') }}" id="quick-create-noticia"
             class="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-md">
-            <i class="fa-solid fa-newspaper"></i> Nova Not√≠cia
+            <i class="fa-solid fa-newspaper"></i> Nova NotÌcia
         </a>
         @endcan
 
@@ -208,7 +208,7 @@
         @can('gerir servicos')
         <a href="{{ route('admin.servicos.create') }}" id="quick-create-servico"
             class="inline-flex items-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700 transition hover:bg-orange-500 hover:text-white hover:border-orange-500 hover:-translate-y-0.5 hover:shadow-md">
-            <i class="fa-solid fa-bolt"></i> Novo Servi√ßo
+            <i class="fa-solid fa-bolt"></i> Novo ServiÁo
         </a>
         @endcan
 
@@ -265,13 +265,13 @@
 </div>
 
 {{-- ===== TOP SERVICOS ===== --}}
-ÔøΩOS ===== --}}
+?OS ===== --}}
 @can('gerir servicos')
 <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden mb-8">
     <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
         <div class="flex items-center gap-2">
             <i class="fa-solid fa-chart-bar text-orange-500"></i>
-            <h2 class="text-base font-bold text-slate-800">Top 5 Servi√ßos Mais Acessados</h2>
+            <h2 class="text-base font-bold text-slate-800">Top 5 ServiÁos Mais Acessados</h2>
         </div>
         <a href="{{ route('admin.servicos.index') }}" class="text-xs font-medium text-blue-600 hover:underline">Ver todos</a>
     </div>
@@ -280,7 +280,7 @@
             <thead>
                 <tr class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wide">
                     <th class="px-6 py-3 text-left w-10">#</th>
-                    <th class="px-6 py-3 text-left">Servi√ßo</th>
+                    <th class="px-6 py-3 text-left">ServiÁo</th>
                     <th class="px-6 py-3 text-left">Link destino</th>
                     <th class="px-6 py-3 text-right">Acessos</th>
                 </tr>
@@ -317,15 +317,15 @@
 </div>
 @endcan
 
-{{-- ===== NOT√çCIAS + EVENTOS + PROGRAMAS ===== --}}
+{{-- ===== NOTÕCIAS + EVENTOS + PROGRAMAS ===== --}}
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-8">
 
-    {{-- √öLTIMAS NOT√çCIAS --}}
+    {{-- ⁄LTIMAS NOTÕCIAS --}}
     <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-newspaper text-blue-500"></i>
-                <h2 class="text-base font-bold text-slate-800">Not√≠cias Recentes</h2>
+                <h2 class="text-base font-bold text-slate-800">NotÌcias Recentes</h2>
             </div>
             <a href="{{ route('admin.noticias.index') }}" class="text-xs font-medium text-blue-600 hover:underline">Ver todas</a>
         </div>
@@ -340,18 +340,18 @@
             </li>
             @empty
             <li class="px-6 py-8 text-center text-slate-400 text-sm">
-                Nenhuma not√≠cia publicada ainda.
+                Nenhuma notÌcia publicada ainda.
             </li>
             @endforelse
         </ul>
     </div>
 
-    {{-- PR√ìXIMOS EVENTOS --}}
+    {{-- PR”XIMOS EVENTOS --}}
     <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-calendar-days text-amber-500"></i>
-                <h2 class="text-base font-bold text-slate-800">Pr√≥ximos Eventos</h2>
+                <h2 class="text-base font-bold text-slate-800">PrÛximos Eventos</h2>
             </div>
             <a href="{{ route('admin.eventos.index') }}" class="text-xs font-medium text-blue-600 hover:underline">Ver todos</a>
         </div>
@@ -387,7 +387,7 @@
         </ul>
     </div>
 
-    {{-- √öLTIMOS PROGRAMAS --}}
+    {{-- ⁄LTIMOS PROGRAMAS --}}
     <div class="bg-white shadow-sm rounded-xl border border-slate-200 overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -414,7 +414,7 @@
     </div>
 </div>
 
-{{-- ===== GOVERNAN√áA (apenas admin) ===== --}}
+{{-- ===== GOVERNAN«A (apenas admin) ===== --}}
 @role('admin')
 <div class="bg-gradient-to-r from-[#0b2f57] to-[#0c4a8a] rounded-2xl p-6 text-white shadow-lg">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -423,16 +423,16 @@
                 <i class="fa-solid fa-shield-halved text-yellow-400 text-2xl"></i>
             </div>
             <div>
-                <h2 class="text-lg font-black tracking-tight">Governan√ßa & Controle</h2>
+                <h2 class="text-lg font-black tracking-tight">GovernanÁa & Controle</h2>
                 <p class="text-blue-200 text-sm mt-0.5">
-                    {{ $totalUsuarios }} {{ $totalUsuarios === 1 ? 'usu√°rio cadastrado' : 'usu√°rios cadastrados' }} no sistema
+                    {{ $totalUsuarios }} {{ $totalUsuarios === 1 ? 'usu·rio cadastrado' : 'usu·rios cadastrados' }} no sistema
                 </p>
             </div>
         </div>
         <div class="flex flex-wrap gap-3">
             <a href="{{ route('users.index') }}" id="gov-users-link"
                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-yellow-400 text-yellow-900 rounded-xl text-sm font-bold hover:bg-yellow-300 transition-all hover:-translate-y-0.5 shadow-md">
-                <i class="fa-solid fa-users"></i> Gerenciar Usu√°rios
+                <i class="fa-solid fa-users"></i> Gerenciar Usu·rios
             </a>
             <a href="{{ route('admin.activity-logs.index') }}" id="gov-audit-link"
                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 border border-white/20 rounded-xl text-sm font-bold hover:bg-white/20 transition-all hover:-translate-y-0.5">

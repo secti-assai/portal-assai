@@ -473,7 +473,7 @@ class PortalController extends Controller
         return view('programas.show', compact('programa'));
     }
 
-    public function autocomplete(Request $request)
+    public function autocomplete(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->get('q', ''));
@@ -489,7 +489,7 @@ class PortalController extends Controller
         $this->applyInsensitiveSearch($servicosQuery, ['titulo'], $termo);
         $this->aplicarFiltroPerfil($servicosQuery, $perfil);
 
-        $servicos = $servicosQuery
+        $localServicos = $servicosQuery
             ->select('id', 'titulo')
             ->limit(4)
             ->get()
@@ -498,6 +498,19 @@ class PortalController extends Controller
                 'url' => route('servicos.acessar', $s->id),
                 'tipo' => 'Serviço',
             ]);
+
+        $conectaBase = collect($conectaApi->getTodosServicos($perfil));
+        $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado) {
+            return str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado);
+        })->take(4)->map(function($s) {
+            return [
+                'titulo' => $s['titulo'] ?? '',
+                'url' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                'tipo' => 'Serviço',
+            ];
+        });
+
+        $servicos = $conectaServicos->concat($localServicos)->take(4);
 
         // 2. Páginas do Portal
         $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
@@ -566,10 +579,12 @@ class PortalController extends Controller
         return response()->json($resultados);
     }
 
-    public function buscaGlobal(Request $request)
+    public function buscaGlobal(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
         $termo = trim($request->input('q', ''));
+        $categoriaId = $request->input('categoria');
+        $somenteNovos = $request->has('somente_novos');
 
         $noticias = collect();
         $servicos = collect();
@@ -579,47 +594,119 @@ class PortalController extends Controller
         $paginas = collect();
         $respostaInteligente = null;
 
-        if (strlen($termo) >= 2) {
-            // 1. Resposta Inteligente (IA)
-            $resultadoIA = BuscaInteligente::buscar($termo);
-            if ($resultadoIA['confianca'] >= 60) {
-                $respostaInteligente = $resultadoIA;
+        $temFiltroAvancado = !empty($categoriaId) || $somenteNovos;
+
+        if (strlen($termo) >= 2 || $temFiltroAvancado) {
+            // 1. Resposta Inteligente (IA) - Apenas se tiver termo
+            if (strlen($termo) >= 2) {
+                $resultadoIA = BuscaInteligente::buscar($termo);
+                if ($resultadoIA['confianca'] >= 60) {
+                    $respostaInteligente = $resultadoIA;
+                }
             }
 
-            // 2. Páginas Estáticas do Portal
+            // 2. Páginas Estáticas do Portal - Apenas se tiver termo e não tiver filtro avançado
             $termoNormalizado = mb_strtolower($this->normalizeSearchTerm($termo));
-            $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
-                return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
-                       str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['descricao'])), $termoNormalizado) ||
-                       collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
-            })->take(6);
+            if (!$temFiltroAvancado && strlen($termo) >= 2) {
+                $paginas = $this->getPaginasEstaticas()->filter(function ($pagina) use ($termoNormalizado) {
+                    return str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['titulo'])), $termoNormalizado) ||
+                           str_contains(mb_strtolower($this->normalizeSearchTerm($pagina['descricao'])), $termoNormalizado) ||
+                           collect($pagina['keywords'] ?? [])->contains(fn($k) => str_contains(mb_strtolower($this->normalizeSearchTerm($k)), $termoNormalizado));
+                })->take(6);
+            }
 
             // 3. Serviços (Prioridade Máxima)
             $servicosQuery = Servico::where('ativo', true);
-            $this->applyInsensitiveSearch($servicosQuery, ['titulo', 'descricao'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($servicosQuery, ['titulo', 'descricao'], $termo);
+            }
+            if ($categoriaId) {
+                $servicosQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $servicosQuery->where('created_at', '>=', now()->subDays(30));
+            }
             $this->aplicarFiltroPerfil($servicosQuery, $perfil);
-            $servicos = $servicosQuery->take(9)->get();
+            
+            $localServicos = $servicosQuery->take(9)->get()->map(function($s) {
+                $s->url_acesso = route('servicos.acessar', $s->id);
+                $s->link = route('servicos.acessar', $s->id);
+                $s->is_conecta = false;
+                return $s;
+            });
+
+            $conectaBase = collect($conectaApi->getTodosServicos($perfil));
+            $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado, $categoriaId) {
+                $passaTermo = empty($termoNormalizado) || str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado) ||
+                       str_contains(mb_strtolower($this->normalizeSearchTerm($s['descricao'] ?? '')), $termoNormalizado);
+                
+                $passaCategoria = true;
+                if (!empty($categoriaId)) {
+                    $passaCategoria = ($s['categoria_id'] ?? null) == $categoriaId;
+                }
+
+                return $passaTermo && $passaCategoria;
+            })->map(function($s) {
+                return (object) [
+                    'titulo' => $s['titulo'] ?? '',
+                    'descricao' => $s['descricao'] ?? '',
+                    'categoria_id' => $s['categoria_id'] ?? null,
+                    'categoria' => $s['categoria'] ?? null,
+                    'icone' => $s['icone'] ?? null,
+                    'url_acesso' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'link' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'is_conecta' => true,
+                ];
+            });
+
+            $servicos = $conectaServicos->concat($localServicos)->take(9);
 
             // 4. Eventos
             $eventosQuery = Evento::publico()->ordenarPorDataMaisProxima();
-            $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($eventosQuery, ['titulo', 'descricao', 'local'], $termo);
+            }
+            if ($categoriaId) {
+                $eventosQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $eventosQuery->where('created_at', '>=', now()->subDays(30));
+            }
             $this->aplicarFiltroPerfil($eventosQuery, $perfil);
             $eventos = $eventosQuery->take(8)->get();
 
             // 5. Programas
             $programasQuery = Programa::where('ativo', true);
-            $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($programasQuery, ['titulo', 'descricao'], $termo);
+            }
+            if ($categoriaId) {
+                $programasQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $programasQuery->where('created_at', '>=', now()->subDays(30));
+            }
             $this->aplicarFiltroPerfil($programasQuery, $perfil);
             $programas = $programasQuery->take(9)->get();
 
             // 6. Secretarias
             $secretariasQuery = Secretaria::query();
-            $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($secretariasQuery, ['nome', 'nome_secretario', 'descricao'], $termo);
+            }
             $secretarias = $secretariasQuery->take(6)->get();
 
             // 7. Notícias (Prioridade Mínima)
             $noticiasQuery = Noticia::where('ativo', true);
-            $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+            if (!empty($termo)) {
+                $this->applyInsensitiveSearch($noticiasQuery, ['titulo', 'resumo', 'conteudo'], $termo);
+            }
+            if ($categoriaId) {
+                $noticiasQuery->where('categoria_id', $categoriaId);
+            }
+            if ($somenteNovos) {
+                $noticiasQuery->whereDate('data_publicacao', '>=', now()->subDays(30));
+            }
             $this->aplicarFiltroPerfil($noticiasQuery, $perfil);
             $noticias = $noticiasQuery
                 ->whereDate('data_publicacao', '<=', today())

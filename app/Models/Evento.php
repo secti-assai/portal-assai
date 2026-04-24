@@ -12,13 +12,18 @@ class Evento extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['titulo', 'descricao', 'data_inicio', 'data_fim', 'local', 'imagem', 'perfis_alvo', 'status'];
+    protected $fillable = ['titulo', 'descricao', 'data_inicio', 'data_fim', 'local', 'imagem', 'categoria_id', 'perfis_alvo', 'status'];
 
     protected $casts = [
         'data_inicio' => 'datetime',
         'data_fim' => 'datetime',
         'perfis_alvo' => 'array',
     ];
+
+    public function categoriaRel()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
 
     public function getStatusAttribute($value): string
     {

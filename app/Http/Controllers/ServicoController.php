@@ -54,7 +54,8 @@ class ServicoController extends Controller
     public function create()
     {
         $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
-        return view('admin.servicos.create', compact('secretarias'));
+        $categorias = \App\Models\Categoria::where('ativo', true)->orderBy('nome')->pluck('nome', 'id')->toArray();
+        return view('admin.servicos.create', compact('secretarias', 'categorias'));
     }
 
     public function store(Request $request)
@@ -65,9 +66,17 @@ class ServicoController extends Controller
             'link'          => 'required|url|max:2048',
             'icone'         => 'nullable|string|max:50',
             'secretaria_id' => 'nullable|exists:secretarias,id',
+            'categoria_id'  => 'nullable|exists:categorias,id',
         ]);
 
         $dados['ativo'] = $request->has('ativo');
+
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        }
 
         Servico::create($dados);
 
@@ -78,7 +87,13 @@ class ServicoController extends Controller
     {
         $servico = Servico::findOrFail($id);
         $secretarias = \App\Models\Secretaria::orderBy('nome')->get();
-        return view('admin.servicos.edit', compact('servico', 'secretarias'));
+        $categorias = \App\Models\Categoria::where('ativo', true)
+            ->orWhere('id', $servico->categoria_id)
+            ->orderBy('nome')
+            ->pluck('nome', 'id')
+            ->toArray();
+            
+        return view('admin.servicos.edit', compact('servico', 'secretarias', 'categorias'));
     }
 
     public function update(Request $request, $id)
@@ -91,9 +106,19 @@ class ServicoController extends Controller
             'link'          => 'required|url|max:2048',
             'icone'         => 'nullable|string|max:50',
             'secretaria_id' => 'nullable|exists:secretarias,id',
+            'categoria_id'  => 'nullable|exists:categorias,id',
         ]);
 
         $dados['ativo'] = $request->has('ativo');
+        
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        } else {
+            $dados['perfis_alvo'] = null;
+        }
 
         $servico->update($dados);
 

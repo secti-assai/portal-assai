@@ -1108,25 +1108,22 @@ MODAIS (Busca Avançada e Banners Pop-up)
                 </div>
             </div>
 
-            {{-- Categoria de notícias --}}
+            {{-- Filtro Global de Categorias --}}
             @php
-                $categoriasNoticias = \App\Models\Noticia::publicadas()
-                    ->whereNotNull('categoria')
-                    ->distinct()
-                    ->orderBy('categoria')
-                    ->pluck('categoria');
+                $categoriasFiltro = \App\Models\Categoria::where('ativo', true)->orderBy('nome')->get();
             @endphp
-            @if($categoriasNoticias->count() > 0)
+            @if($categoriasFiltro->count() > 0)
             <div class="flex flex-col gap-1.5">
                 <label for="adv-categoria" class="text-[0.82rem] font-bold text-slate-500 uppercase tracking-wide">
                     <i class="fa-solid fa-tag mr-1 text-[#006eb7]" aria-hidden="true"></i>
-                    Categoria da notícia
+                    Filtrar por Categoria
                 </label>
+                <select id="adv-categoria" name="categoria"
                     class="w-full border border-slate-300 rounded-lg px-4 py-3 text-sm text-slate-700 bg-white focus:border-[#006eb7] focus:ring-2 focus:ring-[#006eb7]/20 outline-none appearance-none transition-all"
                     style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22292.4%22 height%3D%22292.4%22%3E%3Cpath fill%3D%22%23475569%22 d%3D%22M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.8 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65rem auto;">
                     <option value="">Todas as categorias</option>
-                    @foreach($categoriasNoticias as $cat)
-                    <option value="{{ $cat }}">{{ $cat }}</option>
+                    @foreach($categoriasFiltro as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->nome }}</option>
                     @endforeach
                 </select>
             </div>

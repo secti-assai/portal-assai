@@ -403,6 +403,18 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/noticias/{id}', [NoticiaController::class, 'destroy'])->name('admin.noticias.destroy');
     });
 
+    // Categorias (Temas) Genéricos
+    Route::middleware(['permission:gerir noticias|gerir servicos|gerir programas|gerir eventos'])->group(function () {
+        Route::resource('categorias', \App\Http\Controllers\Admin\CategoriaController::class)->except(['show'])->names([
+            'index'   => 'admin.categorias.index',
+            'create'  => 'admin.categorias.create',
+            'store'   => 'admin.categorias.store',
+            'edit'    => 'admin.categorias.edit',
+            'update'  => 'admin.categorias.update',
+            'destroy' => 'admin.categorias.destroy',
+        ]);
+    });
+
     Route::middleware(['permission:gerir banners'])->group(function () {
         // Rotas de Banners (Modais)
         Route::resource('banners', BannerController::class)->except(['show'])->names([

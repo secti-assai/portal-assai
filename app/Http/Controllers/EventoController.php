@@ -54,7 +54,8 @@ class EventoController extends Controller
 
     public function create()
     {
-        return view('admin.eventos.create');
+        $categorias = \App\Models\Categoria::where('ativo', true)->orderBy('nome')->pluck('nome', 'id')->toArray();
+        return view('admin.eventos.create', compact('categorias'));
     }
 
     public function store(Request $request)
@@ -65,9 +66,17 @@ class EventoController extends Controller
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
             'imagem' => 'nullable|image|max:2048',
             'status' => 'required|in:confirmado,cancelado',
+            'categoria_id' => 'nullable|exists:categorias,id',
         ]);
 
         $dados = $request->all();
+
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        }
 
         if ($request->hasFile('imagem')) {
             $dados['imagem'] = $request->file('imagem')->store('eventos', 'public');
@@ -81,7 +90,12 @@ class EventoController extends Controller
     public function edit($id)
     {
         $evento = Evento::findOrFail($id);
-        return view('admin.eventos.edit', compact('evento'));
+        $categorias = \App\Models\Categoria::where('ativo', true)
+            ->orWhere('id', $evento->categoria_id)
+            ->orderBy('nome')
+            ->pluck('nome', 'id')
+            ->toArray();
+        return view('admin.eventos.edit', compact('evento', 'categorias'));
     }
 
     public function update(Request $request, $id)
@@ -94,9 +108,19 @@ class EventoController extends Controller
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
             'imagem' => 'nullable|image|max:2048',
             'status' => 'required|in:confirmado,cancelado',
+            'categoria_id' => 'nullable|exists:categorias,id',
         ]);
 
         $dados = $request->all();
+
+        if ($request->filled('categoria_id')) {
+            $categoria = \App\Models\Categoria::find($request->categoria_id);
+            if ($categoria) {
+                $dados['perfis_alvo'] = [$categoria->perfil];
+            }
+        } else {
+            $dados['perfis_alvo'] = null;
+        }
 
         if ($request->hasFile('imagem')) {
             if ($evento->imagem) Storage::disk('public')->delete($evento->imagem);

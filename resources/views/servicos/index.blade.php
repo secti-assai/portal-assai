@@ -138,25 +138,21 @@
                 {{-- Ícone --}}
                 <div class="flex h-14 w-14 items-center justify-center rounded-2xl ring-1 shrink-0 group-hover:scale-110 transition-all duration-300
                     {{ $isConecta ? 'bg-white text-blue-700 ring-blue-200 group-hover:bg-blue-700 group-hover:text-white' : 'bg-blue-100 text-blue-700 ring-blue-200 group-hover:bg-blue-700 group-hover:text-white' }}">
-                    @if($isConecta)
-                        <span class="text-[1.35rem]">{{ $item['icone'] ?? '📱' }}</span>
-                    @else
-                        @php
-                            $iconeBruto = trim((string) ($item['icone'] ?? ''));
-                            if ($iconeBruto !== '') {
-                                if (Str::contains($iconeBruto, ['fa-solid','fa-regular','fa-brands','fas','far','fab'])) {
-                                    $iconeClasse = $iconeBruto;
-                                } elseif (Str::startsWith($iconeBruto, 'fa-')) {
-                                    $iconeClasse = 'fa-solid ' . $iconeBruto;
-                                } else {
-                                    $iconeClasse = 'fa-solid fa-' . $iconeBruto;
-                                }
+                    @php
+                        $iconeBruto = trim((string) ($item['icone'] ?? ''));
+                        if ($iconeBruto !== '') {
+                            if (Str::contains($iconeBruto, ['fa-solid','fa-regular','fa-brands','fas','far','fab'])) {
+                                $iconeClasse = $iconeBruto;
+                            } elseif (Str::startsWith($iconeBruto, 'fa-')) {
+                                $iconeClasse = 'fa-solid ' . $iconeBruto;
                             } else {
-                                $iconeClasse = 'fa-solid fa-file-lines';
+                                $iconeClasse = 'fa-solid fa-' . $iconeBruto;
                             }
-                        @endphp
-                        <i class="{{ $iconeClasse }} text-[1.35rem]"></i>
-                    @endif
+                        } else {
+                            $iconeClasse = 'fa-solid fa-file-lines';
+                        }
+                    @endphp
+                    <i class="{{ $iconeClasse }} text-[1.35rem]"></i>
                 </div>
 
                 <div class="flex-1 min-w-0 pt-1">

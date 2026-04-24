@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options' => [], 'value' => null, 'required' => false])
+@props(['name', 'label', 'options' => [], 'value' => null, 'required' => false, 'placeholder' => null])
 
 <div class="mb-4">
     <label for="{{ $name }}" class="block mb-2 text-sm font-bold text-gray-700">
@@ -10,6 +10,9 @@
         {{ $required ? 'required' : '' }}
         {{ $attributes->merge(['class' => 'w-full px-4 py-2.5 leading-tight text-gray-700 border rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 ' . ($errors->has($name) ? 'border-red-500' : 'border-gray-300')]) }}
     >
+        @if($placeholder)
+            <option value="">{{ $placeholder }}</option>
+        @endif
         @foreach($options as $optionValue => $optionLabel)
             <option value="{{ $optionValue }}" @selected(old($name, $value) == $optionValue)>{{ $optionLabel }}</option>
         @endforeach
