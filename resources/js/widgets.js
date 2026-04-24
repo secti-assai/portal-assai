@@ -128,7 +128,7 @@ const registerWidgets = () => {
             const address = this.formatAddress(item.address || '');
             const phone = String(item.contact || '').trim();
             let output = name + ': ' + (address || 'Endereco indisponivel');
-            if (phone) output += ' (' + phone + ')';
+            if (phone) output += ' - ' + phone;
             return output;
         },
 
