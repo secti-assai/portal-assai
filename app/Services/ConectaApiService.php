@@ -15,11 +15,15 @@ class ConectaApiService
         $this->baseUrl = config('services.conecta.url');
     }
 
-    public function getServicos(string $perfil = 'todos', int $perPage = 15): array
+    /**
+     * Retorna TODOS os serviços do Conecta (percorre todas as páginas).
+     * Cada item é normalizado com um campo 'source' = 'conecta'.
+     */
+    public function getTodosServicos(string $perfil = 'todos'): array
     {
-        $cacheKey = "conecta_servicos_perfil_{$perfil}_limit_{$perPage}";
+        $cacheKey = "conecta_todos_servicos_{$perfil}";
 
-        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($perfil, $perPage) {
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($perfil) {
             try {
                 $apiKey = config('services.conecta.key');
 
@@ -29,23 +33,41 @@ class ConectaApiService
                     $request = $request->withHeaders(['X-API-Key' => $apiKey]);
                 }
 
-                $response = $request->get("{$this->baseUrl}/api/v1/integracao/portal/servicos", [
-                    'perfil'   => $perfil,
-                    'per_page' => $perPage,
-                ]);
-
-                if (!$response->successful()) {
-                    Log::warning('Conecta API retornou erro.', [
-                        'status' => $response->status(),
-                        'body'   => $response->body(),
-                    ]);
-                    return ['data' => []];
+                if (app()->environment('local')) {
+                    $request = $request->withoutVerifying();
                 }
 
-                return $response->json();
+                $todos = [];
+                $page  = 1;
+
+                do {
+                    $response = $request->get("{$this->baseUrl}/api/v1/integracao/portal/servicos", [
+                        'perfil'   => $perfil,
+                        'per_page' => 50,
+                        'page'     => $page,
+                    ]);
+
+                    if (!$response->successful()) {
+                        Log::warning('Conecta API retornou erro.', [
+                            'status' => $response->status(),
+                            'body'   => $response->body(),
+                        ]);
+                        break;
+                    }
+
+                    $payload     = $response->json();
+                    $todos       = array_merge($todos, $payload['data'] ?? []);
+                    $lastPage    = $payload['last_page']    ?? 1;
+                    $currentPage = $payload['current_page'] ?? 1;
+                    $page++;
+
+                } while ($currentPage < $lastPage);
+
+                return $todos;
+
             } catch (\Exception $e) {
                 Log::error('Erro de I/O na API Conecta: ' . $e->getMessage());
-                return ['data' => []];
+                return [];
             }
         });
     }

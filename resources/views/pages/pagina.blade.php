@@ -49,18 +49,7 @@
     'Solicitar matricula na rede municipal',
     ])->take(3);
 
-    $servicosPlMobile = [
-    ['titulo' => 'Nota Fiscal Pr. / ISS', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
-    ['titulo' => 'Alvará Web', 'icone' => 'fa-building-columns', 'link' => '#'],
-    ['titulo' => 'Holerite Online', 'icone' => 'fa-file-invoice', 'link' => '#'],
-    ['titulo' => 'ITBI', 'icone' => 'fa-house-circle-check', 'link' => '#'],
-    ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
-    ['titulo' => 'Portal da Transparência', 'icone' => 'fa-money-bill-trend-up', 'link' => '#'],
-    ['titulo' => 'Ouvidoria', 'icone' => 'fa-bullhorn', 'link' => '#'],
-    ['titulo' => 'Procon', 'icone' => 'fa-scale-balanced', 'link' => '#'],
-    ['titulo' => 'Diário Oficial', 'icone' => 'fa-book-bookmark', 'link' => '#'],
-    ['titulo' => 'Licitações', 'icone' => 'fa-file-contract', 'link' => '#'],
-    ];
+
 
     $calendarMesParam = request()->query('mes');
     $calendarMonth = null;
@@ -371,28 +360,23 @@
         <section class="bg-white-section">
             <h2 class="section-title font-bold">Mais Acessados</h2>
             <div class="small-cards-grid">
-                @if(isset($servicos) && $servicos->count() > 0)
-                @foreach($servicos->take(8) as $servicoItem)
+                @forelse(($servicosHome ?? collect())->take(8) as $servicoItem)
                 <div class="small-card group relative">
-                    <a href="{{ route('servicos.acessar', $servicoItem->id) }}" target="_blank" rel="noopener"
+                    <a href="{{ $servicoItem['link'] }}"
+                        {{ ($servicoItem['is_conecta'] ?? false) ? 'target="_blank" rel="noopener"' : '' }}
                         class="flex flex-col items-center justify-center w-full h-full px-1 py-3">
-                        @php $iconeServico = !empty($servicoItem->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servicoItem->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconeServico }} service-icon" aria-hidden="true"></i>
-                        <h4 class="small-card-title">{{ $servicoItem->titulo }}</h4>
-                    </a>
-                </div>
-                @endforeach
-                @else
-                @foreach(collect($servicosPlMobile)->take(8) as $servicoItem)
-                <div class="small-card group relative">
-                    <a href="{{ $servicoItem['link'] }}" target="_blank" rel="noopener"
-                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3">
-                        <i class="fa-solid {{ $servicoItem['icone'] }} service-icon" aria-hidden="true"></i>
+                        @if($servicoItem['is_conecta'] ?? false)
+                            <span class="service-icon text-3xl leading-none" aria-hidden="true">{{ $servicoItem['icone'] ?? '📱' }}</span>
+                        @else
+                            @php $iconeServico = !empty($servicoItem['icone']) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servicoItem['icone']) : 'file-lines'; @endphp
+                            <i class="fa-solid fa-{{ $iconeServico }} service-icon" aria-hidden="true"></i>
+                        @endif
                         <h4 class="small-card-title">{{ $servicoItem['titulo'] }}</h4>
                     </a>
                 </div>
-                @endforeach
-                @endif
+                @empty
+                    {{-- sem serviços --}}
+                @endforelse
             </div>
             <div class="all-btn-wrapper">
                 <a href="{{ route('servicos.index') }}" class="all-btn"><i class="fa-solid fa-table-cells-large"
@@ -644,24 +628,21 @@
                 <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
                     style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>
                 <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
-                    @if(isset($servicos) && $servicos->count() > 0)
-                    @foreach($servicos->take(10) as $servico)
-                    <a href="{{ route('servicos.acessar', $servico->id) }}" target="_blank" rel="noopener"
+                    @forelse(($servicosHome ?? collect())->take(10) as $servico)
+                    <a href="{{ $servico['link'] }}"
+                        {{ ($servico['is_conecta'] ?? false) ? 'target="_blank" rel="noopener"' : '' }}
                         class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-                        @php $iconeServico = !empty($servico->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servico->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconeServico }} text-6xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug">{{ $servico->titulo }}</h3>
+                        @if($servico['is_conecta'] ?? false)
+                            <span class="text-5xl mb-3 mt-2 leading-none" aria-hidden="true">{{ $servico['icone'] ?? '📱' }}</span>
+                        @else
+                            @php $iconeServico = !empty($servico['icone']) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servico['icone']) : 'file-lines'; @endphp
+                            <i class="fa-solid fa-{{ $iconeServico }} text-6xl text-[#006eb7] mb-3 mt-2"></i>
+                        @endif
+                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug">{{ $servico['titulo'] }}</h3>
                     </a>
-                    @endforeach
-                    @else
-                    @foreach(collect($servicosPlMobile)->take(10) as $servico)
-                    <a href="{{ $servico['link'] }}" target="_blank" rel="noopener"
-                        class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-                        <i class="fa-solid {{ $servico['icone'] }} text-4xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-[0.95rem] font-medium text-[#006eb7] leading-snug">{{ $servico['titulo'] }}</h3>
-                    </a>
-                    @endforeach
-                    @endif
+                    @empty
+                        {{-- sem serviços --}}
+                    @endforelse
                 </div>
                 <div class="mt-10 flex justify-center">
                     <a href="{{ route('servicos.index') }}"
