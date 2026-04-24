@@ -37,5 +37,6 @@ return [
 
     'conecta' => [
         'url' => env('CONECTA_API_URL', 'https://conecta.assai.pr.gov.br'),
+        'key' => env('CONECTA_API_KEY'),
     ],
 ];

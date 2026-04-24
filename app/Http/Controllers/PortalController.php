@@ -45,7 +45,7 @@ class PortalController extends Controller
     }
 
     // Página inicial
-    public function index(Request $request)
+    public function index(Request $request, ConectaApiService $conectaApi)
     {
         $perfil = $request->cookie('portal_perfil', 'todos');
 
@@ -106,11 +106,29 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Serviços (Filtro Perfil Aplicado)
+        // Serviços Locais (Filtro Perfil Aplicado — Mais Acessados)
         $servicosQuery = Servico::where('ativo', true)
             ->orderByDesc('acessos')
             ->take(10);
         $servicos = $this->aplicarFiltroPerfil($servicosQuery, $perfil)->get();
+
+        // Serviços Conecta (normalizado para a home)
+        $conectaRaw      = $conectaApi->getTodosServicos($perfil);
+        $conectaHome     = collect($conectaRaw)->take(10)->map(fn($s) => [
+            'titulo'     => $s['titulo'] ?? '',
+            'icone'      => $s['icone']  ?? null,
+            'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+            'is_conecta' => true,
+        ]);
+
+        // Merge: locais primeiro, conecta preenche até 10
+        $localHome = $servicos->map(fn($s) => [
+            'titulo'     => $s->titulo,
+            'icone'      => $s->icone,
+            'link'       => route('servicos.acessar', $s->id),
+            'is_conecta' => false,
+        ]);
+        $servicosHome = $localHome->concat($conectaHome)->take(10);
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -146,6 +164,7 @@ class PortalController extends Controller
             'eventos',
             'programas',
             'servicos',
+            'servicosHome',
             'inscricoesAbertas',
             'sugestoesIA',
             'portais',
@@ -279,34 +298,60 @@ class PortalController extends Controller
 
     public function servicos(Request $request, ConectaApiService $conectaApi)
     {
-        $perfil = $request->cookie('portal_perfil', 'todos');
+        $perfil     = $request->cookie('portal_perfil', 'todos');
+        $termoBusca = $request->string('search')->trim()->toString();
+        $page       = max(1, $request->integer('page', 1));
+        $perPage    = 21;
 
-        // 1. Processamento da Query Local (Portal)
-        $query = \App\Models\Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+        // 1. Serviços locais do portal → normalizados
+        $queryLocal = \App\Models\Servico::where('ativo', true)->with('secretaria')->orderBy('titulo');
+        $this->aplicarFiltroPerfil($queryLocal, $perfil);
+        $localServicos = $queryLocal->get()->map(fn($s) => [
+            'source'    => 'local',
+            'titulo'    => $s->titulo,
+            'descricao' => $s->descricao ? strip_tags($s->descricao) : '',
+            'icone'     => $s->icone,
+            'orgao'     => $s->secretaria?->nome,
+            'link'      => route('servicos.acessar', $s->id),
+            'externo'   => false,
+        ]);
 
-        $this->aplicarFiltroPerfil($query, $perfil);
+        // 2. Serviços do Conecta → normalizados
+        $conectaBase = $conectaApi->getTodosServicos($perfil);
+        $conectaServicos = collect($conectaBase)->map(fn($s) => [
+            'source'    => 'conecta',
+            'titulo'    => $s['titulo'] ?? '',
+            'descricao' => $s['descricao'] ?? '',
+            'icone'     => $s['icone'] ?? null,
+            'orgao'     => $s['orgao'] ?? null,
+            'link'      => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+            'externo'   => true,
+        ]);
 
-        if ($request->filled('search')) {
-            $termo = $request->string('search')->trim()->toString();
-            $query->where(function ($q) use ($termo) {
-                $busca = '%' . $this->normalizeSearchTerm($termo) . '%';
-                $q->whereRaw($this->normalizedColumnSql('titulo') . ' LIKE ?', [$busca])
-                    ->orWhereRaw($this->normalizedColumnSql('link') . ' LIKE ?', [$busca]);
-            });
+        // 3. Merge: Conecta primeiro, depois locais
+        $todos = $conectaServicos->concat($localServicos);
+
+        // 4. Busca unificada
+        if ($termoBusca !== '') {
+            $busca = mb_strtolower($this->normalizeSearchTerm($termoBusca));
+            $todos = $todos->filter(fn($s) =>
+                str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'])), $busca) ||
+                str_contains(mb_strtolower($this->normalizeSearchTerm($s['descricao'])), $busca)
+            );
         }
 
-        $servicos = $query->paginate(21)->withQueryString();
+        // 5. Paginador único do Laravel
+        $total    = $todos->count();
+        $itens    = $todos->slice(($page - 1) * $perPage, $perPage)->values();
+        $servicos = new \Illuminate\Pagination\LengthAwarePaginator(
+            $itens,
+            $total,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-        // 2. Processamento da API Externa (Conecta)
-        $payloadConecta = $conectaApi->getServicos($perfil);
-        $servicosConecta = $payloadConecta['data'] ?? [];
-
-        // 3. Retorno
-        return view('servicos.index', compact(
-            'servicos',
-            'servicosConecta',
-            'perfil'
-        ));
+        return view('servicos.index', compact('servicos', 'perfil'));
     }
 
     public function acessarServico($id)
