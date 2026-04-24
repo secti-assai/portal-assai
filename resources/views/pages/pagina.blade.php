@@ -39,8 +39,6 @@
 
     {{-- Variáveis Globais da Home --}}
     @php
-    $destaquesSlider = isset($noticias) && $noticias->count() > 0 ? $noticias->take(3) : collect();
-    $recentesSidebar = isset($noticias) && $noticias->count() > 3 ? $noticias->skip(3)->take(3) : (isset($noticias) ? $noticias->take(3) : collect());
 
     $sugestoesBusca = collect($sugestoesIA ?? [
     'Emitir nota fiscal eletronica',
@@ -50,16 +48,16 @@
     ])->take(3);
 
     $servicosPlMobile = [
-    ['titulo' => 'Nota Fiscal Pr. / ISS', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
-    ['titulo' => 'Alvará Web', 'icone' => 'fa-building-columns', 'link' => '#'],
-    ['titulo' => 'Holerite Online', 'icone' => 'fa-file-invoice', 'link' => '#'],
-    ['titulo' => 'ITBI', 'icone' => 'fa-house-circle-check', 'link' => '#'],
-    ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
-    ['titulo' => 'Portal da Transparência', 'icone' => 'fa-money-bill-trend-up', 'link' => '#'],
-    ['titulo' => 'Ouvidoria', 'icone' => 'fa-bullhorn', 'link' => '#'],
-    ['titulo' => 'Procon', 'icone' => 'fa-scale-balanced', 'link' => '#'],
-    ['titulo' => 'Diário Oficial', 'icone' => 'fa-book-bookmark', 'link' => '#'],
     ['titulo' => 'Licitações', 'icone' => 'fa-file-contract', 'link' => '#'],
+    ['titulo' => 'Boletim da Dengue', 'icone' => 'fa-mosquitonet', 'link' => '#'],
+    ['titulo' => 'Concurso Público', 'icone' => 'fa-user-graduate', 'link' => '#'],
+    ['titulo' => 'Livro Eletrônico', 'icone' => 'fa-book-open-reader', 'link' => '#'],
+    ['titulo' => 'Nota Fiscal Eletrônica', 'icone' => 'fa-file-invoice-dollar', 'link' => '#'],
+    ['titulo' => 'Cidadão Web', 'icone' => 'fa-user-gear', 'link' => '#'],
+    ['titulo' => 'Telefones Úteis', 'icone' => 'fa-phone-volume', 'link' => '#'],
+    ['titulo' => 'Vagas de Emprego', 'icone' => 'fa-briefcase', 'link' => '#'],
+    ['titulo' => 'Cadastro no Gov.Assaí', 'icone' => 'fa-id-card-clip', 'link' => '#'],
+    ['titulo' => 'Classificados de Assaí', 'icone' => 'fa-tags', 'link' => '#'],
     ];
 
     $calendarMesParam = request()->query('mes');
@@ -378,62 +376,70 @@
 
         {{-- Notícias Mobile --}}
         <section class="bg-white-section border-b border-slate-100">
-            <h2 class="section-title font-bold mb-6">Últimas Notícias</h2>
-
-            @if($destaquesSlider->count() > 0)
-            <div class="px-2 mb-8">
-                <div class="swiper swiper-noticias-mobile w-full pb-10">
-                    <div class="swiper-wrapper">
-                        @foreach($destaquesSlider as $destaque)
-                        <div class="swiper-slide h-auto">
-                            <a href="{{ route('noticias.show', $destaque->slug) }}"
-                                class="flex flex-col h-full bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                                <div class="w-full aspect-[4/3] relative shrink-0 bg-slate-100">
-                                    <img src="{{ $destaque->imagem_capa ? (str_starts_with($destaque->imagem_capa, 'img/') ? asset($destaque->imagem_capa) : asset('storage/' . $destaque->imagem_capa)) : asset('img/Assai.jpg') }}"
-                                        class="absolute inset-0 w-full h-full object-cover"
-                                        alt="{{ $destaque->titulo }}" loading="lazy">
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-                                    </div>
-                                </div>
-                                <div class="p-5 flex-1 flex flex-col justify-between bg-white">
-                                    <h3 class="text-[1.1rem] font-bold text-slate-800 leading-snug mb-3"
-                                        style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $destaque->titulo }}
-                                    </h3>
-                                    <span class="text-[11px] text-slate-500 font-medium uppercase tracking-wide">
-                                        {{ \Carbon\Carbon::parse($destaque->data_publicacao)->format('d/m/Y') }}
-                                    </span>
-                                </div>
-                            </a>
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="swiper-pagination !bottom-0"></div>
-                </div>
+            <div class="px-4 text-center mb-8">
+                <h2 class="section-title font-bold mb-1">Portal de Notícias</h2>
+                <p class="text-xs text-slate-500 font-medium">Acompanhe as notícias postadas da Gestão do Município</p>
             </div>
 
-            <div class="px-2">
+            @if($destaqueNoticia)
+            <div class="px-4 mb-8">
+                {{-- Destaque Principal Mobile --}}
+                <a href="{{ route('noticias.show', $destaqueNoticia->slug) }}"
+                    class="flex flex-col bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="w-full aspect-[16/9] relative shrink-0 bg-slate-100">
+                        <img src="{{ $destaqueNoticia->imagem_capa ? (str_starts_with($destaqueNoticia->imagem_capa, 'img/') ? asset($destaqueNoticia->imagem_capa) : asset('storage/' . $destaqueNoticia->imagem_capa)) : asset('img/Assai.jpg') }}"
+                            class="absolute inset-0 w-full h-full object-cover"
+                            alt="{{ $destaqueNoticia->titulo }}" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <span class="inline-block px-2 py-0.5 bg-yellow-400 text-blue-900 text-[9px] font-black uppercase tracking-widest rounded mb-2">
+                                {{ $destaqueNoticia->categoria }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between bg-white">
+                        <h3 class="text-[1.15rem] font-bold text-slate-800 leading-snug mb-3"
+                            style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $destaqueNoticia->titulo }}
+                        </h3>
+                        <span class="text-[11px] text-slate-500 font-medium uppercase tracking-wide flex items-center gap-2">
+                            <i class="fa-regular fa-calendar"></i>
+                            {{ \Carbon\Carbon::parse($destaqueNoticia->data_publicacao)->format('d/m/Y') }}
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="px-4">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-extrabold text-slate-800"
-                        style="font-family: 'Rawline', 'Open Sans', sans-serif;">Recentes</h3>
-                    <a href="{{ route('noticias.index') }}"
-                        class="text-[12px] font-bold text-[#006eb7] hover:underline py-1">Ver Todas</a>
+                        style="font-family: 'Rawline', 'Open Sans', sans-serif;">Mais Recentes</h3>
                 </div>
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-4">
                     @foreach($recentesSidebar as $recente)
                     <a href="{{ route('noticias.show', $recente->slug) }}"
-                        class="relative h-[200px] w-full block group overflow-hidden rounded-xl shadow-sm border border-slate-100">
-                        <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
-                            class="absolute inset-0 w-full h-full object-cover" alt="{{ $recente->titulo }}"
-                            loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-4">
-                            <h4 class="text-white text-[13px] font-bold leading-snug line-clamp-3"
+                        class="flex items-start gap-4 p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+                        <div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-slate-50">
+                            <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
+                                class="w-full h-full object-cover" alt="{{ $recente->titulo }}"
+                                loading="lazy">
+                        </div>
+                        <div class="flex-1 min-w-0 py-1">
+                            <h4 class="text-slate-800 text-[13px] font-bold leading-tight line-clamp-3 mb-2"
                                 style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $recente->titulo }}</h4>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                {{ \Carbon\Carbon::parse($recente->data_publicacao)->format('d/m/Y') }}
+                            </span>
                         </div>
                     </a>
                     @endforeach
                 </div>
+            </div>
+
+            <div class="mt-8 px-4 flex justify-center">
+                <a href="{{ route('noticias.index') }}"
+                    class="w-full bg-[#006eb7] text-white rounded-xl py-4 text-sm font-black flex items-center justify-center gap-3 hover:bg-blue-800 transition shadow-md">
+                    <i class="fa-solid fa-plus-circle"></i> Ver todas as Notícias
+                </a>
             </div>
             @else
             <div
@@ -557,13 +563,24 @@
     {{-- ==========================================
         SEÇÕES DESKTOP (Apenas telas grandes)
         ========================================== --}}
-    <div class="hidden lg:block">
 
         {{-- Programas Desktop --}}
         <section id="programas-desktop" class="pb-16 pt-10 bg-[#eef1f5]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Fique Ligado</h2>
+                <div class="flex flex-col items-center mb-10">
+                    <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
+                        </div>
+                        <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Destaques</h3>
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Fique Ligado</h2>
+                </div>
                 @if(isset($programas) && $programas->count() > 0)
                 <div class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
                     <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
@@ -591,94 +608,71 @@
             </div>
         </section>
 
-        {{-- Nossos Portais Desktop --}}
-        <section id="nossos-portais-desktop" class="py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
-            <div class="container px-4 mx-auto max-w-6xl font-sans">
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Nossos Portais</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    @foreach($portais as $portal)
-                    <a href="{{ $portal->url }}" target="_blank" rel="noopener"
-                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group
-                        {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
-                        @php $iconePortal = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconePortal }} text-6xl {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2"></i>
-                        <h3 class="text-lg font-medium {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
-        {{-- Notícias Desktop Correção Flexbox & Título --}}
+        {{-- Portal de Notícias Desktop --}}
         <section id="noticias-desktop" class="py-16 bg-white border-t border-slate-100">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
 
-                {{-- Título Padronizado --}}
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Últimas Notícias</h2>
-
-                @if($destaquesSlider->count() > 0)
-                <div class="grid grid-cols-12 gap-8 lg:h-[500px]">
-                    {{-- Coluna Esquerda: Slider Destaque --}}
-                    <div class="col-span-8 flex flex-col h-full">
-                        <div
-                            class="swiper swiper-noticias-desktop w-full h-full group relative flex-1 overflow-hidden shadow-sm border border-slate-100">
-                            <div class="swiper-wrapper h-full">
-                                @foreach($destaquesSlider as $destaque)
-                                <div class="swiper-slide bg-white h-full flex flex-col">
-                                    <a href="{{ route('noticias.show', $destaque->slug) }}"
-                                        class="flex flex-col h-full focus:outline-none focus:ring-2 focus:ring-[#006eb7]">
-                                        <div class="p-6 shrink-0 bg-white">
-                                            <h3 class="text-[1.85rem] font-bold text-slate-800 mb-3 leading-[1.2] line-clamp-2"
-                                                style="font-family: 'Rawline', 'Open Sans', sans-serif;">
-                                                {{ $destaque->titulo }}
-                                            </h3>
-                                            <div class="text-[13px] text-slate-500 flex flex-col gap-0.5 font-medium">
-                                                <span>Data da Publicação:
-                                                    {{ \Carbon\Carbon::parse($destaque->data_publicacao)->format('d/m/Y') }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="relative w-full flex-1 bg-slate-100 border-t border-slate-100">
-                                            <img src="{{ $destaque->imagem_capa ? (str_starts_with($destaque->imagem_capa, 'img/') ? asset($destaque->imagem_capa) : asset('storage/' . $destaque->imagem_capa)) : asset('img/Assai.jpg') }}"
-                                                class="absolute inset-0 w-full h-full object-cover"
-                                                alt="{{ $destaque->titulo }}" loading="lazy">
-                                        </div>
-                                    </a>
-                                </div>
-                                @endforeach
-                            </div>
-                            @if($destaquesSlider->count() > 1)
-                            <div class="swiper-button-prev !bg-none !bg-black/40 hover:!bg-black/80 !w-8 !h-8 !rounded-full !mt-0 !translate-y-[-50%] transition-all backdrop-blur-sm top-[75%] !left-3 !flex !items-center !justify-center !text-transparent" style="--swiper-navigation-size: 0px;">
-                                <i class="fa-solid fa-chevron-left !text-white text-[10px]"></i>
-                            </div>
-                            <div class="swiper-button-next !bg-none !bg-black/40 hover:!bg-black/80 !w-8 !h-8 !rounded-full !mt-0 !translate-y-[-50%] transition-all backdrop-blur-sm top-[75%] !right-3 !flex !items-center !justify-center !text-transparent" style="--swiper-navigation-size: 0px;">
-                                <i class="fa-solid fa-chevron-right !text-white text-[10px]"></i>
-                            </div>
-                            @endif
+                <div class="flex flex-col items-center mb-10">
+                    <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
                         </div>
+                        <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Portal de</h3>
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Notícias</h2>
+                </div>
+
+                @if($destaqueNoticia)
+                <div class="grid grid-cols-12 gap-8 lg:h-[500px] mb-16">
+                    {{-- Coluna Esquerda: Notícia Destaque (Estático) --}}
+                    <div class="col-span-8 flex flex-col h-full">
+                        <article class="relative w-full h-full group overflow-hidden rounded-2xl shadow-lg border border-slate-100">
+                            <a href="{{ route('noticias.show', $destaqueNoticia->slug) }}" class="block w-full h-full">
+                                <img src="{{ $destaqueNoticia->imagem_capa ? (str_starts_with($destaqueNoticia->imagem_capa, 'img/') ? asset($destaqueNoticia->imagem_capa) : asset('storage/' . $destaqueNoticia->imagem_capa)) : asset('img/Assai.jpg') }}"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    alt="{{ $destaqueNoticia->titulo }}" loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
+                                <div class="absolute bottom-0 left-0 w-full p-8">
+                                    <h3 class="text-3xl font-bold text-white leading-[1.1] mb-5 group-hover:text-yellow-400 transition-colors"
+                                        style="font-family: 'Montserrat', sans-serif; letter-spacing: -0.5px;">
+                                        {{ $destaqueNoticia->titulo }}
+                                    </h3>
+                                    <div class="flex flex-col gap-1.5 text-white/70 text-[11px] font-semibold uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <span>Redação: Secretaria de Comunicação Social</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span>Data da Publicação: {{ \Carbon\Carbon::parse($destaqueNoticia->data_publicacao)->format('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
                     </div>
 
                     {{-- Coluna Direita: Recentes --}}
                     <div class="col-span-4 flex flex-col h-full">
-                        <div class="flex items-center justify-between mb-4 shrink-0 px-1">
-                            <h3 class="text-[1.3rem] font-extrabold text-slate-800"
-                                style="font-family: 'Rawline', 'Open Sans', sans-serif;">Recentes</h3>
-                            <a href="{{ route('noticias.index') }}"
-                                class="text-[13px] font-bold text-[#006eb7] hover:underline px-2 py-1">Ver Todas</a>
+                        <div class="flex items-center justify-between mb-6 shrink-0 bg-slate-50 p-4 rounded-t-xl border-x border-t border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-800"
+                                style="font-family: 'Montserrat', sans-serif;">Recentes</h3>
+                            <a href="{{ route('noticias.index') }}" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">Todas</a>
                         </div>
                         <div class="flex flex-col gap-4 flex-1">
                             @foreach($recentesSidebar as $recente)
                             <a href="{{ route('noticias.show', $recente->slug) }}"
-                                class="relative flex-1 w-full block group overflow-hidden shadow-sm border border-slate-100 focus:outline-none focus:ring-2 focus:ring-[#006eb7] min-h-[110px]">
+                                class="relative flex-1 w-full block group overflow-hidden border-x border-b border-slate-100 last:rounded-b-xl focus:outline-none focus:ring-2 focus:ring-[#006eb7] min-h-[120px]">
                                 <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
                                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     alt="{{ $recente->titulo }}" loading="lazy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10">
-                                </div>
-                                <div class="absolute bottom-0 left-0 w-full p-4">
-                                    <h4 class="text-white text-[14px] font-bold leading-snug line-clamp-3 drop-shadow-md"
-                                        style="font-family: 'Rawline', 'Open Sans', sans-serif;">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent"></div>
+                                <div class="absolute bottom-0 left-0 w-full p-4 bg-black/40 backdrop-blur-[2px]">
+                                    <h4 class="text-white text-xs font-bold leading-snug line-clamp-2 group-hover:text-yellow-400 transition-colors"
+                                        style="font-family: 'Montserrat', sans-serif;">
                                         {{ $recente->titulo }}
                                     </h4>
                                 </div>
@@ -687,77 +681,240 @@
                         </div>
                     </div>
                 </div>
-                @else
-                <div
-                    class="border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center text-sm text-slate-500 shadow-sm">
-                    Nenhuma notícia publicada no momento.
+
+                {{-- Seção Temática com Select --}}
+                <div class="mt-16 pt-12 border-t border-slate-100">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight" style="font-family: 'Montserrat', sans-serif;">Notícias por Tema</h3>
+                            <p class="text-sm text-slate-500 font-medium">Selecione uma categoria para filtrar</p>
+                        </div>
+                        <div class="relative min-w-[280px]">
+                            <select id="select-tema-noticias" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-bold appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer shadow-sm">
+                                <option value="">Selecione um Tema</option>
+                                @foreach($categoriasNoticias as $cat)
+                                    <option value="{{ $cat }}">{{ $cat }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-blue-600">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Container de Notícias Temáticas (AJAX) --}}
+                    <div id="container-noticias-tematicas" class="hidden grid-cols-1 md:grid-cols-3 gap-8 mt-10 transition-opacity duration-300">
+                    </div>
                 </div>
+
+                <div id="btn-ver-todas-container" class="mt-16 flex justify-center">
+                    <a href="{{ route('noticias.index') }}"
+                        class="bg-[#006eb7] text-white rounded-full px-10 py-4 text-base font-black flex items-center gap-3 hover:bg-blue-800 transition shadow-lg hover:-translate-y-1">
+                        <i class="fa-solid fa-plus-circle"></i> Ver todas as Notícias
+                    </a>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const selectTema = document.getElementById('select-tema-noticias');
+                        const container = document.getElementById('container-noticias-tematicas');
+                        const excludeIds = @json(isset($noticias) ? $noticias->pluck('id') : []);
+
+                        selectTema.addEventListener('change', function() {
+                            const tema = this.value;
+                            const btnTodas = document.getElementById('btn-ver-todas-container');
+
+                            if (!tema) {
+                                container.classList.add('hidden');
+                                container.classList.remove('grid');
+                                container.innerHTML = '';
+                                btnTodas.classList.remove('hidden');
+                                return;
+                            }
+
+                            // Ao selecionar um tema, mostra o container e esconde o botão "Ver todas" (opcional, ou mantém ambos)
+                            container.classList.remove('hidden');
+                            container.classList.add('grid');
+                            // btnTodas.classList.add('hidden'); // Descomente se quiser esconder o botão global ao filtrar
+
+                            container.style.opacity = '0.5';
+
+                            fetch(`{{ route('api.noticias.tema') }}?categoria=${encodeURIComponent(tema)}&${excludeIds.map(id => `exclude[]=${id}`).join('&')}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    container.style.opacity = '1';
+                                    if (data.length === 0) {
+                                        container.innerHTML = `
+                                            <div class="col-span-3 flex flex-col items-center justify-center py-16 text-slate-400">
+                                                <p class="font-medium">Nenhuma notícia encontrada para este tema (excluindo destaques).</p>
+                                            </div>
+                                        `;
+                                        return;
+                                    }
+
+                                    let html = '';
+                                    data.forEach(noticia => {
+                                        const imgUrl = noticia.imagem_capa 
+                                            ? (noticia.imagem_capa.startsWith('img/') ? `{{ asset('') }}${noticia.imagem_capa}` : `{{ asset('storage') }}/${noticia.imagem_capa}`)
+                                            : `{{ asset('img/Assai.jpg') }}`;
+                                        
+                                        const date = new Date(noticia.data_publicacao);
+                                        const formattedDate = date.toLocaleDateString('pt-BR');
+
+                                        html += `
+                                            <article class="flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition-all group">
+                                                <a href="/noticia/${noticia.slug}" class="block h-48 overflow-hidden">
+                                                    <img src="${imgUrl}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="${noticia.titulo}">
+                                                </a>
+                                                <div class="p-6 flex-1 flex flex-col">
+                                                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">${noticia.categoria}</span>
+                                                    <h4 class="text-lg font-bold text-slate-800 leading-snug mb-4 group-hover:text-blue-700 transition-colors line-clamp-3">${noticia.titulo}</h4>
+                                                    <div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400 font-bold uppercase tracking-wide">
+                                                        <span>${formattedDate}</span>
+                                                        <span class="text-blue-500">Ler mais <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        `;
+                                    });
+                                    container.innerHTML = html;
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching thematic news:', error);
+                                    container.style.opacity = '1';
+                                    container.innerHTML = '<div class="col-span-3 text-center py-16 text-red-400">Erro ao carregar notícias.</div>';
+                                });
+                        });
+                    });
+                </script>
+
                 @endif
             </div>
         </section>
 
-        {{-- Banners Destaque Desktop --}}
-        @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
-        <section class="pb-16 bg-white border-b border-[#e2e8f0]">
-            <div class="container px-4 mx-auto max-w-5xl font-sans">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-                    @foreach($bannersDestaque as $banner)
-                    <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
-                        class="block">
-                        <div class="w-full aspect-[5/1] max-h-40 min-h-36 flex items-center justify-center bg-white border border-slate-200 overflow-hidden">
-                            <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}"
-                                alt="{{ $banner->titulo }}"
-                                class="w-full h-full object-fill"
-                                loading="lazy"
-                                decoding="async">
-                        </div>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-        @endif
-
         {{-- Serviços Desktop --}}
         <section id="servicos-desktop" class="py-16 bg-[#f8fafc] border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>
-                <div class="grid grid-cols-4 lg:grid-cols-5 gap-4">
-                    @if(isset($servicos) && $servicos->count() > 0)
-                    @foreach($servicos->take(10) as $servico)
-                    <a href="{{ route('servicos.acessar', $servico->id) }}" target="_blank" rel="noopener"
-                        class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-                        @php $iconeServico = !empty($servico->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servico->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconeServico }} text-6xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug">{{ $servico->titulo }}</h3>
-                    </a>
-                    @endforeach
-                    @else
-                    @foreach(collect($servicosPlMobile)->take(10) as $servico)
-                    <a href="{{ $servico['link'] }}" target="_blank" rel="noopener"
-                        class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group">
-                        <i class="fa-solid {{ $servico['icone'] }} text-4xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-[0.95rem] font-medium text-[#006eb7] leading-snug">{{ $servico['titulo'] }}</h3>
-                    </a>
-                    @endforeach
-                    @endif
+                <div class="flex flex-col items-center mb-12">
+                    <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
+                        </div>
+                        <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Serviços</h3>
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Mais Acessados</h2>
                 </div>
-                <div class="mt-10 flex justify-center">
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    @php
+                        // Forçamos o uso do snapshot solicitado pelo usuário para garantir os ícones e títulos corretos
+                        $servicosExibir = collect($servicosPlMobile)->take(10);
+                    @endphp
+                    
+                    @foreach($servicosExibir as $servico)
+                    @php 
+                        $item = (object)$servico; 
+                        // Limpeza robusta para garantir que o ícone funcione
+                        $iconeLimpo = !empty($item->icone) ? str_replace(['fa-solid', 'fas', 'fa-', ' '], '', $item->icone) : 'file-lines';
+                        $link = isset($item->link) ? $item->link : '#';
+                        $titulo = $item->titulo;
+                    @endphp
+                    <a href="{{ $link }}" target="_blank" rel="noopener"
+                        class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group h-full">
+                        <i class="fa-solid fa-{{ $iconeLimpo }} text-6xl text-[#006eb7] mb-3 mt-2 transition-all duration-300"></i>
+                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug transition-colors duration-300 min-h-[48px] flex items-center justify-center px-1">
+                            {{ $titulo }}
+                        </h3>
+                    </a>
+                    @endforeach
+                </div>
+                
+                <div class="mt-12 flex justify-center">
                     <a href="{{ route('servicos.index') }}"
-                        class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
-                        <i class="fa-solid fa-table-cells-large"></i> Ver Todos Serviços
+                        class="bg-white text-[#006eb7] border-2 border-[#006eb7] rounded-full px-10 py-3.5 text-[13px] font-black flex items-center gap-3 hover:bg-[#006eb7] hover:text-white transition-all duration-300 shadow-sm uppercase tracking-wider">
+                        <i class="fa-solid fa-table-cells-large"></i> VER TODOS OS SERVIÇOS
                     </a>
                 </div>
             </div>
         </section>
 
+        {{-- Banners de Perfil Desktop --}}
+        @php
+            $perfilAtual = request()->cookie('portal_perfil', 'todos');
+            
+            $bannersPerfil = [
+                'cidadao' => [
+                    'titulo' => 'Perfil Cidadão',
+                    'itens' => [
+                        ['titulo' => 'Consulte seus Débitos de IPTU', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Consulte seus Débitos de ISSQN', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Central de Estágios', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Plano de Metas', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ],
+                'empresario' => [
+                    'titulo' => 'Perfil Empresário',
+                    'itens' => [
+                        ['titulo' => 'Consulta Prévia Empresa', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Invista em Assaí', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Programa Acelera Assaí', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Portal de Talentos', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ],
+                'servidor' => [
+                    'titulo' => 'Perfil Servidor',
+                    'itens' => [
+                        ['titulo' => 'Consulta Hollerit', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Dúvidas Requerimento', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Cartão Verocard', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Resolução Atestados', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ]
+            ];
+
+            $perfilChave = ($perfilAtual === 'todos' || !isset($bannersPerfil[$perfilAtual])) ? 'cidadao' : $perfilAtual;
+            $bannersExibir = $bannersPerfil[$perfilChave];
+        @endphp
+
+        <section id="banners-perfil-desktop" class="py-12 bg-white border-b border-[#e2e8f0]">
+            <div class="container px-4 mx-auto max-w-6xl font-sans">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    @foreach($bannersExibir['itens'] as $bannerItem)
+                    <a href="{{ $bannerItem['link'] }}" class="group block relative overflow-hidden rounded-[16px] shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 bg-slate-100 aspect-[5/2]">
+                        <img src="{{ asset($bannerItem['imagem']) }}" 
+                             alt="{{ $bannerItem['titulo'] }}" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                             loading="lazy">
+                        {{-- Overlay sutil no hover --}}
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
         {{-- Agenda Desktop --}}
         <section id="agenda-desktop" class="py-16 bg-[#eef1f5]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
-                <h2 class="text-[1.72rem] font-bold text-[#4a5c6a] text-center mb-10"
-                    style="font-family: 'Montserrat', sans-serif;">Calendário de Eventos</h2>
+                <div class="flex flex-col items-center mb-10">
+                    <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
+                        </div>
+                        <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Eventos</h3>
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Calendário</h2>
+                </div>
                 <div class="grid grid-cols-12 gap-8 items-start">
                     <div class="col-span-5 bg-white rounded-2xl p-8 shadow-[0_4px_10px_rgba(0,0,0,0.04)]" id="calendar-desktop-wrap" data-mes="{{ $calendarMonth->format('Y-m') }}">
                         <div class="flex items-center justify-between mb-6 text-[#11181d]">
@@ -841,30 +998,83 @@
                     </a>
                 </div>
             </div>
-    </div>
-    </div>
-    </section>
+        </section>
+
+        {{-- Nossos Portais Desktop --}}
+        <section id="nossos-portais-desktop" class="py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
+            <div class="container px-4 mx-auto max-w-6xl font-sans">
+                <div class="flex flex-col items-center mb-10">
+                    <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
+                        </div>
+                        <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Conheça</h3>
+                        <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                            <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                            <div class="h-px bg-blue-400 w-3/4"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Nossos Portais</h2>
+                </div>
+
+                @php
+                    $portaisFixos = [
+                        ['titulo' => 'Gov.Assaí', 'icone' => 'fa-landmark-flag', 'url' => '#'],
+                        ['titulo' => 'Conecta Assaí', 'icone' => 'fa-wifi', 'url' => '#'],
+                        ['titulo' => 'Sala do Empreendedor Digital', 'icone' => 'fa-briefcase', 'url' => '#'],
+                        ['titulo' => 'Turistando em Assaí', 'icone' => 'fa-camera-retro', 'url' => '#'],
+                        ['titulo' => 'Invista em Assaí', 'icone' => 'fa-chart-line', 'url' => '#'],
+                        ['titulo' => 'Vale do Sol', 'icone' => 'fa-sun', 'url' => '#'],
+                        ['titulo' => 'Portal da Transparência', 'icone' => 'fa-file-lines', 'url' => '#'],
+                    ];
+                @endphp
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                    @foreach($portaisFixos as $portal)
+                    <a href="{{ $portal['url'] }}" target="_blank" rel="noopener"
+                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group
+                        {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
+                        
+                        <i class="fa-solid {{ $portal['icone'] }} text-5xl {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2"></i>
+                        <h3 class="text-base font-bold {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} leading-snug" style="font-family: 'Montserrat', sans-serif;">{{ $portal['titulo'] }}</h3>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
     </div>
 
     {{-- ==========================================
          REDES SOCIAIS (Vitrine Visual 4 Posts)
          ========================================== --}}
-    <section id="redes-sociais-unificada" class="py-12 lg:py-16 bg-white border-t border-slate-100">
-        <div class="container px-4 mx-auto max-w-6xl font-sans">
+    <section id="redes-sociais-unificada" class="py-12 lg:py-16 bg-[#f8fafc] border-t border-slate-200">
+        <div class="container px-4 mx-auto max-w-6xl font-sans text-[#1e3a5f]">
 
-            <h2 class="text-[clamp(1.55rem,5.2vw,1.72rem)] font-bold text-[#4a5c6a] text-center mb-8 lg:mb-10 tracking-[0.01em] leading-[1.2]" style="font-family: 'Montserrat', sans-serif;">
-                Nas Redes Sociais
-            </h2>
+            <div class="flex flex-col items-center mb-10">
+                <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
+                    <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                        <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                        <div class="h-px bg-blue-400 w-3/4 ml-auto"></div>
+                    </div>
+                    <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] whitespace-nowrap">Social</h3>
+                    <div class="flex-1 max-w-[100px] flex flex-col gap-1">
+                        <div class="h-px bg-blue-400 w-full opacity-60"></div>
+                        <div class="h-px bg-blue-400 w-3/4"></div>
+                    </div>
+                </div>
+                <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Redes Sociais</h2>
+            </div>
 
             @if(isset($redesSociais) && $redesSociais->whereNotNull('imagem')->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-10">
                 @foreach($redesSociais as $post)
                 @if($post->imagem)
-                <a href="{{ $post->link ?? '#' }}" target="_blank" rel="noopener" class="block group relative w-full aspect-square rounded-2xl overflow-hidden shadow-md max-w-[360px] mx-auto bg-slate-100">
+                <a href="{{ $post->link ?? '#' }}" target="_blank" rel="noopener" class="block group relative w-full aspect-square rounded-2xl overflow-hidden shadow-md max-w-[360px] mx-auto bg-white border border-slate-100">
 
                     {{-- Imagem --}}
-                    <img src="{{ asset('storage/' . $post->imagem) }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" alt="Post Instagram">
+                    <img src="{{ asset('storage/' . $post->imagem) }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" alt="Post Social">
 
                     {{-- Efeito Hover com ícone --}}
                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
@@ -876,9 +1086,12 @@
             </div>
             @endif
 
-            <div class="flex justify-center w-full mt-2">
-                <a href="https://instagram.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#006eb7] text-white rounded-full px-8 py-3 text-base font-bold flex items-center gap-2 hover:bg-blue-800 transition shadow-md">
-                    <i class="fa-brands fa-instagram" aria-hidden="true"></i> Siga nosso Instagram
+            <div class="flex flex-wrap justify-center items-center gap-4 w-full mt-2">
+                <a href="https://instagram.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#006eb7] text-white rounded-full px-8 py-3.5 text-base font-bold flex items-center gap-3 hover:bg-blue-800 transition-all hover:scale-105 shadow-[0_4px_12px_rgba(0,110,183,0.25)]">
+                    <i class="fa-brands fa-instagram text-xl"></i> Siga nosso Instagram
+                </a>
+                <a href="https://facebook.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#1877F2] text-white rounded-full px-8 py-3.5 text-base font-bold flex items-center gap-3 hover:bg-[#166fe5] transition-all hover:scale-105 shadow-[0_4px_12px_rgba(24,119,242,0.25)]">
+                    <i class="fa-brands fa-facebook-f text-xl"></i> Curta nosso Facebook
                 </a>
             </div>
 

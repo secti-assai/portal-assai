@@ -34,6 +34,7 @@ Route::post('/perfil/definir', [PerfilController::class, 'definir'])->name('perf
 
 Route::get('/noticias', [PortalController::class, 'noticias'])->name('noticias.index');
 Route::get('/noticia/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
+Route::get('/api/noticias-tema', [PortalController::class, 'ajaxNoticias'])->name('api.noticias.tema');
 
 // Agenda
 Route::get('/agenda', [PortalController::class, 'agenda'])->name('agenda.index');
