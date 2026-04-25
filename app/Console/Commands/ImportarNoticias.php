@@ -67,7 +67,7 @@ class ImportarNoticias extends Command
             $imagemLocal = null;
             if (!empty($item['imagem_url'])) {
                 try {
-                    $res = Http::timeout(5)->get($item['imagem_url']);
+                    $res = Http::withoutVerifying()->timeout(15)->get($item['imagem_url']);
                     if ($res->successful()) {
                         $nome = Str::slug(substr($titulo, 0, 50)) . '-' . uniqid() . '.jpg';
                         Storage::disk('public')->put('noticias/' . $nome, $res->body());
