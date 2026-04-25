@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Noticia;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -33,6 +34,12 @@ class ImportarNoticias extends Command
         $bar = $this->output->createProgressBar(count($noticias));
         $bar->start();
 
+        // 0. Garante que existe uma categoria "Geral" para todos os perfis
+        $categoriaGeral = Categoria::firstOrCreate(
+            ['nome' => 'Geral'],
+            ['ativo' => true, 'perfis' => []]
+        );
+
         foreach (array_reverse($noticias) as $item) {
             $titulo = trim($item['titulo']);
             $conteudo = trim($item['conteudo']);
@@ -58,9 +65,13 @@ class ImportarNoticias extends Command
             }
 
             // Evitar duplicados por título limpo + data
-            if (!$this->option('force') && Noticia::where('titulo', trim($titulo))->where('data_publicacao', $dataFinal)->exists()) {
-                $bar->advance();
-                continue;
+            if (!$this->option('force')) {
+                $noticiaExistente = Noticia::where('titulo', trim($titulo))->where('data_publicacao', $dataFinal)->first();
+                if ($noticiaExistente) {
+                    $noticiaExistente->categorias()->syncWithoutDetaching([$categoriaGeral->id]);
+                    $bar->advance();
+                    continue;
+                }
             }
 
             // 3. Download da Imagem (mesma lógica anterior)
@@ -77,7 +88,7 @@ class ImportarNoticias extends Command
             }
 
             // 4. Salvar
-            Noticia::updateOrCreate(
+            $noticia = Noticia::updateOrCreate(
                 ['titulo' => trim($titulo), 'data_publicacao' => $dataFinal],
                 [
                     'slug' => Str::slug(substr($titulo, 0, 80)) . '-' . uniqid(),
@@ -85,8 +96,12 @@ class ImportarNoticias extends Command
                     'conteudo' => nl2br(trim($conteudo)), // Mantém quebras de linha
                     'imagem_capa' => $imagemLocal,
                     'ativo' => true,
+                    'perfis_alvo' => null, // Explicita que é para todos
                 ]
             );
+
+            // Vincula a categoria Geral
+            $noticia->categorias()->syncWithoutDetaching([$categoriaGeral->id]);
 
             $bar->advance();
         }
