@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Alerta;
 use App\Models\Banner;
-use App\Models\Evento;
 use App\Models\Noticia;
 use App\Models\Programa;
 use App\Models\Secretaria;
@@ -41,28 +40,7 @@ class DatabaseSeeder extends Seeder
         $this->call([VagasAdminSeeder::class]);
 
         // Eventos
-        Evento::factory(10)->create();
-
-        Evento::factory()->create([
-            'titulo' => 'Evento de teste agendado',
-            'status' => 'confirmado',
-            'data_inicio' => now()->addDays(20),
-            'data_fim' => now()->addDays(21),
-        ]);
-
-        Evento::factory()->create([
-            'titulo' => 'Evento de teste realizado',
-            'status' => 'confirmado',
-            'data_inicio' => now()->subDays(20),
-            'data_fim' => now()->subDays(19),
-        ]);
-
-        Evento::factory()->create([
-            'titulo' => 'Evento de teste cancelado',
-            'status' => 'cancelado',
-            'data_inicio' => now()->addDays(40),
-            'data_fim' => now()->addDays(41),
-        ]);
+        $this->call([EventosCalendario2026Seeder::class]);
 
     }
 }
