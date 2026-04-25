@@ -181,6 +181,14 @@
                 </a>
             @endcan
 
+            @can('gerir banners')
+                <a href="{{ route('admin.portais.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.portais.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    <i class="fa-solid fa-circle-nodes text-lg w-5 text-center"></i>
+                    Portais
+                </a>
+            @endcan
+
             @hasanyrole('admin')
             <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Governança</div>
 

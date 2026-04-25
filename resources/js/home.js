@@ -110,12 +110,12 @@ document.addEventListener('DOMContentLoaded', function () {
             allowTouchMove: true,
             simulateTouch: true,
             pagination: {
-                el: el.querySelector('.swiper-pagination'),
+                el: el.parentElement.querySelector('.swiper-pagination'),
                 clickable: true,
             },
             navigation: {
-                nextEl: el.querySelector('.swiper-button-next'),
-                prevEl: el.querySelector('.swiper-button-prev'),
+                nextEl: el.parentElement.querySelector('.swiper-button-next'),
+                prevEl: el.parentElement.querySelector('.swiper-button-prev'),
             },
         });
     });

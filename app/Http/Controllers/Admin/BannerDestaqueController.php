@@ -34,7 +34,7 @@ class BannerDestaqueController extends Controller
         $dados['ordem'] = $request->ordem ?? 0;
 
         if ($request->hasFile('imagem')) {
-            $dados['imagem'] = $request->file('imagem')->store('banner_destaques', 'public');
+            $dados['imagem'] = $this->storeAsWebp($request->file('imagem'), 'banner_destaques');
         }
 
         BannerDestaque::create($dados);
@@ -64,7 +64,7 @@ class BannerDestaqueController extends Controller
             if ($banner_destaque->imagem) {
                 Storage::disk('public')->delete($banner_destaque->imagem);
             }
-            $dados['imagem'] = $request->file('imagem')->store('banner_destaques', 'public');
+            $dados['imagem'] = $this->storeAsWebp($request->file('imagem'), 'banner_destaques');
         }
 
         $banner_destaque->update($dados);
@@ -79,5 +79,43 @@ class BannerDestaqueController extends Controller
         }
         $banner_destaque->delete();
         return redirect()->route('admin.banner-destaques.index')->with('sucesso', 'Banner excluído!');
+    }
+
+    private function storeAsWebp($file, $folder)
+    {
+        $extension = $file->getClientOriginalExtension();
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.webp';
+        $path = storage_path('app/public/' . $folder . '/' . $filename);
+        
+        if (!file_exists(storage_path('app/public/' . $folder))) {
+            mkdir(storage_path('app/public/' . $folder), 0755, true);
+        }
+
+        $image = null;
+        switch (strtolower($extension)) {
+            case 'jpeg':
+            case 'jpg':
+                $image = @imagecreatefromjpeg($file);
+                break;
+            case 'png':
+                $image = @imagecreatefrompng($file);
+                if ($image) {
+                    imagepalettetotruecolor($image);
+                    imagealphablending($image, true);
+                    imagesavealpha($image, true);
+                }
+                break;
+            case 'webp':
+                $image = @imagecreatefromwebp($file);
+                break;
+        }
+
+        if ($image) {
+            imagewebp($image, $path, 80);
+            imagedestroy($image);
+            return $folder . '/' . $filename;
+        }
+
+        return $file->store($folder, 'public');
     }
 }

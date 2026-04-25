@@ -65,7 +65,7 @@ class ProgramaController extends Controller
         }
 
         if ($request->hasFile('icone')) {
-            $dados['icone'] = $request->file('icone')->store('programas', 'public');
+            $dados['icone'] = $this->storeAsWebp($request->file('icone'), 'programas');
         }
 
         Programa::create($dados);
@@ -120,7 +120,7 @@ class ProgramaController extends Controller
 
         if ($request->hasFile('icone')) {
             if ($programa->icone) Storage::disk('public')->delete($programa->icone);
-            $dados['icone'] = $request->file('icone')->store('programas', 'public');
+            $dados['icone'] = $this->storeAsWebp($request->file('icone'), 'programas');
         }
 
         $programa->update($dados);
@@ -178,5 +178,41 @@ class ProgramaController extends Controller
 
         return response()->json(['destaque' => $programa->destaque]);
     }
+    private function storeAsWebp($file, $folder)
+    {
+        $extension = $file->getClientOriginalExtension();
+        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.webp';
+        $path = storage_path('app/public/' . $folder . '/' . $filename);
+        
+        if (!file_exists(storage_path('app/public/' . $folder))) {
+            mkdir(storage_path('app/public/' . $folder), 0755, true);
+        }
 
+        $image = null;
+        switch (strtolower($extension)) {
+            case 'jpeg':
+            case 'jpg':
+                $image = @imagecreatefromjpeg($file);
+                break;
+            case 'png':
+                $image = @imagecreatefrompng($file);
+                if ($image) {
+                    imagepalettetotruecolor($image);
+                    imagealphablending($image, true);
+                    imagesavealpha($image, true);
+                }
+                break;
+            case 'webp':
+                $image = @imagecreatefromwebp($file);
+                break;
+        }
+
+        if ($image) {
+            imagewebp($image, $path, 80);
+            imagedestroy($image);
+            return $folder . '/' . $filename;
+        }
+
+        return $file->store($folder, 'public');
+    }
 }

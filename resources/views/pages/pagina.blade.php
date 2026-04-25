@@ -261,8 +261,8 @@
     {{-- ==========================================
         FAIXA DE PLANTÃO (Abaixo da Hero)
         ========================================== --}}
-    <div x-data="dutyWidget()" x-init="init()" class="hidden lg:block w-full bg-white border-y border-slate-200">
-        <div class="container mx-auto max-w-6xl px-4 py-2.5 flex items-center justify-center gap-4 text-sm font-sans text-slate-700 flex-wrap">
+    <div x-data="dutyWidget()" x-init="init()" class="w-full bg-white border-y border-slate-200">
+        <div class="container mx-auto max-w-6xl px-4 py-3 md:py-2.5 flex items-center justify-center gap-4 text-[13px] md:text-sm font-sans text-slate-700 flex-wrap">
 
             {{-- Ícone e label fixo --}}
             <div class="flex items-center gap-2 shrink-0 font-bold text-blue-900">
@@ -323,240 +323,247 @@
         ========================================== --}}
     <div class="lg:hidden pl-mobile-home">
 
-        {{-- Programas Mobile --}}
-        <section class="bg-gray-section" style="padding-top: 1.5rem; padding-bottom: 2.5rem;">
-            <h2 class="section-title mb-6 font-bold">Fique Ligado</h2>
-            @if(isset($programas) && $programas->count() > 0)
-            <div class="px-4 w-full">
-                <div
-                    class="swiper swiper-fique-ligado h-[360px] w-full rounded-[16px] shadow-md overflow-hidden relative">
+        {{-- 1. FIQUE LIGADO (Programas Swiper) --}}
+        @if(isset($programas) && $programas->count() > 0)
+        <section class="bg-white-section">
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Destaques</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                </div>
+                <h2 class="section-title">Fique Ligado</h2>
+            </div>
+            <div class="px-10 relative">
+                <div class="swiper swiper-fique-ligado w-full rounded-[22px] shadow-lg overflow-hidden relative border border-slate-100 bg-slate-50">
                     <div class="swiper-wrapper">
-                        @foreach($programas as $programa)
-                        <div class="swiper-slide relative h-[360px] bg-slate-100">
-
-                            {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
-                            <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
-                                {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
+                        @foreach($programas as $prog)
+                        <div class="swiper-slide relative bg-slate-50">
+                            <a href="{{ $prog->link ?? route('programas.show', $prog) }}" 
+                                {{ $prog->link ? 'target="_blank" rel="noopener"' : '' }}
                                 class="block w-full h-full">
-                                <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-white">
-                                    <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
-                                        alt="{{ $programa->titulo }}"
-                                        loading="lazy"
-                                        class="w-full h-full object-cover mx-auto">
-                                </div>
+                                <img src="{{ $prog->icone ? (str_starts_with($prog->icone, 'img/') ? asset($prog->icone) : asset('storage/' . $prog->icone)) : asset('img/Assai.jpg') }}"
+                                    alt="{{ $prog->titulo }}"
+                                    loading="lazy"
+                                    class="w-full h-full object-contain">
                             </a>
                         </div>
                         @endforeach
                     </div>
-                    <div class="swiper-pagination !bottom-3"></div>
-                    <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
-                    </div>
-                    <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]">
-                    </div>
                 </div>
+                <div class="swiper-pagination swiper-pagination-fique-ligado !bottom-auto !relative !mt-4"></div>
+                <!-- Navigation buttons -->
+                <div class="swiper-button-prev program-swiper-arrow"></div>
+                <div class="swiper-button-next program-swiper-arrow"></div>
             </div>
-            @endif
         </section>
+        @endif
 
-        {{-- Nossos Portais Mobile --}}
-        <section class="bg-white-section border-b border-slate-100">
-            <h2 class="section-title font-bold mb-6">Nossos Portais</h2>
-            <div class="small-cards-grid">
-                @foreach($portais as $portal)
-                    <a href="{{ $portal->url }}" target="_blank" rel="noopener"
-                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3 rounded-2xl border transition-all duration-300
-                        {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
-                        @php $iconePortal = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconePortal }} text-6xl {{ Str::of($portal->titulo)->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2" aria-hidden="true"></i>
-                        <h3 class="text-lg font-medium w-full flex items-center justify-center text-center{{ Str::of($portal->titulo)->lower()->contains('transpar') ? ' text-white' : ' text-[#006eb7]' }} leading-snug">{{ $portal->titulo }}</h3>
-                    </a>
+        {{-- 2. PORTAL DE NOTÍCIAS --}}
+        @php 
+            $noticiasMobile = isset($noticias) ? $noticias : (isset($recentesSidebar) ? $recentesSidebar : collect());
+        @endphp
+        @if($noticiasMobile->count() > 0)
+        <section class="bg-gray-section">
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Atualizações</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                </div>
+                <h2 class="section-title">Portal de Notícias</h2>
+            </div>
+            <div class="mobile-news-grid">
+                @foreach($noticiasMobile->take(3) as $not)
+                <a href="{{ route('noticias.show', $not->slug) }}" class="card-news bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 block">
+                    <img src="{{ $not->imagem_capa ? (str_starts_with($not->imagem_capa, 'img/') ? asset($not->imagem_capa) : asset('storage/' . $not->imagem_capa)) : asset('img/Assai.jpg') }}" alt="{{ $not->titulo }}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1 block">{{ $not->categoria ?? 'Notícias' }}</span>
+                        <h4 class="text-base font-bold text-[#1e3a5f] line-clamp-2 leading-snug mb-2" style="font-family: 'Montserrat', sans-serif;">{{ $not->titulo }}</h4>
+                        <div class="flex items-center gap-2 text-slate-400 text-[11px] font-semibold">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span>{{ \Carbon\Carbon::parse($not->data_publicacao)->format('d/m/Y') }}</span>
+                        </div>
+                    </div>
+                </a>
                 @endforeach
             </div>
+            <div class="all-btn-wrapper">
+                <a href="{{ route('noticias.index') }}" class="all-btn shadow-md">Ver todas as notícias <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </section>
+        @endif
+
+        {{-- 3. SERVIÇOS MAIS ACESSADOS --}}
+        @php
+            $servicosMob = (isset($servicos) && $servicos->count() > 0) ? $servicos->take(10) : collect($servicosPlMobile)->take(10);
+        @endphp
+        <section class="bg-white-section">
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Serviços</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                </div>
+                <h2 class="section-title">Mais Acessados</h2>
+            </div>
+            <div class="small-cards-grid">
+                @foreach($servicosMob as $srv)
+                @php 
+                    $s = (object)$srv;
+                    $sIcone = !empty($s->icone) ? str_replace(['fa-solid ', 'fas ', 'fa-'], '', $s->icone) : 'file-lines';
+                    $sLink = $s->link ?? '#';
+                    $sTitulo = $s->titulo ?? ($s->nome ?? 'Serviço');
+                @endphp
+                <a href="{{ $sLink }}" target="_blank" rel="noopener" class="small-card group">
+                    <span class="helper-dot">.</span>
+                    <div class="service-icon transition-transform group-hover:scale-110 duration-300">
+                        <i class="fa-solid fa-{{ $sIcone }}"></i>
+                    </div>
+                    <h4 class="small-card-title">{{ $sTitulo }}</h4>
+                </a>
+                @endforeach
+            </div>
+            <div class="all-btn-wrapper">
+                <a href="{{ route('servicos.index') }}" class="all-btn !bg-white !text-[#006eb7] border-2 border-[#006eb7]">Ver todos os serviços <i class="fa-solid fa-table-cells-large"></i></a>
+            </div>
         </section>
 
-        {{-- Notícias Mobile --}}
-        <section class="bg-white-section border-b border-slate-100">
-            <div class="px-4 text-center mb-8">
-                <h2 class="section-title font-bold mb-1">Portal de Notícias</h2>
-                <p class="text-xs text-slate-500 font-medium">Acompanhe as notícias postadas da Gestão do Município</p>
-            </div>
-
-            @if($destaqueNoticia)
-            <div class="px-4 mb-8">
-                {{-- Destaque Principal Mobile --}}
-                <a href="{{ route('noticias.show', $destaqueNoticia->slug) }}"
-                    class="flex flex-col bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-                    <div class="w-full aspect-[16/9] relative shrink-0 bg-slate-100">
-                        <img src="{{ $destaqueNoticia->imagem_capa ? (str_starts_with($destaqueNoticia->imagem_capa, 'img/') ? asset($destaqueNoticia->imagem_capa) : asset('storage/' . $destaqueNoticia->imagem_capa)) : asset('img/Assai.jpg') }}"
-                            class="absolute inset-0 w-full h-full object-cover"
-                            alt="{{ $destaqueNoticia->titulo }}" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 p-4">
-                            <span class="inline-block px-2 py-0.5 bg-yellow-400 text-blue-900 text-[9px] font-black uppercase tracking-widest rounded mb-2">
-                                {{ $destaqueNoticia->categoria }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between bg-white">
-                        <h3 class="text-[1.15rem] font-bold text-slate-800 leading-snug mb-3"
-                            style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $destaqueNoticia->titulo }}
-                        </h3>
-                        <span class="text-[11px] text-slate-500 font-medium uppercase tracking-wide flex items-center gap-2">
-                            <i class="fa-regular fa-calendar"></i>
-                            {{ \Carbon\Carbon::parse($destaqueNoticia->data_publicacao)->format('d/m/Y') }}
-                        </span>
-                    </div>
-                </a>
-            </div>
-
-            <div class="px-4">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-extrabold text-slate-800"
-                        style="font-family: 'Rawline', 'Open Sans', sans-serif;">Mais Recentes</h3>
-                </div>
-                <div class="flex flex-col gap-4">
-                    @foreach($recentesSidebar as $recente)
-                    <a href="{{ route('noticias.show', $recente->slug) }}"
-                        class="flex items-start gap-4 p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
-                        <div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-slate-50">
-                            <img src="{{ $recente->imagem_capa ? (str_starts_with($recente->imagem_capa, 'img/') ? asset($recente->imagem_capa) : asset('storage/' . $recente->imagem_capa)) : asset('img/Assai.jpg') }}"
-                                class="w-full h-full object-cover" alt="{{ $recente->titulo }}"
-                                loading="lazy">
-                        </div>
-                        <div class="flex-1 min-w-0 py-1">
-                            <h4 class="text-slate-800 text-[13px] font-bold leading-tight line-clamp-3 mb-2"
-                                style="font-family: 'Rawline', 'Open Sans', sans-serif;">{{ $recente->titulo }}</h4>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                {{ \Carbon\Carbon::parse($recente->data_publicacao)->format('d/m/Y') }}
-                            </span>
-                        </div>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="mt-8 px-4 flex justify-center">
-                <a href="{{ route('noticias.index') }}"
-                    class="w-full bg-[#006eb7] text-white rounded-xl py-4 text-sm font-black flex items-center justify-center gap-3 hover:bg-blue-800 transition shadow-md">
-                    <i class="fa-solid fa-plus-circle"></i> Ver todas as Notícias
-                </a>
-            </div>
-            @else
-            <div
-                class="mx-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center text-sm text-slate-500">
-                Nenhuma notícia publicada no momento.
-            </div>
-            @endif
-        </section>
-
-        {{-- Banners Destaque Mobile --}}
+        {{-- 4. BANNERS DE PROGRAMAS (Seção sem título) --}}
         @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
-        <section class="bg-white-section border-b border-slate-100 py-6">
-            <div class="px-4 w-full">
-                <div class="flex flex-col gap-4">
-                    @foreach($bannersDestaque as $banner)
-                    <a href="{{ $banner->link ?? '#' }}" {{ $banner->link && $banner->link !== '#' ? 'target="_blank" rel="noopener"' : '' }}
-                        class="block">
-                        <div class="w-full aspect-[5/1] max-h-32 min-h-24 flex items-center justify-center bg-white border border-slate-200 overflow-hidden">
-                            <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}"
-                                alt="{{ $banner->titulo }}"
-                                class="w-full h-full object-fill"
-                                loading="lazy"
-                                decoding="async">
-                        </div>
-                    </a>
+        <section class="bg-gray-section !py-8">
+            <div class="px-4">
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($bannersDestaque->take(4) as $bd)
+                    <div class="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
+                        <a href="{{ $bd->link ?? '#' }}" class="block w-full">
+                            <img src="{{ str_starts_with($bd->imagem, 'img/') ? asset($bd->imagem) : asset('storage/' . $bd->imagem) }}" 
+                                alt="Banner Destaque" class="w-full h-auto block object-contain">
+                        </a>
+                    </div>
                     @endforeach
                 </div>
             </div>
         </section>
         @endif
 
-        {{-- Serviços Mobile --}}
+        {{-- 5. CALENDÁRIO DE EVENTOS --}}
         <section class="bg-white-section">
-            <h2 class="section-title font-bold">Mais Acessados</h2>
-            <div class="small-cards-grid">
-                @if(isset($servicos) && $servicos->count() > 0)
-                @foreach($servicos->take(8) as $servicoItem)
-                <div class="small-card group relative">
-                    <a href="{{ route('servicos.acessar', $servicoItem->id) }}" target="_blank" rel="noopener"
-                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3">
-                        @php $iconeServico = !empty($servicoItem->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $servicoItem->icone) : 'file-lines'; @endphp
-                        <i class="fa-solid fa-{{ $iconeServico }} service-icon" aria-hidden="true"></i>
-                        <h4 class="small-card-title">{{ $servicoItem->titulo }}</h4>
-                    </a>
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Agenda</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
                 </div>
-                @endforeach
-                @else
-                @foreach(collect($servicosPlMobile)->take(8) as $servicoItem)
-                <div class="small-card group relative">
-                    <a href="{{ $servicoItem['link'] }}" target="_blank" rel="noopener"
-                        class="flex flex-col items-center justify-center w-full h-full px-1 py-3">
-                        <i class="fa-solid {{ $servicoItem['icone'] }} service-icon" aria-hidden="true"></i>
-                        <h4 class="small-card-title">{{ $servicoItem['titulo'] }}</h4>
-                    </a>
+                <h2 class="section-title">Calendário de Eventos</h2>
+            </div>
+            <div class="px-4">
+                <div class="calendar-wrap" id="calendar-ajax-wrap" data-mes="{{ $calendarMonth->format('Y-m') }}">
+                    <div class="calendar-head">
+                        <button type="button" class="arrow-btn" id="calendar-prev-btn" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span class="month-name" id="calendar-month-name">{{ $calendarTituloMes }}</span>
+                        <button type="button" class="arrow-btn" id="calendar-next-btn" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-days-grid">
+                        <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
+                        @foreach($calendarDays as $calendarDay)
+                        <span class="day-number @if(!$calendarDay['isCurrentMonth']) muted @endif @if($calendarDay['isToday']) today @endif @if($calendarDay['hasEvent']) event @endif">
+                            {{ $calendarDay['day'] }}
+                        </span>
+                        @endforeach
+                    </div>
                 </div>
-                @endforeach
+
+                @if(isset($eventos) && $eventos->count() > 0)
+                @php $ev = $eventos->first(); @endphp
+                <a href="{{ route('agenda.index') }}" class="event-featured mt-6 border border-slate-100 shadow-sm block">
+                    <div class="date-chip">
+                        <span class="day">{{ \Carbon\Carbon::parse($ev->data_inicio)->format('d') }}</span>
+                        <span class="month">{{ \Carbon\Carbon::parse($ev->data_inicio)->translatedFormat('M') }}</span>
+                    </div>
+                    <div class="event-info">
+                        <h4 class="event-title line-clamp-2">{{ $ev->titulo }}</h4>
+                        <div class="event-meta">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>{{ \Carbon\Carbon::parse($ev->data_inicio)->format('H:i') }} @if($ev->local) - {{ $ev->local }} @endif</span>
+                        </div>
+                    </div>
+                </a>
                 @endif
             </div>
-            <div class="all-btn-wrapper">
-                <a href="{{ route('servicos.index') }}" class="all-btn"><i class="fa-solid fa-table-cells-large"
-                        aria-hidden="true"></i> Ver Todos Serviços</a>
+            <div class="all-btn-wrapper mt-8">
+                <a href="{{ route('agenda.index') }}" class="all-btn !bg-slate-800">Ver todos os eventos <i class="fa-regular fa-calendar-days"></i></a>
             </div>
         </section>
 
-
-        {{-- Calendário Mobile --}}
-        <section class="bg-gray-section" style="padding-top: 2.5rem;">
-
-            <h2 class="section-title font-bold">Calendário de Eventos</h2>
-            <div class="calendar-wrap" id="calendar-ajax-wrap" data-mes="{{ $calendarMonth->format('Y-m') }}">
-                <div class="calendar-head">
-                    <button type="button" class="arrow-btn" id="calendar-prev-btn" aria-label="Mês anterior"><i class="fa-solid fa-chevron-left"></i></button>
-                    <span class="month-name" id="calendar-month-name">{{ $calendarTituloMes }}</span>
-                    <button type="button" class="arrow-btn" id="calendar-next-btn" aria-label="Próximo mês"><i class="fa-solid fa-chevron-right"></i></button>
+        {{-- 6. NOSSOS PORTAIS --}}
+        @if(isset($portais) && $portais->count() > 0)
+        <section class="bg-gray-section">
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Conheça</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
                 </div>
-                <div class="calendar-grid" id="calendar-days-grid">
-                    <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
-                    @foreach($calendarDays as $calendarDay)
-                    @php
-                    $calendarClasses = 'day-number';
-                    if (!$calendarDay['isCurrentMonth'])
-                    $calendarClasses .= ' muted';
-                    if ($calendarDay['isToday'])
-                    $calendarClasses .= ' today';
-                    if ($calendarDay['hasEvent'])
-                    $calendarClasses .= ' event';
-                    @endphp
-                    <span class="{{ $calendarClasses }}">{{ $calendarDay['day'] }}</span>
-                    @endforeach
-                </div>
+                <h2 class="section-title">Nossos Portais</h2>
             </div>
-
-            @if(isset($eventos) && $eventos->count() > 0)
-            @foreach($eventos->take(2) as $eventoItem)
-            <div class="event-featured">
-                <div class="date-chip">
-                    <span class="day">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d') }}</span>
-                    <span
-                        class="month">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->translatedFormat('M') }}</span>
-                </div>
-                <div>
-                    <h3 class="event-title">{{ $eventoItem->titulo }}</h3>
-                    <p class="event-meta"><i class="fa-solid fa-clock"></i>
-                        {{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d \d\e F \à\s H:i') }}
-                    </p>
-                    <p class="event-meta"><i class="fa-solid fa-location-dot"></i>
-                        {{ $eventoItem->local ?? 'Assaí, PR' }}
-                    </p>
-                </div>
-            </div>
-            @endforeach
-            @endif
-            <div class="all-btn-wrapper">
-                <a href="{{ route('agenda.index') }}" class="all-btn"><i class="fa-regular fa-calendar-days"></i> Ver
-                    todos os Eventos</a>
+            <div class="small-cards-grid">
+                @foreach($portais as $pt)
+                @php 
+                    $p = (object)$pt;
+                    $pIcone = !empty($p->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $p->icone) : 'file-lines';
+                    $pColor = $p->cor ?? '#006eb7';
+                    $pUrl = $p->url ?? ($p->link ?? '#');
+                    $pTitulo = $p->titulo ?? ($p->nome ?? 'Portal');
+                @endphp
+                <a href="{{ $pUrl }}" target="_blank" rel="noopener" class="small-card group" style="border-top: 4px solid {{ $pColor }}">
+                    <div class="service-icon transition-transform group-hover:scale-110 duration-300" style="color: {{ $pColor }}">
+                        <i class="fa-solid fa-{{ $pIcone }}"></i>
+                    </div>
+                    <h4 class="small-card-title" style="color: {{ $pColor }}">{{ $pTitulo }}</h4>
+                </a>
+                @endforeach
             </div>
         </section>
+        @endif
+
+        {{-- 7. REDES SOCIAIS --}}
+        @if(isset($redesSociais) && $redesSociais->whereNotNull('imagem')->count() > 0)
+        <section class="bg-white-section">
+            <div class="premium-title-wrapper">
+                <div class="premium-title-decoration">
+                    <div class="premium-title-line-left"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                    <h3 class="premium-title-tag">Social</h3>
+                    <div class="premium-title-line-right"><div class="premium-title-line-full"></div><div class="premium-title-line-short"></div></div>
+                </div>
+                <h2 class="section-title">Redes Sociais</h2>
+            </div>
+            <div class="flex flex-col gap-6 px-4">
+                @foreach($redesSociais->whereNotNull('imagem')->take(2) as $post)
+                <div class="bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+                    <div class="p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-sm">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-black text-slate-800">Prefeitura de Assaí</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Facebook</span>
+                        </div>
+                    </div>
+                    <a href="{{ $post->link }}" target="_blank" class="block aspect-square overflow-hidden relative">
+                        <img src="{{ asset('storage/' . $post->imagem) }}" alt="Post Social" class="w-full h-full object-cover">
+                    </a>
+                    <div class="p-5">
+                        <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">{{ $post->legenda }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <div class="all-btn-wrapper mt-8">
+                <a href="https://www.facebook.com/prefeituraassai" target="_blank" class="all-btn !bg-[#1877f2]">Siga-nos no Facebook <i class="fa-brands fa-facebook"></i></a>
+            </div>
+        </section>
+        @endif
 
     </div>
 
@@ -565,7 +572,7 @@
         ========================================== --}}
 
         {{-- Programas Desktop --}}
-        <section id="programas-desktop" class="pb-16 pt-10 bg-[#eef1f5]">
+        <section id="programas-desktop" class="hidden lg:block pb-16 pt-10 bg-[#eef1f5]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="flex flex-col items-center mb-10">
                     <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
@@ -582,34 +589,34 @@
                     <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Fique Ligado</h2>
                 </div>
                 @if(isset($programas) && $programas->count() > 0)
-                <div class="relative h-[520px] w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100">
-                    <div class="swiper swiper-fique-ligado h-[520px] w-full rounded-[22px] overflow-hidden pointer-events-auto">
+                <div class="relative w-full lg:px-16">
+                    <div class="swiper swiper-fique-ligado w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100 overflow-hidden pointer-events-auto">
                         <div class="swiper-wrapper">
                             @foreach($programas as $programa)
-                            <div class="swiper-slide relative h-[520px] w-full bg-slate-100">
-                                {{-- Lógica do Link: Abre externo se existir, senão abre a página interna --}}
+                            <div class="swiper-slide relative w-full bg-slate-100">
                                 <a href="{{ $programa->link ?? route('programas.show', $programa) }}"
                                     {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
                                     class="block w-full h-full focus:outline-none focus:ring-4 focus:ring-inset focus:ring-[#006eb7]">
                                     <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
                                         alt="{{ $programa->titulo }}"
                                         loading="lazy"
-                                        class="absolute inset-0 object-cover w-full h-full">
+                                        class="absolute inset-0 object-contain w-full h-full bg-slate-50">
                                 </a>
                             </div>
                             @endforeach
                         </div>
                         <div class="swiper-pagination !bottom-5"></div>
-                        <div class="swiper-button-prev program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
-                        <div class="swiper-button-next program-swiper-arrow program-swiper-arrow-mobile !text-[#0b2f57]"></div>
                     </div>
+                    {{-- Setas posicionadas externamente --}}
+                    <div class="swiper-button-prev program-swiper-arrow !text-[#0b2f57] lg:!left-0"></div>
+                    <div class="swiper-button-next program-swiper-arrow !text-[#0b2f57] lg:!right-0"></div>
                 </div>
                 @endif
             </div>
         </section>
 
         {{-- Portal de Notícias Desktop --}}
-        <section id="noticias-desktop" class="py-16 bg-white border-t border-slate-100">
+        <section id="noticias-desktop" class="hidden lg:block py-16 bg-white border-t border-slate-100">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
 
                 <div class="flex flex-col items-center mb-10">
@@ -793,7 +800,7 @@
         </section>
 
         {{-- Serviços Desktop --}}
-        <section id="servicos-desktop" class="py-16 bg-[#f8fafc] border-b border-[#e2e8f0]">
+        <section id="servicos-desktop" class="hidden lg:block py-16 bg-[#f8fafc] border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="flex flex-col items-center mb-12">
                     <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
@@ -881,7 +888,7 @@
             $bannersExibir = $bannersPerfil[$perfilChave];
         @endphp
 
-        <section id="banners-perfil-desktop" class="py-12 bg-white border-b border-[#e2e8f0]">
+        <section id="banners-perfil-desktop" class="hidden lg:block py-12 bg-white border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     @foreach($bannersExibir['itens'] as $bannerItem)
@@ -899,7 +906,7 @@
         </section>
 
         {{-- Agenda Desktop --}}
-        <section id="agenda-desktop" class="py-16 bg-[#eef1f5]">
+        <section id="agenda-desktop" class="hidden lg:block py-16 bg-[#eef1f5]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="flex flex-col items-center mb-10">
                     <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
@@ -1001,7 +1008,7 @@
         </section>
 
         {{-- Nossos Portais Desktop --}}
-        <section id="nossos-portais-desktop" class="py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
+        <section id="nossos-portais-desktop" class="hidden lg:block py-12 bg-[#f8fafc] border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="flex flex-col items-center mb-10">
                     <div class="flex items-center justify-center gap-4 w-full overflow-hidden mb-2">
@@ -1018,26 +1025,16 @@
                     <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Nossos Portais</h2>
                 </div>
 
-                @php
-                    $portaisFixos = [
-                        ['titulo' => 'Gov.Assaí', 'icone' => 'fa-landmark-flag', 'url' => '#'],
-                        ['titulo' => 'Conecta Assaí', 'icone' => 'fa-wifi', 'url' => '#'],
-                        ['titulo' => 'Sala do Empreendedor Digital', 'icone' => 'fa-briefcase', 'url' => '#'],
-                        ['titulo' => 'Turistando em Assaí', 'icone' => 'fa-camera-retro', 'url' => '#'],
-                        ['titulo' => 'Invista em Assaí', 'icone' => 'fa-chart-line', 'url' => '#'],
-                        ['titulo' => 'Vale do Sol', 'icone' => 'fa-sun', 'url' => '#'],
-                        ['titulo' => 'Portal da Transparência', 'icone' => 'fa-file-lines', 'url' => '#'],
-                    ];
-                @endphp
-
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    @foreach($portaisFixos as $portal)
-                    <a href="{{ $portal['url'] }}" target="_blank" rel="noopener"
-                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group
-                        {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'bg-[#22c55e] border-[#22c55e] hover:bg-[#16a34a]' : 'bg-white border-[#edf2f7]' }}">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+                    @foreach($portais as $portal)
+                    <a href="{{ $portal->url }}" target="_blank" rel="noopener"
+                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group bg-white border-[#edf2f7] min-h-[140px]">
                         
-                        <i class="fa-solid {{ $portal['icone'] }} text-5xl {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} mb-3 mt-2"></i>
-                        <h3 class="text-base font-bold {{ Str::of($portal['titulo'])->lower()->contains('transpar') ? 'text-white' : 'text-[#006eb7]' }} leading-snug" style="font-family: 'Montserrat', sans-serif;">{{ $portal['titulo'] }}</h3>
+                        @php 
+                            $pIcone = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'circle-nodes';
+                        @endphp
+                        <i class="fa-solid fa-{{ $pIcone }} text-5xl text-[#006eb7] mb-3 mt-2"></i>
+                        <h3 class="text-sm font-bold text-[#1e3a5f] leading-tight" style="font-family: 'Montserrat', sans-serif;">{{ $portal->titulo }}</h3>
                     </a>
                     @endforeach
                 </div>
@@ -1049,7 +1046,7 @@
     {{-- ==========================================
          REDES SOCIAIS (Vitrine Visual 4 Posts)
          ========================================== --}}
-    <section id="redes-sociais-unificada" class="py-12 lg:py-16 bg-[#f8fafc] border-t border-slate-200">
+    <section id="redes-sociais-unificada" class="hidden lg:block py-12 lg:py-16 bg-[#f8fafc] border-t border-slate-200">
         <div class="container px-4 mx-auto max-w-6xl font-sans text-[#1e3a5f]">
 
             <div class="flex flex-col items-center mb-10">

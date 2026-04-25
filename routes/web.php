@@ -441,6 +441,19 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         // NOVO: Módulo de Redes Sociais
         Route::get('redes-sociais', [RedeSocialController::class, 'index'])->name('admin.redes-sociais.index');
         Route::put('redes-sociais', [RedeSocialController::class, 'updateAll'])->name('admin.redes-sociais.updateAll');
+
+        // NOVO: Módulo de Portais
+        Route::resource('portais', \App\Http\Controllers\Admin\PortalAdminController::class)->names([
+            'index'   => 'admin.portais.index',
+            'create'  => 'admin.portais.create',
+            'store'   => 'admin.portais.store',
+            'edit'    => 'admin.portais.edit',
+            'update'  => 'admin.portais.update',
+            'destroy' => 'admin.portais.destroy',
+        ])->parameters([
+            'portais' => 'portal'
+        ]);
+        Route::patch('portais/{portal}/toggle', [\App\Http\Controllers\Admin\PortalAdminController::class, 'toggle'])->name('admin.portais.toggle');
     });
 
     Route::middleware(['permission:gerir eventos'])->group(function () {
