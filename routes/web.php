@@ -254,23 +254,42 @@ Route::get('/api/calendario', static function () {
     $start = $month->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
     $end   = $month->copy()->endOfMonth()->endOfWeek(\Carbon\Carbon::SATURDAY);
 
-    $eventDates = \App\Models\Evento::query()
+    // Buscar todos os eventos do mês para o payload
+    $eventosData = \App\Models\Evento::query()
         ->whereNotNull('data_inicio')
-        ->whereBetween('data_inicio', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
-        ->get()
-        ->map(fn($e) => \Carbon\Carbon::parse($e->data_inicio)->toDateString())
-        ->unique()
-        ->values()
-        ->all();
+        ->whereBetween('data_inicio', [$start, $end])
+        ->where('status', '!=', 'cancelado') // Opcional: ocultar cancelados do mini-calendário se desejar
+        ->get();
+
+    // Agrupar eventos por data para fácil acesso no loop
+    $eventosPorDia = [];
+    foreach ($eventosData as $evento) {
+        $diaKey = \Carbon\Carbon::parse($evento->data_inicio)->toDateString();
+        if (!isset($eventosPorDia[$diaKey])) {
+            $eventosPorDia[$diaKey] = [];
+        }
+        $eventosPorDia[$diaKey][] = [
+            'titulo'   => $evento->titulo,
+            'hora'     => \Carbon\Carbon::parse($evento->data_inicio)->format('H:i'),
+            'local'    => $evento->local,
+            'url'      => route('agenda.show', $evento->id),
+            'resumo'   => $evento->descricao ? mb_substr(strip_tags($evento->descricao), 0, 100) . '...' : null,
+        ];
+    }
 
     $dias   = [];
     $cursor = $start->copy();
     while ($cursor->lte($end)) {
+        $diaKey = $cursor->toDateString();
+        $hasEvent = isset($eventosPorDia[$diaKey]);
+
         $dias[] = [
             'day'            => (int) $cursor->format('j'),
+            'fullDate'       => $diaKey,
             'isCurrentMonth' => $cursor->month === $month->month,
             'isToday'        => $cursor->isToday(),
-            'hasEvent'       => in_array($cursor->toDateString(), $eventDates, true),
+            'hasEvent'       => $hasEvent,
+            'eventos'        => $eventosPorDia[$diaKey] ?? [],
         ];
         $cursor->addDay();
     }
@@ -306,6 +325,7 @@ Route::get('/api/calendario-prev-next', static function () {
 Route::get('/servicos', [PortalController::class, 'servicos'])->name('servicos.index');
 
 // Tracking de cliques em serviços
+Route::get('/servico/conecta/acessar', [PortalController::class, 'acessarServicoConecta'])->name('servicos.acessar.conecta');
 Route::get('/servico/{id}/acessar', [PortalController::class, 'acessarServico'])->name('servicos.acessar');
 
 // Contato
@@ -315,6 +335,10 @@ Route::post('/contato', [PortalController::class, 'enviarContato'])->name('conta
 // Programas
 Route::get('/programas', [PortalController::class, 'programas'])->name('programas.index');
 Route::get('/programas/{programa}', [PortalController::class, 'showPrograma'])->name('programas.show');
+
+// Concursos e Telefones
+Route::get('/concursos', [PortalController::class, 'concursos'])->name('concursos.index');
+Route::get('/telefones', [PortalController::class, 'telefones'])->name('telefones.index');
 
 // Páginas Estáticas
 Route::prefix('cidade')->name('cidade.')->group(function () {
@@ -513,5 +537,27 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             'update'  => 'admin.servicos.update',
             'destroy' => 'admin.servicos.destroy',
         ]);
+
+        // Módulo de Concursos
+        Route::resource('concursos', \App\Http\Controllers\Admin\ConcursoController::class)->except(['show'])->names([
+            'index'   => 'admin.concursos.index',
+            'create'  => 'admin.concursos.create',
+            'store'   => 'admin.concursos.store',
+            'edit'    => 'admin.concursos.edit',
+            'update'  => 'admin.concursos.update',
+            'destroy' => 'admin.concursos.destroy',
+        ]);
+        Route::patch('concursos/{concurso}/toggle', [\App\Http\Controllers\Admin\ConcursoController::class, 'toggleStatus'])->name('admin.concursos.toggle');
+
+        // Módulo de Telefones Úteis
+        Route::resource('telefones', \App\Http\Controllers\Admin\TelefoneController::class)->except(['show'])->names([
+            'index'   => 'admin.telefones.index',
+            'create'  => 'admin.telefones.create',
+            'store'   => 'admin.telefones.store',
+            'edit'    => 'admin.telefones.edit',
+            'update'  => 'admin.telefones.update',
+            'destroy' => 'admin.telefones.destroy',
+        ]);
+        Route::patch('telefones/{telefone}/toggle', [\App\Http\Controllers\Admin\TelefoneController::class, 'toggleStatus'])->name('admin.telefones.toggle');
     });
 });

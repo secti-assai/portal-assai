@@ -47,10 +47,14 @@
             @php
                 $dataAtualLoop = $dataBase->copy()->day($dia)->format('Y-m-d');
                 $isHoje        = $dataAtualLoop === now()->format('Y-m-d');
-                $temEvento     = in_array($dataAtualLoop, $diasComEvento);
+                $eventosDia    = $eventosPorDia[$dataAtualLoop] ?? [];
+                $temEvento     = count($eventosDia) > 0;
             @endphp
             <button
                 type="button"
+                data-dia="{{ $dataAtualLoop }}"
+                @if($temEvento) data-eventos='@json($eventosDia)' @endif
+                onclick="window.abrirPreviewEvento(this)"
                 title="{{ \Carbon\Carbon::parse($dataAtualLoop)->translatedFormat('d \d\e F') }}"
                 class="w-8 h-8 mx-auto flex items-center justify-center text-sm rounded-full transition-all
                     @if ($isHoje) bg-blue-600 text-white font-bold shadow-md shadow-blue-500/30

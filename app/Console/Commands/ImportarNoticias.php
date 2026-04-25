@@ -16,7 +16,6 @@ class ImportarNoticias extends Command
 
     public function handle()
     {
-    {
         ini_set('memory_limit', '512M');
         $caminhoArquivo = base_path('noticias_assai_completo.json');
         if (!file_exists($caminhoArquivo)) {
@@ -25,6 +24,12 @@ class ImportarNoticias extends Command
         }
 
         $noticias = json_decode(file_get_contents($caminhoArquivo), true);
+
+        if (!is_array($noticias)) {
+            $this->error("O arquivo JSON é inválido ou está vazio (pode ser um ponteiro Git LFS).");
+            return;
+        }
+
         $bar = $this->output->createProgressBar(count($noticias));
         $bar->start();
 
@@ -89,5 +94,4 @@ class ImportarNoticias extends Command
         $bar->finish();
         $this->info("\n🎉 Importação limpa concluída!");
     }
-}
 }

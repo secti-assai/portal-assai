@@ -14,6 +14,8 @@ use App\Models\ServicoAcesso;
 use App\Models\BannerDestaque;
 use App\Models\RedeSocial;
 use App\Models\Portal;
+use App\Models\Concurso;
+use App\Models\Telefone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -93,24 +95,29 @@ class PortalController extends Controller
         // Notícias - Coleção geral (fallback ou uso mobile)
         $noticias = collect([$destaqueNoticia])->filter()->concat($recentesSidebar);
 
-        // Eventos (Filtro Perfil Aplicado)
-        $eventosQuery = Evento::futurosPublicos()
-            ->ordenarPorDataMaisProxima()
-            ->take(4);
-        $eventos = $this->aplicarFiltroPerfil($eventosQuery, $perfil)->get();
+        // 4. Eventos para o Calendário e Listagem
+        // Pega todos do mês para o calendário
+        $dataBaseHome = request('mes') ? Carbon::createFromFormat('Y-m', request('mes'))->startOfMonth() : now()->startOfMonth();
+        $eventosNoMesQuery = Evento::futurosPublicos()
+            ->whereYear('data_inicio', $dataBaseHome->year)
+            ->whereMonth('data_inicio', $dataBaseHome->month);
+        $eventosNoMes = $this->aplicarFiltroPerfil($eventosNoMesQuery, $perfil)->get();
+
+        // Pega os 4 próximos para a listagem lateral
+        $eventos = $eventosNoMes->sortBy('data_inicio')->take(4);
 
         // Programas Destaque (Filtro Perfil Aplicado)
         $destaquesProgQuery = Programa::where('ativo', true)
             ->where('destaque', true)
             ->latest()
-            ->take(3);
+            ->take(7);
         $destaques = $this->aplicarFiltroPerfil($destaquesProgQuery, $perfil)->get();
 
-        $programas = $destaques->count() >= 3
+        $programas = $destaques->count() >= 7
             ? $destaques
             : $destaques->concat(
                 $this->aplicarFiltroPerfil(
-                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(3 - $destaques->count()),
+                    Programa::where('ativo', true)->where('destaque', false)->latest()->take(7 - $destaques->count()),
                     $perfil
                 )->get()
             );
@@ -120,29 +127,46 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Serviços Locais (Filtro Perfil Aplicado — Mais Acessados)
-        $servicosQuery = Servico::where('ativo', true)
+        // 1. Serviços "Mais Acessados" Reais (Locais e Conecta já rastreados)
+        $maisAcessadosQuery = Servico::where('ativo', true)
             ->orderByDesc('acessos')
             ->take(10);
-        $servicos = $this->aplicarFiltroPerfil($servicosQuery, $perfil)->get();
+        $maisAcessados = $this->aplicarFiltroPerfil($maisAcessadosQuery, $perfil)->get();
 
-        // Serviços Conecta (normalizado para a home)
-        $conectaRaw      = $conectaApi->getTodosServicos($perfil);
-        $conectaHome     = collect($conectaRaw)->take(10)->map(fn($s) => [
-            'titulo'     => $s['titulo'] ?? '',
-            'icone'      => $s['icone']  ?? null,
-            'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
-            'is_conecta' => true,
-        ]);
-
-        // Merge: locais primeiro, conecta preenche até 10
-        $localHome = $servicos->map(fn($s) => [
+        // 2. Mapeia os já existentes
+        $servicosHome = $maisAcessados->map(fn($s) => [
             'titulo'     => $s->titulo,
             'icone'      => $s->icone,
             'link'       => route('servicos.acessar', $s->id),
-            'is_conecta' => false,
+            'is_conecta' => !is_null($s->id_conecta),
         ]);
-        $servicosHome = $localHome->concat($conectaHome)->take(10);
+
+        // 3. Complementa com serviços do Conecta se houver menos de 10
+        if ($servicosHome->count() < 10) {
+            $conectaRaw = $conectaApi->getTodosServicos($perfil);
+            
+            // Filtra os que já estão no banco para não repetir
+            $idsConectaNoBanco = $maisAcessados->whereNotNull('id_conecta')->pluck('id_conecta')->toArray();
+            
+            $conectaRestantes = collect($conectaRaw)
+                ->reject(fn($s) => in_array($s['id_conecta'] ?? '', $idsConectaNoBanco))
+                ->take(10 - $servicosHome->count())
+                ->map(fn($s) => [
+                    'titulo'     => $s['titulo'] ?? '',
+                    'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code',
+                    'link'       => route('servicos.acessar.conecta', [
+                        'id_conecta' => $s['id_conecta'] ?? '',
+                        'titulo'     => $s['titulo'] ?? '',
+                        'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                        'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+                    ]),
+                    'is_conecta' => true,
+                ]);
+                
+            $servicosHome = $servicosHome->concat($conectaRestantes);
+        }
+
+        $servicos = $maisAcessados; // Para compatibilidade com outras partes se necessário
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -169,6 +193,19 @@ class PortalController extends Controller
             ->take(3);
         $sugestoesIA = $this->aplicarFiltroPerfil($sugestoesQuery, $perfil)->pluck('titulo');
 
+        $eventosPorDiaHome = [];
+        foreach ($eventosNoMes as $e) {
+            $data = $e->data_inicio->format('Y-m-d');
+            $eventosPorDiaHome[$data][] = [
+                'id' => $e->id,
+                'titulo' => $e->titulo,
+                'hora' => $e->data_inicio->format('H:i'),
+                'local' => $e->local,
+                'url' => route('agenda.show', $e->id),
+                'resumo' => \Illuminate\Support\Str::limit(strip_tags($e->descricao), 80)
+            ];
+        }
+
         return view('pages.pagina', compact(
             'banners',
             'alertasAtivos',
@@ -177,6 +214,7 @@ class PortalController extends Controller
             'recentesSidebar',
             'categoriasNoticias',
             'eventos',
+            'eventosPorDiaHome',
             'programas',
             'servicos',
             'servicosHome',
@@ -305,12 +343,20 @@ class PortalController extends Controller
             ->whereYear('data_inicio', $dataBase->year)
             ->whereMonth('data_inicio', $dataBase->month);
 
-        $diasComEvento = $this->aplicarFiltroPerfil($diasComEventoQuery, $perfil)
-            ->get()
-            ->map(fn($e) => $e->data_inicio->format('Y-m-d'))
-            ->unique()
-            ->values()
-            ->all();
+        $eventosNoMes = $this->aplicarFiltroPerfil($diasComEventoQuery, $perfil)->get();
+
+        $eventosPorDia = [];
+        foreach ($eventosNoMes as $e) {
+            $data = $e->data_inicio->format('Y-m-d');
+            $eventosPorDia[$data][] = [
+                'id' => $e->id,
+                'titulo' => $e->titulo,
+                'hora' => $e->data_inicio->format('H:i'),
+                'local' => $e->local,
+                'url' => route('agenda.show', $e->id),
+                'resumo' => \Illuminate\Support\Str::limit(strip_tags($e->descricao), 80)
+            ];
+        }
 
         $calendarData = compact(
             'dataBase',
@@ -319,7 +365,7 @@ class PortalController extends Controller
             'tituloMes',
             'diasNoMes',
             'primeiroDiaSemana',
-            'diasComEvento'
+            'eventosPorDia'
         );
 
         if ($request->ajax()) {
@@ -398,9 +444,14 @@ class PortalController extends Controller
             'source'    => 'conecta',
             'titulo'    => $s['titulo'] ?? '',
             'descricao' => $s['descricao'] ?? '',
-            'icone'     => $s['icone'] ?? null,
+            'icone'     => $s['icone'] ?? 'fa-solid fa-laptop-code',
             'orgao'     => $s['orgao'] ?? null,
-            'link'      => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+            'link'      => route('servicos.acessar.conecta', [
+                'id_conecta' => $s['id_conecta'] ?? '',
+                'titulo'     => $s['titulo'] ?? '',
+                'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+            ]),
             'externo'   => true,
         ]);
 
@@ -435,6 +486,7 @@ class PortalController extends Controller
         $servico = Servico::findOrFail($id);
         $servico->increment('acessos');
         ServicoAcesso::create(['servico_id' => $servico->id]);
+        
         $destino = trim((string) ($servico->url_acesso ?? $servico->link ?? ''));
 
         if ($destino === '' || $destino === '#') {
@@ -442,6 +494,31 @@ class PortalController extends Controller
         }
 
         return redirect($destino);
+    }
+
+    public function acessarServicoConecta(Request $request)
+    {
+        $idConecta = $request->id_conecta;
+        
+        if (!$idConecta) {
+            return redirect()->back();
+        }
+
+        // Busca ou cria o registro local para este serviço do Conecta
+        $servico = Servico::firstOrCreate(
+            ['id_conecta' => $idConecta],
+            [
+                'titulo' => $request->titulo ?? 'Serviço Conecta',
+                'icone'  => $request->icone  ?? 'fa-solid fa-laptop-code',
+                'link'   => $request->link   ?? config('services.conecta.url'),
+                'ativo'  => true,
+            ]
+        );
+
+        $servico->increment('acessos');
+        ServicoAcesso::create(['servico_id' => $servico->id]);
+
+        return redirect($servico->link);
     }
 
     public function secretariaShow($id)
@@ -574,13 +651,17 @@ class PortalController extends Controller
                 'tipo' => 'Serviço',
             ]);
 
-        $conectaBase = collect($conectaApi->getTodosServicos($perfil));
         $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado) {
             return str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado);
         })->take(4)->map(function($s) {
             return [
                 'titulo' => $s['titulo'] ?? '',
-                'url' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                'url' => route('servicos.acessar.conecta', [
+                    'id_conecta' => $s['id_conecta'] ?? '',
+                    'titulo'     => $s['titulo'] ?? '',
+                    'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+                ]),
                 'tipo' => 'Serviço',
             ];
         });
@@ -727,9 +808,19 @@ class PortalController extends Controller
                     'descricao' => $s['descricao'] ?? '',
                     'categoria_id' => $s['categoria_id'] ?? null,
                     'categoria' => $s['categoria'] ?? null,
-                    'icone' => $s['icone'] ?? null,
-                    'url_acesso' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
-                    'link' => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                    'icone' => $s['icone'] ?? 'fa-solid fa-laptop-code',
+                    'url_acesso' => route('servicos.acessar.conecta', [
+                        'id_conecta' => $s['id_conecta'] ?? '',
+                        'titulo'     => $s['titulo'] ?? '',
+                        'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                        'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+                    ]),
+                    'link' => route('servicos.acessar.conecta', [
+                        'id_conecta' => $s['id_conecta'] ?? '',
+                        'titulo'     => $s['titulo'] ?? '',
+                        'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                        'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+                    ]),
                     'is_conecta' => true,
                 ];
             });
@@ -984,5 +1075,24 @@ class PortalController extends Controller
     public function qualidadeVida()
     {
         return view('pages.cidade.qualidade-vida');
+    }
+
+    public function concursos()
+    {
+        $concursos = Concurso::where('ativo', true)->latest()->paginate(12);
+        return view('pages.concursos', compact('concursos'));
+    }
+
+    public function telefones()
+    {
+        $telefones = Telefone::where('ativo', true)
+            ->with('secretaria')
+            ->orderBy('nome')
+            ->get()
+            ->groupBy(function($item) {
+                return $item->secretaria ? $item->secretaria->nome : 'Diversos';
+            });
+
+        return view('pages.telefones', compact('telefones'));
     }
 }

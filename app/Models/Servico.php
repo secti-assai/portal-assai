@@ -22,7 +22,8 @@ class Servico extends Model
         'categoria_id',
         'ativo',
         'perfis_alvo',
-        'acessos'
+        'acessos',
+        'id_conecta'
     ];
 
     protected $casts = ['perfis_alvo' => 'array',];

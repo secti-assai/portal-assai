@@ -212,7 +212,9 @@
         }
     </script>
 
+    @include('partials.calendar-preview-modal')
     @stack('modals')
+    @stack('scripts')
 </body>
 
 </html>

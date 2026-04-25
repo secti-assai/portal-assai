@@ -74,22 +74,21 @@
     $calendarStart = $calendarMonth->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
     $calendarEnd = $calendarMonth->copy()->endOfMonth()->endOfWeek(\Carbon\Carbon::SATURDAY);
 
-    $eventDates = collect($eventos ?? [])
-    ->filter(fn($evento) => !empty($evento->data_inicio))
-    ->map(fn($evento) => \Carbon\Carbon::parse($evento->data_inicio)->toDateString())
-    ->unique()->values()->all();
 
     $calendarDays = [];
     $cursor = $calendarStart->copy();
     while ($cursor->lte($calendarEnd)) {
-    $isoDate = $cursor->toDateString();
-    $calendarDays[] = [
-    'day' => (int) $cursor->format('j'),
-    'isCurrentMonth' => $cursor->month === $calendarMonth->month,
-    'isToday' => $cursor->isToday(),
-    'hasEvent' => in_array($isoDate, $eventDates, true),
-    ];
-    $cursor->addDay();
+        $isoDate = $cursor->toDateString();
+        $eventosNoDia = $eventosPorDiaHome[$isoDate] ?? [];
+        $calendarDays[] = [
+            'date' => $isoDate,
+            'day' => (int) $cursor->format('j'),
+            'isCurrentMonth' => $cursor->month === $calendarMonth->month,
+            'isToday' => $cursor->isToday(),
+            'hasEvent' => count($eventosNoDia) > 0,
+            'eventos' => $eventosNoDia
+        ];
+        $cursor->addDay();
     }
 
     $calendarMesAnterior = $calendarMonth->copy()->subMonth()->format('Y-m');
@@ -394,10 +393,6 @@
         </section>
         @endif
 
-        {{-- 3. SERVIÇOS MAIS ACESSADOS --}}
-        @php
-            $servicosMob = (isset($servicos) && $servicos->count() > 0) ? $servicos->take(10) : collect($servicosPlMobile)->take(10);
-        @endphp
         <section class="bg-white-section">
             <div class="premium-title-wrapper">
                 <div class="premium-title-decoration">
@@ -408,17 +403,20 @@
                 <h2 class="section-title">Mais Acessados</h2>
             </div>
             <div class="small-cards-grid">
-                @foreach($servicosMob as $srv)
+                @foreach($servicosHome as $srv)
                 @php 
                     $s = (object)$srv;
-                    $sIcone = !empty($s->icone) ? str_replace(['fa-solid ', 'fas ', 'fa-'], '', $s->icone) : 'file-lines';
+                    $iconeClasse = !empty($s->icone) ? $s->icone : 'fa-solid fa-file-lines';
+                    if (!str_contains($iconeClasse, 'fa-')) {
+                        $iconeClasse = 'fa-solid fa-' . $iconeClasse;
+                    }
                     $sLink = $s->link ?? '#';
-                    $sTitulo = $s->titulo ?? ($s->nome ?? 'Serviço');
+                    $sTitulo = $s->titulo ?? 'Serviço';
                 @endphp
-                <a href="{{ $sLink }}" target="_blank" rel="noopener" class="small-card group">
+                <a href="{{ $sLink }}" @if($s->is_conecta) target="_blank" rel="noopener" @endif class="small-card group">
                     <span class="helper-dot">.</span>
                     <div class="service-icon transition-transform group-hover:scale-110 duration-300">
-                        <i class="fa-solid fa-{{ $sIcone }}"></i>
+                        <i class="{{ $iconeClasse }}"></i>
                     </div>
                     <h4 class="small-card-title">{{ $sTitulo }}</h4>
                 </a>
@@ -467,9 +465,13 @@
                     <div class="calendar-grid" id="calendar-days-grid">
                         <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
                         @foreach($calendarDays as $calendarDay)
-                        <span class="day-number @if(!$calendarDay['isCurrentMonth']) muted @endif @if($calendarDay['isToday']) today @endif @if($calendarDay['hasEvent']) event @endif">
+                        <button type="button"
+                            data-dia="{{ $calendarDay['date'] }}"
+                            @if($calendarDay['hasEvent']) data-eventos='@json($calendarDay['eventos'])' @endif
+                            onclick="window.abrirPreviewEvento(this)"
+                            class="day-number @if(!$calendarDay['isCurrentMonth']) muted @endif @if($calendarDay['isToday']) today @endif @if($calendarDay['hasEvent']) event @endif">
                             {{ $calendarDay['day'] }}
-                        </span>
+                        </button>
                         @endforeach
                     </div>
                 </div>
@@ -818,22 +820,19 @@
                 </div>
                 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    @php
-                        // Forçamos o uso do snapshot solicitado pelo usuário para garantir os ícones e títulos corretos
-                        $servicosExibir = collect($servicosPlMobile)->take(10);
-                    @endphp
-                    
-                    @foreach($servicosExibir as $servico)
+                    @foreach($servicosHome as $servico)
                     @php 
                         $item = (object)$servico; 
-                        // Limpeza robusta para garantir que o ícone funcione
-                        $iconeLimpo = !empty($item->icone) ? str_replace(['fa-solid', 'fas', 'fa-', ' '], '', $item->icone) : 'file-lines';
-                        $link = isset($item->link) ? $item->link : '#';
+                        $iconeClasse = !empty($item->icone) ? $item->icone : 'fa-solid fa-file-lines';
+                        if (!str_contains($iconeClasse, 'fa-')) {
+                            $iconeClasse = 'fa-solid fa-' . $iconeClasse;
+                        }
+                        $link = $item->link ?? '#';
                         $titulo = $item->titulo;
                     @endphp
-                    <a href="{{ $link }}" target="_blank" rel="noopener"
+                    <a href="{{ $link }}" @if($item->is_conecta) target="_blank" rel="noopener" @endif
                         class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group h-full">
-                        <i class="fa-solid fa-{{ $iconeLimpo }} text-6xl text-[#006eb7] mb-3 mt-2 transition-all duration-300"></i>
+                        <i class="{{ $iconeClasse }} text-6xl text-[#006eb7] mb-3 mt-2 transition-all duration-300"></i>
                         <h3 class="text-lg font-medium text-[#006eb7] leading-snug transition-colors duration-300 min-h-[48px] flex items-center justify-center px-1">
                             {{ $titulo }}
                         </h3>
@@ -948,7 +947,7 @@
                         <div class="grid grid-cols-7 text-center gap-2" id="calendar-desktop-days">
                             @foreach($calendarDays as $calendarDay)
                             @php
-                            $classes = 'w-10 h-10 flex items-center justify-center mx-auto rounded-full text-base font-medium ';
+                            $classes = 'w-10 h-10 flex items-center justify-center mx-auto rounded-full text-base font-medium transition-all ';
                             if (!$calendarDay['isCurrentMonth'])
                             $classes .= 'text-[#cbd5e1] ';
                             else
@@ -958,8 +957,14 @@
                             $classes .= 'border-2 border-[#14b8a6] ';
                             if ($calendarDay['hasEvent'])
                             $classes .= 'bg-[#64748b] text-white font-bold ';
+                            else
+                            $classes .= 'hover:bg-slate-100 ';
                             @endphp
-                            <span class="{{ $classes }}">{{ $calendarDay['day'] }}</span>
+                            <button type="button" 
+                                data-dia="{{ $calendarDay['date'] }}"
+                                @if($calendarDay['hasEvent']) data-eventos='@json($calendarDay['eventos'])' @endif
+                                onclick="window.abrirPreviewEvento(this)"
+                                class="{{ $classes }}">{{ $calendarDay['day'] }}</button>
                             @endforeach
                         </div>
                     </div>

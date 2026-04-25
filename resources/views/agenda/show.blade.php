@@ -275,4 +275,41 @@
     </div>
 </section>
 
+@push('scripts')
+<script>
+    function compartilharEvento() {
+        const title = "{{ $evento->titulo }}";
+        const text = "Confira este evento em Assaí: " + title;
+        const url = window.location.href;
+
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: text,
+                url: url
+            }).catch((error) => console.log('Erro ao compartilhar:', error));
+        } else {
+            // Fallback: Copiar para área de transferência
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.querySelector('button[onclick="compartilharEvento()"]');
+                const originalContent = btn.innerHTML;
+                
+                btn.innerHTML = `
+                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Link copiado!
+                `;
+                btn.classList.add('bg-emerald-50', 'text-emerald-700', 'ring-1', 'ring-emerald-200');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('bg-emerald-50', 'text-emerald-700', 'ring-1', 'ring-emerald-200');
+                }, 2500);
+            });
+        }
+    }
+</script>
+@endpush
+
 @endsection

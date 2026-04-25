@@ -57,9 +57,9 @@ class ProgramaController extends Controller
 
         if ($dados['destaque']) {
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 3) {
+            if ($totalDestaques >= 7) {
                 return back()
-                    ->withErrors(['destaque' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'])
+                    ->withErrors(['destaque' => 'Limite de 7 destaques atingido. Remova um destaque antes de adicionar outro.'])
                     ->withInput();
             }
         }
@@ -111,9 +111,9 @@ class ProgramaController extends Controller
 
         if ($dados['destaque'] && !$programa->destaque) {
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 3) {
+            if ($totalDestaques >= 7) {
                 return back()
-                    ->withErrors(['destaque' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'])
+                    ->withErrors(['destaque' => 'Limite de 7 destaques atingido. Remova um destaque antes de adicionar outro.'])
                     ->withInput();
             }
         }
@@ -166,9 +166,9 @@ class ProgramaController extends Controller
                 ], 422);
             }
             $totalDestaques = Programa::where('destaque', true)->count();
-            if ($totalDestaques >= 3) {
+            if ($totalDestaques >= 7) {
                 return response()->json([
-                    'message' => 'Limite de 3 destaques atingido. Remova um destaque antes de adicionar outro.'
+                    'message' => 'Limite de 7 destaques atingido. Remova um destaque antes de adicionar outro.'
                 ], 422);
             }
         }
@@ -181,7 +181,8 @@ class ProgramaController extends Controller
     private function storeAsWebp($file, $folder)
     {
         $extension = $file->getClientOriginalExtension();
-        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.webp';
+        $safeName = \Illuminate\Support\Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+        $filename = $safeName . '_' . time() . '.webp';
         $path = storage_path('app/public/' . $folder . '/' . $filename);
         
         if (!file_exists(storage_path('app/public/' . $folder))) {

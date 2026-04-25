@@ -79,6 +79,55 @@ class ServicoSeeder extends Seeder
                 'descricao' => 'Emita o documento que informa todos os seus vínculos, remunerações e contribuições previdenciárias.',
                 'link' => 'https://meu.inss.gov.br/',
                 'ativo' => true,
+            ],
+            [
+                'titulo' => 'Boletim da Dengue',
+                'icone' => 'fa-solid fa-virus-covid',
+                'descricao' => 'Acompanhe as atualizações e boletins informativos sobre a situação da dengue em Assaí.',
+                'link' => 'https://www.dengue.pr.gov.br/Endereco/Assai',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Concurso Público',
+                'icone' => 'fa-solid fa-user-graduate',
+                'descricao' => 'Confira os editais abertos, inscrições e resultados dos concursos e seleções do município.',
+                'link' => '/concursos',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Livro Eletrônico',
+                'icone' => 'fa-solid fa-book-bookmark',
+                'descricao' => 'Acesse o sistema de Livro Eletrônico para gestão fiscal e tributária de serviços.',
+                'link' => 'https://e-gov.betha.com.br/livroeletronico2/02022-038/login.faces?lastUrl=/selecaodemodulo.faces',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Telefones Úteis',
+                'icone' => 'fa-solid fa-phone-volume',
+                'descricao' => 'Lista completa de telefones de emergência, secretarias e serviços essenciais de Assaí.',
+                'link' => '/telefones',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Vagas de Emprego',
+                'icone' => 'fa-solid fa-briefcase',
+                'descricao' => 'Encontre oportunidades de trabalho e vagas disponíveis através do portal GoAssaí.',
+                'link' => 'https://goassai.pr.gov.br',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Cadastro no Gov.Assaí',
+                'icone' => 'fa-solid fa-id-card-clip',
+                'descricao' => 'Realize seu cadastro único no Gov.Assaí para acessar diversos serviços digitais do município.',
+                'link' => 'https://gov.assai.pr.gov.br',
+                'ativo' => true,
+            ],
+            [
+                'titulo' => 'Classificados de Assaí',
+                'icone' => 'fa-solid fa-tags',
+                'descricao' => 'Portal de anúncios e classificados locais para compra, venda e trocas (Em breve).',
+                'link' => '#',
+                'ativo' => true,
             ]
         ];
 
