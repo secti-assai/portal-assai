@@ -651,6 +651,8 @@ class PortalController extends Controller
                 'tipo' => 'Serviço',
             ]);
 
+        $conectaBase = collect($conectaApi->getTodosServicos($perfil));
+
         $conectaServicos = $conectaBase->filter(function($s) use ($termoNormalizado) {
             return str_contains(mb_strtolower($this->normalizeSearchTerm($s['titulo'] ?? '')), $termoNormalizado);
         })->take(4)->map(function($s) {
