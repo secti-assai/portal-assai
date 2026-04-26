@@ -86,33 +86,44 @@ class BannerDestaqueController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . time() . '.webp';
         $path = storage_path('app/public/' . $folder . '/' . $filename);
+        $sourcePath = $file->getRealPath();
         
         if (!file_exists(storage_path('app/public/' . $folder))) {
             mkdir(storage_path('app/public/' . $folder), 0755, true);
+        }
+
+        if (!$sourcePath || !\function_exists('imagewebp')) {
+            return $file->store($folder, 'public');
         }
 
         $image = null;
         switch (strtolower($extension)) {
             case 'jpeg':
             case 'jpg':
-                $image = @imagecreatefromjpeg($file);
+                if (\function_exists('imagecreatefromjpeg')) {
+                    $image = @\imagecreatefromjpeg($sourcePath);
+                }
                 break;
             case 'png':
-                $image = @imagecreatefrompng($file);
+                if (\function_exists('imagecreatefrompng')) {
+                    $image = @\imagecreatefrompng($sourcePath);
+                }
                 if ($image) {
-                    imagepalettetotruecolor($image);
-                    imagealphablending($image, true);
-                    imagesavealpha($image, true);
+                    \imagepalettetotruecolor($image);
+                    \imagealphablending($image, true);
+                    \imagesavealpha($image, true);
                 }
                 break;
             case 'webp':
-                $image = @imagecreatefromwebp($file);
+                if (\function_exists('imagecreatefromwebp')) {
+                    $image = @\imagecreatefromwebp($sourcePath);
+                }
                 break;
         }
 
         if ($image) {
-            imagewebp($image, $path, 80);
-            imagedestroy($image);
+            \imagewebp($image, $path, 80);
+            \imagedestroy($image);
             return $folder . '/' . $filename;
         }
 
