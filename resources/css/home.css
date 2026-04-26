@@ -570,6 +570,8 @@ h6,
         padding: 4px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         position: relative;
+        width: 100%;
+        max-width: 100%;
     }
 
     .pl-mobile-home .home-search-bar .home-search-input-custom {
@@ -1173,16 +1175,17 @@ html.contrast-mode .pl-mobile-home .home-search-bar .wp-block-search__button {
         top: calc(100% + 4px);
         background: #ffffff;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        max-height: 380px;
+        max-height: 260px;
     }
     
     .search-suggestion-item {
-        font-size: 0.9rem;
-        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
     }
     
     .search-category-title {
-        padding: 0.7rem 1rem 0.35rem;
+        padding: 0.6rem 0.8rem 0.3rem;
+        font-size: 0.65rem;
     }
 }
 
