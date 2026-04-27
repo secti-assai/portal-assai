@@ -260,60 +260,52 @@
     {{-- ==========================================
         FAIXA DE PLANTÃO (Abaixo da Hero)
         ========================================== --}}
-    <div x-data="dutyWidget()" x-init="init()" class="w-full bg-white border-y border-slate-200">
-        <div class="container mx-auto max-w-6xl px-4 py-3 md:py-2.5 flex items-center justify-center gap-4 text-[13px] md:text-sm font-sans text-slate-700 flex-wrap">
-
-            {{-- Ícone e label fixo --}}
-            <div class="flex items-center gap-2 shrink-0 font-bold text-blue-900">
-                <i class="fa-solid fa-kit-medical text-blue-700 text-base"></i>
-                <span>Plantão de hoje:</span>
+    <div x-data="dutyWidget()" x-init="init()" class="w-full bg-gradient-to-r from-[#006eb7] to-[#004e82] border-b border-[#00385d] text-white shadow-inner relative z-40">
+        <div class="container mx-auto max-w-6xl px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-sans">
+            
+            <div class="flex items-center gap-3 shrink-0 bg-black/20 px-3 py-1.5 rounded-full">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <span class="font-bold tracking-wider uppercase text-[11px]">Plantão Agora</span>
             </div>
 
-            <div class="w-px h-4 bg-slate-300 shrink-0"></div>
-
-            {{-- Estado: carregando --}}
-            <template x-if="loading">
-                <span class="text-slate-400 italic text-xs animate-pulse">Carregando informações de plantão...</span>
-            </template>
-
-            {{-- Estado: erro --}}
-            <template x-if="error && !loading">
-                <span class="text-slate-400 text-xs">Informações de plantão indisponíveis no momento.</span>
-            </template>
-
-            {{-- Estado: sem plantão --}}
-            <template x-if="!loading && !error && !hasDuty">
-                <span class="text-slate-500 italic" x-text="message || 'Nenhum plantão cadastrado para hoje.'"></span>
-            </template>
-
-            {{-- Estado: com plantão — exibe ambos lado a lado --}}
-            <template x-if="!loading && !error && hasDuty">
-                <div class="flex items-center gap-4 flex-wrap justify-center">
-
-                    {{-- Posto --}}
-                    <template x-if="posto">
-                        <div class="flex items-center gap-1.5 text-slate-700">
-                            <i class="fa-solid fa-gas-pump text-blue-600 text-xs shrink-0"></i>
-                            <span class="font-semibold text-blue-800" x-text="formatDutyText(posto, 'Posto de combustível')"></span>
-                        </div>
-                    </template>
-
-                    {{-- Separador entre os dois --}}
-                    <template x-if="posto && farmacia">
-                        <span class="text-slate-300 font-light text-base select-none">|</span>
-                    </template>
-
-                    {{-- Farmácia --}}
-                    <template x-if="farmacia">
-                        <div class="flex items-center gap-1.5 text-slate-700">
-                            <i class="fa-solid fa-pills text-emerald-600 text-xs shrink-0"></i>
-                            <span class="font-semibold text-slate-800" x-text="formatDutyText(farmacia, 'Farmácia')"></span>
-                        </div>
-                    </template>
-
-                </div>
-            </template>
-
+            <div class="flex-1 flex items-center justify-center text-center">
+                <template x-if="loading">
+                    <span class="text-white/70 italic text-xs animate-pulse">Carregando plantões...</span>
+                </template>
+                
+                <template x-if="error && !loading">
+                    <span class="text-red-300 text-xs font-medium">Plantões indisponíveis no momento.</span>
+                </template>
+                
+                <template x-if="!loading && !error && !hasDuty">
+                    <span class="text-white/80 italic text-sm" x-text="message || 'Nenhum plantão cadastrado para hoje.'"></span>
+                </template>
+                
+                <template x-if="!loading && !error && hasDuty">
+                    <div class="flex items-center justify-center gap-4 flex-wrap">
+                        <template x-if="posto">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-gas-pump text-yellow-400 text-sm"></i>
+                                <span class="font-semibold text-white tracking-wide" x-text="formatDutyText(posto, '')"></span>
+                            </div>
+                        </template>
+                        
+                        <template x-if="posto && farmacia">
+                            <div class="w-1.5 h-1.5 rounded-full bg-white/30 hidden md:block"></div>
+                        </template>
+                        
+                        <template x-if="farmacia">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-pills text-emerald-400 text-sm"></i>
+                                <span class="font-semibold text-white tracking-wide" x-text="formatDutyText(farmacia, '')"></span>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
 
@@ -333,27 +325,33 @@
                 </div>
                 <h2 class="section-title">Fique Ligado</h2>
             </div>
-            <div class="px-10 relative">
+            <div class="px-4 relative">
                 <div class="swiper swiper-fique-ligado w-full rounded-[22px] shadow-lg overflow-hidden relative border border-slate-100 bg-slate-50">
                     <div class="swiper-wrapper">
-                        @foreach($programas as $prog)
-                        <div class="swiper-slide relative bg-slate-50">
-                            <a href="{{ $prog->link ?? route('programas.show', $prog) }}" 
-                                {{ $prog->link ? 'target="_blank" rel="noopener"' : '' }}
+                        @foreach($programas as $programa)
+                        <div class="swiper-slide relative bg-slate-50 flex items-center justify-center">
+                            <a href="{{ $programa->link ?? route('programas.show', $programa) }}" 
+                                {{ $programa->link ? 'target="_blank" rel="noopener"' : '' }}
                                 class="block w-full h-full">
-                                <img src="{{ $prog->icone ? (str_starts_with($prog->icone, 'img/') ? asset($prog->icone) : asset('storage/' . $prog->icone)) : asset('img/Assai.jpg') }}"
-                                    alt="{{ $prog->titulo }}"
+                                <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
+                                    alt="{{ $programa->titulo }}"
                                     loading="lazy"
-                                    class="w-full h-full object-contain">
+                                    class="w-full h-80 object-cover">
                             </a>
                         </div>
                         @endforeach
                     </div>
+                    
+                    <div class="swiper-pagination swiper-pagination-fique-ligado !bottom-2"></div>
+                    
+                    <!-- Navigation buttons inside -->
+                    <style>
+                        .fique-ligado-mobile-arrow { width: 32px !important; height: 32px !important; }
+                        .fique-ligado-mobile-arrow::after { font-size: 14px !important; }
+                    </style>
+                    <div class="swiper-button-prev program-swiper-arrow fique-ligado-mobile-arrow !left-2 bg-white/70 hover:bg-white rounded-full shadow-md !text-[#0b2f57]"></div>
+                    <div class="swiper-button-next program-swiper-arrow fique-ligado-mobile-arrow !right-2 bg-white/70 hover:bg-white rounded-full shadow-md !text-[#0b2f57]"></div>
                 </div>
-                <div class="swiper-pagination swiper-pagination-fique-ligado !bottom-auto !relative !mt-4"></div>
-                <!-- Navigation buttons -->
-                <div class="swiper-button-prev program-swiper-arrow"></div>
-                <div class="swiper-button-next program-swiper-arrow"></div>
             </div>
         </section>
         @endif
@@ -427,17 +425,70 @@
             </div>
         </section>
 
-        {{-- 4. BANNERS DE PROGRAMAS (Seção sem título) --}}
-        @if(isset($bannersDestaque) && $bannersDestaque->count() > 0)
-        <section class="bg-gray-section !py-8">
+        {{-- Define dados de Banners de Perfil --}}
+        @php
+            $perfilAtual = request()->cookie('portal_perfil', 'todos');
+            
+            $bannersPerfil = [
+                'cidadao' => [
+                    'titulo' => 'Perfil Cidadão',
+                    'itens' => [
+                        ['titulo' => 'Consulte seus Débitos de IPTU', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Consulte seus Débitos de ISSQN', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Central de Estágios', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Plano de Metas', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ],
+                'empresario' => [
+                    'titulo' => 'Perfil Empresário',
+                    'itens' => [
+                        ['titulo' => 'Consulta Prévia Empresa', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Invista em Assaí', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Programa Acelera Assaí', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Portal de Talentos', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ],
+                'servidor' => [
+                    'titulo' => 'Perfil Servidor',
+                    'itens' => [
+                        ['titulo' => 'Consulta Hollerit', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Dúvidas Requerimento', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
+                        ['titulo' => 'Cartão Verocard', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
+                        ['titulo' => 'Resolução Atestados', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
+                    ]
+                ]
+            ];
+
+            $perfilChave = ($perfilAtual === 'todos' || !isset($bannersPerfil[$perfilAtual])) ? 'cidadao' : $perfilAtual;
+            $bannersExibir = $bannersPerfil[$perfilChave];
+        @endphp
+
+        {{-- 3.5 BANNERS DE PERFIL (Destaques) MOBILE --}}
+        @if(!empty($bannersExibir['itens']) && count($bannersExibir['itens']) > 0)
+        <section class="bg-gray-section !py-6">
             <div class="px-4">
                 <div class="grid grid-cols-1 gap-4">
-                    @foreach($bannersDestaque->take(4) as $bd)
-                    <div class="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white">
-                        <a href="{{ $bd->link ?? '#' }}" class="block w-full">
-                            <img src="{{ str_starts_with($bd->imagem, 'img/') ? asset($bd->imagem) : asset('storage/' . $bd->imagem) }}" 
-                                alt="Banner Destaque" class="w-full h-auto block object-contain">
-                        </a>
+                    @foreach($bannersExibir['itens'] as $bannerItem)
+                    <a href="{{ $bannerItem['link'] }}" class="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white flex justify-center aspect-[7/2]">
+                        <img src="{{ asset($bannerItem['imagem']) }}" 
+                             alt="{{ $bannerItem['titulo'] }}" 
+                             class="w-full h-full block object-fill">
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+        @endif
+
+        {{-- 4. BANNERS DE PROGRAMAS (Seção sem título) --}}
+        @if(isset($banners) && $banners->count() > 0)
+        <section class="bg-gray-section !py-6">
+            <div class="px-4">
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($banners->take(4) as $banner)
+                    <div class="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white flex justify-center aspect-[7/2]">
+                        <img src="{{ str_starts_with($banner->imagem, 'img/') ? asset($banner->imagem) : asset('storage/' . $banner->imagem) }}" 
+                            alt="Banner" class="w-full h-full block object-fill">
                     </div>
                     @endforeach
                 </div>
@@ -465,11 +516,12 @@
                     <div class="calendar-grid" id="calendar-days-grid">
                         <span class="day-name">D</span><span class="day-name">S</span><span class="day-name">T</span><span class="day-name">Q</span><span class="day-name">Q</span><span class="day-name">S</span><span class="day-name">S</span>
                         @foreach($calendarDays as $calendarDay)
-                        <button type="button"
-                            data-dia="{{ $calendarDay['date'] }}"
-                            @if($calendarDay['hasEvent']) data-eventos='@json($calendarDay['eventos'])' @endif
-                            onclick="window.abrirPreviewEvento(this)"
-                            class="day-number @if(!$calendarDay['isCurrentMonth']) muted @endif @if($calendarDay['isToday']) today @endif @if($calendarDay['hasEvent']) event @endif">
+                        @php
+                        $classesDay = 'day-number ';
+                        if (!$calendarDay['isCurrentMonth']) $classesDay .= 'muted ';
+                        if ($calendarDay['isToday']) $classesDay .= 'today ';
+                        @endphp
+                        <button type="button" disabled class="{{ $classesDay }}">
                             {{ $calendarDay['day'] }}
                         </button>
                         @endforeach
@@ -478,7 +530,7 @@
 
                 @if(isset($eventos) && $eventos->count() > 0)
                 @php $ev = $eventos->first(); @endphp
-                <a href="{{ route('agenda.index') }}" class="event-featured mt-6 border border-slate-100 shadow-sm block">
+                <a href="{{ route('agenda.show', $ev->id) }}" class="event-featured mt-6 border border-slate-100 shadow-sm block">
                     <div class="date-chip">
                         <span class="day">{{ \Carbon\Carbon::parse($ev->data_inicio)->format('d') }}</span>
                         <span class="month">{{ \Carbon\Carbon::parse($ev->data_inicio)->translatedFormat('M') }}</span>
@@ -514,15 +566,16 @@
                 @php 
                     $p = (object)$pt;
                     $pIcone = !empty($p->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $p->icone) : 'file-lines';
-                    $pColor = $p->cor ?? '#006eb7';
                     $pUrl = $p->url ?? ($p->link ?? '#');
                     $pTitulo = $p->titulo ?? ($p->nome ?? 'Portal');
+                    $isTransparencia = stripos($pTitulo, 'Transparência') !== false;
+                    $pColor = $isTransparencia ? '#10b981' : ($p->cor ?? '#006eb7');
                 @endphp
-                <a href="{{ $pUrl }}" target="_blank" rel="noopener" class="small-card group" style="border-top: 4px solid {{ $pColor }}">
-                    <div class="service-icon transition-transform group-hover:scale-110 duration-300" style="color: {{ $pColor }}">
+                <a href="{{ $pUrl }}" target="_blank" rel="noopener" class="small-card group" style="border-top: 4px solid {{ $pColor }}; {{ $isTransparencia ? 'background-color: #059669;' : '' }}">
+                    <div class="service-icon transition-transform group-hover:scale-110 duration-300" style="color: {{ $isTransparencia ? '#ecfdf5' : $pColor }}">
                         <i class="fa-solid fa-{{ $pIcone }}"></i>
                     </div>
-                    <h4 class="small-card-title" style="color: {{ $pColor }}">{{ $pTitulo }}</h4>
+                    <h4 class="small-card-title" style="color: {{ $isTransparencia ? '#fff' : $pColor }}">{{ $pTitulo }}</h4>
                 </a>
                 @endforeach
             </div>
@@ -591,8 +644,8 @@
                     <h2 class="text-4xl font-bold text-[#1e3a5f] tracking-tight" style="font-family: 'Montserrat', sans-serif;">Fique Ligado</h2>
                 </div>
                 @if(isset($programas) && $programas->count() > 0)
-                <div class="relative w-full lg:px-16">
-                    <div class="swiper swiper-fique-ligado w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100 overflow-hidden pointer-events-auto">
+                <div class="relative w-full lg:px-4">
+                    <div class="swiper swiper-fique-ligado w-full rounded-[22px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-slate-100 overflow-hidden pointer-events-auto group">
                         <div class="swiper-wrapper">
                             @foreach($programas as $programa)
                             <div class="swiper-slide relative w-full bg-slate-100">
@@ -602,16 +655,17 @@
                                     <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
                                         alt="{{ $programa->titulo }}"
                                         loading="lazy"
-                                        class="absolute inset-0 object-contain w-full h-full bg-slate-50">
+                                        class="absolute inset-0 object-cover w-full h-full bg-slate-50">
                                 </a>
                             </div>
                             @endforeach
                         </div>
                         <div class="swiper-pagination !bottom-5"></div>
+                        
+                        {{-- Setas posicionadas internamente com hover --}}
+                        <div class="swiper-button-prev program-swiper-arrow !text-[#0b2f57] !left-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/70 hover:bg-white rounded-full !w-12 !h-12 flex items-center justify-center shadow-md"></div>
+                        <div class="swiper-button-next program-swiper-arrow !text-[#0b2f57] !right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/70 hover:bg-white rounded-full !w-12 !h-12 flex items-center justify-center shadow-md"></div>
                     </div>
-                    {{-- Setas posicionadas externamente --}}
-                    <div class="swiper-button-prev program-swiper-arrow !text-[#0b2f57] lg:!left-0"></div>
-                    <div class="swiper-button-next program-swiper-arrow !text-[#0b2f57] lg:!right-0"></div>
                 </div>
                 @endif
             </div>
@@ -702,7 +756,7 @@
                             <select id="select-tema-noticias" class="w-full pl-4 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-bold appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer shadow-sm">
                                 <option value="">Selecione um Tema</option>
                                 @foreach($categoriasNoticias as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->nome }}</option>
+                                    <option value="{{ $cat->id }}" {{ strtolower($cat->nome) == 'geral' ? 'selected' : '' }}>{{ $cat->nome }}</option>
                                 @endforeach
                             </select>
                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-blue-600">
@@ -734,21 +788,25 @@
                             const btnTodas = document.getElementById('btn-ver-todas-container');
 
                             if (!tema) {
-                                container.classList.add('hidden');
-                                container.classList.remove('grid');
-                                container.innerHTML = '';
-                                btnTodas.classList.remove('hidden');
+                                // Se for vazio, busca todas as notícias (Geral)
+                                fetchTemaNoticias('');
                                 return;
                             }
 
-                            // Ao selecionar um tema, mostra o container e esconde o botão "Ver todas" (opcional, ou mantém ambos)
+                            // Ao selecionar um tema, mostra o container
                             container.classList.remove('hidden');
                             container.classList.add('grid');
-                            // btnTodas.classList.add('hidden'); // Descomente se quiser esconder o botão global ao filtrar
 
                             container.style.opacity = '0.5';
+                            fetchTemaNoticias(tema);
+                        });
+                        
+                        function fetchTemaNoticias(temaId) {
+                            const url = temaId 
+                                ? `{{ route('api.noticias.tema') }}?categoria=${encodeURIComponent(temaId)}&${excludeIds.map(id => `exclude[]=${id}`).join('&')}`
+                                : `{{ route('api.noticias.tema') }}?${excludeIds.map(id => `exclude[]=${id}`).join('&')}`;
 
-                            fetch(`{{ route('api.noticias.tema') }}?categoria=${encodeURIComponent(tema)}&${excludeIds.map(id => `exclude[]=${id}`).join('&')}`)
+                            fetch(url)
                                 .then(response => response.json())
                                 .then(data => {
                                     container.style.opacity = '1';
@@ -793,7 +851,12 @@
                                     container.style.opacity = '1';
                                     container.innerHTML = '<div class="col-span-3 text-center py-16 text-red-400">Erro ao carregar notícias.</div>';
                                 });
-                        });
+                        }
+                        
+                        // Executa automaticamente no carregamento da página para mostrar o tema selecionado
+                        container.classList.remove('hidden');
+                        container.classList.add('grid');
+                        fetchTemaNoticias(selectTema.value);
                     });
                 </script>
 
@@ -832,8 +895,8 @@
                     @endphp
                     <a href="{{ $link }}" @if($item->is_conecta) target="_blank" rel="noopener" @endif
                         class="bg-white rounded-[22px] border border-[#edf2f7] p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group h-full">
-                        <i class="{{ $iconeClasse }} text-6xl text-[#006eb7] mb-3 mt-2 transition-all duration-300"></i>
-                        <h3 class="text-lg font-medium text-[#006eb7] leading-snug transition-colors duration-300 min-h-[48px] flex items-center justify-center px-1">
+                        <i class="{{ $iconeClasse }} text-4xl text-[#006eb7] mb-3 mt-2 transition-all duration-300"></i>
+                        <h3 class="text-base font-medium text-[#006eb7] leading-snug transition-colors duration-300 min-h-[48px] flex items-center justify-center px-1">
                             {{ $titulo }}
                         </h3>
                     </a>
@@ -850,51 +913,14 @@
         </section>
 
         {{-- Banners de Perfil Desktop --}}
-        @php
-            $perfilAtual = request()->cookie('portal_perfil', 'todos');
-            
-            $bannersPerfil = [
-                'cidadao' => [
-                    'titulo' => 'Perfil Cidadão',
-                    'itens' => [
-                        ['titulo' => 'Consulte seus Débitos de IPTU', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Consulte seus Débitos de ISSQN', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Central de Estágios', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
-                        ['titulo' => 'Plano de Metas', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
-                    ]
-                ],
-                'empresario' => [
-                    'titulo' => 'Perfil Empresário',
-                    'itens' => [
-                        ['titulo' => 'Consulta Prévia Empresa', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Invista em Assaí', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Programa Acelera Assaí', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
-                        ['titulo' => 'Portal de Talentos', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
-                    ]
-                ],
-                'servidor' => [
-                    'titulo' => 'Perfil Servidor',
-                    'itens' => [
-                        ['titulo' => 'Consulta Hollerit', 'imagem' => 'img/banner/IPTU-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Dúvidas Requerimento', 'imagem' => 'img/banner/ISS-banner.jpg', 'link' => '#'],
-                        ['titulo' => 'Cartão Verocard', 'imagem' => 'img/banner/central-estagio.png', 'link' => '#'],
-                        ['titulo' => 'Resolução Atestados', 'imagem' => 'img/banner/Metas.png', 'link' => '#'],
-                    ]
-                ]
-            ];
-
-            $perfilChave = ($perfilAtual === 'todos' || !isset($bannersPerfil[$perfilAtual])) ? 'cidadao' : $perfilAtual;
-            $bannersExibir = $bannersPerfil[$perfilChave];
-        @endphp
-
         <section id="banners-perfil-desktop" class="hidden lg:block py-12 bg-white border-b border-[#e2e8f0]">
             <div class="container px-4 mx-auto max-w-6xl font-sans">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     @foreach($bannersExibir['itens'] as $bannerItem)
-                    <a href="{{ $bannerItem['link'] }}" class="group block relative overflow-hidden rounded-[16px] shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 bg-slate-100 aspect-[5/2]">
+                    <a href="{{ $bannerItem['link'] }}" class="group block relative overflow-hidden rounded-[16px] shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 bg-white border border-slate-100 aspect-[7/2]">
                         <img src="{{ asset($bannerItem['imagem']) }}" 
                              alt="{{ $bannerItem['titulo'] }}" 
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                             class="absolute inset-0 w-full h-full object-fill transition-transform duration-700 group-hover:scale-105"
                              loading="lazy">
                         {{-- Overlay sutil no hover --}}
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
@@ -949,22 +975,17 @@
                             @php
                             $classes = 'w-10 h-10 flex items-center justify-center mx-auto rounded-full text-base font-medium transition-all ';
                             if (!$calendarDay['isCurrentMonth'])
-                            $classes .= 'text-[#cbd5e1] ';
+                                $classes .= 'text-[#cbd5e1] ';
                             else
-                            $classes .= 'text-[#334155] ';
+                                $classes .= 'text-[#334155] ';
 
                             if ($calendarDay['isToday'])
-                            $classes .= 'border-2 border-[#14b8a6] ';
-                            if ($calendarDay['hasEvent'])
-                            $classes .= 'bg-[#64748b] text-white font-bold ';
+                                $classes .= 'border-2 border-[#14b8a6] ';
                             else
-                            $classes .= 'hover:bg-slate-100 ';
+                                $classes .= 'hover:bg-slate-100 ';
                             @endphp
-                            <button type="button" 
-                                data-dia="{{ $calendarDay['date'] }}"
-                                @if($calendarDay['hasEvent']) data-eventos='@json($calendarDay['eventos'])' @endif
-                                onclick="window.abrirPreviewEvento(this)"
-                                class="{{ $classes }}">{{ $calendarDay['day'] }}</button>
+                            
+                            <button type="button" disabled class="{{ $classes }} cursor-default">{{ $calendarDay['day'] }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -972,17 +993,17 @@
                     <div class="col-span-7 flex flex-col gap-4">
                         @if(isset($eventos) && $eventos->count() > 0)
                         @foreach($eventos->take(3) as $eventoItem)
-                        <div
-                            class="bg-white rounded-[16px] shadow-[0_4px_10px_rgba(0,0,0,0.04)] flex p-6 gap-6 items-center hover:shadow-md transition-shadow">
+                        <a href="{{ route('agenda.show', $eventoItem->id) }}"
+                            class="bg-white rounded-[16px] shadow-[0_4px_10px_rgba(0,0,0,0.04)] flex p-6 gap-6 items-center hover:shadow-md transition-shadow group">
                             <div
                                 class="flex flex-col items-center justify-center border-r border-[#e2e8f0] pr-6 text-[#006eb7] shrink-0">
-                                <span class="text-[2.6rem] font-extrabold leading-none"
+                                <span class="text-[2.6rem] font-extrabold leading-none group-hover:scale-110 transition-transform"
                                     style="font-family: 'Montserrat', sans-serif;">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->format('d') }}</span>
                                 <span
                                     class="text-sm font-semibold lowercase mt-1">{{ \Carbon\Carbon::parse($eventoItem->data_inicio)->translatedFormat('M') }}</span>
                             </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-[#006eb7] mb-2 leading-snug">{{ $eventoItem->titulo }}
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-[#006eb7] mb-2 leading-snug group-hover:text-blue-800 transition-colors">{{ $eventoItem->titulo }}
                                 </h3>
                                 <p class="text-sm text-[#334155] mb-1 flex items-center gap-2"><i
                                         class="fa-solid fa-clock text-slate-400"></i>
@@ -993,7 +1014,8 @@
                                     {{ $eventoItem->local ?? 'Assaí, PR' }}
                                 </p>
                             </div>
-                        </div>
+                            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-[#006eb7] transition-colors"></i>
+                        </a>
                         @endforeach
                         @else
                         <div
@@ -1032,14 +1054,18 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4">
                     @foreach($portais as $portal)
+                    @php 
+                        $isTransparencia = stripos($portal->titulo, 'Transparência') !== false;
+                        $bgClass = $isTransparencia ? 'bg-emerald-600 border-emerald-500' : 'bg-white border-[#edf2f7]';
+                        $textClass = $isTransparencia ? 'text-white' : 'text-[#1e3a5f]';
+                        $iconClass = $isTransparencia ? 'text-emerald-100' : 'text-[#006eb7]';
+                        $pIcone = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'circle-nodes';
+                    @endphp
                     <a href="{{ $portal->url }}" target="_blank" rel="noopener"
-                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group bg-white border-[#edf2f7] min-h-[140px]">
+                        class="rounded-[22px] border p-5 flex flex-col items-center justify-center text-center relative shadow-[0_6px_14px_rgba(15,23,42,0.07)] hover:-translate-y-1 transition-transform duration-300 group {{ $bgClass }} min-h-[140px]">
                         
-                        @php 
-                            $pIcone = !empty($portal->icone) ? str_replace(['fa-', 'fas ', 'fa-solid '], '', $portal->icone) : 'circle-nodes';
-                        @endphp
-                        <i class="fa-solid fa-{{ $pIcone }} text-5xl text-[#006eb7] mb-3 mt-2"></i>
-                        <h3 class="text-sm font-bold text-[#1e3a5f] leading-tight" style="font-family: 'Montserrat', sans-serif;">{{ $portal->titulo }}</h3>
+                        <i class="fa-solid fa-{{ $pIcone }} text-5xl {{ $iconClass }} mb-3 mt-2 transition-transform duration-300 group-hover:scale-110"></i>
+                        <h3 class="text-sm font-bold {{ $textClass }} leading-tight" style="font-family: 'Montserrat', sans-serif;">{{ $portal->titulo }}</h3>
                     </a>
                     @endforeach
                 </div>
@@ -1089,11 +1115,11 @@
             @endif
 
             <div class="flex flex-wrap justify-center items-center gap-4 w-full mt-2">
-                <a href="https://instagram.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#006eb7] text-white rounded-full px-8 py-3.5 text-base font-bold flex items-center gap-3 hover:bg-blue-800 transition-all hover:scale-105 shadow-[0_4px_12px_rgba(0,110,183,0.25)]">
-                    <i class="fa-brands fa-instagram text-xl"></i> Siga nosso Instagram
+                <a href="https://instagram.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#006eb7] text-white rounded-full px-6 py-2.5 text-sm font-bold flex items-center gap-2 hover:bg-blue-800 transition-all hover:scale-105 shadow-[0_4px_12px_rgba(0,110,183,0.25)]">
+                    <i class="fa-brands fa-instagram text-lg"></i> Siga nosso Instagram
                 </a>
-                <a href="https://facebook.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#1877F2] text-white rounded-full px-8 py-3.5 text-base font-bold flex items-center gap-3 hover:bg-[#166fe5] transition-all hover:scale-105 shadow-[0_4px_12px_rgba(24,119,242,0.25)]">
-                    <i class="fa-brands fa-facebook-f text-xl"></i> Curta nosso Facebook
+                <a href="https://facebook.com/prefeituradeassai" target="_blank" rel="noopener" class="bg-[#1877F2] text-white rounded-full px-6 py-2.5 text-sm font-bold flex items-center gap-2 hover:bg-[#166fe5] transition-all hover:scale-105 shadow-[0_4px_12px_rgba(24,119,242,0.25)]">
+                    <i class="fa-brands fa-facebook-f text-lg"></i> Curta nosso Facebook
                 </a>
             </div>
 

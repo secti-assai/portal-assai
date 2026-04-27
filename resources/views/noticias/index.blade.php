@@ -3,8 +3,9 @@
 @section('title', 'Notícias - Prefeitura Municipal de Assaí')
 
 @section('content')
-    <main id="conteudo-principal" accesskey="1" tabindex="-1"
-        class="relative flex flex-col min-h-screen pt-[96px] lg:pt-[160px] pb-16 bg-white" x-data="{ 
+    <section id="conteudo-principal" accesskey="1" tabindex="-1"
+        class="relative flex flex-col min-h-screen bg-white pt-24 md:pt-24 lg:pt-[170px] pb-20 lg:pb-24"
+        x-data="{ 
             loading: false,
             async navigate(url) {
                 if (!url || url === '#' || this.loading) return;
@@ -227,5 +228,5 @@
             </div>
 
         </div>
-    </main>
+    </section>
 @endsection

@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var cls = 'day-number';
             if (!day.isCurrentMonth) cls += ' muted';
             if (day.isToday)         cls += ' today';
-            if (day.hasEvent)        cls += ' event';
             
             var evJson = JSON.stringify(day.eventos || []).replace(/"/g, '&quot;');
             html += '<button type="button" class="' + cls + '" '
@@ -154,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var cls = 'w-10 h-10 flex items-center justify-center mx-auto rounded-full text-base font-medium transition-all ';
             cls += day.isCurrentMonth ? 'text-[#334155] ' : 'text-[#cbd5e1] ';
             if (day.isToday)  cls += 'border-2 border-[#14b8a6] ';
-            if (day.hasEvent) cls += 'bg-[#64748b] text-white font-bold hover:bg-slate-800 ';
             else cls += 'hover:bg-slate-100 ';
             
             var evJson = JSON.stringify(day.eventos || []).replace(/"/g, '&quot;');

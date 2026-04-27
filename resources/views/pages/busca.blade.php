@@ -432,13 +432,7 @@
             <a href="{{ route('secretarias.show', $secretaria->id) }}"
                 class="flex items-start gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-[#FFCD00] hover:shadow-md hover:-translate-y-1 transition-all duration-300 group outline-none focus-visible:ring-4 focus-visible:ring-[#FFCD00]">
                 <div class="w-14 h-14 shrink-0 rounded-xl overflow-hidden border border-slate-200">
-                    @if($secretaria->foto)
-                    <img src="{{ asset('storage/' . $secretaria->foto) }}" class="w-full h-full object-cover" alt="Foto" loading="lazy" decoding="async">
-                    @else
-                    <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-500 font-black text-sm group-hover:bg-[#071D41] group-hover:text-[#FFCD00] transition-colors">
-                        {{ $iniciais ?: 'SM' }}
-                    </div>
-                    @endif
+                    <img src="{{ asset('img/secretarias/' . ($secretaria->foto ?? 'default.jpg')) }}" class="w-full h-full object-cover" alt="Foto" loading="lazy" decoding="async">
                 </div>
                 <div class="min-w-0 flex-1 pt-0.5">
                     <h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 font-heading group-hover:text-[#071D41] transition-colors mb-1">{{ $secretaria->nome }}</h3>

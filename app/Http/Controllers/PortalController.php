@@ -1097,4 +1097,14 @@ class PortalController extends Controller
 
         return view('pages.telefones', compact('telefones'));
     }
+
+    public function galeriaFotos()
+    {
+        $fotos = \App\Models\Noticia::whereNotNull('imagem_capa')
+            ->where('imagem_capa', '!=', '')
+            ->orderBy('data_publicacao', 'desc')
+            ->paginate(24);
+
+        return view('pages.cidade.galeria-fotos', compact('fotos'));
+    }
 }

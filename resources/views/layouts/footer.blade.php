@@ -59,6 +59,7 @@
                         <li><a href="https://gov.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Gov.Assaí</a></li>
                         <li><a href="https://conecta.assai.pr.gov.br/servico/99" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">IPTU Digital</a></li>
                         <li><a href="https://e-gov.betha.com.br/e-nota/login.faces" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Nota Fiscal Eletrônica</a></li>
+                        <li><a href="{{ route('contato.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Telefones e Contatos</a></li>
                         <li><a href="{{ route('pages.faq') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">FAQ & Ajuda</a></li>
                     </ul>
                 </nav>
@@ -75,24 +76,71 @@
                         <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">e-SIC (Acesso à Informação)</a></li>
                         <li><a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Ouvidoria Municipal</a></li>
                         <li><a href="{{ route('secretarias.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Conheça as Secretarias</a></li>
-                        <li><a href="{{ route('contato.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Telefones e Contatos</a></li>
+                        <li class="pt-2 border-t border-slate-700/50 mt-2"></li>
+                        <li><a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Leis Municipais</a></li>
+                        <li><a href="{{ route('pages.acessibilidade') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Acessibilidade Digital</a></li>
+                        <li><a href="https://valedosol.assai.pr.gov.br/lgpd" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Política de Privacidade (LGPD)</a></li>
+                        <li><a href="{{ route('pages.termos') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Termos de Uso</a></li>
                     </ul>
                 </nav>
             </div>
 
-            {{-- 4. Legislação & Privacidade --}}
+            {{-- 4. Selos e Certificações --}}
             <div class="space-y-5">
-                <h3 class="text-xs font-bold tracking-widest text-slate-100 uppercase font-heading border-b border-slate-700/50 pb-3 inline-block lg:block">Avisos Legais</h3>
-                <nav aria-label="Navegação de Legislação">
-                    <ul class="space-y-3.5 text-[13.5px] font-medium text-slate-400">
-                        <li><a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Leis Municipais</a></li>
-                        <li><a href="{{ route('pages.acessibilidade') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Acessibilidade Digital</a></li>
-                        <li><a href="{{ route('pages.lgpd') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Lei Geral de Proteção de Dados (LGPD)</a></li>
-                        <li><a href="https://valedosol.assai.pr.gov.br/lgpd" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Política de Privacidade</a></li>
-                        <li><a href="{{ route('pages.cookies') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Política de Cookies</a></li>
-                        <li><a href="{{ route('pages.termos') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Termos de Uso do Portal</a></li>
-                    </ul>
-                </nav>
+                <h3 class="text-xs font-bold tracking-widest text-slate-100 uppercase font-heading border-b border-slate-700/50 pb-3 inline-block lg:block">Certificações</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/selo-diamante.png') }}', 'Selo Diamante de Transparência')" tabindex="0" aria-label="Ver Selo Diamante de Transparência em destaque">
+                        <img src="{{ asset('img/selos/selo-diamante.png') }}" alt="Selo Diamante de Transparência" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    </div>
+                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}', 'Selo Nacional Compromisso Educação Ouro')" tabindex="0" aria-label="Ver Selo Nacional Compromisso Educação Ouro em destaque">
+                        <img src="{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}" alt="Selo Nacional Compromisso Educação Ouro" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    </div>
+                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}', 'ICF Certification')" tabindex="0" aria-label="Ver ICF Certification em destaque">
+                        <img src="{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}" alt="ICF Certification" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    </div>
+                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/smart21-logo.jpg') }}', 'Smart 21')" tabindex="0" aria-label="Ver Smart 21 em destaque">
+                        <img src="{{ asset('img/selos/smart21-logo.jpg') }}" alt="Smart 21" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    </div>
+                </div>
+                <!-- Modal para exibir selo ampliado -->
+                <div id="seloModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden" style="transition: all 0.3s;">
+                    <div class="relative flex items-center justify-center p-4 bg-white rounded-2xl shadow-2xl border border-slate-200" style="max-width:90vw; max-height:90vh;">
+                        <button onclick="hideSeloModal()" aria-label="Fechar" class="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 shadow focus:outline-none focus:ring-2 focus:ring-yellow-400 z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                        <img id="seloModalImg" src="" alt="Certificação" class="block mx-auto" style="max-width: min(350px, 80vw); max-height: min(70vh, 350px); width: auto; height: auto; object-fit: contain;" />
+                        <span id="seloModalAlt" class="sr-only"></span>
+                    </div>
+                </div>
+                <script>
+                    function showSeloModal(src, alt) {
+                        var modal = document.getElementById('seloModal');
+                        var img = document.getElementById('seloModalImg');
+                        var altSpan = document.getElementById('seloModalAlt');
+                        img.src = src;
+                        img.alt = alt;
+                        altSpan.textContent = alt;
+                        modal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    }
+                    function hideSeloModal() {
+                        var modal = document.getElementById('seloModal');
+                        modal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }
+                    // Fechar ao clicar fora da imagem
+                    document.addEventListener('click', function(e) {
+                        var modal = document.getElementById('seloModal');
+                        var img = document.getElementById('seloModalImg');
+                        if (!modal.classList.contains('hidden') && e.target === modal) {
+                            hideSeloModal();
+                        }
+                    });
+                    // Fechar ao pressionar ESC
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') hideSeloModal();
+                    });
+                </script>
             </div>
 
         </div>

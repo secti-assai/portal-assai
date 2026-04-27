@@ -55,11 +55,7 @@
                             <td class="p-4 max-w-0 overflow-hidden">
                                 <div class="flex items-center gap-3">
                                     <a href="{{ route('secretarias.show', $secretaria->id) }}" target="_blank" class="block group">
-                                        @if($secretaria->foto)
-                                            <img src="{{ asset('storage/' . $secretaria->foto) }}" alt="Foto do(a) Secretário(a)" class="object-cover w-10 h-10 rounded-full border-2 border-teal-200 shadow-sm group-hover:ring-2 group-hover:ring-teal-400 transition">
-                                        @else
-                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($secretaria->nome_secretario ?: $secretaria->nome) }}&background=e2e8f0&color=94a3b8&size=96" alt="Avatar" class="object-cover w-10 h-10 rounded-full border-2 border-teal-200 shadow-sm group-hover:ring-2 group-hover:ring-teal-400 transition">
-                                        @endif
+                                        <img src="{{ asset('img/secretarias/' . ($secretaria->foto ?? 'default.jpg')) }}" alt="Foto do(a) Secretário(a)" class="object-cover w-10 h-10 rounded-full border-2 border-teal-200 shadow-sm group-hover:ring-2 group-hover:ring-teal-400 transition">
                                     </a>
                                     <p class="font-bold text-slate-800 truncate" title="{{ $secretaria->nome }}">{{ \Illuminate\Support\Str::limit($secretaria->nome, 90) }}</p>
                                 </div>
