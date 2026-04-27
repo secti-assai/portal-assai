@@ -126,21 +126,9 @@
                     <div class="bg-white border border-slate-300/80 ring-1 ring-slate-200/80 rounded-2xl shadow-[0_10px_24px_rgba(15,23,42,0.12)] hover:shadow-[0_16px_34px_rgba(15,23,42,0.16)] transition-all duration-300 overflow-visible pt-16 relative">
                         {{-- Avatar flutuante --}}
                         <div class="absolute -top-10 left-1/2 -translate-x-1/2">
-                            @if($secretaria->foto)
-                                <img src="{{ asset('storage/' . $secretaria->foto) }}"
-                                     alt="{{ $secretaria->nome_secretario }}"
-                                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" loading="lazy" decoding="async">
-                            @else
-                                @php
-                                    $partes = explode(' ', trim($secretaria->nome_secretario ?? ''));
-                                    $iniciais = count($partes) >= 2
-                                        ? mb_strtoupper(mb_substr($partes[0], 0, 1) . mb_substr(end($partes), 0, 1))
-                                        : mb_strtoupper(mb_substr($partes[0] ?? 'S', 0, 2));
-                                @endphp
-                                <div class="w-24 h-24 rounded-full bg-blue-100 text-blue-600 font-bold text-2xl flex items-center justify-center border-4 border-white shadow-md">
-                                    {{ $iniciais }}
-                                </div>
-                            @endif
+                            <img src="{{ asset('img/secretarias/' . ($secretaria->foto ?? 'default.jpg')) }}"
+                                 alt="{{ $secretaria->nome_secretario ?: $secretaria->nome }}"
+                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" loading="lazy" decoding="async">
                         </div>
 
                         <div class="px-6 pb-6 text-center">

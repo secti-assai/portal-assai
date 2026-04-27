@@ -213,6 +213,7 @@
     </script>
 
     @include('partials.calendar-preview-modal')
+    <x-gov-assai-login-modal />
     @stack('modals')
     @stack('scripts')
 </body>

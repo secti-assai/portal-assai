@@ -39,4 +39,9 @@ return [
         'url' => env('CONECTA_API_URL', 'https://conecta.assai.pr.gov.br'),
         'key' => env('CONECTA_API_KEY'),
     ],
+
+    'govassai' => [
+        'url'           => env('GOVASSAI_API_URL', 'https://gov.assai.pr.gov.br'),
+        'portal_secret' => env('PORTAL_ASSAI_API_SECRET'),
+    ],
 ];

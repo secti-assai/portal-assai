@@ -12,6 +12,7 @@ use App\Http\Controllers\AlertaController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\GovAssaiAuthController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ExecutivoController;
@@ -347,6 +348,8 @@ Route::prefix('cidade')->name('cidade.')->group(function () {
     Route::get('/demografia', [PortalController::class, 'demografia'])->name('demografia');
     Route::get('/historias-de-sucessos', [PortalController::class, 'historiasSucesso'])->name('historias-sucesso');
     Route::get('/qualidade-de-vida', [PortalController::class, 'qualidadeVida'])->name('qualidade-vida');
+    Route::get('/galeria-fotos', [PortalController::class, 'galeriaFotos'])->name('galeria-fotos');
+
 });
 Route::view('/turismo', 'pages.turismo')->name('pages.turismo');
 Route::view('/transparencia', 'pages.transparencia')->name('pages.transparencia');
@@ -365,6 +368,10 @@ Route::get('/trabalhos-informais', [VagaController::class, 'informais'])->name('
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// ================= GOV.ASSAI LOGIN =================
+Route::post('/govassai/login', [GovAssaiAuthController::class, 'login'])->name('govassai.login');
+Route::post('/govassai/logout', [GovAssaiAuthController::class, 'logout'])->name('govassai.logout');
 
 // ================= ROTAS DO PAINEL ADMIN =================
 Route::middleware('auth')->prefix('admin')->group(function () {
