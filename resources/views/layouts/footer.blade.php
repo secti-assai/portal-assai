@@ -153,12 +153,12 @@
                 </p>
             </div>
 
-            <div class="flex items-center gap-2.5 px-5 py-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 w-full lg:w-auto justify-center hover:bg-slate-800 transition-colors">
-                <svg class="w-4 h-4 text-yellow-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="https://valedosol.assai.pr.gov.br/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-5 py-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 w-full lg:w-auto justify-center hover:bg-slate-800 transition-colors group">
+                <svg class="w-4 h-4 text-yellow-500 shrink-0 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-                <span class="text-[11px] sm:text-xs font-bold text-slate-300 tracking-wider uppercase">Desenvolvido pela Sec. de Tecnologia e Inovação</span>
-            </div>
+                <span class="text-[11px] sm:text-xs font-bold text-slate-300 tracking-wider uppercase group-hover:text-white transition-colors">Powered by Ecossistema de Inovação e Transformação Digital do Vale do Sol</span>
+            </a>
         </div>
     </div>
 </footer>

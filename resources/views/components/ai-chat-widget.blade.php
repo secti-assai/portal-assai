@@ -28,9 +28,9 @@
             @click="openSidebar()"
             :aria-expanded="isOpen"
             aria-label="Abrir assistente de IA"
-            class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center text-white z-[9999] group">
-        <div class="absolute inset-0 rounded-full bg-purple-500 opacity-0 group-hover:opacity-20 animate-pulse"></div>
-        <i class="fa-solid fa-sparkles text-xl relative z-10"></i>
+            class="fixed bottom-24 right-6 w-16 h-16 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.18)] transition-all duration-300 flex items-center justify-center z-[9999] group overflow-hidden border-2 border-purple-100">
+        <div class="absolute inset-0 bg-purple-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
+        <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[1.5] relative z-10 transition-transform duration-300 group-hover:scale-[1.65]">
     </button>
 
     {{-- Sidebar Chat --}}
@@ -49,8 +49,8 @@
         {{-- Header --}}
         <div class="bg-gradient-to-r from-purple-600 to-purple-800 text-white p-4 sm:p-6 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-sparkles text-lg text-yellow-300"></i>
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-white/30 shadow-sm">
+                    <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[1.5]">
                 </div>
                 <div class="min-w-0">
                     <h2 id="ai-chat-title" class="font-bold text-base sm:text-lg truncate">Assistente IA</h2>
