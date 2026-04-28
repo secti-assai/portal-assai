@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'gerir programas']);
         Permission::firstOrCreate(['name' => 'gerir servicos']);
         Permission::firstOrCreate(['name' => 'gerir secretarias']);
+        Permission::firstOrCreate(['name' => 'gerir atos oficiais']);
 
         // ── Permissão de Governança (acesso exclusivo do admin) ───────────────
         Permission::firstOrCreate(['name' => 'gerir usuarios']);

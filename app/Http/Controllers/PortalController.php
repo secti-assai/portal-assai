@@ -16,6 +16,9 @@ use App\Models\RedeSocial;
 use App\Models\Portal;
 use App\Models\Concurso;
 use App\Models\Telefone;
+use App\Models\Portaria;
+use App\Models\Decreto;
+use App\Models\DiarioOficial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -1096,6 +1099,126 @@ class PortalController extends Controller
             });
 
         return view('pages.telefones', compact('telefones'));
+    }
+
+    public function portarias(Request $request)
+    {
+        $query = Portaria::query();
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+            $query->where(function ($q) use ($search) {
+                $q->where('numero', 'like', "%{$search}%")
+                  ->orWhere('sumula', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_publicacao', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_publicacao', '<=', $request->data_fim);
+        }
+
+        $portarias = $query->orderByDesc('data_publicacao')
+            ->orderByDesc('numero')
+            ->paginate(15)
+            ->withQueryString();
+
+        $anos = Portaria::selectRaw('EXTRACT(YEAR FROM data_publicacao) as ano')
+            ->distinct()
+            ->orderByDesc('ano')
+            ->pluck('ano');
+
+        if ($request->ajax()) {
+            return view('pages.partials.portarias-list', compact('portarias'))->render();
+        }
+
+        return view('pages.portarias', compact('portarias', 'anos'));
+    }
+
+    public function decretos(Request $request)
+    {
+        $query = Decreto::query();
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+            $query->where(function ($q) use ($search) {
+                $q->where('numero', 'like', "%{$search}%")
+                  ->orWhere('sumula', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_publicacao', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_publicacao', '<=', $request->data_fim);
+        }
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+
+        $decretos = $query->orderByDesc('data_publicacao')
+            ->orderByDesc('numero')
+            ->paginate(15)
+            ->withQueryString();
+
+        $anos = Decreto::selectRaw('EXTRACT(YEAR FROM data_publicacao) as ano')
+            ->distinct()
+            ->orderByDesc('ano')
+            ->pluck('ano');
+
+        $tipos = Decreto::whereNotNull('tipo')
+            ->distinct()
+            ->orderBy('tipo')
+            ->pluck('tipo');
+
+        if ($request->ajax()) {
+            return view('pages.partials.decretos-list', compact('decretos'))->render();
+        }
+
+        return view('pages.decretos', compact('decretos', 'anos', 'tipos'));
+    }
+
+    public function diarios(Request $request)
+    {
+        $query = DiarioOficial::query();
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+            $query->where(function ($q) use ($search) {
+                $q->where('edicao', 'like', "%{$search}%")
+                  ->orWhere('assinante_nome', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('data_publicacao', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('data_publicacao', '<=', $request->data_fim);
+        }
+
+        $diarios = $query->orderByDesc('data_publicacao')
+            ->orderByDesc('edicao')
+            ->paginate(15)
+            ->withQueryString();
+
+        $anos = DiarioOficial::selectRaw('EXTRACT(YEAR FROM data_publicacao) as ano')
+            ->distinct()
+            ->orderByDesc('ano')
+            ->pluck('ano');
+
+        if ($request->ajax()) {
+            return view('pages.partials.diarios-list', compact('diarios'))->render();
+        }
+
+        return view('pages.diarios', compact('diarios', 'anos'));
     }
 
     public function galeriaFotos()

@@ -146,6 +146,25 @@
                 </a>
             @endcan
 
+            @can('gerir atos oficiais')
+                <div class="mt-4 mb-2 text-xs font-bold tracking-wider text-blue-400 uppercase px-4">Atos Oficiais</div>
+                <a href="{{ route('admin.portarias.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.portarias.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    <i class="fa-solid fa-file-contract w-5 text-center"></i>
+                    Portarias
+                </a>
+                <a href="{{ route('admin.decretos.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.decretos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    <i class="fa-solid fa-file-signature w-5 text-center"></i>
+                    Decretos
+                </a>
+                <a href="{{ route('admin.diarios.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.diarios.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
+                    <i class="fa-solid fa-newspaper w-5 text-center"></i>
+                    Diários Oficiais
+                </a>
+            @endcan
+
             @can('gerir secretarias')
                 <a href="{{ route('admin.executivos.index') }}"
                     class="flex items-center gap-3 px-4 py-3 transition rounded-lg hover:bg-blue-800 {{ request()->routeIs('admin.executivos.*') ? 'bg-blue-800 border-l-4 border-yellow-400 text-yellow-400 font-bold' : 'text-blue-100 font-medium' }}">
