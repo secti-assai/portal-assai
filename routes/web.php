@@ -363,6 +363,11 @@ Route::view('/termos-de-uso', 'pages.termos')->name('pages.termos');
 Route::get('/oportunidades', [VagaController::class, 'formais'])->name('oportunidades');
 Route::get('/trabalhos-informais', [VagaController::class, 'informais'])->name('trabalhos-informais');
 
+// Atos Oficiais Públicos
+Route::get('/portarias', [PortalController::class, 'portarias'])->name('portarias.index');
+Route::get('/decretos', [PortalController::class, 'decretos'])->name('decretos.index');
+Route::get('/diario-oficial', [PortalController::class, 'diarios'])->name('diarios.index');
+
 
 // ================= ROTAS DE LOGIN =================
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -566,5 +571,36 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             'destroy' => 'admin.telefones.destroy',
         ]);
         Route::patch('telefones/{telefone}/toggle', [\App\Http\Controllers\Admin\TelefoneController::class, 'toggleStatus'])->name('admin.telefones.toggle');
+    });
+
+    Route::middleware(['permission:gerir atos oficiais'])->group(function () {
+        Route::resource('portarias', \App\Http\Controllers\Admin\PortariaController::class)->names([
+            'index'   => 'admin.portarias.index',
+            'create'  => 'admin.portarias.create',
+            'store'   => 'admin.portarias.store',
+            'edit'    => 'admin.portarias.edit',
+            'update'  => 'admin.portarias.update',
+            'destroy' => 'admin.portarias.destroy',
+        ]);
+
+        Route::resource('decretos', \App\Http\Controllers\Admin\DecretoController::class)->names([
+            'index'   => 'admin.decretos.index',
+            'create'  => 'admin.decretos.create',
+            'store'   => 'admin.decretos.store',
+            'edit'    => 'admin.decretos.edit',
+            'update'  => 'admin.decretos.update',
+            'destroy' => 'admin.decretos.destroy',
+        ]);
+
+        Route::resource('diarios', \App\Http\Controllers\Admin\DiarioOficialController::class)->names([
+            'index'   => 'admin.diarios.index',
+            'create'  => 'admin.diarios.create',
+            'store'   => 'admin.diarios.store',
+            'edit'    => 'admin.diarios.edit',
+            'update'  => 'admin.diarios.update',
+            'destroy' => 'admin.diarios.destroy',
+        ])->parameters([
+            'diarios' => 'diario'
+        ]);
     });
 });
