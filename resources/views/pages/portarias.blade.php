@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="pt-24 pb-12 bg-slate-50 min-h-screen" 
-    x-data="{ 
-        loading: false, 
-        q: '{{ request('q') }}',
-        data_inicio: '{{ request('data_inicio') }}',
-        data_fim: '{{ request('data_fim') }}',
+<section class="pt-24 pb-12 bg-slate-50 min-h-screen"
+    x-data="{
+        loading: false,
+        q: '{{ request('q', '') }}',
+        data_inicio: '{{ request('data_inicio', '') }}',
+        data_fim: '{{ request('data_fim', '') }}',
         updateList() {
             this.loading = true;
             const params = new URLSearchParams({
@@ -14,8 +14,6 @@
                 data_inicio: this.data_inicio,
                 data_fim: this.data_fim
             });
-            
-            // Simula o tempo de "recarregamento" para dar o efeito visual
             setTimeout(() => {
                 fetch(`{{ route('portarias.index') }}?${params.toString()}`, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -25,7 +23,7 @@
                     document.getElementById('list-container').innerHTML = html;
                     window.history.pushState({}, '', `{{ route('portarias.index') }}?${params.toString()}`);
                 })
-                .finally(() => { 
+                .finally(() => {
                     setTimeout(() => { this.loading = false; }, 300);
                 });
             }, 200);
@@ -39,7 +37,7 @@
     }"
     x-init="
         window.clearFilters = () => clearFilters();
-        document.getElementById('list-container').addEventListener('click', (e) => {
+        document.getElementById('list-container').addEventListener('click', function(e) {
             const link = e.target.closest('a');
             if (link && link.href && link.href.includes('page=')) {
                 e.preventDefault();
@@ -84,7 +82,7 @@
         <div class="mb-10">
             <x-breadcrumb :items="[
                 ['name' => 'Início', 'url' => route('home')],
-                ['name' => 'Transparência', 'url' => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao'],
+                ['name' => 'Transparência', 'url' => route('pages.transparencia')],
                 ['name' => 'Portarias']
             ]" />
             <h1 class="text-4xl font-extrabold text-blue-900 mb-2">Portarias</h1>

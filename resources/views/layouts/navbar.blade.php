@@ -229,17 +229,17 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">
                         <i class="fa-solid fa-circle-info w-4 text-center text-blue-500"></i> Acesso à Informação
                     </a>
-                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-100">
+                    <a href="{{ route('diarios.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-100">
                         <i class="fa-solid fa-book-open w-4 text-center text-indigo-500"></i> Diário Oficial
                     </a>
                     <a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-amber-50 hover:text-amber-700 border-b border-slate-100">
                         <i class="fa-solid fa-scale-balanced w-4 text-center text-amber-500"></i> Leis Municipais
                     </a>
-                    <a href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivodecretos" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-slate-50 hover:text-slate-700 border-b border-slate-100">
-                        <i class="fa-solid fa-file-pen w-4 text-center text-slate-400"></i> Decretos Municipais
+                    <a href="{{ route('decretos.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-rose-50 hover:text-rose-700 border-b border-slate-100">
+                        <i class="fa-solid fa-file-pen w-4 text-center text-rose-500"></i> Decretos Municipais
                     </a>
-                    <a href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivoportarias" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-slate-50 hover:text-slate-700 border-b border-slate-100">
-                        <i class="fa-solid fa-file-lines w-4 text-center text-slate-400"></i> Portarias
+                    <a href="{{ route('portarias.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-sky-50 hover:text-sky-700 border-b border-slate-100">
+                        <i class="fa-solid fa-file-lines w-4 text-center text-sky-500"></i> Portarias
                     </a>
                     <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-emerald-50 hover:text-emerald-700">
                         <i class="fa-solid fa-magnifying-glass-chart w-4 text-center text-emerald-500"></i> Portal da Transparência
@@ -372,10 +372,10 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                         </button>
                         <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 rounded-b-lg">
                             <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-blue-600 hover:text-blue-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao"><i class="fa-solid fa-circle-info w-4 text-center"></i> Acesso à Informação</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-indigo-600 hover:text-indigo-600 transition-colors" href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-book-open w-4 text-center"></i> Diário Oficial</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-indigo-600 hover:text-indigo-600 transition-colors" href="{{ route('diarios.index') }}"><i class="fa-solid fa-book-open w-4 text-center"></i> Diário Oficial</a></li>
                             <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-amber-600 hover:text-amber-600 transition-colors" href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Leis Municipais</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-slate-500 hover:text-slate-600 transition-colors" href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivodecretos" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pen w-4 text-center"></i> Decretos Municipais</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-slate-500 hover:text-slate-600 transition-colors" href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivoportarias" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-lines w-4 text-center"></i> Portarias</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-rose-500 hover:text-rose-600 transition-colors" href="{{ route('decretos.index') }}"><i class="fa-solid fa-file-pen w-4 text-center text-rose-500"></i> Decretos Municipais</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-600 transition-colors" href="{{ route('portarias.index') }}"><i class="fa-solid fa-file-lines w-4 text-center text-sky-500"></i> Portarias</a></li>
                             <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> Portal da Transparência</a></li>
                         </ul>
                     </li>

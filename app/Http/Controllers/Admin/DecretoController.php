@@ -31,7 +31,8 @@ class DecretoController extends Controller
 
     public function create()
     {
-        return view('admin.decretos.create');
+        $ultimo = Decreto::latest('data_publicacao')->latest('id')->first();
+        return view('admin.decretos.create', compact('ultimo'));
     }
 
     public function store(Request $request)
@@ -46,7 +47,8 @@ class DecretoController extends Controller
         ]);
 
         if ($request->hasFile('pdf_file')) {
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/decretos', 'public');
+            $fileName = 'decreto_' . str_replace('/', '-', $request->numero) . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/decretos', $fileName, 'public');
         }
 
         Decreto::create($validated);
@@ -76,7 +78,8 @@ class DecretoController extends Controller
             if ($decreto->caminho_local) {
                 Storage::disk('public')->delete($decreto->caminho_local);
             }
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/decretos', 'public');
+            $fileName = 'decreto-' . \Illuminate\Support\Str::slug(str_replace('/', '-', $request->numero)) . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/decretos', $fileName, 'public');
         }
 
         $decreto->update($validated);

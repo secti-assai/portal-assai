@@ -31,7 +31,12 @@ class PortariaController extends Controller
 
     public function create()
     {
-        return view('admin.portarias.create');
+        // Versão para PostgreSQL (split_part e CAST para INTEGER)
+        $ultimo = Portaria::orderByRaw("CAST(NULLIF(split_part(numero, '/', 2), '') AS INTEGER) DESC NULLS LAST")
+            ->orderByRaw("CAST(NULLIF(split_part(numero, '/', 1), '') AS INTEGER) DESC NULLS LAST")
+            ->first();
+
+        return view('admin.portarias.create', compact('ultimo'));
     }
 
     public function store(Request $request)
@@ -45,7 +50,8 @@ class PortariaController extends Controller
         ]);
 
         if ($request->hasFile('pdf_file')) {
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/portarias', 'public');
+            $fileName = 'portaria_' . str_replace('/', '-', $request->numero) . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/portarias', $fileName, 'public');
         }
 
         Portaria::create($validated);
@@ -74,7 +80,8 @@ class PortariaController extends Controller
             if ($portaria->caminho_local) {
                 Storage::disk('public')->delete($portaria->caminho_local);
             }
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/portarias', 'public');
+            $fileName = 'portaria-' . \Illuminate\Support\Str::slug(str_replace('/', '-', $request->numero)) . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/portarias', $fileName, 'public');
         }
 
         $portaria->update($validated);

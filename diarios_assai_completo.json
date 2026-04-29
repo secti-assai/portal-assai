@@ -1,5 +1,28 @@
 [
     {
+        "edicao": 3109,
+        "data_publicacao": "2026-04-28",
+        "pdf_url": "https://api.doemunicipal.com.br/storage/2026-04/e87df246-be7b-4489-9714-7d8091f48ec4.pdf",
+        "informacoes_assinante": {
+            "assinado_por": "MURILO LEONARDI:05052132905",
+            "nome_responsavel": "MURILO LEONARDI",
+            "cpf_responsavel": "05052132905",
+            "email_responsavel": "IMPRENSA@ASSAI.PR.GOV"
+        },
+        "informacoes_certificado": {
+            "emissao": "2026-01-29",
+            "validade": "2029-01-28",
+            "versao": "3",
+            "serial": "780d1cc0cad396a3",
+            "hash": "a0a9b5f4711611b22661d87de48e719b0604d558"
+        },
+        "informacoes_carimbo_tempo": {
+            "data_hora": "2026-04-28T18:01:03.000Z",
+            "servidor": "4",
+            "politica": "2.16.76.1.6.4"
+        }
+    },
+    {
         "edicao": 3108,
         "data_publicacao": "2026-04-27",
         "pdf_url": "https://api.doemunicipal.com.br/storage/2026-04/55264d43-6f01-4f50-b8c3-2b5e6bec4e7a.pdf",

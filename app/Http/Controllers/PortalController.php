@@ -1106,12 +1106,10 @@ class PortalController extends Controller
         $query = Portaria::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('numero', 'like', "%{$search}%")
-                  ->orWhere('sumula', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['numero', 'sumula'], $request->q);
         }
+
+
 
         if ($request->filled('data_inicio')) {
             $query->whereDate('data_publicacao', '>=', $request->data_inicio);
@@ -1143,12 +1141,10 @@ class PortalController extends Controller
         $query = Decreto::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('numero', 'like', "%{$search}%")
-                  ->orWhere('sumula', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['numero', 'sumula'], $request->q);
         }
+
+
 
         if ($request->filled('data_inicio')) {
             $query->whereDate('data_publicacao', '>=', $request->data_inicio);
@@ -1189,11 +1185,7 @@ class PortalController extends Controller
         $query = DiarioOficial::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('edicao', 'like', "%{$search}%")
-                  ->orWhere('assinante_nome', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['edicao', 'assinante_nome'], $request->q);
         }
 
         if ($request->filled('data_inicio')) {

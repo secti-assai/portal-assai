@@ -67,21 +67,13 @@
    então as setas ficam fora da imagem automaticamente. 
    As regras abaixo são para mobile (caso fossem mostradas) ou fallback. */
 
-@media (max-width: 1280px) {
-    .swiper-button-prev.program-swiper-arrow { left: 0 !important; }
-    .swiper-button-next.program-swiper-arrow { right: 0 !important; }
-}
+/* Mantendo as margens definidas acima para telas menores */
 
 @media (max-width: 1023px) {
     .program-swiper-arrow {
         width: 32px !important;
         height: 32px !important;
-        background: transparent !important;
         color: #006eb7 !important;
-        border: none !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
         display: flex !important;
         align-items: center;
         justify-content: center;
@@ -118,8 +110,14 @@
 
 /* Aspect Ratio Responsivo */
 .swiper-fique-ligado {
-    aspect-ratio: 16/9; /* Formato Banner conforme solicitado */
+    aspect-ratio: 16/9; /* Formato Desktop */
     height: auto !important;
+}
+
+@media (max-width: 1023px) {
+    .swiper-fique-ligado {
+        aspect-ratio: 4/3 !important; /* Maior no mobile */
+    }
 }
 
 .swiper-fique-ligado .swiper-slide img {

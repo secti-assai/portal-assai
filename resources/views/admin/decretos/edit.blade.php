@@ -42,10 +42,19 @@
                     class="md:col-span-1"
                 />
 
-                <x-admin.input
+                <x-admin.select
                     name="tipo"
                     label="Tipo de Decreto"
+                    placeholder="Selecione o tipo..."
                     :value="$decreto->tipo"
+                    :options="[
+                        'Padrão' => 'Padrão',
+                        'Alteração orçamentária' => 'Alteração orçamentária',
+                        'Normativo' => 'Normativo',
+                        'Regulamentação' => 'Regulamentação',
+                        'Prestação de contas' => 'Prestação de contas',
+                        'Covid19' => 'Covid19',
+                    ]"
                     class="md:col-span-1"
                 />
 

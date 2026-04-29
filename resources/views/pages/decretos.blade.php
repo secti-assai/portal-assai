@@ -86,7 +86,7 @@
         <div class="mb-10">
             <x-breadcrumb :items="[
                 ['name' => 'Início', 'url' => route('home')],
-                ['name' => 'Transparência', 'url' => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao'],
+                ['name' => 'Transparência', 'url' => route('pages.transparencia')],
                 ['name' => 'Decretos']
             ]" />
             <h1 class="text-4xl font-extrabold text-blue-900 mb-2">Decretos</h1>
@@ -115,7 +115,7 @@
                 <div>
                     <label for="tipo" class="block text-sm font-bold text-slate-700 mb-2">Tipo</label>
                     <select x-model="tipo" @change="updateList()" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                        <option value="">Todos os tipos</option>
+                        <option value="">Todos</option>
                         @foreach($tipos as $t)
                             <option value="{{ $t }}">{{ $t }}</option>
                         @endforeach

@@ -83,7 +83,7 @@
         <div class="mb-10">
             <x-breadcrumb :items="[
                 ['name' => 'Início', 'url' => route('home')],
-                ['name' => 'Transparência', 'url' => 'https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao'],
+                ['name' => 'Transparência', 'url' => route('pages.transparencia')],
                 ['name' => 'Diário Oficial']
             ]" />
             <h1 class="text-4xl font-extrabold text-blue-900 mb-2">Diário Oficial Eletrônico</h1>

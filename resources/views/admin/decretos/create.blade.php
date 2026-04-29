@@ -33,18 +33,32 @@
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <x-admin.input
-                    name="numero"
-                    label="Número do Decreto"
-                    required="true"
-                    placeholder="Ex: 123/2026"
-                    class="md:col-span-1"
-                />
+                <div class="md:col-span-1">
+                    <x-admin.input
+                        name="numero"
+                        label="Número do Decreto"
+                        required="true"
+                        placeholder="Ex: 123/2026"
+                    />
+                    @if($ultimo)
+                        <p class="mt-1 text-[11px] font-bold text-slate-500 italic">
+                            <i class="fa-solid fa-circle-info mr-1"></i> Último decreto publicado: <span class="text-blue-600">{{ $ultimo->numero }}</span>
+                        </p>
+                    @endif
+                </div>
 
-                <x-admin.input
+                <x-admin.select
                     name="tipo"
                     label="Tipo de Decreto"
-                    placeholder="Ex: Legislativo, Executivo..."
+                    placeholder="Selecione o tipo..."
+                    :options="[
+                        'Padrão' => 'Padrão',
+                        'Alteração orçamentária' => 'Alteração orçamentária',
+                        'Normativo' => 'Normativo',
+                        'Regulamentação' => 'Regulamentação',
+                        'Prestação de contas' => 'Prestação de contas',
+                        'Covid19' => 'Covid19',
+                    ]"
                     class="md:col-span-1"
                 />
 
