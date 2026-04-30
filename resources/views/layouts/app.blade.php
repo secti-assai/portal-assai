@@ -171,10 +171,34 @@
         // Função Proxy: Aciona a tradução a partir dos botões customizados
         function syncGoogleTranslate(lang) {
             let googleSelect = document.querySelector('.goog-te-combo');
-            if (googleSelect) {
+            
+            if (lang === '') {
+                // Tenta encontrar o botão "Mostrar o original" da barra do Google
+                // ID :1.restore é o padrão, mas buscamos por texto como fallback robusto
+                const restoreBtn = document.getElementById(':1.restore') || 
+                                   document.querySelector('button[id*="restore"]') ||
+                                   document.querySelector('.goog-te-banner-frame')?.contentWindow?.document?.querySelector('.goog-close-link') ||
+                                   Array.from(document.querySelectorAll('.skiptranslate button, .skiptranslate a, .goog-te-banner button'))
+                                        .find(el => {
+                                            const txt = el.textContent.trim().toLowerCase();
+                                            return txt.includes('original') || txt.includes('restaurar');
+                                        });
+                
+                if (restoreBtn) {
+                    restoreBtn.click();
+                } else {
+                    // Fallback: Tenta selecionar PT no select se o botão falhar
+                    if (googleSelect) {
+                        const ptOpt = Array.from(googleSelect.options).find(o => o.value === 'pt' || o.value === 'pt-BR');
+                        if (ptOpt) {
+                            googleSelect.value = ptOpt.value;
+                            googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    }
+                }
+            } else if (googleSelect) {
                 googleSelect.value = lang;
-                // Dispara o evento de mudança nativo para forçar a API a processar a tradução
-                googleSelect.dispatchEvent(new Event('change'));
+                googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
             // Sincroniza todos os selects customizados da página para refletirem o mesmo idioma

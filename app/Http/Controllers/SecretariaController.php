@@ -47,7 +47,7 @@ class SecretariaController extends Controller
             'nome' => 'required|max:255',
             'nome_secretario' => 'required|max:255',
             'descricao' => 'nullable',
-            'foto' => 'nullable|image|max:2048', // Até 2MB
+            'foto' => 'nullable|image|max:10240', // Até 10MB
             'telefone' => 'nullable|max:50',
             'email' => 'nullable|email|max:255',
             'endereco' => 'nullable|max:255',
@@ -78,7 +78,7 @@ class SecretariaController extends Controller
             'nome' => 'required|max:255',
             'nome_secretario' => 'required|max:255',
             'descricao' => 'nullable',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|max:10240',
             'telefone' => 'nullable|max:50',
             'email' => 'nullable|email|max:255',
             'endereco' => 'nullable|max:255',

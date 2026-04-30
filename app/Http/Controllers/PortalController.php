@@ -130,46 +130,60 @@ class PortalController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 1. Serviços "Mais Acessados" Reais (Locais e Conecta já rastreados)
-        $maisAcessadosQuery = Servico::where('ativo', true)
-            ->orderByDesc('acessos')
-            ->take(10);
-        $maisAcessados = $this->aplicarFiltroPerfil($maisAcessadosQuery, $perfil)->get();
+        // 1. Busca serviços locais (incluindo espelhados do Conecta)
+        $locaisQuery = Servico::where('ativo', true);
+        $locais = $this->aplicarFiltroPerfil($locaisQuery, $perfil)->get();
 
-        // 2. Mapeia os já existentes
-        $servicosHome = $maisAcessados->map(fn($s) => [
-            'titulo'     => $s->titulo,
-            'icone'      => $s->icone,
-            'link'       => route('servicos.acessar', $s->id),
-            'is_conecta' => !is_null($s->id_conecta),
+        // 2. Busca todos os serviços do Conecta via API
+        $conectaRaw = collect($conectaApi->getTodosServicos($perfil));
+
+        // 3. Mapeia Conecta por ID para mesclagem rápida
+        $conectaMap = $conectaRaw->keyBy('id_conecta');
+
+        // 4. Processa locais e soma acessos se houver correspondente no Conecta
+        $servicosMerged = $locais->map(function($s) use ($conectaMap) {
+            $isConecta = !is_null($s->id_conecta);
+            $totalAcessos = $s->acessos;
+
+            if ($isConecta && $conectaMap->has($s->id_conecta)) {
+                $remoto = $conectaMap->get($s->id_conecta);
+                $totalAcessos += ($remoto['acessos'] ?? 0);
+                // Remove do mapa para não duplicar no passo seguinte
+                $conectaMap->forget($s->id_conecta);
+            }
+
+            return [
+                'titulo'     => $s->titulo,
+                'icone'      => $s->icone,
+                'link'       => route('servicos.acessar', $s->id),
+                'is_conecta' => $isConecta,
+                'acessos'    => $totalAcessos,
+            ];
+        });
+
+        // 5. Adiciona serviços do Conecta que ainda não existem localmente
+        $apenasConecta = $conectaMap->map(fn($s) => [
+            'titulo'     => $s['titulo'] ?? '',
+            'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code',
+            'link'       => route('servicos.acessar.conecta', [
+                'id_conecta' => $s['id_conecta'] ?? '',
+                'titulo'     => $s['titulo'] ?? '',
+                'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
+                'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
+            ]),
+            'is_conecta' => true,
+            'acessos'    => $s['acessos'] ?? 0,
         ]);
 
-        // 3. Complementa com serviços do Conecta se houver menos de 10
-        if ($servicosHome->count() < 10) {
-            $conectaRaw = $conectaApi->getTodosServicos($perfil);
-            
-            // Filtra os que já estão no banco para não repetir
-            $idsConectaNoBanco = $maisAcessados->whereNotNull('id_conecta')->pluck('id_conecta')->toArray();
-            
-            $conectaRestantes = collect($conectaRaw)
-                ->reject(fn($s) => in_array($s['id_conecta'] ?? '', $idsConectaNoBanco))
-                ->take(10 - $servicosHome->count())
-                ->map(fn($s) => [
-                    'titulo'     => $s['titulo'] ?? '',
-                    'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code',
-                    'link'       => route('servicos.acessar.conecta', [
-                        'id_conecta' => $s['id_conecta'] ?? '',
-                        'titulo'     => $s['titulo'] ?? '',
-                        'link'       => rtrim(config('services.conecta.url'), '/') . '/servico/' . ($s['id_conecta'] ?? ''),
-                        'icone'      => $s['icone']  ?? 'fa-solid fa-laptop-code'
-                    ]),
-                    'is_conecta' => true,
-                ]);
-                
-            $servicosHome = $servicosHome->concat($conectaRestantes);
-        }
+        // 6. Consolida, ordena pelo total de acessos e pega os 10 primeiros
+        $servicosHome = $servicosMerged->concat($apenasConecta)
+            ->sortByDesc('acessos')
+            ->take(10)
+            ->values();
 
-        $servicos = $maisAcessados; // Para compatibilidade com outras partes se necessário
+        $servicos = $servicosHome; // Para compatibilidade
+
+        $servicos = $servicosHome; // Para compatibilidade
 
         $inscricoesAbertas = Cache::remember('inscricoes_conecta', 1800, function () {
             try {
@@ -285,12 +299,7 @@ class PortalController extends Controller
         $this->aplicarFiltroPerfil($query, $perfil);
 
         if ($request->filled('q')) {
-            $termo = $request->q;
-            $query->where(function ($q) use ($termo) {
-                $q->whereRaw('titulo ILIKE ?', ["%{$termo}%"])
-                    ->orWhereRaw('resumo ILIKE ?', ["%{$termo}%"])
-                    ->orWhereRaw('conteudo ILIKE ?', ["%{$termo}%"]);
-            });
+            $this->applyInsensitiveSearch($query, ['titulo', 'resumo', 'conteudo'], $request->q);
         }
 
         if ($request->filled('categoria')) {
@@ -1106,12 +1115,10 @@ class PortalController extends Controller
         $query = Portaria::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('numero', 'like', "%{$search}%")
-                  ->orWhere('sumula', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['numero', 'sumula'], $request->q);
         }
+
+
 
         if ($request->filled('data_inicio')) {
             $query->whereDate('data_publicacao', '>=', $request->data_inicio);
@@ -1143,12 +1150,10 @@ class PortalController extends Controller
         $query = Decreto::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('numero', 'like', "%{$search}%")
-                  ->orWhere('sumula', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['numero', 'sumula'], $request->q);
         }
+
+
 
         if ($request->filled('data_inicio')) {
             $query->whereDate('data_publicacao', '>=', $request->data_inicio);
@@ -1189,11 +1194,7 @@ class PortalController extends Controller
         $query = DiarioOficial::query();
 
         if ($request->filled('q')) {
-            $search = $request->q;
-            $query->where(function ($q) use ($search) {
-                $q->where('edicao', 'like', "%{$search}%")
-                  ->orWhere('assinante_nome', 'like', "%{$search}%");
-            });
+            $this->applyInsensitiveSearch($query, ['edicao', 'assinante_nome'], $request->q);
         }
 
         if ($request->filled('data_inicio')) {

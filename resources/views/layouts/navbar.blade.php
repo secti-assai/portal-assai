@@ -42,6 +42,29 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
         transition-property: background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
         /* Exclui propositalmente 'color' para ser instantâneo */
     }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    @keyframes marquee {
+        0%, 10% { transform: translateX(0); }
+        40%, 60% { transform: translateX(var(--marquee-dist, -50px)); }
+        90%, 100% { transform: translateX(0); }
+    }
+    
+    .animate-marquee-hover:hover span {
+        display: inline-block;
+        animation: marquee 8s ease-in-out infinite alternate;
+    }
+
+    .animate-marquee-mobile {
+        display: inline-block;
+        animation: marquee 10s ease-in-out infinite;
+    }
 </style>
 
 <div id="portal-config" class="hidden"
@@ -186,7 +209,7 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     <a href="{{ route('cidade.nossa-cultura') }}"  class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Nossa Cultura</a>
                     <a href="{{ route('cidade.galeria-fotos') }}"    class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Galeria de Fotos</a>
                     <a href="{{ route('agenda.index') }}"          class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Calendário</a>
-                    <a href="{{ route('em-desenvolvimento') }}"    class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Método Assaiense</a>
+                    <a href="{{ route('pages.metodos') }}"    class="block px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Método Assaiense</a>
                 </div>
             </div>
 
@@ -196,23 +219,23 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     Governo
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div class="absolute left-0 top-full mt-0 w-72 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-y-auto text-slate-700" style="max-height:22rem;scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent">
-                    <a href="{{ route('secretarias.index') }}"                      class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Prefeito</a>
-                    <a href="{{ $secUrl('Procuradoria') }}"                          class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Procuradoria-Geral do Município</a>
-                    <a href="{{ $secUrl('Administração') }}"                         class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Administração e RH</a>
-                    <a href="{{ $secUrl('Agricultura') }}"                           class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Agricultura, Abastecimento e Meio Ambiente</a>
-                    <a href="{{ $secUrl('Assistência Social') }}"                    class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Assistência Social</a>
-                    <a href="{{ $secUrl('Ciência') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Ciência, Tecnologia e Inovação</a>
-                    <a href="{{ $secUrl('Cultura') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Cultura e Turismo</a>
-                    <a href="{{ $secUrl('Educação') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Educação</a>
-                    <a href="{{ $secUrl('Engenharia') }}"                            class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Engenharia e Planejamento Urbano</a>
-                    <a href="{{ $secUrl('Esporte') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Esporte e Lazer</a>
-                    <a href="{{ $secUrl('Finanças') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Finanças</a>
-                    <a href="{{ $secUrl('Obras') }}"                                 class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Obras e Serviços Públicos</a>
-                    <a href="{{ $secUrl('Saúde') }}"                                 class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Saúde</a>
-                    <a href="{{ $secUrl('Segurança Alimentar') }}"                   class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Segurança Alimentar e Nutrição</a>
-                    <a href="{{ $secUrl('Suprimentos') }}"                           class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">Suprimentos</a>
-                    <a href="{{ $secUrl('Trabalho') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700">Trabalho e Renda</a>
+                <div class="absolute left-0 top-full mt-0 w-max bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-y-auto text-slate-700" style="max-height:22rem;scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent">
+                    <a href="{{ route('secretarias.index') }}"                      class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Prefeito</a>
+                    <a href="{{ $secUrl('Procuradoria') }}"                          class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Procuradoria-Geral do Município</a>
+                    <a href="{{ $secUrl('Administração') }}"                         class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Administração e RH</a>
+                    <a href="{{ $secUrl('Agricultura') }}"                           class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Agricultura, Abastecimento e Meio Ambiente</a>
+                    <a href="{{ $secUrl('Assistência Social') }}"                    class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Assistência Social</a>
+                    <a href="{{ $secUrl('Ciência') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Ciência, Tecnologia e Inovação</a>
+                    <a href="{{ $secUrl('Cultura') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Cultura e Turismo</a>
+                    <a href="{{ $secUrl('Educação') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Educação</a>
+                    <a href="{{ $secUrl('Engenharia') }}"                            class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Engenharia e Planejamento Urbano</a>
+                    <a href="{{ $secUrl('Esporte') }}"                               class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Esporte e Lazer</a>
+                    <a href="{{ $secUrl('Finanças') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Finanças</a>
+                    <a href="{{ $secUrl('Obras') }}"                                 class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Obras e Serviços Públicos</a>
+                    <a href="{{ $secUrl('Saúde') }}"                                 class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Saúde</a>
+                    <a href="{{ $secUrl('Segurança Alimentar') }}"                   class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Segurança Alimentar e Nutrição</a>
+                    <a href="{{ $secUrl('Suprimentos') }}"                           class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100 whitespace-nowrap">Suprimentos</a>
+                    <a href="{{ $secUrl('Trabalho') }}"                              class="block px-4 py-2.5 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 whitespace-nowrap">Trabalho e Renda</a>
                 </div>
             </div>
 
@@ -229,17 +252,17 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                     <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-blue-50 hover:text-blue-700 border-b border-slate-100">
                         <i class="fa-solid fa-circle-info w-4 text-center text-blue-500"></i> Acesso à Informação
                     </a>
-                    <a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-100">
+                    <a href="{{ route('diarios.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-indigo-50 hover:text-indigo-700 border-b border-slate-100">
                         <i class="fa-solid fa-book-open w-4 text-center text-indigo-500"></i> Diário Oficial
                     </a>
                     <a href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-amber-50 hover:text-amber-700 border-b border-slate-100">
                         <i class="fa-solid fa-scale-balanced w-4 text-center text-amber-500"></i> Leis Municipais
                     </a>
-                    <a href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivodecretos" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-slate-50 hover:text-slate-700 border-b border-slate-100">
-                        <i class="fa-solid fa-file-pen w-4 text-center text-slate-400"></i> Decretos Municipais
+                    <a href="{{ route('decretos.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-rose-50 hover:text-rose-700 border-b border-slate-100">
+                        <i class="fa-solid fa-file-pen w-4 text-center text-rose-500"></i> Decretos Municipais
                     </a>
-                    <a href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivoportarias" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-slate-50 hover:text-slate-700 border-b border-slate-100">
-                        <i class="fa-solid fa-file-lines w-4 text-center text-slate-400"></i> Portarias
+                    <a href="{{ route('portarias.index') }}" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-sky-50 hover:text-sky-700 border-b border-slate-100">
+                        <i class="fa-solid fa-file-lines w-4 text-center text-sky-500"></i> Portarias
                     </a>
                     <a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-emerald-50 hover:text-emerald-700">
                         <i class="fa-solid fa-magnifying-glass-chart w-4 text-center text-emerald-500"></i> Portal da Transparência
@@ -248,25 +271,53 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
             </div>
 
             {{-- Sou Assaiense --}}
+            {{-- Sou Assaiense --}}
             @if(session()->has('gov_user'))
             <div class="relative group py-2 lg:ml-1 xl:ml-2">
-                <button class="px-4 xl:px-5 py-2 rounded-lg flex items-center gap-2 font-medium text-white bg-blue-900 hover:bg-blue-800 shadow hover:shadow-md transition-colors duration-300 outline-none text-xs xl:text-sm whitespace-nowrap">
-                    <img src="{{ asset('img/gov.assai.png') }}" class="h-4 w-auto object-contain" alt="Gov.Assaí">
-                    Olá, {{ explode(' ', session('gov_user.nome', 'Cidadão'))[0] }}
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                <button class="px-4 xl:px-5 py-2.5 rounded-xl flex items-center gap-2.5 font-bold text-white bg-gradient-to-r from-blue-900 to-indigo-900 hover:from-blue-800 hover:to-indigo-800 shadow-md hover:shadow-lg transition-all duration-300 outline-none text-xs xl:text-sm whitespace-nowrap border border-white/10">
+                    <span>Olá, {{ explode(' ', session('gov_user.nome', 'Cidadão'))[0] }}</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform duration-300"></i>
                 </button>
-                <div class="absolute right-0 top-full mt-0 w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-slate-200/60 overflow-hidden text-slate-700">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50">
-                        <p class="font-bold text-slate-800">{{ session('gov_user.nome') }}</p>
-                        <p class="text-xs text-slate-500 mt-1">Nível: <span class="font-bold text-blue-600">{{ session('gov_user.nivel', 'Bronze') }}</span></p>
-                        <p class="text-xs text-slate-500 mt-1">Girassóis: <span class="font-bold text-yellow-600"><i class="fa-solid fa-sun"></i> {{ session('gov_user.girassois', 0) }} pts</span></p>
+                <div class="absolute right-0 top-full mt-2 min-w-[18rem] w-max bg-white rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-slate-200/60 overflow-hidden text-slate-700 z-50 transform origin-top-right scale-95 group-hover:scale-100">
+                    <div class="p-5 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg border-2 border-white shrink-0">
+                                <i class="fa-solid fa-user text-xl"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <p class="font-black text-slate-800 text-sm leading-tight whitespace-nowrap">{{ session('gov_user.nome') }}</p>
+                                <p class="text-[11px] text-slate-500 font-medium mt-0.5 whitespace-nowrap">{{ session('gov_user.cpf_mask') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <div class="bg-blue-50/50 rounded-xl p-2.5 border border-blue-100/50">
+                                <p class="text-[9px] uppercase font-bold text-blue-500 tracking-wider mb-0.5 whitespace-nowrap">Nível Atual</p>
+                                <p class="text-sm font-black text-blue-900 flex items-center gap-1.5 whitespace-nowrap">
+                                    <i class="fa-solid fa-award text-blue-600"></i>
+                                    Nível {{ session('gov_user.nivel_num', 1) }}
+                                </p>
+                            </div>
+                            <div class="bg-yellow-50/50 rounded-xl p-2.5 border border-yellow-100/50">
+                                <p class="text-[9px] uppercase font-bold text-amber-600 tracking-wider mb-0.5 whitespace-nowrap">Girassóis</p>
+                                <p class="text-sm font-black text-amber-700 flex items-center gap-1.5 whitespace-nowrap">
+                                    <i class="fa-solid fa-sun text-amber-500"></i>
+                                    {{ session('gov_user.girassois', 0) }} <span class="text-[10px] font-bold opacity-70">pts</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <form action="{{ route('govassai.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-3 text-[13px] font-medium hover:bg-red-50 hover:text-red-700 text-slate-600">
-                            <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Sair
-                        </button>
-                    </form>
+                    <div class="p-2 bg-white">
+                        <a href="https://gov.assai.pr.gov.br/cidadao/dashboard" target="_blank" class="w-full text-left flex items-center gap-3 px-4 py-3 text-[13px] font-bold hover:bg-slate-50 rounded-xl transition-colors text-slate-600 hover:text-blue-700 whitespace-nowrap">
+                            <i class="fa-solid fa-id-card w-5 text-center text-slate-400"></i> Meu Perfil
+                        </a>
+                        <form action="{{ route('govassai.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-3 text-[13px] font-bold hover:bg-red-50 rounded-xl transition-colors text-slate-600 hover:text-red-700 group/logout whitespace-nowrap">
+                                <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center text-slate-400 group-hover/logout:text-red-500"></i> Sair da Conta
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
             @else
@@ -285,6 +336,79 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
 
             <nav class="h-full overflow-y-auto px-4 pb-20 overscroll-contain" aria-label="Links principais">
                 <ul class="list-none m-0 p-0 flex flex-col pt-3">
+                    
+                    {{-- BOTÃO DE PERFIL (MOBILE - APENAS SE LOGADO) --}}
+                    @if(session()->has('gov_user'))
+                    <li class="mb-4">
+                        <div x-data="{ 
+                                openGov: false, 
+                                nameOverflows: false, 
+                                marqueeDist: '0px' 
+                             }" 
+                             x-init="
+                                const checkOverflow = () => {
+                                    if ($refs.nameText && $refs.nameContainer) {
+                                        const diff = $refs.nameText.scrollWidth - $refs.nameContainer.clientWidth;
+                                        nameOverflows = diff > 2;
+                                        marqueeDist = '-' + diff + 'px';
+                                    }
+                                };
+                                $nextTick(() => checkOverflow());
+                                window.addEventListener('resize', checkOverflow);
+                                const observer = new MutationObserver(checkOverflow);
+                                observer.observe($refs.nameText, { childList: true, characterData: true, subtree: true });
+                             }"
+                             class="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-2xl overflow-hidden shadow-lg border border-white/10">
+                            <button type="button" @click="openGov = !openGov" class="flex flex-col w-full px-5 py-4 text-white font-bold transition-all">
+                                <div class="flex items-center justify-between w-full">
+                                    <div class="flex items-center gap-3">
+                                        <div x-ref="nameContainer" class="flex flex-col items-start overflow-hidden max-w-[260px]">
+                                            <span class="text-[10px] uppercase opacity-70 tracking-widest leading-none mb-1">Cidadão Conectado</span>
+                                            <span x-ref="nameText" 
+                                                  class="text-base leading-none whitespace-nowrap pr-8"
+                                                  :class="nameOverflows ? 'animate-marquee-mobile' : ''"
+                                                  :style="'--marquee-dist: ' + marqueeDist">
+                                                <span>{{ session('gov_user.nome') }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-down text-sm transition-transform duration-300" :class="openGov ? 'rotate-180' : ''"></i>
+                                </div>
+                            </button>
+                            
+                            <div x-show="openGov" x-collapse style="display: none;" class="bg-white/10 backdrop-blur-md px-5 pb-5">
+                                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
+                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
+                                        <p class="text-[9px] uppercase font-bold text-blue-200 tracking-wider mb-1">Nível</p>
+                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
+                                            <i class="fa-solid fa-award text-blue-300"></i>
+                                            Nível {{ session('gov_user.nivel_num', 1) }}
+                                        </p>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
+                                        <p class="text-[9px] uppercase font-bold text-amber-200 tracking-wider mb-1">Girassóis</p>
+                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
+                                            <i class="fa-solid fa-sun text-amber-300"></i>
+                                            {{ session('gov_user.girassois', 0) }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col gap-2 mt-4">
+                                    <a href="https://gov.assai.pr.gov.br/cidadao/dashboard" target="_blank" class="flex items-center gap-3 py-3 px-4 rounded-xl bg-white/10 text-white text-sm font-bold">
+                                        <i class="fa-solid fa-id-card opacity-70"></i> Meu Perfil
+                                    </a>
+                                    <form action="{{ route('govassai.logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center gap-3 py-3 px-4 rounded-xl bg-red-500/20 text-red-100 text-sm font-bold">
+                                            <i class="fa-solid fa-arrow-right-from-bracket opacity-70"></i> Sair da Conta
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    @endif
 
                     {{-- SELETOR DE PERFIL (MOBILE - DESTACADO) --}}
                     <li x-data="{ open: false }" class="border-b border-blue-100 bg-blue-50/80 rounded-xl mb-3 shadow-sm border">
@@ -329,7 +453,7 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.nossa-cultura') }}">Nossa Cultura</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('cidade.galeria-fotos') }}">Galeria de Fotos</a></li>
                             <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('agenda.index') }}">Calendário</a></li>
-                            <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('em-desenvolvimento') }}">Método Assaiense</a></li>
+                            <li><a class="block text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-yellow-500 hover:text-yellow-500 transition-colors" href="{{ route('pages.metodos') }}">Método Assaiense</a></li>
                         </ul>
                     </li>
 
@@ -371,45 +495,20 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                             <i class="fa-solid fa-chevron-down text-slate-500 text-sm transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
                         <ul x-show="open" style="display: none;" class="list-none m-0 pb-3 pt-1 px-2 bg-slate-50/50 rounded-b-lg">
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-blue-600 hover:text-blue-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao"><i class="fa-solid fa-circle-info w-4 text-center"></i> Acesso à Informação</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-indigo-600 hover:text-indigo-600 transition-colors" href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-book-open w-4 text-center"></i> Diário Oficial</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-amber-600 hover:text-amber-600 transition-colors" href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Leis Municipais</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-slate-500 hover:text-slate-600 transition-colors" href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivodecretos" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pen w-4 text-center"></i> Decretos Municipais</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-slate-500 hover:text-slate-600 transition-colors" href="https://docmunicipal.com.br/prefeitura-municipal-de-assai/executivoportarias" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-lines w-4 text-center"></i> Portarias</a></li>
-                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> Portal da Transparência</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-blue-600 hover:text-blue-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao"><i class="fa-solid fa-circle-info w-4 text-center text-blue-500"></i> Acesso à Informação</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-indigo-600 hover:text-indigo-600 transition-colors" href="{{ route('diarios.index') }}"><i class="fa-solid fa-book-open w-4 text-center text-indigo-500"></i> Diário Oficial</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-amber-600 hover:text-amber-600 transition-colors" href="https://leis.org/prefeitura/pr/assai" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-scale-balanced w-4 text-center text-amber-500"></i> Leis Municipais</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-rose-500 hover:text-rose-600 transition-colors" href="{{ route('decretos.index') }}"><i class="fa-solid fa-file-pen w-4 text-center text-rose-500"></i> Decretos Municipais</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-sky-500 hover:text-sky-600 transition-colors" href="{{ route('portarias.index') }}"><i class="fa-solid fa-file-lines w-4 text-center text-sky-500"></i> Portarias</a></li>
+                            <li><a class="flex items-center gap-2 text-slate-600 text-sm py-2.5 pl-3 border-l-2 border-transparent hover:border-emerald-600 hover:text-emerald-600 transition-colors" href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center text-emerald-500"></i> Portal da Transparência</a></li>
                         </ul>
                     </li>
 
 
 
+                    {{-- BOTÃO DE LOGIN (MOBILE - APENAS SE DESLOGADO - NO FINAL) --}}
+                    @if(!session()->has('gov_user'))
                     <li class="pt-4">
-                        @if(session()->has('gov_user'))
-                        <div x-data="{ openGov: false }">
-                            <button type="button" @click="openGov = !openGov" class="flex flex-col w-full px-4 py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold shadow-md transition-all">
-                                <div class="flex items-center justify-between w-full">
-                                    <div class="flex items-center gap-2">
-                                        <img src="{{ asset('img/gov.assai.png') }}" class="h-4 w-auto object-contain" alt="Gov.Assaí">
-                                        <span>Olá, {{ explode(' ', session('gov_user.nome', 'Cidadão'))[0] }}</span>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-down text-sm transition-transform duration-200" :class="openGov ? 'rotate-180' : ''"></i>
-                                </div>
-                            </button>
-                            <ul x-show="openGov" style="display: none;" class="list-none m-0 pb-3 pt-2 px-2 bg-slate-50/50 rounded-b-lg border border-t-0 border-blue-100">
-                                <li class="px-3 py-2">
-                                    <p class="text-xs text-slate-500">Nível: <span class="font-bold text-blue-600">{{ session('gov_user.nivel', 'Bronze') }}</span></p>
-                                    <p class="text-xs text-slate-500 mt-1">Girassóis: <span class="font-bold text-yellow-600"><i class="fa-solid fa-sun"></i> {{ session('gov_user.girassois', 0) }} pts</span></p>
-                                </li>
-                                <li>
-                                    <form action="{{ route('govassai.logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="w-full text-left flex items-center gap-2 text-slate-600 text-sm py-2 pl-3 border-l-2 border-transparent hover:border-red-600 hover:text-red-600 transition-colors">
-                                            <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Sair
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                        @else
                         <button type="button" @click="$dispatch('open-modal-sou-assaiense')"
                             class="flex items-center justify-center gap-2 w-full px-4 py-3.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-yellow-400 font-bold shadow-md transition-all active:scale-95 border-0">
                             <span>Sou Assaiense</span>
@@ -417,8 +516,11 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </button>
-                        @endif
                     </li>
+                    @endif
+
+                    {{-- Espaçador Final --}}
+                    <li class="pb-6"></li>
                 </ul>
 
                 <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm flex items-center justify-start gap-3 mx-1">
@@ -454,7 +556,7 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                                             <i :class="weatherIconClass" class="text-base" aria-hidden="true"></i>
                                         </span>
                                         <div class="min-w-0">
-                                            <p class="text-sm font-bold text-slate-800" x-text="weatherLabel"></p>
+                                            <p class="text-sm font-bold text-slate-800 whitespace-nowrap overflow-x-auto scrollbar-hide" x-text="weatherLabel"></p>
                                             <p class="text-xs text-slate-500"><span x-text="formatNumber(temperature) + '°C'"></span> • Umid. <span x-text="formatNumber(humidity) + '%'"></span></p>
                                         </div>
                                     </div>
@@ -463,28 +565,6 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                         </div>
                     </section>
 
-                    <section x-data="dutyWidget()" x-init="init()" class="rounded-2xl border border-slate-200 bg-slate-50/95 p-4 shadow-sm text-slate-700">
-                        <p class="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Plantão de hoje</p>
-                        <template x-if="loading">
-                            <p class="mt-2 text-sm font-medium text-slate-500">Carregando plantão...</p>
-                        </template>
-                        <template x-if="error && !loading">
-                            <p class="mt-2 text-sm font-medium text-slate-500">Plantão indisponível</p>
-                        </template>
-                        <template x-if="!loading && !error && !hasDuty">
-                            <p class="mt-2 text-sm font-medium text-slate-500" x-text="message || 'Sem plantão hoje'"></p>
-                        </template>
-                        <template x-if="!loading && !error && hasDuty">
-                            <div class="mt-2 flex items-start gap-2">
-                                <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white text-blue-700 border border-slate-200 shadow-sm shrink-0">
-                                    <i class="fa-solid fa-kit-medical text-base" aria-hidden="true"></i>
-                                </span>
-                                <div class="min-w-0">
-                                    <p class="text-xs font-bold text-slate-500 leading-relaxed line-clamp-2" x-text="dutySummary"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </section>
                 </div>
             </nav>
         </aside>

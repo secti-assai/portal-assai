@@ -39,7 +39,7 @@ class ProgramaController extends Controller
         $request->validate([
             'titulo' => 'required|max:100',
             'descricao' => 'required',
-            'icone' => 'nullable|image|max:2048', // Aceita imagens de até 2MB
+            'icone' => 'nullable|image|max:10240', // Aceita imagens de até 10MB
             'link' => 'nullable|url',
             'categoria_id' => 'nullable|exists:categorias,id',
         ]);
@@ -91,7 +91,7 @@ class ProgramaController extends Controller
         $request->validate([
             'titulo' => 'required|max:100',
             'descricao' => 'required',
-            'icone' => 'nullable|image|max:2048',
+            'icone' => 'nullable|image|max:10240',
             'link' => 'nullable|url',
             'categoria_id' => 'nullable|exists:categorias,id',
         ]);

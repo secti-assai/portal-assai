@@ -268,7 +268,7 @@
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                 </span>
-                <span class="font-bold tracking-wider uppercase text-[11px]">Plantão Agora</span>
+                <span class="font-bold tracking-wider uppercase text-[11px]">Plantão Hoje</span>
             </div>
 
             <div class="flex-1 flex items-center justify-center text-center">
@@ -336,18 +336,18 @@
                                 <img src="{{ $programa->icone ? (str_starts_with($programa->icone, 'img/') ? asset($programa->icone) : asset('storage/' . $programa->icone)) : asset('img/Assai.jpg') }}"
                                     alt="{{ $programa->titulo }}"
                                     loading="lazy"
-                                    class="w-full h-80 object-cover">
+                                    class="w-full h-full object-cover">
                             </a>
                         </div>
                         @endforeach
                     </div>
                     
-                    <div class="swiper-pagination swiper-pagination-fique-ligado !bottom-2"></div>
+                    <div class="swiper-pagination !bottom-5"></div>
                     
                     <!-- Navigation buttons inside -->
                     <style>
-                        .fique-ligado-mobile-arrow { width: 32px !important; height: 32px !important; }
-                        .fique-ligado-mobile-arrow::after { font-size: 14px !important; }
+                        .fique-ligado-mobile-arrow { width: 38px !important; height: 38px !important; }
+                        .fique-ligado-mobile-arrow::after { font-size: 16px !important; }
                     </style>
                     <div class="swiper-button-prev program-swiper-arrow fique-ligado-mobile-arrow !left-2 bg-white/70 hover:bg-white rounded-full shadow-md !text-[#0b2f57]"></div>
                     <div class="swiper-button-next program-swiper-arrow fique-ligado-mobile-arrow !right-2 bg-white/70 hover:bg-white rounded-full shadow-md !text-[#0b2f57]"></div>

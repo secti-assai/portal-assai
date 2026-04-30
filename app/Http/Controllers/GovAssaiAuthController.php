@@ -29,14 +29,22 @@ class GovAssaiAuthController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
+                $userData = [
+                    'id'        => $data['user']['id']          ?? null,
+                    'nome'      => $data['user']['name']        ?? 'Cidadão',
+                    'nivel'     => $data['user']['nivel']       ?? 'Bronze',
+                    'nivel_num' => $data['user']['nivel_num']   ?? 1,
+                    'girassois' => $data['user']['girassois']   ?? 0,
+                    'cpf_mask'  => $data['user']['cpf_mask']    ?? null,
+                ];
 
-                session(['gov_user' => [
-                    'id'       => $data['user']['id']       ?? null,
-                    'nome'     => $data['user']['name']      ?? 'Cidadão',
-                    'nivel'    => $data['user']['nivel']     ?? 'Bronze',
-                    'girassois'=> $data['user']['girassois'] ?? 0,
-                    'cpf_mask' => $data['user']['cpf_mask']  ?? null,
-                ]]);
+                session(['gov_user' => $userData]);
+
+                // Se "Lembrar de mim" estiver marcado, salvar em cookie por 30 dias
+                if ($request->has('remember')) {
+                    $cookie = cookie('gov_user_remember', json_encode($userData), 43200); // 30 dias
+                    return back()->with('success', 'Login efetuado com sucesso!')->withCookie($cookie);
+                }
 
                 return back()->with('success', 'Login efetuado com sucesso! Bem-vindo ao Gov.Assaí.');
             }
@@ -62,6 +70,7 @@ class GovAssaiAuthController extends Controller
     public function logout(Request $request)
     {
         $request->session()->forget('gov_user');
-        return back()->with('success', 'Você saiu da sua conta Gov.Assaí.');
+        return back()->with('success', 'Você saiu da sua conta Gov.Assaí.')
+            ->withoutCookie('gov_user_remember');
     }
 }

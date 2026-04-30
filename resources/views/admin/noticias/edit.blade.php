@@ -117,6 +117,31 @@
                     help-text="PNG, JPG, GIF até 2MB"
                     :preview-src="$noticia->imagem_capa ? asset('storage/' . $noticia->imagem_capa) : null"
                 />
+
+                <div class="mt-6 pt-6 border-t border-slate-100">
+                    <label class="block mb-4 text-sm font-bold text-gray-700">Galeria de Fotos</label>
+                    
+                    @if($noticia->galeria && count($noticia->galeria) > 0)
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            @foreach($noticia->galeria as $foto)
+                                <div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                                    <img src="{{ asset('storage/' . $foto) }}" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-red-600/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <label class="flex items-center gap-2 cursor-pointer bg-white px-2 py-1 rounded shadow-sm text-[10px] font-bold text-red-600 uppercase">
+                                            <input type="checkbox" name="remover_fotos[]" value="{{ $foto }}" class="rounded text-red-600 focus:ring-red-500">
+                                            Remover
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                        <label class="block mb-2 text-xs font-bold text-blue-800 uppercase tracking-wide">Adicionar Novas Fotos</label>
+                        <input type="file" name="galeria[]" multiple accept="image/*" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 transition-all cursor-pointer">
+                    </div>
+                </div>
             </x-admin.panel>
 
             <x-admin.button color="amber" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl shadow-md">

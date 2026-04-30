@@ -67,45 +67,287 @@
     </div>
 </section>
 
-{{-- ===== FUNDAÇÃO E ERA DO OURO BRANCO ===== --}}
+{{-- ===== CAPÍTULO I: FUNDAÇÃO ===== --}}
 <section id="historia" class="py-16 md:py-24 bg-white overflow-x-hidden">
     <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full">
-        <div class="grid items-center grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div class="grid items-start grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
             
-            <div class="relative group order-2 lg:order-1">
+            {{-- Coluna 1: Imagem e Selos --}}
+            <div class="relative group lg:sticky lg:top-24">
                 <div class="overflow-hidden shadow-2xl rounded-[2.5rem] bg-slate-200 relative aspect-video lg:aspect-square w-full">
                     <img src="{{ asset('img/Assai.jpg') }}" alt="Pioneiros de Assailand" class="object-cover w-full h-full transition duration-700 group-hover:scale-105" loading="lazy">
                     <div class="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-[2.5rem]"></div>
                 </div>
                 
-                <div class="absolute -bottom-6 -right-2 sm:-right-6 p-6 shadow-2xl bg-[#006eb7] text-white rounded-3xl transform group-hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute -bottom-6 -right-2 sm:-right-6 p-6 shadow-2xl bg-[#006eb7] text-white rounded-3xl transform group-hover:-translate-y-2 transition-transform duration-300 z-10">
                     <p class="mb-1 text-[10px] font-extrabold tracking-[0.2em] uppercase text-yellow-400">Aniversário</p>
                     <p class="text-3xl font-black font-heading leading-none" style="font-family: 'Montserrat', sans-serif;">1º de Maio</p>
                     <p class="text-blue-200 text-sm mt-2 font-medium">Desde 1932</p>
                 </div>
+
+                {{-- Selo BRATAC --}}
+                <div class="absolute -top-6 -left-6 w-32 h-32 bg-white rounded-full shadow-lg border-8 border-slate-50 flex items-center justify-center p-4 z-10 transform -rotate-12 hidden md:flex">
+                    <div class="text-center">
+                        <span class="block text-[8px] font-black text-slate-400 uppercase leading-none mb-1">Colonizadora</span>
+                        <span class="block text-xl font-black text-blue-900 leading-none">BRATAC</span>
+                    </div>
+                </div>
             </div>
             
-            <div class="space-y-6 text-slate-700 order-1 lg:order-2 lg:pl-8">
-                <div class="inline-flex items-center gap-2">
-                    <span class="w-8 h-1 bg-[#006eb7] rounded-full"></span>
-                    <span class="text-[#006eb7] font-bold tracking-widest uppercase text-xs">A Saga dos Pioneiros</span>
+            {{-- Coluna 2: Narrativa --}}
+            <div class="space-y-8 text-slate-700">
+                <div class="space-y-4">
+                    <div class="inline-flex items-center gap-2">
+                        <span class="w-8 h-1 bg-[#006eb7] rounded-full"></span>
+                        <span class="text-[#006eb7] font-bold tracking-widest uppercase text-xs">Capítulo I: A Fundação</span>
+                    </div>
+                    
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 font-heading leading-tight" style="font-family: 'Montserrat', sans-serif;">
+                        O Nascimento do <br><span class="text-[#006eb7]">Sol Nascente</span>
+                    </h2>
                 </div>
                 
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 font-heading leading-tight" style="font-family: 'Montserrat', sans-serif;">
-                    De Assailand ao <span class="text-[#006eb7]">Vale do Sol</span>
-                </h2>
-                
-                <div class="prose prose-slate prose-lg max-w-none text-slate-600">
-                    <p>Em 1932, sob a liderança de <strong>Miyuki Saito</strong>, fundou-se a colônia japonesa que homenagearia o Império do Sol Nascente. Entretanto, foi entre as décadas de 40 e 50 que o município viveu sua primeira explosão econômica.</p>
-                    <p>Conhecida como a <strong>"Era do Ouro Branco"</strong>, Assaí tornou-se um dos maiores centros produtores de algodão do mundo, atraindo indústrias de beneficiamento globais como a Anderson Clayton e a Sanbra, e acolhendo milhares de migrantes nordestinos que ajudaram a moldar a diversidade cultural da cidade.</p>
-                    <div class="bg-blue-50 border-l-4 border-[#006eb7] p-5 rounded-r-xl mt-6 italic text-slate-800 text-base">
-                        O nome "Assaí" é a adaptação fonética da palavra japonesa <strong>Asahi</strong> (朝日), que significa "Sol Nascente", combinada com o termo inglês "land" (terra) em seus registros iniciais.
+                <div class="prose prose-slate prose-lg max-w-none text-slate-600 space-y-6">
+                    <p class="leading-relaxed">
+                        A história de Assaí começa oficialmente em <strong>1º de maio de 1932</strong>, com a chegada de um grupo liderado por <strong>Miyuki Saito</strong>. Eles partiram de Jataizinho para desbravar a vasta <strong>Fazenda Três Barras</strong>, uma área de 13.600 alqueires adquirida pela <strong>BRATAC</strong>.
+                    </p>
+                    
+                    <p class="leading-relaxed">
+                        Diferente de outras colonizações, a BRATAC implementou um modelo planejado: os imigrantes não eram apenas trabalhadores, mas <strong>colonos-proprietários</strong>. A empresa oferecia suporte técnico e infraestrutura, transformando a mata virgem em núcleos agrícolas produtivos em tempo recorde.
+                    </p>
+
+                    <div class="bg-blue-50 border-l-4 border-[#006eb7] p-6 rounded-r-2xl shadow-sm italic text-slate-800 text-base relative overflow-hidden group">
+                        <i class="fa-solid fa-quote-right absolute top-4 right-4 text-blue-100 text-4xl group-hover:scale-110 transition-transform"></i>
+                        O nome original da colônia era <strong>Assailand</strong> — uma fusão poética de <em>Asahi</em> (Sol Nascente em japonês) e <em>Land</em> (Terra em inglês).
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+{{-- ===== CAPÍTULO II: ERA DO OURO BRANCO ===== --}}
+<section class="py-16 md:py-24 bg-slate-950 text-white overflow-hidden relative border-y border-white/5">
+    <div class="absolute inset-0 opacity-10">
+        <img src="{{ asset('img/Assai.jpg') }}" class="w-full h-full object-cover blur-sm scale-110" alt="Background">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent"></div>
+
+    <div class="container px-4 sm:px-6 md:px-8 mx-auto max-w-6xl w-full relative z-10">
+        <div class="w-full text-center">
+            <div class="inline-flex items-center gap-2 mb-6">
+                <span class="w-8 h-1 bg-yellow-400 rounded-full"></span>
+                <span class="text-yellow-400 font-bold tracking-widest uppercase text-xs">Capítulo II: O Ouro Branco</span>
+            </div>
+            
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-8 leading-tight" style="font-family: 'Montserrat', sans-serif;">
+                A Capital Mundial <br>do <span class="text-yellow-400">Algodão</span>
+            </h2>
+
+            <div class="space-y-12">
+                {{-- Narrativa --}}
+                <div class="space-y-6 text-slate-300 text-lg leading-relaxed">
+                    <p>
+                        Entre as décadas de 1940 e 1960, Assaí viveu seu maior apogeu econômico. Graças ao solo fértil de terra roxa, a cidade tornou-se um dos maiores centros produtores de <strong>algodão</strong> do mundo. 
+                    </p>
+                    <p>
+                        Nesta fase, gigantes globais como a <strong>Anderson Clayton</strong> e a <strong>Sanbra</strong> instalaram usinas de beneficiamento na cidade, que pulsava dia e noite com o movimento das colheitas e o vaivém das máquinas.
+                    </p>
+                    <p>
+                        Foi este ciclo que atraiu milhares de famílias de todo o Brasil, especialmente do Nordeste, criando o caldeirão cultural que hoje define a identidade única do povo assaiense.
+                    </p>
+                </div>
+                
+                {{-- Grid de Cards --}}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    {{-- Card 1: Usinas --}}
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-[2.5rem] hover:bg-white/15 transition-all">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center text-slate-950 text-2xl shadow-[0_0_20px_rgba(250,204,21,0.3)]">
+                                <i class="fa-solid fa-industry"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white leading-tight">Usinas Globais</h4>
+                                <p class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">Impacto Industrial</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100/70 text-sm leading-relaxed italic">
+                            A cidade atraiu os maiores nomes da indústria têxtil global, com usinas que operavam ininterruptamente, alimentando o comércio internacional.
+                        </p>
+                    </div>
+
+                    {{-- Card 2: Ouro Branco --}}
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-[2.5rem] hover:bg-white/15 transition-all">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl">
+                                <i class="fa-solid fa-seedling"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white leading-tight">Ouro Branco</h4>
+                                <p class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">Produção Agrícola</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100/70 text-sm leading-relaxed italic">
+                            O solo de Terra Roxa proporcionou a maior produtividade de algodão do mundo, atraindo investimentos internacionais.
+                        </p>
+                    </div>
+
+                    {{-- Card 3: Migração --}}
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-[2.5rem] hover:bg-white/15 transition-all">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 bg-blue-500/20 text-blue-300 rounded-2xl flex items-center justify-center text-2xl">
+                                <i class="fa-solid fa-users-rays"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white leading-tight">Caldeirão Cultural</h4>
+                                <p class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">População</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100/70 text-sm leading-relaxed italic">
+                            A fusão única entre imigrantes japoneses e migrantes de todo o Brasil criou a identidade vibrante de Assaí.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ===== CAPÍTULO III: CULTURA E TRADIÇÃO ===== --}}
+<section class="py-16 md:py-24 bg-white relative overflow-hidden">
+    <div class="container px-4 mx-auto max-w-6xl relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="w-8 h-1 bg-[#006eb7] rounded-full"></span>
+                    <span class="text-[#006eb7] font-bold tracking-widest uppercase text-xs">Capítulo III: O Legado Cultural</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-800 font-heading mb-6" style="font-family: 'Montserrat', sans-serif;">
+                    Onde a Tradição <br><span class="text-[#006eb7]">Cruza Fronteiras</span>
+                </h2>
+                <div class="prose prose-slate prose-lg text-slate-600 space-y-6">
+                    <p>
+                        Assaí carrega o orgulho de ser o berço do <strong>primeiro Tanabata Matsuri do Brasil</strong>, realizado em 1978. O Festival das Estrelas, que celebra a milenar lenda japonesa, tornou-se uma das maiores manifestações culturais do estado.
+                    </p>
+                    <p>
+                        A fusão das raízes nipônicas com a alegria brasileira criou uma identidade vibrante, manifestada no <strong>Bon Odori</strong>, na culinária típica e nas associações que mantêm viva a língua e a disciplina dos antepassados.
+                    </p>
+                </div>
+            </div>
+            <div class="order-1 md:order-2">
+                <div class="relative group">
+                    <div class="absolute -inset-4 bg-blue-50 rounded-[3rem] -rotate-3 transition-transform group-hover:rotate-0 duration-500"></div>
+                    <div class="relative overflow-hidden rounded-[2.5rem] shadow-xl aspect-[4/3] bg-slate-100">
+                        <img src="{{ asset('img/assai_1.jpg') }}" alt="Castelo de Assaí" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-xs font-bold uppercase tracking-widest">Patrimônio</span>
+                            <h4 class="text-lg font-bold mt-1">Memorial da Imigração</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ===== CAPÍTULO IV: SMART CITY ===== --}}
+<section class="py-16 md:py-24 bg-gradient-to-br from-blue-700 to-indigo-900 text-white relative overflow-hidden">
+    {{-- Elementos Decorativos Tech --}}
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0,10 L100,10 M0,20 L100,20 M0,30 L100,30" stroke="white" stroke-width="0.1" fill="none" />
+            <path d="M10,0 L10,100 M20,0 L20,100 M30,0 L30,100" stroke="white" stroke-width="0.1" fill="none" />
+        </svg>
+    </div>
+
+    <div class="container px-4 mx-auto max-w-6xl relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 mb-4">
+                <span class="w-8 h-1 bg-cyan-400 rounded-full"></span>
+                <span class="text-cyan-400 font-bold tracking-widest uppercase text-xs">Capítulo IV: O Futuro Agora</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-6 leading-tight" style="font-family: 'Montserrat', sans-serif;">
+                Do Campo ao <br><span class="text-cyan-400 underline decoration-cyan-400/30">Top 7 Global</span>
+            </h2>
+            <p class="text-lg text-blue-100 leading-relaxed font-light">
+                Assaí não apenas preserva o passado, mas desenha o amanhã. Reconhecida internacionalmente, a cidade tornou-se um modelo de desenvolvimento inteligente e tecnológico.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[2.5rem] hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 bg-cyan-400/20 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-colors shadow-lg">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Inovação e Tech</h4>
+                <p class="text-blue-100/70 text-sm leading-relaxed">
+                    Eleita uma das <strong>7 Comunidades Mais Inteligentes do Mundo</strong> (Top 7 Global) pelo ICF, superando grandes metrópoles globais.
+                </p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[2.5rem] hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 bg-emerald-400/20 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-emerald-400 group-hover:text-slate-950 transition-colors shadow-lg">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Educação do Futuro</h4>
+                <p class="text-blue-100/70 text-sm leading-relaxed">
+                    Investimentos massivos em robótica, ensino trilíngue e qualificação técnica para reter talentos locais no Vale do Sol.
+                </p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[2.5rem] hover:-translate-y-2 transition-all duration-300 group">
+                <div class="w-14 h-14 bg-amber-400/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-amber-400 group-hover:text-slate-950 transition-colors shadow-lg">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Vale do Sol</h4>
+                <p class="text-blue-100/70 text-sm leading-relaxed">
+                    Um ecossistema de startups e agrotecnologia que conecta Assaí às principais redes globais de inovação e investimento.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ===== GRID DE CURIOSIDADES ===== --}}
+<section class="py-16 bg-white border-b border-slate-100">
+    <div class="container px-4 mx-auto max-w-6xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="p-6 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <h4 class="font-bold text-slate-800 mb-2">Emancipação</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">Em 1944, Assaí conquistou sua soberania administrativa, desmembrando-se de São Jerônimo da Serra.</p>
+            </div>
+            
+            <div class="p-6 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-tree-city"></i>
+                </div>
+                <h4 class="font-bold text-slate-800 mb-2">Urbanismo</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">O traçado urbano foi planejado para integrar residências e zonas industriais de beneficiamento têxtil.</p>
+            </div>
+
+            <div class="p-6 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-sun"></i>
+                </div>
+                <h4 class="font-bold text-slate-800 mb-2">Sol Nascente</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">O nome Assaí é a tradução fonética de Asahi, homenageando as raízes nipônicas da cidade.</p>
+            </div>
+
+            <div class="p-6 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white hover:shadow-xl transition-all group">
+                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+                <h4 class="font-bold text-slate-800 mb-2">Diversidade</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">A fusão entre imigrantes japoneses e migrantes nordestinos criou uma cultura única no Paraná.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 {{-- ===== LINHA DO TEMPO ===== --}}
 <section class="py-16 md:py-24 bg-slate-50 border-y border-slate-200">

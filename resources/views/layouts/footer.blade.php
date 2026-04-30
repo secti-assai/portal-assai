@@ -71,7 +71,7 @@
                 <nav aria-label="Navegação de Transparência">
                     <ul class="space-y-3.5 text-[13.5px] font-medium text-slate-400">
                         <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Portal da Transparência</a></li>
-                        <li><a href="https://www.doemunicipal.com.br/prefeituras/4" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Diário Oficial</a></li>
+                        <li><a href="{{ route('diarios.index') }}" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Diário Oficial</a></li>
                         <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/consulta/95802" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Processos Licitatórios</a></li>
                         <li><a href="https://transparencia.betha.cloud/#/yyGw8hIiYdv6bs-avrzVUg==/acesso-informacao" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">e-SIC (Acesso à Informação)</a></li>
                         <li><a href="https://www.govfacilcidadao.com.br/login" target="_blank" rel="noopener noreferrer" class="rounded-sm transition-colors hover:text-yellow-400 focus-visible:ring-2 focus-visible:ring-yellow-400 focus-visible:outline-none">Ouvidoria Municipal</a></li>
@@ -89,17 +89,17 @@
             <div class="space-y-5">
                 <h3 class="text-xs font-bold tracking-widest text-slate-100 uppercase font-heading border-b border-slate-700/50 pb-3 inline-block lg:block">Certificações</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/selo-diamante.png') }}', 'Selo Diamante de Transparência')" tabindex="0" aria-label="Ver Selo Diamante de Transparência em destaque">
-                        <img src="{{ asset('img/selos/selo-diamante.png') }}" alt="Selo Diamante de Transparência" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    <div class="bg-white/95 rounded-2xl p-3 flex items-center justify-center hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10 transition-all cursor-pointer group shadow-md" onclick="showSeloModal('{{ asset('img/selos/selo-diamante.png') }}', 'Selo Diamante de Transparência')" tabindex="0" aria-label="Ver Selo Diamante de Transparência em destaque">
+                        <img src="{{ asset('img/selos/selo-diamante.png') }}" alt="Selo Diamante de Transparência" class="h-14 w-auto object-contain transition-transform group-hover:scale-110" loading="lazy">
                     </div>
-                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}', 'Selo Nacional Compromisso Educação Ouro')" tabindex="0" aria-label="Ver Selo Nacional Compromisso Educação Ouro em destaque">
-                        <img src="{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}" alt="Selo Nacional Compromisso Educação Ouro" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    <div class="bg-white/95 rounded-2xl p-3 flex items-center justify-center hover:scale-105 hover:shadow-lg hover:shadow-yellow-500/10 transition-all cursor-pointer group shadow-md" onclick="showSeloModal('{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}', 'Selo Nacional Compromisso Educação Ouro')" tabindex="0" aria-label="Ver Selo Nacional Compromisso Educação Ouro em destaque">
+                        <img src="{{ asset('img/selos/selo-nacional-compromisso-com-educacao-ouro.png') }}" alt="Selo Nacional Compromisso Educação Ouro" class="h-14 w-auto object-contain transition-transform group-hover:scale-110" loading="lazy">
                     </div>
-                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}', 'ICF Certification')" tabindex="0" aria-label="Ver ICF Certification em destaque">
-                        <img src="{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}" alt="ICF Certification" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    <div class="bg-white/95 rounded-2xl p-3 flex items-center justify-center hover:scale-105 hover:shadow-lg hover:shadow-red-500/10 transition-all cursor-pointer group shadow-md" onclick="showSeloModal('{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}', 'ICF Certification')" tabindex="0" aria-label="Ver ICF Certification em destaque">
+                        <img src="{{ asset('img/selos/icf-certification-badge-assaí-web-200x225.png') }}" alt="ICF Certification" class="h-14 w-auto object-contain transition-transform group-hover:scale-110" loading="lazy">
                     </div>
-                    <div class="bg-white rounded-xl p-2 flex items-center justify-center hover:scale-105 transition-transform cursor-pointer" onclick="showSeloModal('{{ asset('img/selos/smart21-logo.jpg') }}', 'Smart 21')" tabindex="0" aria-label="Ver Smart 21 em destaque">
-                        <img src="{{ asset('img/selos/smart21-logo.jpg') }}" alt="Smart 21" class="h-16 w-auto object-contain pointer-events-none" loading="lazy">
+                    <div class="bg-white/95 rounded-2xl p-3 flex items-center justify-center hover:scale-105 hover:shadow-lg hover:shadow-slate-500/10 transition-all cursor-pointer group shadow-md" onclick="showSeloModal('{{ asset('img/selos/smart21-logo.jpg') }}', 'Smart 21')" tabindex="0" aria-label="Ver Smart 21 em destaque">
+                        <img src="{{ asset('img/selos/smart21-logo.jpg') }}" alt="Smart 21" class="h-14 w-auto object-contain transition-transform group-hover:scale-110" loading="lazy">
                     </div>
                 </div>
                 <!-- Modal para exibir selo ampliado -->

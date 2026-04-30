@@ -31,7 +31,8 @@ class DiarioOficialController extends Controller
 
     public function create()
     {
-        return view('admin.diarios.create');
+        $ultimo = DiarioOficial::orderBy('edicao', 'desc')->first();
+        return view('admin.diarios.create', compact('ultimo'));
     }
 
     public function store(Request $request)
@@ -56,7 +57,8 @@ class DiarioOficialController extends Controller
         ]);
 
         if ($request->hasFile('pdf_file')) {
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/diarios', 'public');
+            $fileName = 'diario_oficial_edicao_' . $request->edicao . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/diarios', $fileName, 'public');
         }
 
         DiarioOficial::create($validated);
@@ -96,7 +98,8 @@ class DiarioOficialController extends Controller
             if ($diario->caminho_local) {
                 Storage::disk('public')->delete($diario->caminho_local);
             }
-            $validated['caminho_local'] = $request->file('pdf_file')->store('atos_oficiais/diarios', 'public');
+            $fileName = 'diario-oficial-' . $request->edicao . '.pdf';
+            $validated['caminho_local'] = $request->file('pdf_file')->storeAs('atos_oficiais/diarios', $fileName, 'public');
         }
 
         $diario->update($validated);

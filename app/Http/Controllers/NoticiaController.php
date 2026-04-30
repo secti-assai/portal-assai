@@ -66,7 +66,9 @@ class NoticiaController extends Controller
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
-            'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'galeria' => 'nullable|array',
+            'galeria.*' => 'image|mimes:jpeg,png,jpg,webp|max:10240',
             'ativo' => 'nullable|boolean',
             'destaque' => 'nullable|boolean',
         ]);
@@ -86,7 +88,17 @@ class NoticiaController extends Controller
             'ativo' => $request->has('ativo'),
             'destaque' => $request->has('destaque'),
             'perfis_alvo' => null, // Será preenchido abaixo
+            'galeria' => null, // Será preenchido abaixo
         ]);
+
+        // Galeria de Fotos
+        if ($request->hasFile('galeria')) {
+            $galeria = [];
+            foreach ($request->file('galeria') as $foto) {
+                $galeria[] = $foto->store('noticias/galeria', 'public');
+            }
+            $noticia->update(['galeria' => $galeria]);
+        }
 
         // Sincroniza as categorias e herda os perfis
         $perfisAlvo = [];
@@ -149,7 +161,10 @@ class NoticiaController extends Controller
             'resumo' => 'nullable',
             'conteudo' => 'required',
             'data_publicacao' => 'required|date',
-            'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'imagem_capa' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'galeria' => 'nullable|array',
+            'galeria.*' => 'image|mimes:jpeg,png,jpg,webp|max:10240',
+            'remover_fotos' => 'nullable|array',
             'ativo' => 'nullable|boolean',
             'destaque' => 'nullable|boolean',
         ]);
@@ -169,6 +184,28 @@ class NoticiaController extends Controller
             $noticia->imagem_capa = $request->file('imagem_capa')->store('noticias', 'public');
         }
 
+        // Gestão da Galeria
+        $galeriaAtual = $noticia->galeria ?? [];
+        
+        // 1. Remover fotos selecionadas
+        if ($request->filled('remover_fotos')) {
+            foreach ($request->remover_fotos as $fotoRemover) {
+                if (($key = array_search($fotoRemover, $galeriaAtual)) !== false) {
+                    Storage::disk('public')->delete($fotoRemover);
+                    unset($galeriaAtual[$key]);
+                }
+            }
+            $galeriaAtual = array_values($galeriaAtual);
+        }
+
+        // 2. Adicionar novas fotos
+        if ($request->hasFile('galeria')) {
+            foreach ($request->file('galeria') as $foto) {
+                $galeriaAtual[] = $foto->store('noticias/galeria', 'public');
+            }
+        }
+
+        $noticia->galeria = $galeriaAtual;
         $noticia->save();
 
         // Sincroniza as categorias e herda os perfis
@@ -218,6 +255,12 @@ class NoticiaController extends Controller
 
         if ($noticia->imagem_capa) {
             Storage::disk('public')->delete($noticia->imagem_capa);
+        }
+
+        if (is_array($noticia->galeria)) {
+            foreach ($noticia->galeria as $foto) {
+                Storage::disk('public')->delete($foto);
+            }
         }
 
         $noticia->delete();

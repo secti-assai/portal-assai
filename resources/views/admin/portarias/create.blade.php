@@ -33,12 +33,19 @@
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <x-admin.input
-                    name="numero"
-                    label="Número da Portaria"
-                    required="true"
-                    placeholder="Ex: 001/2026"
-                />
+                <div>
+                    <x-admin.input
+                        name="numero"
+                        label="Número da Portaria"
+                        required="true"
+                        placeholder="Ex: 001/2026"
+                    />
+                    @if($ultimo)
+                        <p class="mt-1 text-[11px] font-bold text-slate-500 italic">
+                            <i class="fa-solid fa-circle-info mr-1"></i> Última portaria publicada: <span class="text-blue-600">{{ $ultimo->numero }}</span>
+                        </p>
+                    @endif
+                </div>
 
                 <x-admin.input
                     type="date"

@@ -24,7 +24,7 @@ class BannerDestaqueController extends Controller
     {
         $request->validate([
             'titulo' => 'required|string|max:255',
-            'imagem' => 'required|image|max:2048',
+            'imagem' => 'required|image|max:10240',
             'link'   => 'nullable|url|max:255',
             'ordem'  => 'nullable|integer',
         ]);
@@ -51,7 +51,7 @@ class BannerDestaqueController extends Controller
     {
         $request->validate([
             'titulo' => 'required|string|max:255',
-            'imagem' => 'nullable|image|max:2048',
+            'imagem' => 'nullable|image|max:10240',
             'link'   => 'nullable|url|max:255',
             'ordem'  => 'nullable|integer',
         ]);

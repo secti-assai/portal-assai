@@ -37,13 +37,20 @@
                 <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3">Dados da Edição</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <x-admin.input
-                        type="number"
-                        name="edicao"
-                        label="Número da Edição"
-                        required="true"
-                        placeholder="Ex: 1540"
-                    />
+                    <div>
+                        <x-admin.input
+                            type="number"
+                            name="edicao"
+                            label="Número da Edição"
+                            required="true"
+                            placeholder="Ex: 1540"
+                        />
+                        @if($ultimo)
+                            <p class="mt-1 text-[11px] font-bold text-slate-500 italic">
+                                <i class="fa-solid fa-circle-info mr-1"></i> Última edição publicada: <span class="text-blue-600">{{ $ultimo->edicao }}</span>
+                            </p>
+                        @endif
+                    </div>
 
                     <x-admin.input
                         type="date"
