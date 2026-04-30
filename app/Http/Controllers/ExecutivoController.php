@@ -29,7 +29,7 @@ class ExecutivoController extends Controller
 
         $request->validate([
             'nome' => 'required|string|max:255',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // 2MB
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240', // 10MB
         ]);
 
         $dados = $request->only(['nome']);

@@ -64,7 +64,7 @@ class EventoController extends Controller
             'titulo' => 'required|max:100',
             'data_inicio' => 'required|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
-            'imagem' => 'nullable|image|max:2048',
+            'imagem' => 'nullable|image|max:10240',
             'status' => 'required|in:confirmado,cancelado',
             'categoria_id' => 'nullable|exists:categorias,id',
         ]);
@@ -106,7 +106,7 @@ class EventoController extends Controller
             'titulo' => 'required|max:100',
             'data_inicio' => 'required|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
-            'imagem' => 'nullable|image|max:2048',
+            'imagem' => 'nullable|image|max:10240',
             'status' => 'required|in:confirmado,cancelado',
             'categoria_id' => 'nullable|exists:categorias,id',
         ]);

@@ -77,32 +77,36 @@
             {{-- Mensagem Inicial --}}
             <div x-show="messages.length === 0" class="text-center py-10 px-4">
                 <div class="mb-6 relative inline-block">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto shadow-inner border border-blue-200/50 overflow-hidden">
-                        <img src="{{ asset('img/mascote.png') }}" alt="Mascote" class="w-full h-full object-cover scale-[2.2] object-center animate-bounce">
-                    </div>
-                    <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-blue-900 shadow-lg border-2 border-white">
-                        <i class="fa-solid fa-sparkles text-xs"></i>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-100 to-white rounded-full flex items-center justify-center mx-auto shadow-[inset_0_2px_10px_rgba(30,58,138,0.1)] border border-blue-200/50 overflow-hidden relative">
+                        <img src="{{ asset('img/mascote.png') }}" alt="Mascote" class="w-full h-full object-cover animate-float">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/10 to-transparent"></div>
                     </div>
                 </div>
-                <h3 class="text-slate-800 font-black text-lg mb-2" style="font-family: 'Montserrat', sans-serif;">Olá! Eu sou o Assistente da Smart City.</h3>
-                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Estou aqui para tirar suas dúvidas sobre serviços, IPTU, saúde e muito mais. Como posso ajudar?</p>
+                <h3 class="text-slate-800 font-black text-xl mb-2 leading-tight" style="font-family: 'Montserrat', sans-serif;">Olá! Sou o seu <br> <span class="text-blue-700">Assistente Virtual</span></h3>
+                <p class="text-slate-500 text-[15px] mb-8 leading-relaxed max-w-[240px] mx-auto">Tire dúvidas sobre IPTU, saúde, serviços e muito mais em poucos segundos.</p>
                 
                 {{-- Sugestões Rápidas --}}
-                <div class="grid grid-cols-1 gap-2 max-w-xs mx-auto">
-                    <button @click="sendMessage('Quais serviços estão disponíveis?')"
-                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
-                        <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs group-hover:bg-blue-600 group-hover:text-white transition-colors">📋</span>
-                        Serviços disponíveis
+                <div class="grid grid-cols-1 gap-2.5 max-w-[280px] mx-auto">
+                    <button @click="sendMessage('Quais os serviços disponíveis online?')"
+                            class="w-full text-left px-4 py-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md hover:-translate-y-0.5 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0 shadow-sm">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        Serviços Online
                     </button>
-                    <button @click="sendMessage('Como solicitar uma certidão?')"
-                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
-                        <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs group-hover:bg-emerald-600 group-hover:text-white transition-colors">📝</span>
-                        Solicitar documento
+                    <button @click="sendMessage('Como emitir a guia do IPTU?')"
+                            class="w-full text-left px-4 py-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md hover:-translate-y-0.5 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0 shadow-sm">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </div>
+                        Guia do IPTU
                     </button>
-                    <button @click="sendMessage('Como fazer uma denúncia?')"
-                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
-                        <span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xs group-hover:bg-red-600 group-hover:text-white transition-colors">🚨</span>
-                        Denúncia
+                    <button @click="sendMessage('Onde agendar consulta médica?')"
+                            class="w-full text-left px-4 py-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md hover:-translate-y-0.5 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm group-hover:bg-rose-600 group-hover:text-white transition-colors shrink-0 shadow-sm">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </div>
+                        Agendar Consulta
                     </button>
                 </div>
             </div>
@@ -111,7 +115,7 @@
             <template x-for="message in messages" :key="message.id">
                 <div :class="message.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
                     <div :class="[
-                        'max-w-[85%] px-4 py-3 rounded-2xl text-[14px] leading-relaxed break-words shadow-sm',
+                        'max-w-[88%] px-4 py-3.5 rounded-2xl text-[14px] leading-relaxed break-words shadow-sm',
                         message.role === 'user' 
                             ? 'bg-blue-900 text-white rounded-tr-none' 
                             : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none'
@@ -177,6 +181,23 @@
         </div>
     </aside>
 </div>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0) scale(2.2); }
+        50% { transform: translateY(-8px) scale(2.25); }
+    }
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
 
 <script>
 /**

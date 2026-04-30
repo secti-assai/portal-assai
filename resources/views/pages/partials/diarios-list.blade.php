@@ -18,13 +18,7 @@
                             <span class="text-slate-700 font-medium truncate">{{ $diario->assinante_nome }}</span>
                         </div>
                     @endif
-                    <div class="flex gap-2 text-sm">
-                        <span class="text-slate-400 font-bold w-20 shrink-0">Status:</span>
-                        <span class="inline-flex items-center gap-1.5 text-emerald-600 font-bold">
-                            <i class="fa-solid fa-circle-check text-[10px]"></i>
-                            Autenticado
-                        </span>
-                    </div>
+
                 </div>
 
                 @php

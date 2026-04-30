@@ -51,15 +51,19 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
     }
     
     @keyframes marquee {
-        0%, 5% { transform: translateX(0); }
-        45%, 55% { transform: translateX(calc(-100% + 160px)); } /* Estimativa de largura do container */
-        95%, 100% { transform: translateX(0); }
+        0%, 10% { transform: translateX(0); }
+        40%, 60% { transform: translateX(var(--marquee-dist, -50px)); }
+        90%, 100% { transform: translateX(0); }
     }
     
-    .animate-marquee-hover:hover span, 
-    .animate-marquee-mobile {
+    .animate-marquee-hover:hover span {
         display: inline-block;
         animation: marquee 8s ease-in-out infinite alternate;
+    }
+
+    .animate-marquee-mobile {
+        display: inline-block;
+        animation: marquee 10s ease-in-out infinite;
     }
 </style>
 
@@ -332,6 +336,79 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
 
             <nav class="h-full overflow-y-auto px-4 pb-20 overscroll-contain" aria-label="Links principais">
                 <ul class="list-none m-0 p-0 flex flex-col pt-3">
+                    
+                    {{-- BOTÃO DE PERFIL (MOBILE - APENAS SE LOGADO) --}}
+                    @if(session()->has('gov_user'))
+                    <li class="mb-4">
+                        <div x-data="{ 
+                                openGov: false, 
+                                nameOverflows: false, 
+                                marqueeDist: '0px' 
+                             }" 
+                             x-init="
+                                const checkOverflow = () => {
+                                    if ($refs.nameText && $refs.nameContainer) {
+                                        const diff = $refs.nameText.scrollWidth - $refs.nameContainer.clientWidth;
+                                        nameOverflows = diff > 2;
+                                        marqueeDist = '-' + diff + 'px';
+                                    }
+                                };
+                                $nextTick(() => checkOverflow());
+                                window.addEventListener('resize', checkOverflow);
+                                const observer = new MutationObserver(checkOverflow);
+                                observer.observe($refs.nameText, { childList: true, characterData: true, subtree: true });
+                             }"
+                             class="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-2xl overflow-hidden shadow-lg border border-white/10">
+                            <button type="button" @click="openGov = !openGov" class="flex flex-col w-full px-5 py-4 text-white font-bold transition-all">
+                                <div class="flex items-center justify-between w-full">
+                                    <div class="flex items-center gap-3">
+                                        <div x-ref="nameContainer" class="flex flex-col items-start overflow-hidden max-w-[260px]">
+                                            <span class="text-[10px] uppercase opacity-70 tracking-widest leading-none mb-1">Cidadão Conectado</span>
+                                            <span x-ref="nameText" 
+                                                  class="text-base leading-none whitespace-nowrap pr-8"
+                                                  :class="nameOverflows ? 'animate-marquee-mobile' : ''"
+                                                  :style="'--marquee-dist: ' + marqueeDist">
+                                                <span>{{ session('gov_user.nome') }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-down text-sm transition-transform duration-300" :class="openGov ? 'rotate-180' : ''"></i>
+                                </div>
+                            </button>
+                            
+                            <div x-show="openGov" x-collapse style="display: none;" class="bg-white/10 backdrop-blur-md px-5 pb-5">
+                                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
+                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
+                                        <p class="text-[9px] uppercase font-bold text-blue-200 tracking-wider mb-1">Nível</p>
+                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
+                                            <i class="fa-solid fa-award text-blue-300"></i>
+                                            Nível {{ session('gov_user.nivel_num', 1) }}
+                                        </p>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
+                                        <p class="text-[9px] uppercase font-bold text-amber-200 tracking-wider mb-1">Girassóis</p>
+                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
+                                            <i class="fa-solid fa-sun text-amber-300"></i>
+                                            {{ session('gov_user.girassois', 0) }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col gap-2 mt-4">
+                                    <a href="https://gov.assai.pr.gov.br/cidadao/dashboard" target="_blank" class="flex items-center gap-3 py-3 px-4 rounded-xl bg-white/10 text-white text-sm font-bold">
+                                        <i class="fa-solid fa-id-card opacity-70"></i> Meu Perfil
+                                    </a>
+                                    <form action="{{ route('govassai.logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center gap-3 py-3 px-4 rounded-xl bg-red-500/20 text-red-100 text-sm font-bold">
+                                            <i class="fa-solid fa-arrow-right-from-bracket opacity-70"></i> Sair da Conta
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    @endif
 
                     {{-- SELETOR DE PERFIL (MOBILE - DESTACADO) --}}
                     <li x-data="{ open: false }" class="border-b border-blue-100 bg-blue-50/80 rounded-xl mb-3 shadow-sm border">
@@ -429,55 +506,9 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
 
 
 
+                    {{-- BOTÃO DE LOGIN (MOBILE - APENAS SE DESLOGADO - NO FINAL) --}}
+                    @if(!session()->has('gov_user'))
                     <li class="pt-4">
-                        @if(session()->has('gov_user'))
-                        <div x-data="{ openGov: false }" class="bg-gradient-to-br from-blue-900 to-indigo-900 rounded-2xl overflow-hidden shadow-lg border border-white/10">
-                            <button type="button" @click="openGov = !openGov" class="flex flex-col w-full px-5 py-4 text-white font-bold transition-all">
-                                <div class="flex items-center justify-between w-full">
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex flex-col items-start overflow-hidden max-w-[180px]">
-                                            <span class="text-[10px] uppercase opacity-70 tracking-widest leading-none mb-1">Cidadão Conectado</span>
-                                            <span class="text-base leading-none whitespace-nowrap animate-marquee-mobile">
-                                                <span>{{ session('gov_user.nome') }}</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-down text-sm transition-transform duration-300" :class="openGov ? 'rotate-180' : ''"></i>
-                                </div>
-                            </button>
-                            
-                            <div x-show="openGov" x-collapse style="display: none;" class="bg-white/10 backdrop-blur-md px-5 pb-5">
-                                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
-                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
-                                        <p class="text-[9px] uppercase font-bold text-blue-200 tracking-wider mb-1">Nível</p>
-                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
-                                            <i class="fa-solid fa-award text-blue-300"></i>
-                                            Nível {{ session('gov_user.nivel_num', 1) }}
-                                        </p>
-                                    </div>
-                                    <div class="bg-white/10 rounded-xl p-3 border border-white/10">
-                                        <p class="text-[9px] uppercase font-bold text-amber-200 tracking-wider mb-1">Girassóis</p>
-                                        <p class="text-sm font-black text-white flex items-center gap-1.5">
-                                            <i class="fa-solid fa-sun text-amber-300"></i>
-                                            {{ session('gov_user.girassois', 0) }}
-                                        </p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex flex-col gap-2 mt-4">
-                                    <a href="https://gov.assai.pr.gov.br/cidadao/dashboard" target="_blank" class="flex items-center gap-3 py-3 px-4 rounded-xl bg-white/10 text-white text-sm font-bold">
-                                        <i class="fa-solid fa-id-card opacity-70"></i> Meu Perfil
-                                    </a>
-                                    <form action="{{ route('govassai.logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="w-full flex items-center gap-3 py-3 px-4 rounded-xl bg-red-500/20 text-red-100 text-sm font-bold">
-                                            <i class="fa-solid fa-arrow-right-from-bracket opacity-70"></i> Sair da Conta
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        @else
                         <button type="button" @click="$dispatch('open-modal-sou-assaiense')"
                             class="flex items-center justify-center gap-2 w-full px-4 py-3.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-yellow-400 font-bold shadow-md transition-all active:scale-95 border-0">
                             <span>Sou Assaiense</span>
@@ -485,8 +516,11 @@ $perfilAtual = request()->cookie('portal_perfil', 'todos');
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
                         </button>
-                        @endif
                     </li>
+                    @endif
+
+                    {{-- Espaçador Final --}}
+                    <li class="pb-6"></li>
                 </ul>
 
                 <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50/95 p-3 shadow-sm flex items-center justify-start gap-3 mx-1">
