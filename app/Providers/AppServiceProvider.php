@@ -33,6 +33,18 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('pt_BR');
 
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            // Restaurar sessão do Gov.Assai se existir cookie
+            if (!session()->has('gov_user') && request()->hasCookie('gov_user_remember')) {
+                try {
+                    $userData = json_decode(request()->cookie('gov_user_remember'), true);
+                    if ($userData) {
+                        session(['gov_user' => $userData]);
+                    }
+                } catch (\Exception $e) {
+                    // Ignore
+                }
+            }
+            
             $view->with('alertasAtivos', \App\Models\Alerta::where('ativo', true)->orderBy('created_at', 'desc')->get());
         });
 

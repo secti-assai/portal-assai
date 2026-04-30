@@ -28,9 +28,10 @@
             @click="openSidebar()"
             :aria-expanded="isOpen"
             aria-label="Abrir assistente de IA"
-            class="fixed bottom-24 right-6 w-16 h-16 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.18)] transition-all duration-300 flex items-center justify-center z-[9999] group overflow-hidden border-2 border-purple-100">
-        <div class="absolute inset-0 bg-purple-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-        <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[1.5] relative z-10 transition-transform duration-300 group-hover:scale-[1.65]">
+            class="fixed bottom-24 right-6 w-16 h-16 rounded-full bg-blue-900 shadow-[0_8px_30px_rgba(30,58,138,0.3)] hover:shadow-[0_12px_40px_rgba(30,58,138,0.4)] transition-all duration-300 flex items-center justify-center z-[9999] group overflow-hidden border-2 border-white/20">
+        <div class="absolute inset-0 bg-gradient-to-tr from-blue-900 to-indigo-800 opacity-100 group-hover:scale-110 transition-transform duration-500"></div>
+        <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[2.2] object-center relative z-10 transition-transform duration-300 group-hover:scale-[2.4] group-hover:-rotate-3">
+        <div class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 border-2 border-blue-900 rounded-full z-20 animate-pulse"></div>
     </button>
 
     {{-- Sidebar Chat --}}
@@ -41,53 +42,67 @@
            x-transition:leave="transition ease-in duration-200"
            x-transition:leave-start="translate-x-0 opacity-100"
            x-transition:leave-end="sm:translate-x-full opacity-0"
-           class="fixed right-0 top-0 w-full sm:w-96 h-[100dvh] bg-white shadow-2xl flex flex-col z-[9999] sm:border-l sm:border-gray-200"
+           class="fixed right-0 top-0 w-full sm:w-96 h-[100dvh] bg-white shadow-2xl flex flex-col z-[9999] sm:border-l sm:border-slate-200"
            role="dialog"
            aria-modal="true"
            aria-labelledby="ai-chat-title">
 
         {{-- Header --}}
-        <div class="bg-gradient-to-r from-purple-600 to-purple-800 text-white p-4 sm:p-6 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-white/30 shadow-sm">
-                    <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[1.5]">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-4 sm:p-6 flex items-center justify-between shrink-0 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-robot text-6xl -rotate-12"></i>
+            </div>
+            <div class="flex items-center gap-3 min-w-0 relative z-10">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-white/30 shadow-inner">
+                    <img src="{{ asset('img/mascote.png') }}" alt="Mascote IA" class="w-full h-full object-cover scale-[2.2] object-center">
                 </div>
                 <div class="min-w-0">
-                    <h2 id="ai-chat-title" class="font-bold text-base sm:text-lg truncate">Assistente IA</h2>
-                    <p class="text-xs opacity-90" x-text="isLoading ? 'Conectando...' : 'Online'"></p>
+                    <h2 id="ai-chat-title" class="font-black text-base sm:text-lg tracking-tight leading-tight">Assistente <span class="text-yellow-400">Assaiense</span></h2>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <p class="text-[10px] uppercase font-bold tracking-widest opacity-80" x-text="isLoading ? 'Conectando...' : 'Online'"></p>
+                    </div>
                 </div>
             </div>
             <button @click="closeSidebar()"
                     aria-label="Fechar assistente"
-                    class="text-white/80 hover:text-white transition text-2xl leading-none shrink-0 ml-2">
-                ×
+                    class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-all flex items-center justify-center text-white text-xl leading-none shrink-0 ml-2 border border-white/10">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
         {{-- Área de Mensagens --}}
-        <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-4 scroll-smooth" id="messages-container">
+        <div class="flex-1 overflow-y-auto bg-slate-50 p-4 space-y-4 scroll-smooth scrollbar-hide" id="messages-container">
             
             {{-- Mensagem Inicial --}}
-            <div x-show="messages.length === 0" class="text-center py-8">
-                <div class="mb-4">
-                    <i class="fa-solid fa-sparkles text-4xl text-purple-400 opacity-60"></i>
+            <div x-show="messages.length === 0" class="text-center py-10 px-4">
+                <div class="mb-6 relative inline-block">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto shadow-inner border border-blue-200/50 overflow-hidden">
+                        <img src="{{ asset('img/mascote.png') }}" alt="Mascote" class="w-full h-full object-cover scale-[2.2] object-center animate-bounce">
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-blue-900 shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-sparkles text-xs"></i>
+                    </div>
                 </div>
-                <h3 class="text-gray-700 font-bold text-base mb-2">Bem-vindo ao Assistente Municipal</h3>
-                <p class="text-gray-600 text-sm mb-6">Como posso ajudá-lo hoje?</p>
+                <h3 class="text-slate-800 font-black text-lg mb-2" style="font-family: 'Montserrat', sans-serif;">Olá! Eu sou o Assistente da Smart City.</h3>
+                <p class="text-slate-500 text-sm mb-8 leading-relaxed">Estou aqui para tirar suas dúvidas sobre serviços, IPTU, saúde e muito mais. Como posso ajudar?</p>
                 
                 {{-- Sugestões Rápidas --}}
-                <div class="space-y-2">
+                <div class="grid grid-cols-1 gap-2 max-w-xs mx-auto">
                     <button @click="sendMessage('Quais serviços estão disponíveis?')"
-                            class="w-full text-left px-3 py-2.5 rounded-lg bg-white border border-gray-300 hover:border-purple-500 hover:bg-purple-50 text-gray-700 text-xs transition font-medium">
-                        📋 Serviços disponíveis
+                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
+                        <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-xs group-hover:bg-blue-600 group-hover:text-white transition-colors">📋</span>
+                        Serviços disponíveis
                     </button>
                     <button @click="sendMessage('Como solicitar uma certidão?')"
-                            class="w-full text-left px-3 py-2.5 rounded-lg bg-white border border-gray-300 hover:border-purple-500 hover:bg-purple-50 text-gray-700 text-xs transition font-medium">
-                        📝 Solicitar documento
+                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs group-hover:bg-emerald-600 group-hover:text-white transition-colors">📝</span>
+                        Solicitar documento
                     </button>
                     <button @click="sendMessage('Como fazer uma denúncia?')"
-                            class="w-full text-left px-3 py-2.5 rounded-lg bg-white border border-gray-300 hover:border-purple-500 hover:bg-purple-50 text-gray-700 text-xs transition font-medium">
-                        🚨 Denúncia
+                            class="w-full text-left px-4 py-3 rounded-xl bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-[13px] transition-all font-bold flex items-center gap-3 shadow-sm group">
+                        <span class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-xs group-hover:bg-red-600 group-hover:text-white transition-colors">🚨</span>
+                        Denúncia
                     </button>
                 </div>
             </div>
@@ -96,58 +111,69 @@
             <template x-for="message in messages" :key="message.id">
                 <div :class="message.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
                     <div :class="[
-                        'max-w-[80%] px-4 py-2.5 rounded-lg text-sm break-words',
+                        'max-w-[85%] px-4 py-3 rounded-2xl text-[14px] leading-relaxed break-words shadow-sm',
                         message.role === 'user' 
-                            ? 'bg-purple-600 text-white rounded-br-none' 
-                            : 'bg-white border border-gray-300 text-gray-800 rounded-bl-none'
+                            ? 'bg-blue-900 text-white rounded-tr-none' 
+                            : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none'
                     ]">
-                        <p x-html="message.content"></p>
-                        <p :class="message.role === 'user' ? 'text-purple-100' : 'text-gray-500'" class="text-xs mt-1.5 opacity-70">
+                        <div x-html="message.content" class="prose prose-sm prose-slate max-w-none"></div>
+                        <div :class="message.role === 'user' ? 'text-blue-200' : 'text-slate-400'" class="text-[10px] mt-2 flex items-center gap-1 font-bold">
+                            <i class="fa-regular fa-clock text-[9px] opacity-70"></i>
                             <span x-text="formatTime(message.created_at)"></span>
-                        </p>
+                        </div>
                     </div>
                 </div>
             </template>
 
             {{-- Indicador Digitando --}}
             <div x-show="isTyping" class="flex justify-start">
-                <div class="bg-white border border-gray-300 px-4 py-2.5 rounded-lg rounded-bl-none">
-                    <div class="flex gap-1 items-center">
-                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></span>
-                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></span>
-                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></span>
+                <div class="bg-white border border-slate-200 px-5 py-4 rounded-2xl rounded-tl-none shadow-sm">
+                    <div class="flex gap-1.5 items-center">
+                        <span class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0ms;"></span>
+                        <span class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 150ms;"></span>
+                        <span class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 300ms;"></span>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- Ações --}}
-        <div x-show="messages.length > 0" class="border-t bg-white px-4 py-2 flex items-center justify-between text-xs">
+        <div x-show="messages.length > 0" class="border-t border-slate-100 bg-white px-5 py-2.5 flex items-center justify-between text-[11px] font-bold tracking-tight">
             <button @click="clearConversation()"
-                    class="text-gray-600 hover:text-red-600 transition font-medium flex items-center gap-1">
-                <i class="fa-solid fa-trash-alt"></i>
-                Limpar
+                    class="text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                LIMPAR CHAT
             </button>
-            <span class="text-gray-400" x-text="`${messages.length} mensagens`"></span>
+            <span class="text-slate-400 uppercase opacity-60" x-text="`${messages.length} mensagens`"></span>
         </div>
 
         {{-- Input --}}
-        <div class="border-t bg-white p-4 shrink-0">
-            <form @submit.prevent="sendMessage()" class="flex gap-2">
-                <input x-model="inputValue"
-                       :disabled="isLoading || isTyping"
-                       type="text"
-                       placeholder="Digite sua pergunta..."
-                       aria-label="Digite sua pergunta"
-                       class="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm placeholder-gray-500 transition disabled:bg-gray-100 disabled:cursor-not-allowed">
+        <div class="border-t border-slate-100 bg-white p-4 shrink-0 shadow-[0_-4px_15px_rgba(0,0,0,0.02)]">
+            <form @submit.prevent="sendMessage()" class="flex gap-2.5">
+                <div class="relative flex-1">
+                    <input x-model="inputValue"
+                           :disabled="isLoading || isTyping"
+                           type="text"
+                           placeholder="Qual sua dúvida?"
+                           aria-label="Qual sua dúvida?"
+                           class="w-full pl-4 pr-10 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-[14px] placeholder-slate-400 transition-all disabled:bg-slate-50 disabled:cursor-not-allowed font-medium">
+                    <div class="absolute right-3 inset-y-0 flex items-center text-slate-300">
+                        <i class="fa-solid fa-keyboard text-xs"></i>
+                    </div>
+                </div>
                 
                 <button type="submit"
                         :disabled="!inputValue.trim() || isLoading || isTyping"
                         aria-label="Enviar mensagem"
-                        class="px-4 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition flex items-center justify-center text-sm font-medium shrink-0">
-                    <i class="fa-solid fa-paper-plane"></i>
+                        class="w-12 h-12 rounded-xl bg-blue-900 hover:bg-blue-800 disabled:bg-slate-200 disabled:cursor-not-allowed text-white transition-all flex items-center justify-center text-sm font-bold shrink-0 shadow-lg shadow-blue-900/10 active:scale-90">
+                    <i class="fa-solid fa-paper-plane-top"></i>
+                    <svg x-show="isLoading || isTyping" class="animate-spin h-5 w-5 text-white absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
             </form>
+            <p class="text-[9px] text-center text-slate-400 mt-3 font-bold uppercase tracking-widest opacity-50">Inteligência Artificial Municipal</p>
         </div>
     </aside>
 </div>

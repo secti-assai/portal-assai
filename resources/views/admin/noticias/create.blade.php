@@ -116,6 +116,12 @@
                     accept="image/*"
                     help-text="PNG, JPG, GIF até 2MB"
                 />
+
+                <div class="mt-6 pt-6 border-t border-slate-100">
+                    <label class="block mb-2 text-sm font-bold text-gray-700">Galeria de Fotos (Opcional)</label>
+                    <input type="file" name="galeria[]" multiple accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all">
+                    <p class="mt-2 text-xs text-slate-400">Selecione várias imagens para criar uma galeria no final da notícia.</p>
+                </div>
             </div>
 
             <div class="flex items-center justify-end mt-6">

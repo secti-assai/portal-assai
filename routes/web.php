@@ -355,6 +355,7 @@ Route::view('/turismo', 'pages.turismo')->name('pages.turismo');
 Route::view('/transparencia', 'pages.transparencia')->name('pages.transparencia');
 Route::view('/acessibilidade', 'pages.acessibilidade')->name('pages.acessibilidade');
 Route::view('/faq', 'pages.faq')->name('pages.faq');
+Route::view('/metodo-assaiense', 'pages.metodos')->name('pages.metodos');
 Route::view('/lgpd', 'pages.lgpd')->name('pages.lgpd');
 Route::view('/cookies', 'pages.cookies')->name('pages.cookies');
 Route::view('/termos-de-uso', 'pages.termos')->name('pages.termos');

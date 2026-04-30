@@ -31,6 +31,7 @@ class Noticia extends Model
         'ativo',
         'perfis_alvo',
         'destaque',
+        'galeria',
     ];
 
     public function categorias()
@@ -43,6 +44,7 @@ class Noticia extends Model
         'ativo' => 'boolean',
         'destaque' => 'boolean',
         'perfis_alvo' => 'array',
+        'galeria' => 'array',
     ];
 
     public function getActivitylogOptions(): LogOptions

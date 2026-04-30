@@ -120,6 +120,36 @@
                 {!! $noticia->conteudo !!}
             </div>
 
+            {{-- Galeria de Fotos --}}
+            @if($noticia->galeria && count($noticia->galeria) > 0)
+            <div class="mt-16 pt-10 border-t border-gray-100">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-2 h-8 bg-blue-900 rounded-full"></div>
+                    <h2 class="text-2xl font-black text-blue-900 uppercase tracking-tight" style="font-family: 'Montserrat', sans-serif;">Galeria de Fotos</h2>
+                </div>
+
+                <div class="relative group">
+                    <div class="swiper galeriaSwiper rounded-2xl overflow-hidden shadow-xl border border-slate-100">
+                        <div class="swiper-wrapper">
+                            @foreach($noticia->galeria as $foto)
+                            <div class="swiper-slide bg-slate-50 flex items-center justify-center aspect-[16/9] md:aspect-[21/9]">
+                                <img src="{{ asset('storage/' . $foto) }}" class="w-full h-full object-contain cursor-zoom-in" 
+                                     @click="openImage = true; $refs.modalImage.src = $el.src" alt="Foto da galeria">
+                            </div>
+                            @endforeach
+                        </div>
+                        
+                        {{-- Navegação --}}
+                        <div class="swiper-button-next !text-blue-900 after:!text-2xl bg-white/80 backdrop-blur-sm w-12 h-12 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="swiper-button-prev !text-blue-900 after:!text-2xl bg-white/80 backdrop-blur-sm w-12 h-12 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        {{-- Paginação --}}
+                        <div class="swiper-pagination !bottom-4"></div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             {{-- Rodapé do artigo --}}
             <div class="mt-16 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <a href="{{ route('noticias.index') }}"
@@ -215,6 +245,7 @@
         {{-- Imagem em Tamanho Real --}}
         <div class="relative max-w-5xl max-h-[90vh] flex items-center justify-center pointer-events-none">
             <img
+                x-ref="modalImage"
                 src="{{ asset('storage/' . $noticia->imagem_capa) }}"
                 class="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-default"
                 alt="Imagem ampliada">
@@ -222,3 +253,29 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.querySelector('.galeriaSwiper')) {
+            new Swiper(".galeriaSwiper", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+            });
+        }
+    });
+</script>
+@endpush
